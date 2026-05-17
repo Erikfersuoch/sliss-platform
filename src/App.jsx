@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback, createContext, useContext } from "react";
 
 // ═══════════════════════════════════════════════════════════════════════════
-// SLISS PLATFORM v2.0 — Ecosistema Operativo per Micro-Business
+// SLISS PLATFORM v2.1 — Ecosistema Operativo per Micro-Business
 // Architecture: Modular · Persistent Storage · Production-Ready
+// UX Brief v1.2 implemented
 // ═══════════════════════════════════════════════════════════════════════════
 
 // ── Design System ──────────────────────────────────────────────────────────
@@ -74,7 +75,7 @@ const defaultData = () => ({
     { id: "t4", name: "Ringraziamento Barber", code: "R4-BAR", phase: "thankyou", sector: "Barber", channel: "WhatsApp", text: "Ciao [Nome]! Grazie del passaggio oggi 💈 Spero ti piaccia il risultato. Quando vuoi tornare, sai dove trovarmi!", active: true },
     { id: "t5", name: "Ringraziamento Estetica", code: "R5-EST", phase: "thankyou", sector: "Estetica", channel: "WhatsApp", text: "Ciao [Nome]! Grazie per essere passata oggi ✨ Spero ti sia piaciuto il trattamento. Per consigli, scrivimi. A presto!", active: true },
     { id: "t6", name: "Controllo base", code: "C1", phase: "check", sector: "Generico", channel: "WhatsApp", text: "Ciao [Nome]! Volevo solo sapere come stai andando dopo l'appuntamento di settimana scorsa. Tutto ok? Se qualcosa non ti convince al 100%, dimmelo — preferisco saperlo direttamente.", active: true },
-    { id: "t7", name: "Controllo con feedback", code: "C2", phase: "check", sector: "Generico", channel: "WhatsApp", text: "Ciao [Nome]! Come procede tutto? Se hai 2 minuti, mi farebbe piacere sapere cosa ne pensi: [Link Feedback]. Anonimo e brevissimo, prometto 🙏", active: true },
+    { id: "t7", name: "Controllo con feedback", code: "C2", phase: "check", sector: "Generico", channel: "WhatsApp", text: "Ciao [Nome]! Come procede tutto? Se hai 2 minuti, mi farebbe piacere sapere cosa ne pensi: [Link Feedback]. Anonimo e brevissimo, promesso 🙏", active: true },
     { id: "t8", name: "Controllo Tatuaggi", code: "C3-TAT", phase: "check", sector: "Tatuaggi", channel: "WhatsApp", text: "Ciao [Nome]! Come sta andando la cicatrizzazione? Dovrebbe desquamarsi — è normale. Se hai dubbi, mandami una foto.", active: true },
     { id: "t9", name: "Controllo Barber", code: "C4-BAR", phase: "check", sector: "Barber", channel: "WhatsApp", text: "Ciao [Nome]! Tutto ok con il taglio? Se serve una sistemata o vuoi prenotare il prossimo, sono qui 💈", active: true },
     { id: "t10", name: "Richiesta recensione", code: "RC1", phase: "review", sector: "Generico", channel: "WhatsApp", text: "Ciao [Nome]! Sono contento/a che ti sia trovato/a bene 🙏 Se hai un minuto, una recensione su [Piattaforma] mi aiuterebbe tantissimo. Grazie di cuore!", active: true },
@@ -109,6 +110,7 @@ const Ctx = createContext(null);
 const useSliss = () => useContext(Ctx);
 
 // ── Config Maps ────────────────────────────────────────────────────────────
+// BRIEF UX #3: etichette leggibili al posto di codici
 const PHASES = {
   thankyou: { label: "Ringraziamento", color: T.blue, icon: "🙏", bg: T.blueS },
   check: { label: "Controllo", color: T.amber, icon: "🔍", bg: T.amberS },
@@ -122,25 +124,42 @@ const STATUSES = {
   completed: { label: "Completato", color: T.textD, bg: "rgba(90,111,148,0.12)" },
   skipped: { label: "Saltato", color: T.textMu, bg: "rgba(61,81,120,0.1)" },
 };
+
+// BRIEF UX #2: semafori clienti con etichette corrette
 const CLIENT_ST = {
   new: { label: "Nuovo", color: T.blue, bg: T.blueS },
-  active: { label: "Attivo", color: T.green, bg: T.greenS },
+  active: { label: "Fidelizzato", color: T.green, bg: T.greenS },
   vip: { label: "VIP", color: T.purple, bg: T.purpleS },
-  to_reactivate: { label: "Da riattivare", color: T.amber, bg: T.amberS },
+  to_reactivate: { label: "Da ricontattare", color: T.amber, bg: T.amberS },
   inactive: { label: "Inattivo", color: T.textD, bg: "rgba(90,111,148,0.12)" },
 };
-const MODULES = [
-  { id: "followup", name: "Follow-Up", icon: "💬", color: T.blue, desc: "Gestisci i follow-up con i clienti", status: "active" },
-  { id: "onboarding", name: "Onboarding", icon: "📋", color: T.purple, desc: "Raccogli info prima dell'appuntamento", status: "planned" },
-  { id: "inbound", name: "Richieste", icon: "📥", color: T.amber, desc: "Gestisci le richieste in entrata", status: "planned" },
-  { id: "quotes", name: "Preventivi", icon: "💰", color: T.green, desc: "Crea e invia preventivi", status: "planned" },
-  { id: "reminders", name: "Reminder", icon: "⏰", color: T.red, desc: "Conferme e promemoria", status: "planned" },
-  { id: "faq", name: "FAQ & KB", icon: "📚", color: "#6366F1", desc: "Knowledge base e risposte auto", status: "future" },
-  { id: "assistant", name: "AI Assistant", icon: "🤖", color: T.pink, desc: "Supporto AI operativo", status: "future" },
-  { id: "dashboard", name: "Dashboard", icon: "📊", color: T.teal, desc: "Vista unificata business", status: "future" },
-  { id: "social", name: "Social", icon: "📸", color: T.orange, desc: "Contenuti social assistiti", status: "future" },
-  { id: "referral", name: "Referral", icon: "🤝", color: "#84CC16", desc: "Passaparola strutturato", status: "future" },
+
+// BRIEF UX #7: moduli organizzati per pacchetto
+const PACKAGES = [
+  {
+    name: "Starter", color: T.blue, desc: "Il kit essenziale per iniziare",
+    modules: [
+      { id: "followup", name: "Follow-Up", icon: "💬", desc: "Gestisci i follow-up post-appuntamento", status: "active" },
+      { id: "onboarding", name: "Onboarding", icon: "📋", desc: "Raccogli info prima dell'appuntamento", status: "planned" },
+      { id: "faq", name: "FAQ & KB", icon: "📚", desc: "Knowledge base e risposte auto (bonus)", status: "planned" },
+    ],
+  },
+  {
+    name: "Pro", color: T.purple, desc: "Per chi vuole fare sul serio",
+    modules: [
+      { id: "inbound", name: "Richieste Inbound", icon: "📥", desc: "Gestisci le richieste in entrata", status: "planned" },
+      { id: "reminders", name: "Reminder", icon: "⏰", desc: "Conferme e promemoria anti no-show", status: "planned" },
+    ],
+  },
+  {
+    name: "Full", color: T.green, desc: "L'ecosistema completo",
+    modules: [
+      { id: "referral", name: "Referral", icon: "🤝", desc: "Passaparola strutturato porta-un-amico", status: "planned" },
+    ],
+  },
 ];
+
+const ALL_MODULES = PACKAGES.flatMap(p => p.modules);
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
 const fmtDate = d => { if (!d) return "—"; return new Date(d).toLocaleDateString("it-IT",{day:"numeric",month:"short",year:"numeric"}); };
@@ -148,6 +167,19 @@ const daysAgo = d => { if(!d) return null; const diff=Math.floor((Date.now()-new
 const daysUntil = d => { if(!d) return null; const diff=Math.floor((new Date(d)-Date.now())/(864e5)); if(diff<0) return `${Math.abs(diff)}g fa`; if(diff===0) return "Oggi"; if(diff===1) return "Domani"; return `Tra ${diff}g`; };
 const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const today = () => new Date().toISOString().split("T")[0];
+
+// BRIEF UX #1: funzioni per invio diretto via canale
+const buildWhatsAppUrl = (phone, text) => {
+  const clean = phone.replace(/\D/g, "");
+  const intl = clean.startsWith("39") ? clean : "39" + clean;
+  return `https://wa.me/${intl}?text=${encodeURIComponent(text)}`;
+};
+const buildMailUrl = (email, text) => {
+  return `mailto:${email}?body=${encodeURIComponent(text)}`;
+};
+const buildIGUrl = () => {
+  return `https://www.instagram.com/direct/inbox/`;
+};
 
 // ── UI Components ──────────────────────────────────────────────────────────
 const Badge = ({label,color,bg,s}) => <span style={{display:"inline-flex",alignItems:"center",padding:s?"2px 8px":"3px 10px",borderRadius:T.r.full,fontSize:s?"11px":"12px",fontWeight:600,color,background:bg,letterSpacing:".02em",whiteSpace:"nowrap"}}>{label}</span>;
@@ -170,19 +202,52 @@ const Empty = ({icon,title,desc}) => <div style={{textAlign:"center",padding:"60
 
 const Search = ({value,onChange,placeholder}) => <div style={{position:"relative"}}><span style={{position:"absolute",left:"12px",top:"50%",transform:"translateY(-50%)",fontSize:"15px",opacity:.4}}>🔍</span><input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder||"Cerca..."} style={{paddingLeft:"36px",background:T.bg3}} /></div>;
 
-const Tabs = ({tabs,active,onChange}) => <div style={{display:"flex",gap:"3px",background:T.bg,padding:"3px",borderRadius:T.r.m,border:`1px solid ${T.border}`}}>{tabs.map(t=><button key={t.id} onClick={()=>onChange(t.id)} style={{padding:"7px 14px",borderRadius:T.r.s,border:"none",cursor:"pointer",background:active===t.id?T.bg3:"transparent",color:active===t.id?T.text:T.textD,fontWeight:active===t.id?600:400,fontSize:"13px",fontFamily:"inherit",transition:"all .15s",boxShadow:active===t.id?"0 1px 4px rgba(0,0,0,.25)":"none"}}>{t.label}{t.count!=null&&<span style={{marginLeft:"5px",fontSize:"11px",opacity:.6}}>({t.count})</span>}</button>)}</div>;
+const Tabs = ({tabs,active,onChange}) => <div style={{display:"flex",gap:"3px",background:T.bg,padding:"3px",borderRadius:T.r.m,border:`1px solid ${T.border}`,flexWrap:"wrap"}}>{tabs.map(t=><button key={t.id} onClick={()=>onChange(t.id)} style={{padding:"7px 14px",borderRadius:T.r.s,border:"none",cursor:"pointer",background:active===t.id?T.bg3:"transparent",color:active===t.id?T.text:T.textD,fontWeight:active===t.id?600:400,fontSize:"13px",fontFamily:"inherit",transition:"all .15s",boxShadow:active===t.id?"0 1px 4px rgba(0,0,0,.25)":"none"}}>{t.label}{t.count!=null&&<span style={{marginLeft:"5px",fontSize:"11px",opacity:.6}}>({t.count})</span>}</button>)}</div>;
 
 const Modal = ({open,onClose,title,children,w}) => {
   if(!open) return null;
   return <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center"}} onClick={onClose}><div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.75)",backdropFilter:"blur(6px)"}} /><div onClick={e=>e.stopPropagation()} style={{position:"relative",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:T.r.xl,width:w||"540px",maxWidth:"94vw",maxHeight:"85vh",overflow:"auto",animation:"fadeIn .2s ease",boxShadow:"0 12px 40px rgba(0,0,0,.6)"}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 24px",borderBottom:`1px solid ${T.border}`}}><h3 style={{fontSize:"16px",fontWeight:700}}>{title}</h3><button onClick={onClose} style={{background:"none",border:"none",color:T.textD,fontSize:"18px",cursor:"pointer",padding:"4px"}}>✕</button></div><div style={{padding:"24px"}}>{children}</div></div></div>;
 };
 
-const CopyBtn = ({text}) => {
-  const [ok,setOk]=useState(false);
-  return <Btn v={ok?"success":"secondary"} s="sm" onClick={()=>{navigator.clipboard.writeText(text);setOk(true);setTimeout(()=>setOk(false),2000)}}>{ok?"✓ Copiato":"📋 Copia"}</Btn>;
-};
-
 const FormField = ({label,children}) => <div style={{marginBottom:"16px"}}><label style={{display:"block",fontSize:"12px",color:T.textD,fontWeight:600,textTransform:"uppercase",letterSpacing:".05em",marginBottom:"6px"}}>{label}</label>{children}</div>;
+
+// BRIEF UX #1: Bottone Invia con selezione canale
+const SendBtn = ({message, client}) => {
+  const [open, setOpen] = useState(false);
+
+  const handleSend = (channel) => {
+    let url;
+    switch(channel) {
+      case "WhatsApp":
+        url = buildWhatsAppUrl(client?.phone || "", message);
+        break;
+      case "Email":
+        url = buildMailUrl(client?.email || "", message);
+        break;
+      case "Instagram":
+        // Copy message to clipboard then open IG DMs
+        navigator.clipboard.writeText(message);
+        url = buildIGUrl();
+        break;
+      default:
+        navigator.clipboard.writeText(message);
+        return;
+    }
+    window.open(url, "_blank");
+    setOpen(false);
+  };
+
+  return <div style={{position:"relative",display:"inline-flex"}}>
+    <Btn v="primary" s="sm" onClick={()=>setOpen(!open)}>📤 Invia</Btn>
+    {open && <div style={{position:"absolute",top:"100%",right:0,marginTop:"4px",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:T.r.m,padding:"4px",zIndex:50,minWidth:"150px",boxShadow:"0 8px 24px rgba(0,0,0,.5)"}}>
+      <button onClick={()=>handleSend("WhatsApp")} style={{display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"8px 12px",background:"none",border:"none",color:T.text,cursor:"pointer",borderRadius:T.r.s,fontSize:"13px",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>e.target.style.background=T.bg4} onMouseLeave={e=>e.target.style.background="none"}>💬 WhatsApp</button>
+      <button onClick={()=>handleSend("Email")} style={{display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"8px 12px",background:"none",border:"none",color:T.text,cursor:"pointer",borderRadius:T.r.s,fontSize:"13px",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>e.target.style.background=T.bg4} onMouseLeave={e=>e.target.style.background="none"}>📧 Email</button>
+      <button onClick={()=>handleSend("Instagram")} style={{display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"8px 12px",background:"none",border:"none",color:T.text,cursor:"pointer",borderRadius:T.r.s,fontSize:"13px",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>e.target.style.background=T.bg4} onMouseLeave={e=>e.target.style.background="none"}>📸 Instagram</button>
+      <div style={{borderTop:`1px solid ${T.border}`,margin:"4px 0"}} />
+      <button onClick={()=>{navigator.clipboard.writeText(message);setOpen(false)}} style={{display:"flex",alignItems:"center",gap:"8px",width:"100%",padding:"8px 12px",background:"none",border:"none",color:T.textD,cursor:"pointer",borderRadius:T.r.s,fontSize:"13px",fontFamily:"inherit",textAlign:"left"}} onMouseEnter={e=>e.target.style.background=T.bg4} onMouseLeave={e=>e.target.style.background="none"}>📋 Solo copia</button>
+    </div>}
+  </div>;
+};
 
 // ── Sidebar ────────────────────────────────────────────────────────────────
 const Sidebar = ({view,setView}) => {
@@ -206,7 +271,7 @@ const Sidebar = ({view,setView}) => {
       {nav.map(n=>{const a=view===n.id; return <button key={n.id} onClick={()=>setView(n.id)} style={{display:"flex",alignItems:"center",gap:"10px",padding:"9px 12px",borderRadius:T.r.m,border:"none",cursor:"pointer",background:a?T.blueS:"transparent",color:a?T.blue:T.textM,fontWeight:a?600:400,fontSize:"14px",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}><span style={{fontSize:"17px",width:"22px",textAlign:"center"}}>{n.icon}</span>{n.label}</button>})}
     </nav>
     <div style={{padding:"14px 18px",borderTop:`1px solid ${T.border}`}}>
-      <div style={{fontSize:"11px",color:T.textMu}}>Sliss v2.0</div>
+      <div style={{fontSize:"11px",color:T.textMu}}>Sliss v2.1</div>
       <div style={{fontSize:"11px",color:T.textMu,marginTop:"2px"}}>Liscio come deve essere.</div>
     </div>
   </div>;
@@ -216,7 +281,7 @@ const Sidebar = ({view,setView}) => {
 // VIEWS
 // ═══════════════════════════════════════════════════════════════════════════
 
-// ── HOME ────────────────────────────────────────────────────────────────
+// ── HOME (BRIEF UX #6: blocchi novità per modulo attivo) ────────────────
 const Home = () => {
   const {data}=useSliss(); const td=today();
   const pending=data.followUps.filter(f=>f.status==="pending"&&f.scheduledDate<=td);
@@ -225,14 +290,49 @@ const Home = () => {
   const toReact=data.clients.filter(c=>c.status==="to_reactivate");
   const avgSat=data.feedbacks.length?(data.feedbacks.reduce((a,f)=>a+f.rating,0)/data.feedbacks.length).toFixed(1):"—";
 
+  // Novità per modulo attivo
+  const activeModules = ALL_MODULES.filter(m => m.status === "active");
+
   return <div style={{animation:"fadeIn .4s ease"}}>
     <div style={{marginBottom:"30px"}}><h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",marginBottom:"6px"}}>Buongiorno ☀️</h1><p style={{color:T.textM,fontSize:"14px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</p></div>
     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(170px,1fr))",gap:"14px",marginBottom:"28px"}}>
       <Stat label="Da inviare" value={pending.length} icon="📤" color={pending.length?T.amber:T.green} sub={pending.length?"Azione richiesta":"Tutto liscio ✓"} />
       <Stat label="In attesa risposta" value={awaiting.length} icon="⏳" color={T.blue} sub="Follow-up inviati" />
-      <Stat label="Clienti attivi" value={activeC.length} icon="👥" color={T.green} sub={`${toReact.length} da riattivare`} />
+      <Stat label="Clienti attivi" value={activeC.length} icon="👥" color={T.green} sub={`${toReact.length} da ricontattare`} />
       <Stat label="Soddisfazione" value={avgSat} icon="⭐" color={T.purple} sub={`${data.feedbacks.length} feedback`} />
     </div>
+
+    {/* BRIEF UX #6: blocchi novità per ogni modulo attivo */}
+    {activeModules.map(mod => {
+      const modPending = mod.id === "followup" ? pending : [];
+      const modCount = mod.id === "followup" ? data.followUps.length : 0;
+      return <Card key={mod.id} style={{marginBottom:"20px",borderLeft:`3px solid ${PACKAGES.find(p=>p.modules.some(m=>m.id===mod.id))?.color||T.blue}`}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:"10px"}}>
+            <span style={{fontSize:"20px"}}>{mod.icon}</span>
+            <div>
+              <h3 style={{fontSize:"15px",fontWeight:700}}>{mod.name}</h3>
+              <span style={{fontSize:"12px",color:T.textD}}>{mod.desc}</span>
+            </div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:"6px"}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:T.green,animation:"pulse 2s infinite"}} /><span style={{fontSize:"12px",color:T.green,fontWeight:600}}>Attivo</span></div>
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px"}}>
+          <div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m}}>
+            <div style={{fontSize:"11px",color:T.textD,marginBottom:"4px"}}>Da inviare oggi</div>
+            <div style={{fontSize:"20px",fontWeight:700,color:modPending.length?T.amber:T.green}}>{modPending.length}</div>
+          </div>
+          <div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m}}>
+            <div style={{fontSize:"11px",color:T.textD,marginBottom:"4px"}}>Totale attivi</div>
+            <div style={{fontSize:"20px",fontWeight:700}}>{modCount}</div>
+          </div>
+          <div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m}}>
+            <div style={{fontSize:"11px",color:T.textD,marginBottom:"4px"}}>Feedback</div>
+            <div style={{fontSize:"20px",fontWeight:700,color:T.purple}}>{data.feedbacks.length}</div>
+          </div>
+        </div>
+      </Card>;
+    })}
 
     <Card style={{marginBottom:"20px"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"18px"}}>
@@ -247,7 +347,9 @@ const Home = () => {
             <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"3px"}}><span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"—"}</span><Badge {...ph} s /></div>
             <div style={{fontSize:"12px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{fu.message?.slice(0,80)}...</div>
           </div>
-          <div style={{display:"flex",gap:"6px",flexShrink:0}}><CopyBtn text={fu.message} /></div>
+          <div style={{display:"flex",gap:"6px",flexShrink:0}}>
+            <SendBtn message={fu.message} client={cl} />
+          </div>
         </div>})}
       </div>}
     </Card>
@@ -265,7 +367,7 @@ const Home = () => {
   </div>;
 };
 
-// ── FOLLOW-UP ──────────────────────────────────────────────────────────
+// ── FOLLOW-UP (BRIEF UX #1: SendBtn al posto di CopyBtn) ──────────────
 const FollowUp = () => {
   const {data,update}=useSliss(); const [filter,setFilter]=useState("all"); const [search,setSearch]=useState(""); const [sel,setSel]=useState(null);
   const td=today();
@@ -302,7 +404,10 @@ const FollowUp = () => {
             </div>
             <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"5px",flexShrink:0}}>
               <span style={{fontSize:"12px",color:T.textD}}>{timing}</span>
-              {fu.status==="pending"&&<div style={{display:"flex",gap:"5px"}}><CopyBtn text={fu.message} /><Btn v="success" s="sm" onClick={e=>{e.stopPropagation();markSent(fu)}}>✓ Inviato</Btn></div>}
+              {fu.status==="pending"&&<div style={{display:"flex",gap:"5px"}}>
+                <SendBtn message={fu.message} client={cl} />
+                <Btn v="success" s="sm" onClick={e=>{e.stopPropagation();markSent(fu)}}>✓ Inviato</Btn>
+              </div>}
               {fu.satisfaction&&<span style={{fontSize:"12px"}}>{"⭐".repeat(fu.satisfaction)}</span>}
             </div>
           </div>
@@ -314,7 +419,10 @@ const FollowUp = () => {
         <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}><Badge {...ph} /><Badge {...st} /></div>
         <div><div style={{fontWeight:600,fontSize:"16px"}}>{cl?.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{cl?.phone} · {cl?.channel}</div></div>
         <div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap"}}>{sel.message}</div>
-        <div style={{display:"flex",gap:"8px"}}><CopyBtn text={sel.message} />{sel.status==="pending"&&<Btn v="success" onClick={()=>{markSent(sel);setSel(null)}}>✓ Segna inviato</Btn>}</div>
+        <div style={{display:"flex",gap:"8px"}}>
+          <SendBtn message={sel.message} client={cl} />
+          {sel.status==="pending"&&<Btn v="success" onClick={()=>{markSent(sel);setSel(null)}}>✓ Segna inviato</Btn>}
+        </div>
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",paddingTop:"12px",borderTop:`1px solid ${T.border}`}}>
           <div><span style={{fontSize:"12px",color:T.textD}}>Programmato</span><div style={{fontSize:"13px",marginTop:"2px"}}>{fmtDate(sel.scheduledDate)}</div></div>
           <div><span style={{fontSize:"12px",color:T.textD}}>Inviato</span><div style={{fontSize:"13px",marginTop:"2px"}}>{fmtDate(sel.sentDate)}</div></div>
@@ -330,7 +438,7 @@ const Clients = () => {
   const {data,addRecord,update}=useSliss(); const [search,setSearch]=useState(""); const [sf,setSf]=useState("all"); const [sel,setSel]=useState(null); const [showNew,setShowNew]=useState(false);
   const [form,setForm]=useState({name:"",phone:"",email:"",channel:"WhatsApp",notes:"",sector:"Generico"});
 
-  const tabs=[{id:"all",label:"Tutti",count:data.clients.length},{id:"active",label:"Attivi",count:data.clients.filter(c=>c.status==="active").length},{id:"vip",label:"VIP",count:data.clients.filter(c=>c.status==="vip").length},{id:"to_reactivate",label:"Da riattivare",count:data.clients.filter(c=>c.status==="to_reactivate").length}];
+  const tabs=[{id:"all",label:"Tutti",count:data.clients.length},{id:"active",label:"Fidelizzati",count:data.clients.filter(c=>c.status==="active").length},{id:"vip",label:"VIP",count:data.clients.filter(c=>c.status==="vip").length},{id:"to_reactivate",label:"Da ricontattare",count:data.clients.filter(c=>c.status==="to_reactivate").length}];
   const filtered=data.clients.filter(c=>{const ms=!search||c.name.toLowerCase().includes(search.toLowerCase())||c.email?.toLowerCase().includes(search.toLowerCase()); const mf=sf==="all"||c.status===sf; return ms&&mf;});
 
   const handleAdd=()=>{
@@ -353,7 +461,7 @@ const Clients = () => {
           <span style={{fontSize:"13px",color:T.textM}}>{cl.channel}</span>
           <span style={{fontSize:"13px",color:T.textM}}>{fmtDate(cl.lastVisit)}</span>
           <Badge {...st} s />
-          <div style={{textAlign:"right"}}><span style={{fontSize:"12px",color:T.textD}}>{fuc} FU</span></div>
+          <div style={{textAlign:"right"}}><span style={{fontSize:"12px",color:T.textD}}>{fuc} follow-up</span></div>
         </div>
       </Card>})}
     </div>
@@ -386,23 +494,61 @@ const Clients = () => {
   </div>;
 };
 
-// ── TEMPLATES ──────────────────────────────────────────────────────────
+// ── TEMPLATES (BRIEF UX #5: creazione e eliminazione template) ─────────
 const Templates = () => {
-  const {data}=useSliss(); const [filter,setFilter]=useState("all");
+  const {data,addRecord,deleteRecord}=useSliss(); const [filter,setFilter]=useState("all"); const [showNew,setShowNew]=useState(false); const [confirmDel,setConfirmDel]=useState(null);
+  const [form,setForm]=useState({name:"",phase:"thankyou",sector:"Generico",channel:"WhatsApp",text:""});
   const phases=[{id:"all",label:"Tutte"},{id:"thankyou",label:"Ringraziamento"},{id:"check",label:"Controllo"},{id:"review",label:"Recensione"},{id:"reactivation",label:"Riattivazione"}];
   const filtered=data.templates.filter(t=>filter==="all"||t.phase===filter);
 
+  const handleAdd=()=>{
+    if(!form.name.trim()||!form.text.trim()) return;
+    const code = form.name.substring(0,3).toUpperCase() + "-" + uid().slice(0,3).toUpperCase();
+    addRecord("templates",{id:uid(),name:form.name,code,phase:form.phase,sector:form.sector,channel:form.channel,text:form.text,active:true});
+    setForm({name:"",phase:"thankyou",sector:"Generico",channel:"WhatsApp",text:""});
+    setShowNew(false);
+  };
+
+  const handleDelete=(id)=>{
+    deleteRecord("templates",id);
+    setConfirmDel(null);
+  };
+
   return <div style={{animation:"fadeIn .4s ease"}}>
-    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"22px"}}><h1 style={{fontSize:"22px",fontWeight:700}}>📝 Template</h1></div>
+    <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"22px"}}><h1 style={{fontSize:"22px",fontWeight:700}}>📝 Template</h1><Btn onClick={()=>setShowNew(true)}>+ Nuovo template</Btn></div>
     <div style={{marginBottom:"18px"}}><Tabs tabs={phases.map(p=>({...p,count:p.id==="all"?data.templates.length:data.templates.filter(t=>t.phase===p.id).length}))} active={filter} onChange={setFilter} /></div>
     <div style={{display:"grid",gap:"10px"}}>{filtered.map((tmpl,i)=>{const ph=PHASES[tmpl.phase]; return <Card key={tmpl.id} style={{animation:`fadeIn .3s ease ${i*.04}s both`}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"10px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:"10px"}}><span style={{fontSize:"18px"}}>{ph.icon}</span><div><div style={{fontWeight:600,fontSize:"14px"}}>{tmpl.name}</div><div style={{fontSize:"12px",color:T.textD}}>{tmpl.code} · {tmpl.sector} · {tmpl.channel}</div></div></div>
+        <div style={{display:"flex",alignItems:"center",gap:"10px"}}><span style={{fontSize:"18px"}}>{ph.icon}</span><div><div style={{fontWeight:600,fontSize:"14px"}}>{tmpl.name}</div><div style={{fontSize:"12px",color:T.textD}}>{tmpl.sector} · {tmpl.channel}</div></div></div>
         <div style={{display:"flex",gap:"5px"}}><Badge {...ph} s />{tmpl.active&&<Badge label="Attivo" color={T.green} bg={T.greenS} s />}</div>
       </div>
       <div style={{padding:"12px 14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"13px",lineHeight:1.7,color:T.textM,whiteSpace:"pre-wrap"}}>{tmpl.text}</div>
-      <div style={{display:"flex",justifyContent:"flex-end",marginTop:"10px"}}><CopyBtn text={tmpl.text} /></div>
+      <div style={{display:"flex",justifyContent:"space-between",marginTop:"10px"}}>
+        <Btn v="danger" s="sm" onClick={()=>setConfirmDel(tmpl.id)}>🗑️ Elimina</Btn>
+        <SendBtn message={tmpl.text} client={null} />
+      </div>
     </Card>})}</div>
+
+    {/* New Template Modal */}
+    <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nuovo template">
+      <FormField label="Nome template"><input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} placeholder="Es. Ringraziamento personalizzato" /></FormField>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:"14px"}}>
+        <FormField label="Fase"><select value={form.phase} onChange={e=>setForm(p=>({...p,phase:e.target.value}))}><option value="thankyou">Ringraziamento</option><option value="check">Controllo</option><option value="review">Recensione</option><option value="reactivation">Riattivazione</option></select></FormField>
+        <FormField label="Settore"><select value={form.sector} onChange={e=>setForm(p=>({...p,sector:e.target.value}))}><option>Generico</option><option>Tatuaggi</option><option>Barber</option><option>Estetica</option><option>Officina</option></select></FormField>
+        <FormField label="Canale"><select value={form.channel} onChange={e=>setForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>Email</option><option>SMS</option></select></FormField>
+      </div>
+      <FormField label="Testo del messaggio"><textarea value={form.text} onChange={e=>setForm(p=>({...p,text:e.target.value}))} placeholder="Ciao [Nome]! ..." style={{minHeight:"120px"}} /></FormField>
+      <div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,marginBottom:"16px"}}>
+        <div style={{fontSize:"11px",color:T.textD,marginBottom:"4px"}}>💡 Usa [Nome] per inserire il nome del cliente automaticamente</div>
+      </div>
+      <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowNew(false)}>Annulla</Btn><Btn onClick={handleAdd} disabled={!form.name.trim()||!form.text.trim()}>Salva template</Btn></div>
+    </Modal>
+
+    {/* Delete Confirmation Modal */}
+    <Modal open={!!confirmDel} onClose={()=>setConfirmDel(null)} title="Conferma eliminazione" w="400px">
+      <p style={{fontSize:"14px",color:T.textM,lineHeight:1.6,marginBottom:"20px"}}>Sei sicuro di voler eliminare questo template? L'azione non è reversibile.</p>
+      <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setConfirmDel(null)}>Annulla</Btn><Btn v="danger" onClick={()=>handleDelete(confirmDel)}>🗑️ Elimina</Btn></div>
+    </Modal>
   </div>;
 };
 
@@ -422,6 +568,7 @@ const Feedback = () => {
 
   return <div style={{animation:"fadeIn .4s ease"}}>
     <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"22px"}}><h1 style={{fontSize:"22px",fontWeight:700}}>⭐ Feedback</h1><Btn onClick={()=>setShowNew(true)}>+ Nuovo feedback</Btn></div>
+    <div style={{padding:"12px 16px",background:T.amberS,border:`1px solid ${T.amber}33`,borderRadius:T.r.m,marginBottom:"20px",fontSize:"13px",color:T.amber}}>⚠️ Questa sezione è in fase di ridefinizione. Il suo ruolo finale verrà deciso in CORE.</div>
     <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(170px,1fr))",gap:"14px",marginBottom:"28px"}}>
       <Stat label="Media voto" value={avgR} icon="⭐" color={T.purple} sub="su 5 stelle" />
       <Stat label="Totali" value={data.feedbacks.length} icon="📊" color={T.blue} />
@@ -445,21 +592,47 @@ const Feedback = () => {
   </div>;
 };
 
-// ── MODULES MAP ────────────────────────────────────────────────────────
+// ── MODULES MAP (BRIEF UX #7: vista per pacchetti Starter/Pro/Full) ────
 const ModulesMap = () => {
-  const stL={active:"Attivo",planned:"Pianificato",future:"Futuro"};
+  const stL={active:"Attivo",planned:"In arrivo",future:"Futuro"};
   const stS={active:{color:T.green,bg:T.greenS},planned:{color:T.amber,bg:T.amberS},future:{color:T.textD,bg:"rgba(90,111,148,0.1)"}};
+
   return <div style={{animation:"fadeIn .4s ease"}}>
-    <div style={{marginBottom:"28px"}}><h1 style={{fontSize:"22px",fontWeight:700,marginBottom:"6px"}}>🧩 Ecosistema Sliss</h1><p style={{color:T.textM,fontSize:"14px",lineHeight:1.6}}>Ogni modulo risolve un problema specifico. Attivali uno alla volta.</p></div>
-    <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:"14px"}}>{MODULES.map((mod,i)=>{const ss=stS[mod.status]; return <Card key={mod.id} hov style={{animation:`fadeIn .3s ease ${i*.04}s both`,borderColor:mod.status==="active"?`${mod.color}40`:T.border}}>
-      <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"12px"}}>
-        <div style={{width:"42px",height:"42px",borderRadius:T.r.m,background:`${mod.color}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"20px"}}>{mod.icon}</div>
-        <Badge label={stL[mod.status]} {...ss} s />
-      </div>
-      <div style={{fontWeight:700,fontSize:"15px",marginBottom:"4px"}}>{mod.name}</div>
-      <div style={{fontSize:"13px",color:T.textM,lineHeight:1.6}}>{mod.desc}</div>
-      {mod.status==="active"&&<div style={{marginTop:"12px",paddingTop:"12px",borderTop:`1px solid ${T.border}`,display:"flex",alignItems:"center",gap:"6px"}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:T.green,animation:"pulse 2s infinite"}} /><span style={{fontSize:"12px",color:T.green,fontWeight:600}}>Modulo attivo</span></div>}
-    </Card>})}</div>
+    <div style={{marginBottom:"28px"}}><h1 style={{fontSize:"22px",fontWeight:700,marginBottom:"6px"}}>🧩 Ecosistema Sliss</h1><p style={{color:T.textM,fontSize:"14px",lineHeight:1.6}}>I moduli sono organizzati in 3 pacchetti. Attivali uno alla volta.</p></div>
+
+    <div style={{display:"flex",flexDirection:"column",gap:"24px"}}>
+      {PACKAGES.map((pkg,pi) => <div key={pkg.name} style={{animation:`fadeIn .3s ease ${pi*.1}s both`}}>
+        {/* Package Header */}
+        <div style={{display:"flex",alignItems:"center",gap:"12px",marginBottom:"14px"}}>
+          <div style={{padding:"6px 16px",borderRadius:T.r.full,background:`${pkg.color}20`,border:`1px solid ${pkg.color}40`}}>
+            <span style={{fontSize:"14px",fontWeight:700,color:pkg.color}}>{pkg.name}</span>
+          </div>
+          <span style={{fontSize:"13px",color:T.textD}}>{pkg.desc}</span>
+          {pkg.name === "Starter" && <Badge label="Pacchetto attivo" color={T.green} bg={T.greenS} s />}
+        </div>
+
+        {/* Package Modules */}
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))",gap:"12px",paddingLeft:"8px",borderLeft:`2px solid ${pkg.color}30`}}>
+          {pkg.modules.map((mod,i) => {
+            const ss=stS[mod.status];
+            return <Card key={mod.id} hov style={{animation:`fadeIn .3s ease ${(pi*.1+i*.05)}s both`,borderColor:mod.status==="active"?`${pkg.color}40`:T.border}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"12px"}}>
+                <div style={{width:"42px",height:"42px",borderRadius:T.r.m,background:`${pkg.color}18`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"20px"}}>{mod.icon}</div>
+                <Badge label={stL[mod.status]} {...ss} s />
+              </div>
+              <div style={{fontWeight:700,fontSize:"15px",marginBottom:"4px"}}>{mod.name}</div>
+              <div style={{fontSize:"13px",color:T.textM,lineHeight:1.6}}>{mod.desc}</div>
+              {mod.status==="active"&&<div style={{marginTop:"12px",paddingTop:"12px",borderTop:`1px solid ${T.border}`,display:"flex",alignItems:"center",gap:"6px"}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:T.green,animation:"pulse 2s infinite"}} /><span style={{fontSize:"12px",color:T.green,fontWeight:600}}>Modulo attivo</span></div>}
+            </Card>;
+          })}
+        </div>
+      </div>)}
+    </div>
+
+    {/* Nota commerciale */}
+    <div style={{marginTop:"28px",padding:"14px 18px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`}}>
+      <div style={{fontSize:"13px",color:T.textD,lineHeight:1.6}}>💡 I pacchetti e i moduli sono in fase di sviluppo. Il pricing verrà definito dopo la validazione con i primi casi studio.</div>
+    </div>
   </div>;
 };
 
