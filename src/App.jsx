@@ -243,13 +243,14 @@ const SendButtons = ({message, clientPhone}) => {
 // ── Sidebar ────────────────────────────────────────────────────────────────
 const Sidebar = ({view,setView}) => {
   const nav = [
-    {id:"home",    icon:"🏠", label:"Home"},
-    {id:"followup",icon:"💬", label:"Follow-Up"},
-    {id:"clients", icon:"👥", label:"Clienti"},
-    {id:"templates",icon:"📝",label:"Template"},
-    {id:"feedback",icon:"⭐", label:"Feedback"},
-    {id:"modules", icon:"🧩", label:"Moduli"},
-    {id:"settings",icon:"⚙️", label:"Impostazioni"},
+    {id:"home",         icon:"🏠", label:"Home"},
+    {id:"appointments", icon:"📅", label:"Appuntamenti"},
+    {id:"followup",     icon:"💬", label:"Follow-Up"},
+    {id:"clients",      icon:"👥", label:"Clienti"},
+    {id:"templates",    icon:"📝", label:"Template"},
+    {id:"feedback",     icon:"⭐", label:"Feedback"},
+    {id:"modules",      icon:"🧩", label:"Moduli"},
+    {id:"settings",     icon:"⚙️", label:"Impostazioni"},
   ];
   return (
     <div style={{width:"200px",minHeight:"100vh",background:T.bg,borderRight:`1px solid ${T.border}`,display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,zIndex:100}}>
@@ -953,6 +954,204 @@ const Settings = () => {
   );
 };
 
+// ── APPUNTAMENTI ───────────────────────────────────────────────────────────
+const addDays = (dateStr, days) => {
+  const d = new Date(dateStr);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().split("T")[0];
+};
+
+const buildFollowUps = (appointmentId, clientId, clientName, appointmentDate, serviceType, timings, templates) => {
+  const phases = ["thankyou","check","review","reactivation"];
+  const timingMap = { thankyou: timings.thankyou||0, check: timings.check||7, review: timings.review||21, reactivation: timings.reactivation||60 };
+
+  // Scegli template di default per fase
+  const defaultMsg = {
+    thankyou: serviceType==="Ritocco"
+      ? `Ciao ${clientName}! Grazie per il ritocco di oggi 🙏 Spero che il risultato ti piaccia. Scrivimi per qualsiasi cosa.`
+      : `Ciao ${clientName}! Grazie per oggi 🖤 È stato un piacere. Ricordati pellicola e sapone neutro per i primi giorni. Scrivimi se hai dubbi.`,
+    check: `Ciao ${clientName}! Come sta andando la cicatrizzazione? È normale che desquami un po'. Se hai dubbi mandami una foto 🙏`,
+    review: `Ciao ${clientName}! Sono passate un po' di settimane — spero che il tatuaggio stia guarendo bene ✨ Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo.`,
+    reactivation: `Ciao ${clientName}! Pensavo a te — come stai? Se hai in mente qualcosa di nuovo, sono qui 🖤 Buona giornata!`,
+  };
+
+  return phases.map(phase => ({
+    id: uid(),
+    appointmentId,
+    clientId,
+    phase,
+    status: "pending",
+    scheduledDate: addDays(appointmentDate, timingMap[phase]),
+    sentDate: null,
+    satisfaction: null,
+    message: defaultMsg[phase],
+  }));
+};
+
+const Appointments = () => {
+  const {data, addRecord, deleteRecord} = useSliss();
+  const [showNew, setShowNew] = useState(false);
+  const [form, setForm] = useState({ clientId:"", date: today(), serviceType:"Sessione", notes:"" });
+  const [done, setDone] = useState(false);
+
+  const SERVICE_TYPES = ["Sessione","Ritocco","Prima consulenza","Sessione lunga","Consulenza gratuita"];
+
+  const sorted = [...data.appointments].sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  const handleAdd = () => {
+    if(!form.clientId || !form.date) return;
+    const client = data.clients.find(c=>c.id===form.clientId);
+    if(!client) return;
+
+    const apptId = uid();
+    const timings = data.settings?.followUpTimings || {thankyou:0,check:7,review:21,reactivation:60};
+
+    // Crea appuntamento
+    addRecord("appointments", {
+      id: apptId,
+      clientId: form.clientId,
+      date: form.date,
+      serviceType: form.serviceType,
+      notes: form.notes,
+      followUpTriggered: true,
+      created: today(),
+    });
+
+    // Genera follow-up automaticamente
+    const fus = buildFollowUps(apptId, form.clientId, client.name, form.date, form.serviceType, timings, data.templates);
+    fus.forEach(fu => addRecord("followUps", fu));
+
+    // Aggiorna lastVisit del cliente
+    addRecord; // già nel context
+
+    setDone(true);
+    setTimeout(() => {
+      setDone(false);
+      setShowNew(false);
+      setForm({clientId:"", date:today(), serviceType:"Sessione", notes:""});
+    }, 1800);
+  };
+
+  const handleDelete = (appt) => {
+    if(!window.confirm(`Eliminare l'appuntamento di ${data.clients.find(c=>c.id===appt.clientId)?.name||"questo cliente"}? Anche i follow-up collegati verranno rimossi.`)) return;
+    deleteRecord("appointments", appt.id);
+    // Rimuovi follow-up collegati
+    data.followUps.filter(f=>f.appointmentId===appt.id).forEach(f=>deleteRecord("followUps",f.id));
+  };
+
+  return (
+    <div style={{animation:"fadeIn .35s ease"}}>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"22px"}}>
+        <div>
+          <h1 style={{fontSize:"22px",fontWeight:700}}>Appuntamenti</h1>
+          <p style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>Aggiungi un appuntamento → i 4 follow-up si generano automaticamente</p>
+        </div>
+        <Btn onClick={()=>setShowNew(true)}>+ Nuovo appuntamento</Btn>
+      </div>
+
+      {!sorted.length
+        ? <Empty icon="📅" title="Nessun appuntamento" desc="Aggiungi il primo appuntamento per generare i follow-up automaticamente." />
+        : <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
+            <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 80px",padding:"7px 16px",fontSize:"11px",fontWeight:600,color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>
+              <span>Cliente</span><span>Data</span><span>Servizio</span><span></span>
+            </div>
+            {sorted.map((appt,i) => {
+              const cl = data.clients.find(c=>c.id===appt.clientId);
+              const fus = data.followUps.filter(f=>f.appointmentId===appt.id);
+              const pendingCount = fus.filter(f=>f.status==="pending").length;
+              const doneCount = fus.filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed").length;
+              return (
+                <Card key={appt.id} style={{padding:"12px 16px",animation:`fadeIn .3s ease ${i*.03}s both`}}>
+                  <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 80px",alignItems:"center"}}>
+                    <div>
+                      <div style={{fontWeight:600,fontSize:"13px"}}>{cl?.name||"—"}</div>
+                      <div style={{fontSize:"11px",color:T.textD,marginTop:"2px",display:"flex",gap:"8px"}}>
+                        <span>{pendingCount} in attesa</span>
+                        <span>·</span>
+                        <span>{doneCount} inviati</span>
+                      </div>
+                    </div>
+                    <span style={{fontSize:"13px",color:T.textM}}>{fmtDate(appt.date)}</span>
+                    <span style={{fontSize:"13px",color:T.textM}}>{appt.serviceType}</span>
+                    <div style={{display:"flex",justifyContent:"flex-end"}}>
+                      <Btn v="danger" s="sm" onClick={()=>handleDelete(appt)}>🗑️</Btn>
+                    </div>
+                  </div>
+                  {/* Mini-timeline follow-up */}
+                  {fus.length>0&&(
+                    <div style={{display:"flex",gap:"6px",marginTop:"10px",paddingTop:"10px",borderTop:`1px solid ${T.border}`}}>
+                      {["thankyou","check","review","reactivation"].map(phase=>{
+                        const fu=fus.find(f=>f.phase===phase);
+                        const ph=PHASES[phase];
+                        const col=!fu?"rgba(90,111,148,0.15)":fu.status==="pending"?T.amberS:fu.status==="sent"||fu.status==="replied"?T.greenS:T.blueS;
+                        const textCol=!fu?T.textMu:fu.status==="pending"?T.amber:fu.status==="sent"||fu.status==="replied"?T.green:T.blue;
+                        return (
+                          <div key={phase} style={{flex:1,padding:"5px 8px",background:col,borderRadius:T.r.s,textAlign:"center"}}>
+                            <div style={{fontSize:"14px"}}>{ph.icon}</div>
+                            <div style={{fontSize:"10px",color:textCol,fontWeight:600,marginTop:"2px"}}>{fu?daysUntil(fu.scheduledDate):"—"}</div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </Card>
+              );
+            })}
+          </div>
+      }
+
+      <Modal open={showNew} onClose={()=>{setShowNew(false);setDone(false);}} title="Nuovo appuntamento" w="480px">
+        {done
+          ? <div style={{textAlign:"center",padding:"20px 0"}}>
+              <div style={{fontSize:"36px",marginBottom:"12px"}}>✅</div>
+              <div style={{fontWeight:700,fontSize:"16px",marginBottom:"6px"}}>Appuntamento salvato</div>
+              <div style={{fontSize:"13px",color:T.textD}}>4 follow-up generati automaticamente</div>
+            </div>
+          : <>
+              <FormField label="Cliente">
+                <select value={form.clientId} onChange={e=>setForm(p=>({...p,clientId:e.target.value}))}>
+                  <option value="">Seleziona cliente...</option>
+                  {data.clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </FormField>
+              <FormField label="Data appuntamento" hint="I follow-up si calcolano a partire da questa data">
+                <input type="date" value={form.date} onChange={e=>setForm(p=>({...p,date:e.target.value}))} />
+              </FormField>
+              <FormField label="Tipo servizio">
+                <select value={form.serviceType} onChange={e=>setForm(p=>({...p,serviceType:e.target.value}))}>
+                  {SERVICE_TYPES.map(s=><option key={s}>{s}</option>)}
+                </select>
+              </FormField>
+              <FormField label="Note (opzionale)">
+                <textarea value={form.notes} onChange={e=>setForm(p=>({...p,notes:e.target.value}))} placeholder="Zona del tatuaggio, dettagli utili..." style={{minHeight:"60px"}} />
+              </FormField>
+              {form.clientId&&form.date&&(
+                <div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,marginBottom:"16px",fontSize:"12px",color:T.textD}}>
+                  <div style={{fontWeight:600,color:T.textM,marginBottom:"5px"}}>Follow-up che verranno generati:</div>
+                  {[
+                    {label:"🙏 Ringraziamento", days: data.settings?.followUpTimings?.thankyou||0},
+                    {label:"🔍 Controllo",       days: data.settings?.followUpTimings?.check||7},
+                    {label:"⭐ Recensione",       days: data.settings?.followUpTimings?.review||21},
+                    {label:"💬 Riattivazione",    days: data.settings?.followUpTimings?.reactivation||60},
+                  ].map(({label,days})=>(
+                    <div key={label} style={{display:"flex",justifyContent:"space-between",padding:"3px 0"}}>
+                      <span>{label}</span>
+                      <span style={{color:T.blue}}>{fmtDate(addDays(form.date,days))}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}>
+                <Btn v="secondary" onClick={()=>setShowNew(false)}>Annulla</Btn>
+                <Btn onClick={handleAdd} disabled={!form.clientId||!form.date}>Salva e genera follow-up</Btn>
+              </div>
+            </>
+        }
+      </Modal>
+    </div>
+  );
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MAIN APP
 // ═══════════════════════════════════════════════════════════════════════════
@@ -988,7 +1187,7 @@ export default function SlissPlatform() {
   );
 
   const ctx={data,update,addRecord,deleteRecord,updateSettings,resetData};
-  const views={home:Home,followup:FollowUp,clients:Clients,templates:Templates,feedback:Feedback,modules:ModulesMap,settings:Settings};
+  const views={home:Home,appointments:Appointments,followup:FollowUp,clients:Clients,templates:Templates,feedback:Feedback,modules:ModulesMap,settings:Settings};
   const V=views[view]||Home;
 
   return (
