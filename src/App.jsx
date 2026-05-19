@@ -408,15 +408,34 @@ const FollowUp = () => {
 
   const markSent=(fu)=>{ update("followUps",fu.id,{status:"sent",sentDate:today()}); if(sel?.id===fu.id) setSel({...fu,status:"sent",sentDate:today()}); };
 
+  const pendingToday = data.followUps.filter(f=>f.status==="pending"&&f.scheduledDate<=td);
+  const markAllSent = () => {
+    if(!pendingToday.length) return;
+    if(!window.confirm(`Segna tutti i ${pendingToday.length} follow-up di oggi come inviati?`)) return;
+    pendingToday.forEach(fu => update("followUps", fu.id, {status:"sent", sentDate:today()}));
+  };
+
+  const allDoneToday = filter==="today" && pendingToday.length===0 && data.followUps.filter(f=>f.status==="sent"&&f.sentDate===td).length>0;
+
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
-      <h1 style={{fontSize:"22px",fontWeight:700,marginBottom:"22px"}}>Follow-Up</h1>
+      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"22px"}}>
+        <h1 style={{fontSize:"22px",fontWeight:700}}>Follow-Up</h1>
+        {pendingToday.length>0&&<Btn v="success" s="sm" onClick={markAllSent}>✓ Segna tutti inviati ({pendingToday.length})</Btn>}
+      </div>
       <div style={{display:"flex",gap:"12px",marginBottom:"18px",flexWrap:"wrap"}}>
         <Tabs tabs={tabs} active={filter} onChange={setFilter} />
         <div style={{flex:1,minWidth:"180px"}}><Search value={search} onChange={setSearch} placeholder="Cerca cliente..." /></div>
       </div>
 
-      {!filtered.length
+      {allDoneToday
+        ? <div style={{textAlign:"center",padding:"60px 20px",animation:"fadeIn .4s ease"}}>
+            <div style={{fontSize:"52px",marginBottom:"16px"}}>🎉</div>
+            <div style={{fontSize:"18px",fontWeight:700,marginBottom:"8px"}}>Ottimo lavoro!</div>
+            <div style={{fontSize:"14px",color:T.textM,marginBottom:"6px"}}>Tutti i follow-up di oggi sono stati inviati.</div>
+            <div style={{fontSize:"13px",color:T.textD}}>I tuoi clienti si sentiranno seguiti. A domani.</div>
+          </div>
+        : !filtered.length
         ? <Empty icon="📭" title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
         : <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
             {filtered.map((fu,i)=>{
@@ -547,6 +566,8 @@ const Clients = () => {
         </div>
         {filtered.map((cl,i)=>{
           const st=CLIENT_ST[cl.status];
+          const statusOrder=["new","active","vip","to_reactivate","inactive"];
+          const nextStatus=(cur)=>{const idx=statusOrder.indexOf(cur); return statusOrder[(idx+1)%statusOrder.length];};
           return (
             <Card key={cl.id} hov onClick={()=>openClient(cl)} style={{padding:"11px 16px",animation:`fadeIn .3s ease ${i*.03}s both`}}>
               <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr 1fr",alignItems:"center"}}>
@@ -556,7 +577,9 @@ const Clients = () => {
                 </div>
                 <span style={{fontSize:"12px",color:T.textM}}>{cl.channel}</span>
                 <span style={{fontSize:"12px",color:T.textM}}>{fmtDate(cl.lastVisit)}</span>
-                <Badge {...st} s />
+                <div onClick={e=>{e.stopPropagation(); update("clients",cl.id,{status:nextStatus(cl.status)});}} title="Clicca per cambiare stato" style={{cursor:"pointer"}}>
+                  <Badge {...st} s />
+                </div>
               </div>
             </Card>
           );
@@ -919,12 +942,25 @@ const Settings = () => {
 
       <Card style={{maxWidth:"540px",marginBottom:"14px"}}>
         <h3 style={{fontSize:"14px",fontWeight:700,marginBottom:"4px"}}>Timing follow-up</h3>
-        <p style={{fontSize:"12px",color:T.textD,marginBottom:"16px"}}>Giorni dopo l'appuntamento prima di inviare ogni fase.</p>
+        <p style={{fontSize:"12px",color:T.textD,marginBottom:"16px"}}>Quando inviare ogni fase dopo l'appuntamento.</p>
+        {/* Ringraziamento — in ore */}
+        <div style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"12px"}}>
+          <div style={{flex:1}}>
+            <div style={{fontSize:"13px",fontWeight:500}}>Ringraziamento</div>
+            <div style={{fontSize:"11px",color:T.textMu}}>Ore dopo la fine dell'appuntamento</div>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:"6px"}}>
+            <input type="number" min="0" max="48" value={timings.thankyouHours||2}
+              onChange={e=>setTimings(p=>({...p,thankyouHours:parseInt(e.target.value)||0}))}
+              style={{width:"65px",textAlign:"center",padding:"7px 10px"}} />
+            <span style={{fontSize:"12px",color:T.textD}}>ore</span>
+          </div>
+        </div>
+        {/* Controllo, Recensione, Riattivazione — in giorni */}
         {[
-          {key:"thankyou",    label:"Ringraziamento", note:"Di solito giorno stesso"},
-          {key:"check",       label:"Controllo",       note:"Di solito 7 giorni"},
-          {key:"review",      label:"Recensione",      note:"Di solito 21 giorni"},
-          {key:"reactivation",label:"Riattivazione",   note:"Di solito 60 giorni"},
+          {key:"check",       label:"Controllo",    note:"Di solito 7 giorni"},
+          {key:"review",      label:"Recensione",   note:"Di solito 21 giorni"},
+          {key:"reactivation",label:"Riattivazione",note:"Di solito 60 giorni"},
         ].map(({key,label,note})=>(
           <div key={key} style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"12px"}}>
             <div style={{flex:1}}>
@@ -1070,6 +1106,7 @@ const Appointments = () => {
                         <span>·</span>
                         <span>{doneCount} inviati</span>
                       </div>
+                      {appt.notes&&<div style={{fontSize:"11px",color:T.textMu,marginTop:"3px"}}>📝 {appt.notes}</div>}
                     </div>
                     <span style={{fontSize:"13px",color:T.textM}}>{fmtDate(appt.date)}</span>
                     <span style={{fontSize:"13px",color:T.textM}}>{appt.serviceType}</span>
@@ -1202,3 +1239,4 @@ export default function SlissPlatform() {
     </Ctx.Provider>
   );
 }
+
