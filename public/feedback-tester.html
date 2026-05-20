@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sliss · Feedback Tester</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #070B12;
+    --bg2: #0C1219;
+    --bg3: #111820;
+    --border: #1A2535;
+    --blue: #3B7BF6;
+    --blue-s: rgba(59,123,246,0.12);
+    --green: #0FBE7A;
+    --green-s: rgba(15,190,122,0.12);
+    --amber: #E8A830;
+    --amber-s: rgba(232,168,48,0.12);
+    --text: #E8EDF5;
+    --text-m: #8B9DC3;
+    --text-d: #4A5E80;
+    --r: 14px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 80px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Header */
+  .header {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo {
+    width: 34px; height: 34px;
+    background: var(--blue);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; color: #fff;
+    flex-shrink: 0;
+  }
+  .header-text h1 { font-size: 16px; font-weight: 700; }
+  .header-text p { font-size: 12px; color: var(--text-d); margin-top: 1px; }
+
+  /* Progress */
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    position: sticky;
+    top: 73px;
+    z-index: 9;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--blue);
+    transition: width .4s ease;
+    border-radius: 2px;
+  }
+
+  /* Main */
+  .container { padding: 0 20px; max-width: 540px; margin: 0 auto; }
+
+  /* Intro */
+  .intro {
+    padding: 28px 0 24px;
+    animation: fadeIn .4s ease;
+  }
+  .intro p { font-size: 14px; color: var(--text-m); line-height: 1.7; margin-bottom: 10px; }
+  .intro p strong { color: var(--text); font-weight: 600; }
+  .time-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px;
+    background: var(--amber-s);
+    border: 1px solid rgba(232,168,48,0.2);
+    border-radius: 99px;
+    font-size: 12px; font-weight: 500; color: var(--amber);
+    margin-top: 6px;
+  }
+
+  /* Steps */
+  .step { display: none; animation: fadeIn .35s ease; padding: 24px 0 16px; }
+  .step.active { display: block; }
+
+  .step-label {
+    font-size: 11px; font-weight: 600; color: var(--text-d);
+    text-transform: uppercase; letter-spacing: .08em;
+    margin-bottom: 8px;
+  }
+  .step-title {
+    font-size: 20px; font-weight: 700; line-height: 1.3;
+    margin-bottom: 8px; letter-spacing: -.01em;
+  }
+  .step-sub {
+    font-size: 13px; color: var(--text-m); line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  /* Cards risposta */
+  .options { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .option {
+    padding: 14px 16px;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: all .15s;
+    display: flex; align-items: center; gap: 12px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .option:active { transform: scale(.98); }
+  .option.selected {
+    border-color: var(--blue);
+    background: var(--blue-s);
+  }
+  .option-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+    background: var(--bg3);
+  }
+  .option.selected .option-icon { background: rgba(59,123,246,0.15); }
+  .option-label { font-size: 14px; font-weight: 500; line-height: 1.3; }
+  .option-sub { font-size: 12px; color: var(--text-d); margin-top: 2px; }
+  .option.selected .option-label { color: var(--blue); }
+
+  /* Scala numerica */
+  .scale { display: flex; gap: 8px; margin-bottom: 20px; }
+  .scale-btn {
+    flex: 1; aspect-ratio: 1;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 15px; font-weight: 600;
+    color: var(--text-d);
+    cursor: pointer;
+    transition: all .15s;
+    display: flex; align-items: center; justify-content: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .scale-btn:active { transform: scale(.95); }
+  .scale-btn.selected {
+    border-color: var(--blue);
+    background: var(--blue-s);
+    color: var(--blue);
+  }
+  .scale-labels {
+    display: flex; justify-content: space-between;
+    font-size: 11px; color: var(--text-d);
+    margin-top: -10px; margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  /* Textarea */
+  .text-input {
+    width: 100%;
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    padding: 14px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px; color: var(--text);
+    resize: none; min-height: 110px;
+    outline: none; transition: border-color .2s;
+    line-height: 1.6;
+  }
+  .text-input:focus { border-color: var(--blue); }
+  .text-input::placeholder { color: var(--text-d); }
+
+  /* Hint */
+  .hint {
+    padding: 10px 14px;
+    background: var(--bg3);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 8px 8px 0;
+    font-size: 12px; color: var(--text-m);
+    line-height: 1.6; margin-bottom: 20px;
+  }
+
+  /* Nav */
+  .nav {
+    display: flex; gap: 10px;
+    margin-top: 8px;
+  }
+  .btn-next {
+    flex: 1; padding: 14px;
+    background: var(--blue);
+    color: #fff; border: none;
+    border-radius: var(--r);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all .15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn-next:active { transform: scale(.98); background: #2B66E0; }
+  .btn-next:disabled { opacity: .4; cursor: not-allowed; }
+  .btn-back {
+    padding: 14px 18px;
+    background: transparent;
+    color: var(--text-d); border: 1.5px solid var(--border);
+    border-radius: var(--r);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 500;
+    cursor: pointer; transition: all .15s;
+  }
+  .btn-back:active { background: var(--bg3); }
+
+  /* Completato */
+  .done {
+    display: none;
+    text-align: center;
+    padding: 60px 0 40px;
+    animation: fadeIn .5s ease;
+  }
+  .done.active { display: block; }
+  .done-icon { font-size: 56px; margin-bottom: 20px; }
+  .done h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+  .done p { font-size: 14px; color: var(--text-m); line-height: 1.7; max-width: 320px; margin: 0 auto 24px; }
+  .done-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 16px 20px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  .done-card-label { font-size: 11px; color: var(--text-d); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .done-card-value { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">S</div>
+  <div class="header-text">
+    <h1>Sliss · Feedback</h1>
+    <p>Sessione di test — Momo Ink</p>
+  </div>
+</div>
+
+<div class="progress-bar">
+  <div class="progress-fill" id="progress" style="width:0%"></div>
+</div>
+
+<div class="container">
+
+  <!-- Intro -->
+  <div class="intro" id="intro">
+    <p>Ciao! Questo modulo mi serve per capire <strong>cosa funziona davvero</strong> e cosa no nell'usare Sliss ogni giorno.</p>
+    <p>Non ci sono risposte giuste o sbagliate. L'unica cosa utile è la verità — anche se fa un po' male.</p>
+    <p>Ci vogliono circa 5 minuti.</p>
+    <div class="time-badge">⏱ 5 minuti · 6 domande</div>
+    <div class="nav" style="margin-top: 24px;">
+      <button class="btn-next" onclick="startForm()">Inizia →</button>
+    </div>
+  </div>
+
+  <!-- Step 1: Uso reale -->
+  <div class="step" id="step-1">
+    <div class="step-label">Domanda 1 di 6</div>
+    <div class="step-title">Quanto hai usato Sliss questa settimana?</div>
+    <div class="step-sub">Parliamo di uso reale — non di "l'ho aperto per vedere com'era".</div>
+    <div class="options">
+      <div class="option" onclick="select(this,'uso','non-usato')">
+        <div class="option-icon">😬</div>
+        <div><div class="option-label">Non l'ho usato</div><div class="option-sub">Non ho avuto modo o non mi è venuto in mente</div></div>
+      </div>
+      <div class="option" onclick="select(this,'uso','1-2-volte')">
+        <div class="option-icon">🙂</div>
+        <div><div class="option-label">1-2 volte</div><div class="option-sub">L'ho aperto ma non in modo regolare</div></div>
+      </div>
+      <div class="option" onclick="select(this,'uso','quasi-ogni-giorno')">
+        <div class="option-icon">👍</div>
+        <div><div class="option-label">Quasi ogni giorno</div><div class="option-sub">Con qualche giorno saltato</div></div>
+      </div>
+      <div class="option" onclick="select(this,'uso','ogni-giorno')">
+        <div class="option-icon">🔥</div>
+        <div><div class="option-label">Ogni giorno</div><div class="option-sub">È diventato parte della routine</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-next" id="btn-1" onclick="nextStep(2)" disabled>Avanti →</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Cosa ha funzionato -->
+  <div class="step" id="step-2">
+    <div class="step-label">Domanda 2 di 6</div>
+    <div class="step-title">Quale parte di Sliss ti ha dato più valore?</div>
+    <div class="step-sub">Anche solo una cosa. Quella che pensi "ok, questo mi ha aiutato davvero".</div>
+    <div class="options">
+      <div class="option" onclick="select(this,'valore','ringraziamento')">
+        <div class="option-icon">🙏</div>
+        <div><div class="option-label">Il messaggio di ringraziamento</div><div class="option-sub">Mi ha fatto sembrare più professionale / attenta</div></div>
+      </div>
+      <div class="option" onclick="select(this,'valore','controllo')">
+        <div class="option-icon">🔍</div>
+        <div><div class="option-label">Il controllo a 7 giorni</div><div class="option-sub">Utile per seguire come sta guarendo il lavoro</div></div>
+      </div>
+      <div class="option" onclick="select(this,'valore','recensione')">
+        <div class="option-icon">⭐</div>
+        <div><div class="option-label">La richiesta di recensione</div><div class="option-sub">Finalmente un modo semplice per chiederla</div></div>
+      </div>
+      <div class="option" onclick="select(this,'valore','niente')">
+        <div class="option-icon">🤷</div>
+        <div><div class="option-label">Niente finora</div><div class="option-sub">Non ho ancora trovato qualcosa che mi ha colpito</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(1)">← Indietro</button>
+      <button class="btn-next" id="btn-2" onclick="nextStep(3)" disabled>Avanti →</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Il ringraziamento -->
+  <div class="step" id="step-3">
+    <div class="step-label">Domanda 3 di 6</div>
+    <div class="step-title">Il messaggio di ringraziamento — quando ha senso mandarlo?</div>
+    <div class="step-sub">Hai accennato che deve essere vicino alla fine della sessione. Aiutami a capire meglio.</div>
+    <div class="hint">💡 Non c'è risposta giusta. Voglio capire come lo vivi tu come professionista.</div>
+    <div class="options">
+      <div class="option" onclick="select(this,'timing-ringraziamento','subito')">
+        <div class="option-icon">⚡</div>
+        <div><div class="option-label">Subito — entro 1 ora</div><div class="option-sub">Il cliente è ancora in stato emotivo alto, massima efficacia</div></div>
+      </div>
+      <div class="option" onclick="select(this,'timing-ringraziamento','stessa-sera')">
+        <div class="option-icon">🌙</div>
+        <div><div class="option-label">La stessa sera</div><div class="option-sub">Quando arrivo a casa e ho un momento tranquillo</div></div>
+      </div>
+      <div class="option" onclick="select(this,'timing-ringraziamento','giorno-dopo')">
+        <div class="option-icon">☀️</div>
+        <div><div class="option-label">Il giorno dopo</div><div class="option-sub">Dopo una notte, il cliente ha già avuto modo di vederlo</div></div>
+      </div>
+      <div class="option" onclick="select(this,'timing-ringraziamento','dipende')">
+        <div class="option-icon">🔄</div>
+        <div><div class="option-label">Dipende dal cliente</div><div class="option-sub">Non è uguale per tutti</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(2)">← Indietro</button>
+      <button class="btn-next" id="btn-3" onclick="nextStep(4)" disabled>Avanti →</button>
+    </div>
+  </div>
+
+  <!-- Step 4: Riattivazione -->
+  <div class="step" id="step-4">
+    <div class="step-label">Domanda 4 di 6</div>
+    <div class="step-title">Il messaggio a 60 giorni — ti sembra inutile o lo faresti diverso?</div>
+    <div class="step-sub">Hai detto che il cliente dovrebbe rientrare da solo. Aiutami a capire dove sta il confine per te.</div>
+    <div class="hint">💡 Questa è la domanda più importante del form. Prenditi il tempo che ti serve.</div>
+    <div class="options">
+      <div class="option" onclick="select(this,'riattivazione','inutile')">
+        <div class="option-icon">❌</div>
+        <div><div class="option-label">Inutile, lo toglierei</div><div class="option-sub">Se un cliente vuole tornare, torna. Punto.</div></div>
+      </div>
+      <div class="option" onclick="select(this,'riattivazione','tono-diverso')">
+        <div class="option-icon">✏️</div>
+        <div><div class="option-label">Ha senso ma con tono diverso</div><div class="option-sub">Non una "mossa commerciale" — qualcosa di più naturale, come un pensiero</div></div>
+      </div>
+      <div class="option" onclick="select(this,'riattivazione','timing-diverso')">
+        <div class="option-icon">📅</div>
+        <div><div class="option-label">Ha senso ma in momenti specifici</div><div class="option-sub">Es. prima dell'estate, dopo le feste — non a caso</div></div>
+      </div>
+      <div class="option" onclick="select(this,'riattivazione','solo-certi-clienti')">
+        <div class="option-icon">👤</div>
+        <div><div class="option-label">Ha senso solo per certi clienti</div><div class="option-sub">Per chi è sparito da troppo tempo, non per tutti</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(3)">← Indietro</button>
+      <button class="btn-next" id="btn-4" onclick="nextStep(5)" disabled>Avanti →</button>
+    </div>
+  </div>
+
+  <!-- Step 5: Frizione -->
+  <div class="step" id="step-5">
+    <div class="step-label">Domanda 5 di 6</div>
+    <div class="step-title">C'è qualcosa che ti ha frenato dall'usarla?</div>
+    <div class="step-sub">Non quello che non ti piace graficamente — quello che ti ha fatto dire "no, adesso non lo faccio".</div>
+    <div class="options">
+      <div class="option" onclick="select(this,'frizione','tempo')">
+        <div class="option-icon">⏰</div>
+        <div><div class="option-label">Non avevo tempo</div><div class="option-sub">Dopo la sessione sono stanca e non ci penso</div></div>
+      </div>
+      <div class="option" onclick="select(this,'frizione','dimenticato')">
+        <div class="option-icon">🧠</div>
+        <div><div class="option-label">Me ne sono dimenticata</div><div class="option-sub">Non è ancora un'abitudine</div></div>
+      </div>
+      <div class="option" onclick="select(this,'frizione','complicato')">
+        <div class="option-icon">😵</div>
+        <div><div class="option-label">Qualcosa non era chiaro</div><div class="option-sub">Non sapevo bene cosa fare o da dove partire</div></div>
+      </div>
+      <div class="option" onclick="select(this,'frizione','niente')">
+        <div class="option-icon">✅</div>
+        <div><div class="option-label">Niente, l'ho usata senza problemi</div><div class="option-sub">Il flusso era chiaro</div></div>
+      </div>
+    </div>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(4)">← Indietro</button>
+      <button class="btn-next" id="btn-5" onclick="nextStep(6)" disabled>Avanti →</button>
+    </div>
+  </div>
+
+  <!-- Step 6: Campo libero -->
+  <div class="step" id="step-6">
+    <div class="step-label">Domanda 6 di 6</div>
+    <div class="step-title">Una cosa che cambieresti subito.</div>
+    <div class="step-sub">Se potessi toccare una sola cosa in Sliss questa settimana, cosa sarebbe? Anche solo mezza riga va bene.</div>
+    <textarea class="text-input" id="libero" placeholder="Scrivi qui..." oninput="checkLibero()"></textarea>
+    <div class="nav">
+      <button class="btn-back" onclick="prevStep(5)">← Indietro</button>
+      <button class="btn-next" id="btn-6" onclick="completaForm()">Invia feedback ✓</button>
+    </div>
+  </div>
+
+  <!-- Done -->
+  <div class="done" id="done">
+    <div class="done-icon">🖤</div>
+    <h2>Grazie.</h2>
+    <p>Questi feedback sono la cosa più preziosa che puoi dare a Sliss adesso. Erik li leggerà e li userà per migliorare.</p>
+    <div id="riepilogo"></div>
+  </div>
+
+</div>
+
+<script>
+const risposte = {};
+const totalSteps = 6;
+let currentStep = 0;
+
+function updateProgress(step) {
+  const pct = step === 0 ? 0 : Math.round((step / totalSteps) * 100);
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function startForm() {
+  document.getElementById('intro').style.display = 'none';
+  showStep(1);
+}
+
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById('step-' + n);
+  if(el) { el.classList.add('active'); currentStep = n; }
+  updateProgress(n - 1);
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function nextStep(n) { showStep(n); }
+function prevStep(n) { showStep(n); }
+
+function select(el, key, val) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  risposte[key] = val;
+  const btnId = 'btn-' + currentStep;
+  const btn = document.getElementById(btnId);
+  if(btn) btn.disabled = false;
+}
+
+function checkLibero() {
+  const val = document.getElementById('libero').value.trim();
+  document.getElementById('btn-6').disabled = val.length < 3;
+}
+
+function completaForm() {
+  risposte['libero'] = document.getElementById('libero').value.trim();
+
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  const done = document.getElementById('done');
+  done.classList.add('active');
+  updateProgress(totalSteps);
+
+  const labels = {
+    uso: { label: 'Uso questa settimana', map: { 'non-usato': 'Non usato', '1-2-volte': '1-2 volte', 'quasi-ogni-giorno': 'Quasi ogni giorno', 'ogni-giorno': 'Ogni giorno' }},
+    valore: { label: 'Cosa ha dato più valore', map: { 'ringraziamento': 'Messaggio di ringraziamento', 'controllo': 'Controllo a 7 giorni', 'recensione': 'Richiesta recensione', 'niente': 'Niente finora' }},
+    'timing-ringraziamento': { label: 'Timing ringraziamento', map: { 'subito': 'Entro 1 ora', 'stessa-sera': 'La stessa sera', 'giorno-dopo': 'Il giorno dopo', 'dipende': 'Dipende dal cliente' }},
+    riattivazione: { label: 'Follow-up 60 giorni', map: { 'inutile': 'Lo toglierei', 'tono-diverso': 'Ha senso ma tono diverso', 'timing-diverso': 'Ha senso in momenti specifici', 'solo-certi-clienti': 'Solo per certi clienti' }},
+    frizione: { label: 'Cosa ha frenato l\'uso', map: { 'tempo': 'Non avevo tempo', 'dimenticato': 'Me ne sono dimenticata', 'complicato': 'Qualcosa non era chiaro', 'niente': 'Nessun problema' }},
+    libero: { label: 'Cosa cambieresti subito', map: null },
+  };
+
+  let html = '';
+  for(const [key, cfg] of Object.entries(labels)) {
+    const val = risposte[key];
+    if(!val) continue;
+    const display = cfg.map ? (cfg.map[val] || val) : val;
+    html += `<div class="done-card"><div class="done-card-label">${cfg.label}</div><div class="done-card-value">${display}</div></div>`;
+  }
+  document.getElementById('riepilogo').innerHTML = html;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+
+  // Log in console per Erik
+  console.log('=== SLISS FEEDBACK TESTER ===');
+  console.log(JSON.stringify(risposte, null, 2));
+}
+
+// Init
+updateProgress(0);
+document.getElementById('btn-6').disabled = true;
+</script>
+</body>
+</html>
