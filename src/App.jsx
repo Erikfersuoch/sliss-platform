@@ -58,6 +58,7 @@ const SlissLogo = ({size=28}) => {
 
 const GlobalCSS = () => <style>{`
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
+  *{font-family:'DM Sans','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
   *{margin:0;padding:0;box-sizing:border-box}
   html,body,#root{background:#F8F9FA;color:#111318;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#DEE2E6;border-radius:3px}
@@ -94,9 +95,11 @@ const emptyData = () => ({
     { id: "t5", name: "Riattivazione naturale", code: "RI1", phase: "reactivation", channel: "WhatsApp", text: "Ciao [Nome]! Pensavo a te — come stai? Se hai in mente qualcosa di nuovo, sono qui 🖤 Buona giornata!", active: true },
   ],
   feedbacks: [],
+  orders: [],
   settings: {
     businessName: "",
     reviewLink: "",
+    bizType: "",
     followUpTimings: { thankyou: 0, check: 7, review: 21, reactivation: 60 },
   },
 });
@@ -126,6 +129,14 @@ const PHASES = {
   review:      { label: "Recensione",     color: T.purple, icon: "⭐", bg: T.purpleS },
   reactivation:{ label: "Riattivazione",  color: T.green,  icon: "💬", bg: T.greenS },
 };
+const PRODUCT_PHASES = {
+  order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "📋", bg: T.blueS },
+  shipping:      { label: "In spedizione",   color: T.amber,  icon: "📦", bg: T.amberS },
+  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "✅", bg: T.tealS },
+  review:        { label: "Recensione",      color: T.purple, icon: "⭐", bg: T.purpleS },
+  reorder:       { label: "Riordino",        color: T.green,  icon: "🔄", bg: T.greenS },
+};
+
 const STATUSES = {
   pending:   { label: "In attesa",  color: T.amber,  bg: T.amberS },
   sent:      { label: "Inviato",    color: T.blue,   bg: T.blueS },
@@ -296,16 +307,28 @@ const Onboarding = ({onComplete}) => {
   const handleComplete = () => {
     const updates = {businessName: bName.trim()};
     if(cluster) updates.cluster = cluster;
+    if(bizType) updates.bizType = bizType;
     updateSettings(updates);
-    // Carica template del cluster selezionato
     if(cluster && CLUSTER_TEMPLATES[cluster]) {
       CLUSTER_TEMPLATES[cluster].forEach(t => addRecord("templates", t));
+    }
+    // Template prodotti se selezionato
+    if(bizType === "prodotti") {
+      const prodTemplates = [
+        {id:uid(),name:"Conferma ordine",     code:"PO1",phase:"order_confirm", channel:"WhatsApp",text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie mille 🙏 Lo sto preparando con cura. Ti avviso non appena è in partenza!",active:true},
+        {id:uid(),name:"In spedizione",       code:"PO2",phase:"shipping",      channel:"WhatsApp",text:"Ciao [Nome]! Il tuo ordine è in partenza oggi 📦 Arrivo stimato: [Data]. Per qualsiasi cosa sono qui!",active:true},
+        {id:uid(),name:"Feedback ricezione",  code:"PO3",phase:"delivery_check",channel:"WhatsApp",text:"Ciao [Nome]! È arrivato tutto bene? Spero che il prodotto ti piaccia 🙏 Se c'è qualcosa che non va, scrivimi subito.",active:true},
+        {id:uid(),name:"Richiesta recensione",code:"PO4",phase:"review",        channel:"WhatsApp",text:"Ciao [Nome]! Spero che stia usando il prodotto con soddisfazione ✨ Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!",active:true},
+        {id:uid(),name:"Riordino",            code:"PO5",phase:"reorder",       channel:"WhatsApp",text:"Ciao [Nome]! Sono passati un po' di mesi — se hai bisogno di riordinare o vuoi scoprire qualcosa di nuovo, sono qui 🙏",active:true},
+      ];
+      prodTemplates.forEach(t => addRecord("templates", t));
     }
     setOnboarded();
     onComplete();
   };
 
   const [cluster, setCluster] = useState("");
+  const [bizType, setBizType] = useState("");
 
   const steps = [
     {
@@ -327,20 +350,40 @@ const Onboarding = ({onComplete}) => {
     },
     {
       icon: "🎯",
+      title: "Come lavori?",
+      desc: "Sliss si adatta al tuo tipo di attività.",
+      content: (
+        <div style={{marginTop:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+          {[
+            {key:"servizi", icon:"🗓️", label:"Offro servizi con appuntamento", desc:"Tatuaggi, barber, estetica, officine..."},
+            {key:"prodotti",icon:"📦", label:"Vendo prodotti", desc:"Stampa 3D, artigianato, prodotti fisici..."},
+          ].map(opt=>(
+            <button key={opt.key} onClick={()=>setBizType(opt.key)}
+              style={{display:"flex",alignItems:"center",gap:"14px",padding:"16px 18px",background:bizType===opt.key?T.greenS:T.bg2,border:`1.5px solid ${bizType===opt.key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
+              <span style={{fontSize:"26px"}}>{opt.icon}</span>
+              <div><div style={{fontSize:"15px",fontWeight:bizType===opt.key?600:500,color:bizType===opt.key?T.green:T.text}}>{opt.label}</div><div style={{fontSize:"12px",color:T.textD,marginTop:"2px"}}>{opt.desc}</div></div>
+            </button>
+          ))}
+        </div>
+      ),
+      action: <Btn onClick={()=>setStep(3)} disabled={!bizType} style={{marginTop:"20px"}}>Avanti →</Btn>
+    },
+    {
+      icon: "🏷️",
       title: "In quale settore lavori?",
       desc: "Sliss adatterà i template ai tuoi clienti.",
       content: (
         <div style={{marginTop:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
           {Object.entries(CLUSTERS).map(([key,cl])=>(
             <button key={key} onClick={()=>setCluster(key)}
-              style={{display:"flex",alignItems:"center",gap:"14px",padding:"14px 18px",background:cluster===key?T.blueS:T.bg2,border:`1.5px solid ${cluster===key?T.blue:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
+              style={{display:"flex",alignItems:"center",gap:"14px",padding:"14px 18px",background:cluster===key?T.greenS:T.bg2,border:`1.5px solid ${cluster===key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
               <span style={{fontSize:"22px"}}>{cl.icon}</span>
-              <span style={{fontSize:"15px",fontWeight:cluster===key?600:400,color:cluster===key?T.blue:T.text}}>{cl.label}</span>
+              <span style={{fontSize:"15px",fontWeight:cluster===key?600:400,color:cluster===key?T.green:T.text}}>{cl.label}</span>
             </button>
           ))}
         </div>
       ),
-      action: <Btn onClick={()=>setStep(3)} disabled={!cluster} style={{marginTop:"20px"}}>Avanti →</Btn>
+      action: <Btn onClick={()=>setStep(4)} disabled={!cluster} style={{marginTop:"20px"}}>Avanti →</Btn>
     },
     {
       icon: "🚀",
@@ -382,16 +425,22 @@ const Onboarding = ({onComplete}) => {
 };
 
 // ── Navigation ───────────────────────────────────────────────────────────────
-const NAV_MAIN = [
-  {id:"home",        icon:"🏠", label:"Home"},
-  {id:"clients",     icon:"👥", label:"Clienti"},
-  {id:"appointments",icon:"📅", label:"Agenda"},
-  {id:"followup",    icon:"💬", label:"Follow-Up"},
-];
+const getNavMain = (bizType) => {
+  const agendaItem = bizType==="prodotti"
+    ? {id:"orders",       icon:"📦", label:"Ordini"}
+    : {id:"appointments", icon:"📅", label:"Agenda"};
+  return [
+    {id:"home",    icon:"🏠", label:"Home"},
+    {id:"clients", icon:"👥", label:"Clienti"},
+    agendaItem,
+    {id:"followup",icon:"💬", label:"Follow-Up"},
+  ];
+};
+const NAV_MAIN = getNavMain("");
 
 const BottomNav = ({view,setView,pendingCount}) => (
   <nav className="mobile-only" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:"#FFFFFF",borderTop:"1px solid #DEE2E6",boxShadow:"0 -1px 0 rgba(0,0,0,0.06)",display:"flex",alignItems:"center",paddingBottom:"env(safe-area-inset-bottom)"}}>
-    {NAV_MAIN.map(n=>{
+    {(getNavMain(data?.settings?.bizType||"")).map(n=>{
       const a=view===n.id;
       const showBadge=n.id==="followup"&&pendingCount>0;
       return (
@@ -433,8 +482,9 @@ const MoreMenu = ({setView}) => {
 };
 
 const DesktopSidebar = ({view,setView}) => {
+  const {data:sData}=useSliss();
   const allNav = [
-    ...NAV_MAIN,
+    ...getNavMain(sData?.settings?.bizType||""),
     {id:"templates",icon:"📝",label:"Template"},
     {id:"feedback", icon:"⭐",label:"Feedback"},
     {id:"modules",  icon:"🧩",label:"Moduli"},
@@ -656,6 +706,170 @@ const FollowUp = () => {
   );
 };
 
+
+// ── ORDINI (Flusso Prodotti) ──────────────────────────────────────────────────
+const buildProductFollowUps = (orderId, clientId, clientName, orderDate, estimatedDelivery, templates) => {
+  // Conferma ordine — immediata dalla data ordine
+  // Spedizione — trigger manuale (quando l'utente preme "Spedito")
+  // Delivery check — +3 da data consegna stimata
+  // Recensione — +14 da data consegna stimata
+  // Riordino — +60 da data consegna stimata
+  const deliveryDate = estimatedDelivery || addDays(orderDate, 7);
+  return [
+    {id:uid(),orderId,clientId,phase:"order_confirm", status:"pending",scheduledDate:orderDate,     sentDate:null,message:`Ciao ${clientName}! Ho ricevuto il tuo ordine, grazie mille 🙏 Lo sto preparando con cura. Ti avviso non appena è in partenza!`},
+    {id:uid(),orderId,clientId,phase:"shipping",      status:"pending",scheduledDate:null,          sentDate:null,message:`Ciao ${clientName}! Il tuo ordine è in partenza oggi 📦 Arrivo stimato: ${fmtDate(deliveryDate)}. Per qualsiasi cosa sono qui!`,awaitShipping:true},
+    {id:uid(),orderId,clientId,phase:"delivery_check",status:"pending",scheduledDate:addDays(deliveryDate,3),sentDate:null,message:`Ciao ${clientName}! È arrivato tutto bene? Spero che il prodotto ti piaccia 🙏 Se c'è qualcosa che non va, scrivimi subito.`},
+    {id:uid(),orderId,clientId,phase:"review",        status:"pending",scheduledDate:addDays(deliveryDate,14),sentDate:null,message:`Ciao ${clientName}! Spero che stia usando il prodotto con soddisfazione ✨ Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!`},
+    {id:uid(),orderId,clientId,phase:"reorder",       status:"pending",scheduledDate:addDays(deliveryDate,60),sentDate:null,message:`Ciao ${clientName}! Sono passati un po' di mesi — se hai bisogno di riordinare o vuoi scoprire qualcosa di nuovo, sono qui 🙏`},
+  ];
+};
+
+const Orders = () => {
+  const {data,addRecord,update,deleteRecord}=useSliss();
+  const [showNew,setShowNew]=useState(false);
+  const [done,setDone]=useState(false);
+  const [form,setForm]=useState({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});
+
+  const sorted=[...( data.orders||[])].sort((a,b)=>new Date(b.orderDate)-new Date(a.orderDate));
+
+  const handleAdd=()=>{
+    if(!form.clientId||!form.product.trim()) return;
+    const client=data.clients.find(c=>c.id===form.clientId);
+    if(!client) return;
+    const orderId=uid();
+    const deliveryDate=addDays(form.orderDate,parseInt(form.deliveryDays)||7);
+    addRecord("orders",{id:orderId,clientId:form.clientId,product:form.product,orderDate:form.orderDate,deliveryDate,notes:form.notes,status:"pending",created:today()});
+    const fus=buildProductFollowUps(orderId,form.clientId,client.name,form.orderDate,deliveryDate);
+    fus.forEach(fu=>addRecord("followUps",fu));
+    setDone(true);
+    setTimeout(()=>{setDone(false);setShowNew(false);setForm({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});},1800);
+  };
+
+  const markShipped=(order)=>{
+    const shippingDate=today();
+    update("orders",order.id,{status:"shipped",shippedDate:shippingDate});
+    // Attiva il follow-up spedizione
+    const shippingFU=data.followUps.find(f=>f.orderId===order.id&&f.phase==="shipping"&&f.awaitShipping);
+    if(shippingFU) update("followUps",shippingFU.id,{scheduledDate:shippingDate,status:"pending"});
+  };
+
+  const handleDelete=(order)=>{
+    if(!window.confirm("Eliminare questo ordine?")) return;
+    deleteRecord("orders",order.id);
+    data.followUps.filter(f=>f.orderId===order.id).forEach(f=>deleteRecord("followUps",f.id));
+  };
+
+  const statusLabel={pending:"In preparazione",shipped:"Spedito",delivered:"Consegnato"};
+  const statusColor={pending:T.amber,shipped:T.blue,delivered:T.green};
+
+  return (
+    <div style={{animation:"fadeIn .35s ease"}}>
+      <PageHeader title="Ordini" action={<Btn onClick={()=>setShowNew(true)}>+ Nuovo ordine</Btn>} />
+      <p style={{fontSize:"13px",color:T.textD,marginBottom:"20px",marginTop:"-10px"}}>Aggiungi un ordine → i 5 follow-up si generano automaticamente</p>
+
+      {!sorted.length
+        ? <Empty icon="📦" title="Nessun ordine" desc="Aggiungi il primo ordine per generare i follow-up automaticamente." />
+        : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+            {sorted.map((order,i)=>{
+              const cl=data.clients.find(c=>c.id===order.clientId);
+              const fus=data.followUps.filter(f=>f.orderId===order.id);
+              const pendingFUs=fus.filter(f=>f.status==="pending"&&f.scheduledDate&&f.scheduledDate<=today()).length;
+              return (
+                <Card key={order.id} style={{animation:`fadeIn .3s ease ${i*.03}s both`}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"8px"}}>
+                    <div>
+                      <div style={{fontWeight:700,fontSize:"15px"}}>{cl?.name||"—"}</div>
+                      <div style={{fontSize:"13px",color:T.textM,marginTop:"2px"}}>{order.product}</div>
+                      {order.notes&&<div style={{fontSize:"12px",color:T.textD,marginTop:"2px"}}>📝 {order.notes}</div>}
+                    </div>
+                    <div style={{display:"flex",gap:"6px",alignItems:"center"}}>
+                      <span style={{fontSize:"12px",fontWeight:600,color:statusColor[order.status]||T.amber,background:`${statusColor[order.status]}18`,padding:"3px 10px",borderRadius:T.r.full}}>{statusLabel[order.status]||"—"}</span>
+                    </div>
+                  </div>
+                  <div style={{display:"flex",gap:"12px",fontSize:"12px",color:T.textD,marginBottom:"10px"}}>
+                    <span>Ordine: {fmtDate(order.orderDate)}</span>
+                    <span>Consegna stimata: {fmtDate(order.deliveryDate)}</span>
+                  </div>
+                  {/* Mini timeline follow-up */}
+                  <div style={{display:"flex",gap:"5px",marginBottom:"10px"}}>
+                    {["order_confirm","shipping","delivery_check","review","reorder"].map(phase=>{
+                      const fu=fus.find(f=>f.phase===phase);
+                      const ph=PRODUCT_PHASES[phase];
+                      const col=!fu?"#E9ECEF":fu.status==="sent"||fu.status==="replied"?T.greenS:fu.awaitShipping&&order.status==="pending"?"#E9ECEF":T.amberS;
+                      const textCol=!fu?T.textMu:fu.status==="sent"||fu.status==="replied"?T.green:fu.awaitShipping&&order.status==="pending"?T.textMu:T.amber;
+                      return (
+                        <div key={phase} style={{flex:1,padding:"5px 4px",background:col,borderRadius:T.r.s,textAlign:"center"}}>
+                          <div style={{fontSize:"13px"}}>{ph.icon}</div>
+                          <div style={{fontSize:"9px",color:textCol,fontWeight:600,marginTop:"1px",lineHeight:1.2}}>{fu&&fu.scheduledDate?daysUntil(fu.scheduledDate):fu?.awaitShipping?"⏳":"—"}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
+                    {order.status==="pending"&&<Btn v="primary" s="sm" onClick={()=>markShipped(order)}>📦 Segna spedito</Btn>}
+                    {pendingFUs>0&&<span style={{fontSize:"12px",color:T.amber,fontWeight:600,padding:"8px 0"}}>{pendingFUs} follow-up da inviare</span>}
+                    <Btn v="danger" s="sm" onClick={()=>handleDelete(order)}>🗑️</Btn>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+      }
+
+      <Modal open={showNew} onClose={()=>{setShowNew(false);setDone(false);}} title="Nuovo ordine">
+        {done
+          ? <div style={{textAlign:"center",padding:"20px 0"}}>
+              <div style={{fontSize:"36px",marginBottom:"12px"}}>✅</div>
+              <div style={{fontWeight:700,fontSize:"16px",marginBottom:"6px"}}>Ordine salvato</div>
+              <div style={{fontSize:"13px",color:T.textD}}>5 follow-up generati automaticamente</div>
+            </div>
+          : <>
+              <FormField label="Cliente">
+                <select value={form.clientId} onChange={e=>setForm(p=>({...p,clientId:e.target.value}))}>
+                  <option value="">Seleziona cliente...</option>
+                  {data.clients.map(c=><option key={c.id} value={c.id}>{c.name}</option>)}
+                </select>
+              </FormField>
+              <FormField label="Prodotto / Descrizione">
+                <input value={form.product} onChange={e=>setForm(p=>({...p,product:e.target.value}))} placeholder="Es. Supporto stampa 3D personalizzato" />
+              </FormField>
+              <FormField label="Data ordine">
+                <input type="date" value={form.orderDate} onChange={e=>setForm(p=>({...p,orderDate:e.target.value}))} />
+              </FormField>
+              <FormField label="Consegna stimata (giorni)" hint="Da oggi — usato per calcolare i follow-up post-consegna">
+                <input type="number" min="1" max="365" value={form.deliveryDays} onChange={e=>setForm(p=>({...p,deliveryDays:e.target.value}))} />
+              </FormField>
+              <FormField label="Note (opzionale)">
+                <textarea value={form.notes} onChange={e=>setForm(p=>({...p,notes:e.target.value}))} placeholder="Dettagli prodotto, personalizzazioni..." style={{minHeight:"60px"}} />
+              </FormField>
+              {form.clientId&&form.product&&(
+                <div style={{padding:"12px 14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,marginBottom:"16px",fontSize:"12px",color:T.textD}}>
+                  <div style={{fontWeight:600,color:T.textM,marginBottom:"6px"}}>Follow-up che verranno generati:</div>
+                  {[
+                    {icon:"📋",label:"Conferma ordine",timing:"Oggi"},
+                    {icon:"📦",label:"In spedizione",timing:"Quando premi Spedito"},
+                    {icon:"✅",label:"Feedback ricezione",timing:`+3gg da consegna (${fmtDate(addDays(today(),parseInt(form.deliveryDays||7)+3))})`},
+                    {icon:"⭐",label:"Recensione",timing:`+14gg da consegna (${fmtDate(addDays(today(),parseInt(form.deliveryDays||7)+14))})`},
+                    {icon:"🔄",label:"Riordino",timing:`+60gg da consegna`},
+                  ].map(({icon,label,timing})=>(
+                    <div key={label} style={{display:"flex",justifyContent:"space-between",padding:"3px 0",alignItems:"center"}}>
+                      <span>{icon} {label}</span>
+                      <span style={{color:T.green,fontSize:"11px"}}>{timing}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}>
+                <Btn v="secondary" onClick={()=>setShowNew(false)}>Annulla</Btn>
+                <Btn onClick={handleAdd} disabled={!form.clientId||!form.product.trim()}>Salva e genera follow-up</Btn>
+              </div>
+            </>
+        }
+      </Modal>
+    </div>
+  );
+};
+
 // ── CLIENTI ──────────────────────────────────────────────────────────────────
 const Clients = () => {
   const {data,addRecord,update,deleteRecord}=useSliss();
@@ -787,7 +1001,7 @@ const Clients = () => {
   );
 };
 
-// ── APPUNTAMENTI ─────────────────────────────────────────────────────────────
+// ── AGENDA (Appuntamenti + Ordini) ───────────────────────────────────────────
 const buildFollowUps=(appointmentId,clientId,clientName,appointmentDate,serviceType,timings)=>{
   const timingMap={thankyou:timings.thankyou||0,check:timings.check||7,review:timings.review||21,reactivation:timings.reactivation||60};
   const msgs={
@@ -1137,9 +1351,11 @@ export default function SlissPlatform() {
   const td=today();
   const pendingCount=data.followUps.filter(f=>f.status==="pending"&&f.scheduledDate<=td).length;
 
+  const bizType=data?.settings?.bizType||"";
   const viewMap={
     home:<Home setView={setView}/>,
     appointments:<Appointments/>,
+    orders:<Orders/>,
     followup:<FollowUp/>,
     clients:<Clients/>,
     templates:<Templates/>,
