@@ -58,8 +58,7 @@ const SlissLogo = ({size=28}) => {
 
 const GlobalCSS = () => <style>{`
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
-  *{font-family:'DM Sans','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
-  *{margin:0;padding:0;box-sizing:border-box}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
   html,body,#root{background:#F8F9FA;color:#111318;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#DEE2E6;border-radius:3px}
   input,textarea,select{font-family:inherit;background:#FFFFFF;border:1.5px solid #DEE2E6;color:#111318;border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%}
@@ -81,7 +80,14 @@ const GlobalCSS = () => <style>{`
 
 // ── Storage ──────────────────────────────────────────────────────────────────
 const STORAGE_KEY = "sliss-v4";
-const ONBOARDING_KEY = "sliss-onboarded";
+const ONBOARDING_KEY = "sliss-onboarded-v4";
+
+// Storage wrapper — usa localStorage (funziona su Vercel e qualsiasi browser)
+const storage = {
+  get: (key) => { try { return localStorage.getItem(key); } catch { return null; } },
+  set: (key, val) => { try { localStorage.setItem(key, val); } catch {} },
+  remove: (key) => { try { localStorage.removeItem(key); } catch {} },
+};
 
 const emptyData = () => ({
   clients: [],
@@ -104,18 +110,18 @@ const emptyData = () => ({
   },
 });
 
-const loadData = async () => {
-  try { const r = await window.storage.get(STORAGE_KEY); return r ? JSON.parse(r.value) : emptyData(); }
+const loadData = () => {
+  try { const r = storage.get(STORAGE_KEY); return r ? JSON.parse(r) : emptyData(); }
   catch { return emptyData(); }
 };
-const saveData = async (data) => {
-  try { await window.storage.set(STORAGE_KEY, JSON.stringify(data)); } catch(e) { console.error(e); }
+const saveData = (data) => {
+  try { storage.set(STORAGE_KEY, JSON.stringify(data)); } catch(e) { console.error(e); }
 };
-const isOnboarded = async () => {
-  try { const r = await window.storage.get(ONBOARDING_KEY); return !!r; } catch { return false; }
+const isOnboarded = () => {
+  try { return !!storage.get(ONBOARDING_KEY); } catch { return false; }
 };
-const setOnboarded = async () => {
-  try { await window.storage.set(ONBOARDING_KEY, "1"); } catch(e) {}
+const setOnboarded = () => {
+  try { storage.set(ONBOARDING_KEY, "1"); } catch {}
 };
 
 // ── Context ──────────────────────────────────────────────────────────────────
@@ -1314,11 +1320,11 @@ export default function SlissPlatform() {
   const [showOnboarding,setShowOnboarding]=useState(false);
 
   useEffect(()=>{
-    Promise.all([loadData(),isOnboarded()]).then(([d,ob])=>{
-      setData(d);
-      setShowOnboarding(!ob);
-      setLoading(false);
-    });
+    const d = loadData();
+    const ob = isOnboarded();
+    setData(d);
+    setShowOnboarding(!ob);
+    setLoading(false);
   },[]);
 
   useEffect(()=>{ if(data&&!loading) saveData(data); },[data,loading]);
@@ -1327,7 +1333,7 @@ export default function SlissPlatform() {
   const addRecord=useCallback((table,record)=>setData(prev=>({...prev,[table]:[...(prev[table]||[]),record]})),[]);
   const deleteRecord=useCallback((table,id)=>setData(prev=>({...prev,[table]:(prev[table]||[]).filter(r=>r.id!==id)})),[]);
   const updateSettings=useCallback((updates)=>setData(prev=>({...prev,settings:{...prev.settings,...updates}})),[]);
-  const resetData=useCallback(()=>{const d=emptyData();setData(d);saveData(d);},[]);
+  const resetData=useCallback(()=>{const d=emptyData();setData(d);saveData(d);storage.remove(ONBOARDING_KEY);},[]);
 
   if(loading||!data) return (
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:T.bg}}>
