@@ -151,14 +151,21 @@ const CLIENT_ST = {
   to_reactivate: { label: "Da riattivare", color: T.amber,  bg: T.amberS },
   inactive:      { label: "Inattivo",      color: T.textD,  bg: "rgba(90,111,148,0.10)" },
 };
-const CLUSTERS = {
-  tattoo:    { label: "Tatuaggi / PMU",       icon: "🖤", color: T.purple },
-  artigiani: { label: "Artigiani / Edilizia", icon: "🔨", color: T.amber },
-  barber:    { label: "Barber / Parrucchiere",icon: "💈", color: T.blue },
-  beauty:    { label: "Estetiste / Beauty",   icon: "✨", color: T.teal },
-  officine:  { label: "Officine",             icon: "🔧", color: T.green },
-  altro:     { label: "Altro",                icon: "⚡", color: T.textM },
+const CLUSTERS_SERVIZI = {
+  tattoo:    { label: "Tatuaggi / PMU",        icon: "🖤", color: T.purple },
+  barber:    { label: "Barber / Parrucchiere", icon: "💈", color: T.blue },
+  beauty:    { label: "Estetiste / Beauty",    icon: "✨", color: T.teal },
+  officine:  { label: "Officine",              icon: "🔧", color: T.green },
+  artigiani: { label: "Artigiani / Edilizia",  icon: "🔨", color: T.amber },
+  altro_s:   { label: "Altro",                 icon: "⚡", color: T.textM, custom: true },
 };
+const CLUSTERS_PRODOTTI = {
+  stampa3d:  { label: "Stampa 3D",             icon: "🖨️", color: T.blue },
+  negozio:   { label: "Proprietario negozio",  icon: "🏪", color: T.amber },
+  altro_p:   { label: "Altro",                 icon: "⚡", color: T.textM, custom: true },
+};
+// Cluster unificato per compatibilità
+const CLUSTERS = {...CLUSTERS_SERVIZI, ...CLUSTERS_PRODOTTI};
 
 // Template per cluster
 const CLUSTER_TEMPLATES = {
@@ -303,121 +310,105 @@ const Onboarding = ({onComplete}) => {
   const {updateSettings, addRecord} = useSliss();
   const [step, setStep] = useState(0);
   const [bName, setBName] = useState("");
+  const [bizType, setBizType] = useState("");
+  const [cluster, setCluster] = useState("");
+  const [customSector, setCustomSector] = useState("");
 
-  const handleComplete = () => {
-    const updates = {businessName: bName.trim()};
-    if(cluster) updates.cluster = cluster;
-    if(bizType) updates.bizType = bizType;
+  const clustersForType = bizType === "prodotti" ? CLUSTERS_PRODOTTI : CLUSTERS_SERVIZI;
+  const isCustomCluster = cluster === "altro_s" || cluster === "altro_p";
+
+  const doComplete = () => {
+    const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:""};
     updateSettings(updates);
-    if(cluster && CLUSTER_TEMPLATES[cluster]) {
-      CLUSTER_TEMPLATES[cluster].forEach(t => addRecord("templates", t));
+    if(bizType==="servizi"&&cluster&&CLUSTER_TEMPLATES[cluster]) {
+      CLUSTER_TEMPLATES[cluster].forEach(t=>addRecord("templates",{...t,id:uid()}));
     }
-    // Template prodotti se selezionato
-    if(bizType === "prodotti") {
-      const prodTemplates = [
-        {id:uid(),name:"Conferma ordine",     code:"PO1",phase:"order_confirm", channel:"WhatsApp",text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie mille 🙏 Lo sto preparando con cura. Ti avviso non appena è in partenza!",active:true},
-        {id:uid(),name:"In spedizione",       code:"PO2",phase:"shipping",      channel:"WhatsApp",text:"Ciao [Nome]! Il tuo ordine è in partenza oggi 📦 Arrivo stimato: [Data]. Per qualsiasi cosa sono qui!",active:true},
-        {id:uid(),name:"Feedback ricezione",  code:"PO3",phase:"delivery_check",channel:"WhatsApp",text:"Ciao [Nome]! È arrivato tutto bene? Spero che il prodotto ti piaccia 🙏 Se c'è qualcosa che non va, scrivimi subito.",active:true},
-        {id:uid(),name:"Richiesta recensione",code:"PO4",phase:"review",        channel:"WhatsApp",text:"Ciao [Nome]! Spero che stia usando il prodotto con soddisfazione ✨ Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!",active:true},
-        {id:uid(),name:"Riordino",            code:"PO5",phase:"reorder",       channel:"WhatsApp",text:"Ciao [Nome]! Sono passati un po' di mesi — se hai bisogno di riordinare o vuoi scoprire qualcosa di nuovo, sono qui 🙏",active:true},
-      ];
-      prodTemplates.forEach(t => addRecord("templates", t));
+    if(bizType==="prodotti") {
+      [{name:"Conferma ordine",code:"PO1",phase:"order_confirm",text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie mille! Lo sto preparando con cura. Ti avviso non appena è in partenza!"},
+       {name:"In spedizione",code:"PO2",phase:"shipping",text:"Ciao [Nome]! Il tuo ordine è in partenza oggi. Arrivo stimato: [Data]. Per qualsiasi cosa sono qui!"},
+       {name:"Feedback ricezione",code:"PO3",phase:"delivery_check",text:"Ciao [Nome]! È arrivato tutto bene? Spero che il prodotto ti piaccia. Se c'è qualcosa che non va, scrivimi subito."},
+       {name:"Richiesta recensione",code:"PO4",phase:"review",text:"Ciao [Nome]! Spero che stia usando il prodotto con soddisfazione. Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!"},
+       {name:"Riordino",code:"PO5",phase:"reorder",text:"Ciao [Nome]! Sono passati un po' di mesi — se hai bisogno di riordinare o vuoi scoprire qualcosa di nuovo, sono qui!"},
+      ].forEach(t=>addRecord("templates",{...t,id:uid(),channel:"WhatsApp",active:true}));
     }
     setOnboarded();
     onComplete();
   };
 
-  const [cluster, setCluster] = useState("");
-  const [bizType, setBizType] = useState("");
-
-  const steps = [
-    {
-      icon: "👋",
-      title: "Benvenuto in Sliss",
-      desc: "Lo strumento operativo per professionisti che vogliono curare i propri clienti senza perdere tempo.",
-      action: <Btn onClick={()=>setStep(1)} style={{marginTop:"24px"}}>Inizia →</Btn>
-    },
-    {
-      icon: "💼",
-      title: "Come si chiama la tua attività?",
-      desc: "Apparirà nel saluto della tua home. Potrai cambiarlo in qualsiasi momento.",
-      content: (
-        <div style={{marginTop:"20px"}}>
-          <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center"}} autoFocus />
-        </div>
-      ),
-      action: <Btn onClick={()=>setStep(2)} disabled={!bName.trim()} style={{marginTop:"20px"}}>Avanti →</Btn>
-    },
-    {
-      icon: "🎯",
-      title: "Come lavori?",
-      desc: "Sliss si adatta al tuo tipo di attività.",
-      content: (
-        <div style={{marginTop:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
+  const renderStep = () => {
+    switch(step) {
+      case 0: return <>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>👋</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Benvenuto in Sliss</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"24px"}}>Lo strumento operativo per professionisti che vogliono curare i propri clienti senza perdere tempo.</p>
+        <Btn onClick={()=>setStep(1)} style={{width:"100%",justifyContent:"center"}}>Inizia →</Btn>
+      </>;
+      case 1: return <>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>💼</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come si chiama la tua attività?</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparirà nel saluto della home. Potrai cambiarlo nelle impostazioni.</p>
+        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"20px"}} autoFocus />
+        <Btn onClick={()=>setStep(2)} disabled={!bName.trim()} style={{width:"100%",justifyContent:"center"}}>Avanti →</Btn>
+      </>;
+      case 2: return <>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>🎯</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come lavori?</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss si adatta al tuo tipo di attività.</p>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"20px"}}>
           {[
-            {key:"servizi", icon:"🗓️", label:"Offro servizi con appuntamento", desc:"Tatuaggi, barber, estetica, officine..."},
-            {key:"prodotti",icon:"📦", label:"Vendo prodotti", desc:"Stampa 3D, artigianato, prodotti fisici..."},
+            {key:"servizi", icon:"🗓️",label:"Offro servizi con appuntamento",desc:"Tatuaggi, barber, estetica, officine..."},
+            {key:"prodotti",icon:"📦",label:"Vendo prodotti",desc:"Stampa 3D, negozio, prodotti artigianali..."},
           ].map(opt=>(
-            <button key={opt.key} onClick={()=>setBizType(opt.key)}
+            <button key={opt.key} onClick={()=>{setBizType(opt.key);setCluster("");setCustomSector("");}}
               style={{display:"flex",alignItems:"center",gap:"14px",padding:"16px 18px",background:bizType===opt.key?T.greenS:T.bg2,border:`1.5px solid ${bizType===opt.key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
               <span style={{fontSize:"26px"}}>{opt.icon}</span>
               <div><div style={{fontSize:"15px",fontWeight:bizType===opt.key?600:500,color:bizType===opt.key?T.green:T.text}}>{opt.label}</div><div style={{fontSize:"12px",color:T.textD,marginTop:"2px"}}>{opt.desc}</div></div>
             </button>
           ))}
         </div>
-      ),
-      action: <Btn onClick={()=>setStep(3)} disabled={!bizType} style={{marginTop:"20px"}}>Avanti →</Btn>
-    },
-    {
-      icon: "🏷️",
-      title: "In quale settore lavori?",
-      desc: "Sliss adatterà i template ai tuoi clienti.",
-      content: (
-        <div style={{marginTop:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-          {Object.entries(CLUSTERS).map(([key,cl])=>(
-            <button key={key} onClick={()=>setCluster(key)}
+        <Btn onClick={()=>setStep(3)} disabled={!bizType} style={{width:"100%",justifyContent:"center"}}>Avanti →</Btn>
+      </>;
+      case 3: return <>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>🏷️</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>In quale settore lavori?</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss adatterà i template al tuo settore.</p>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"20px"}}>
+          {Object.entries(clustersForType).map(([key,cl])=>(
+            <button key={key} onClick={()=>{setCluster(key);setCustomSector("");}}
               style={{display:"flex",alignItems:"center",gap:"14px",padding:"14px 18px",background:cluster===key?T.greenS:T.bg2,border:`1.5px solid ${cluster===key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
               <span style={{fontSize:"22px"}}>{cl.icon}</span>
               <span style={{fontSize:"15px",fontWeight:cluster===key?600:400,color:cluster===key?T.green:T.text}}>{cl.label}</span>
             </button>
           ))}
         </div>
-      ),
-      action: <Btn onClick={()=>setStep(4)} disabled={!cluster} style={{marginTop:"20px"}}>Avanti →</Btn>
-    },
-    {
-      icon: "🚀",
-      title: "Sei pronto",
-      desc: "Inizia aggiungendo il tuo primo cliente, poi inserisci un appuntamento. Sliss genererà i follow-up automaticamente.",
-      steps: ["Aggiungi un cliente", "Inserisci un appuntamento", "Sliss prepara i messaggi per te"],
-      action: <Btn onClick={handleComplete} style={{marginTop:"24px"}}>Apri Sliss →</Btn>
+        {isCustomCluster&&<input value={customSector} onChange={e=>setCustomSector(e.target.value)} placeholder="Descrivi il tuo settore..." style={{fontSize:"15px",marginBottom:"20px"}} autoFocus />}
+        <Btn onClick={()=>setStep(4)} disabled={!cluster||(isCustomCluster&&!customSector.trim())} style={{width:"100%",justifyContent:"center"}}>Avanti →</Btn>
+      </>;
+      case 4: return <>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>🚀</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Sei pronto</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>{bizType==="prodotti"?"Inizia aggiungendo il tuo primo cliente, poi inserisci un ordine.":"Inizia aggiungendo il tuo primo cliente, poi inserisci un appuntamento."} Sliss genererà i follow-up automaticamente.</p>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"24px"}}>
+          {(bizType==="prodotti"?["Aggiungi un cliente","Inserisci un ordine","Sliss prepara i messaggi per te"]:["Aggiungi un cliente","Inserisci un appuntamento","Sliss prepara i messaggi per te"]).map((st,i)=>(
+            <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",background:T.bg2,borderRadius:T.r.l,border:`1px solid ${T.border}`,textAlign:"left"}}>
+              <div style={{width:"26px",height:"26px",borderRadius:"50%",background:T.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"12px",fontWeight:700,color:"#fff",flexShrink:0}}>{i+1}</div>
+              <span style={{fontSize:"14px",color:T.textM}}>{st}</span>
+            </div>
+          ))}
+        </div>
+        <Btn onClick={doComplete} style={{width:"100%",justifyContent:"center"}}>Apri Sliss →</Btn>
+      </>;
+      default: return null;
     }
-  ];
+  };
 
-  const s = steps[step];
   return (
     <div style={{minHeight:"100vh",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"32px 24px",background:T.bg,animation:"fadeIn .5s ease"}}>
       <div style={{width:"100%",maxWidth:"400px",textAlign:"center"}}>
-        <div style={{marginBottom:"16px"}}>
-          <SlissLogo size={32} />
-        </div>
-        <div style={{fontSize:"52px",marginBottom:"20px"}}>{s.icon}</div>
-        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>{s.title}</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"4px"}}>{s.desc}</p>
-        {s.content}
-        {s.steps&&(
-          <div style={{marginTop:"20px",display:"flex",flexDirection:"column",gap:"10px"}}>
-            {s.steps.map((st,i)=>(
-              <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",background:T.bg2,borderRadius:T.r.l,border:`1px solid ${T.border}`,textAlign:"left"}}>
-                <div style={{width:"26px",height:"26px",borderRadius:"50%",background:T.blue,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"12px",fontWeight:700,color:"#fff",flexShrink:0}}>{i+1}</div>
-                <span style={{fontSize:"14px",color:T.textM}}>{st}</span>
-              </div>
-            ))}
-          </div>
-        )}
-        {s.action}
+        <div style={{marginBottom:"20px"}}><SlissLogo size={32} /></div>
+        {renderStep()}
         <div style={{display:"flex",gap:"6px",justifyContent:"center",marginTop:"28px"}}>
-          {steps.map((_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
+          {[0,1,2,3,4].map(i=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
         </div>
       </div>
     </div>
