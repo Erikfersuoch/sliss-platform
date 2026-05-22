@@ -721,7 +721,7 @@ const Orders = () => {
   const [done,setDone]=useState(false);
   const [form,setForm]=useState({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});
 
-  const sorted=[...( data.orders||[])].sort((a,b)=>new Date(b.orderDate)-new Date(a.orderDate));
+  const sorted=[...(data.orders||[])].sort((a,b)=>new Date(b.orderDate)-new Date(a.orderDate));
 
   const handleAdd=()=>{
     if(!form.clientId||!form.product.trim()) return;
@@ -1323,9 +1323,9 @@ export default function SlissPlatform() {
 
   useEffect(()=>{ if(data&&!loading) saveData(data); },[data,loading]);
 
-  const update=useCallback((table,id,updates)=>setData(prev=>({...prev,[table]:prev[table].map(r=>r.id===id?{...r,...updates}:r)})),[]);
-  const addRecord=useCallback((table,record)=>setData(prev=>({...prev,[table]:[...prev[table],record]})),[]);
-  const deleteRecord=useCallback((table,id)=>setData(prev=>({...prev,[table]:prev[table].filter(r=>r.id!==id)})),[]);
+  const update=useCallback((table,id,updates)=>setData(prev=>({...prev,[table]:(prev[table]||[]).map(r=>r.id===id?{...r,...updates}:r)})),[]);
+  const addRecord=useCallback((table,record)=>setData(prev=>({...prev,[table]:[...(prev[table]||[]),record]})),[]);
+  const deleteRecord=useCallback((table,id)=>setData(prev=>({...prev,[table]:(prev[table]||[]).filter(r=>r.id!==id)})),[]);
   const updateSettings=useCallback((updates)=>setData(prev=>({...prev,settings:{...prev.settings,...updates}})),[]);
   const resetData=useCallback(()=>{const d=emptyData();setData(d);saveData(d);},[]);
 
@@ -1340,7 +1340,7 @@ export default function SlissPlatform() {
 
   const ctx={data,update,addRecord,deleteRecord,updateSettings,resetData};
   const td=today();
-  const pendingCount=data.followUps.filter(f=>f.status==="pending"&&f.scheduledDate<=td).length;
+  const pendingCount=(data.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td).length;
 
   const bizType=data?.settings?.bizType||"";
   const viewMap={
