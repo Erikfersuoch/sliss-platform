@@ -5,15 +5,15 @@ import { useState, useEffect, useCallback, createContext, useContext } from "rea
 // ═══════════════════════════════════════════════════════════════════════════
 
 const T = {
-  bg: "#070B12", bg2: "#0C1219", bg3: "#111820", bg4: "#172030",
-  border: "#1A2535", borderH: "#263548",
-  text: "#E8EDF5", textM: "#8B9DC3", textD: "#4A5E80", textMu: "#2E3F5C",
-  blue: "#3B7BF6", blueH: "#2B66E0", blueS: "rgba(59,123,246,0.12)",
-  green: "#0FBE7A", greenS: "rgba(15,190,122,0.12)",
-  amber: "#E8A830", amberS: "rgba(232,168,48,0.12)",
-  red: "#E84850", redS: "rgba(232,72,80,0.10)",
-  purple: "#8B5CF6", purpleS: "rgba(139,92,246,0.12)",
-  teal: "#14B8A6", tealS: "rgba(20,184,166,0.10)",
+  bg: "#0F1117", bg2: "#16181F", bg3: "#1C1F28", bg4: "#222632",
+  border: "#2A2D3A", borderH: "#3A3D4E",
+  text: "#F4F5F7", textM: "#A0A8BC", textD: "#5C6380", textMu: "#383D52",
+  blue: "#60A5FA", blueH: "#3B82F6", blueS: "rgba(96,165,250,0.12)",
+  green: "#22C55E", greenH: "#16A34A", greenS: "rgba(34,197,94,0.12)", greenG: "rgba(34,197,94,0.22)",
+  amber: "#FBBF24", amberS: "rgba(251,191,36,0.12)",
+  red: "#F87171", redS: "rgba(248,113,113,0.12)",
+  purple: "#A78BFA", purpleS: "rgba(167,139,250,0.12)",
+  teal: "#2DD4BF", tealS: "rgba(45,212,191,0.10)",
   r: { s: "6px", m: "10px", l: "14px", xl: "20px", full: "9999px" },
 };
 
@@ -30,7 +30,7 @@ const SlissLogo = ({size=28}) => {
       </defs>
       {/* Sfondo contorno verde arrotondato */}
       <rect x="2" y="2" width="166" height="46" rx="14" ry="14"
-        fill="none" stroke="#0FBE7A" strokeWidth="4"/>
+        fill="none" stroke="#22C55E" strokeWidth="4"/>
       {/* Testo Sliss — bianco dentro il contorno */}
       <text
         x="85" y="36"
@@ -48,10 +48,10 @@ const SlissLogo = ({size=28}) => {
 const GlobalCSS = () => <style>{`
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body{background:${T.bg};color:${T.text};font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  html,body,#root{background:${T.bg};color:${T.text};font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${T.border};border-radius:3px}
   input,textarea,select{font-family:inherit;background:${T.bg3};border:1px solid ${T.border};color:${T.text};border-radius:${T.r.m};padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%}
-  input:focus,textarea:focus,select:focus{border-color:${T.blue};box-shadow:0 0 0 3px rgba(59,123,246,0.15)}
+  input:focus,textarea:focus,select:focus{border-color:${T.green};box-shadow:0 0 0 3px rgba(34,197,94,0.15)}
   textarea{resize:vertical;min-height:80px;line-height:1.6}
   select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238B9DC3' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
   button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
@@ -202,7 +202,7 @@ const Badge = ({label,color,bg,s}) => (
 );
 
 const Btn = ({children,v="primary",s="md",onClick,style,disabled}) => {
-  const VS={primary:{bg:T.blue,c:"#fff",hb:T.blueH,bd:"none"},secondary:{bg:"transparent",c:T.textM,hb:T.bg4,bd:`1px solid ${T.border}`},success:{bg:T.green,c:"#fff",hb:"#09a066",bd:"none"},danger:{bg:"transparent",c:T.red,hb:T.redS,bd:`1px solid ${T.red}44`},ghost:{bg:"transparent",c:T.textD,hb:T.bg3,bd:"none"}};
+  const VS={primary:{bg:T.green,c:"#fff",hb:T.greenH,bd:"none"},secondary:{bg:"transparent",c:T.textM,hb:T.bg4,bd:`1px solid ${T.border}`},success:{bg:T.green,c:"#fff",hb:"#09a066",bd:"none"},danger:{bg:"transparent",c:T.red,hb:T.redS,bd:`1px solid ${T.red}44`},ghost:{bg:"transparent",c:T.textD,hb:T.bg3,bd:"none"}};
   const SS={sm:{p:"8px 14px",f:"13px"},md:{p:"11px 20px",f:"14px"},lg:{p:"14px 28px",f:"15px"}};
   const vv=VS[v],ss=SS[s];
   const [h,setH]=useState(false);
@@ -210,7 +210,6 @@ const Btn = ({children,v="primary",s="md",onClick,style,disabled}) => {
 };
 
 const Card = ({children,style,onClick,hov}) => {
-
   const [h,setH]=useState(false);
   return <div onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{background:T.bg2,border:`1px solid ${h&&hov?T.borderH:T.border}`,borderRadius:T.r.l,padding:"16px 18px",transition:"border-color .2s",cursor:hov?"pointer":"default",animation:"fadeIn .3s ease",...style}}>{children}</div>;
 };
@@ -364,7 +363,7 @@ const Onboarding = ({onComplete}) => {
         )}
         {s.action}
         <div style={{display:"flex",gap:"6px",justifyContent:"center",marginTop:"28px"}}>
-          {steps.map((_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.blue:T.border,transition:"all .3s"}} />)}
+          {steps.map((_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
         </div>
       </div>
     </div>
@@ -385,7 +384,7 @@ const BottomNav = ({view,setView,pendingCount}) => (
       const a=view===n.id;
       const showBadge=n.id==="followup"&&pendingCount>0;
       return (
-        <button key={n.id} onClick={()=>setView(n.id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"10px 0",background:"none",border:"none",cursor:"pointer",color:a?T.blue:T.textD,fontFamily:"inherit",transition:"color .15s",position:"relative",minHeight:"56px"}}>
+        <button key={n.id} onClick={()=>setView(n.id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"10px 0",background:"none",border:"none",cursor:"pointer",color:a?T.green:T.textD,fontFamily:"inherit",transition:"color .15s",position:"relative",minHeight:"56px"}}>
           {showBadge&&<div style={{position:"absolute",top:"6px",right:"calc(50% - 14px)",width:"16px",height:"16px",borderRadius:"50%",background:T.amber,fontSize:"10px",fontWeight:700,color:"#000",display:"flex",alignItems:"center",justifyContent:"center"}}>{pendingCount>9?"9+":pendingCount}</div>}
           <span style={{fontSize:"22px",lineHeight:1}}>{n.icon}</span>
           <span style={{fontSize:"11px",fontWeight:a?600:400}}>{n.label}</span>
@@ -438,7 +437,7 @@ const DesktopSidebar = ({view,setView}) => {
       </div>
       <nav style={{flex:1,padding:"8px 6px",display:"flex",flexDirection:"column",gap:"1px"}}>
         {allNav.map(n=>{const a=view===n.id; return (
-          <button key={n.id} onClick={()=>setView(n.id)} style={{display:"flex",alignItems:"center",gap:"9px",padding:"10px 12px",borderRadius:T.r.m,border:"none",cursor:"pointer",background:a?"rgba(59,123,246,0.12)":"transparent",color:a?T.blue:T.textD,fontWeight:a?600:400,fontSize:"13px",fontFamily:"inherit",transition:"all .12s",textAlign:"left",width:"100%",minHeight:"44px"}}>
+          <button key={n.id} onClick={()=>setView(n.id)} style={{display:"flex",alignItems:"center",gap:"9px",padding:"10px 12px",borderRadius:T.r.m,border:"none",cursor:"pointer",background:a?T.greenS:"transparent",color:a?T.green:T.textD,fontWeight:a?600:400,fontSize:"13px",fontFamily:"inherit",transition:"all .12s",textAlign:"left",width:"100%",minHeight:"44px"}}>
             <span style={{fontSize:"17px",width:"22px",textAlign:"center",flexShrink:0}}>{n.icon}</span>{n.label}
           </button>
         );})}
