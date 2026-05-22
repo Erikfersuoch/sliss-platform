@@ -5,15 +5,26 @@ import { useState, useEffect, useCallback, createContext, useContext } from "rea
 // ═══════════════════════════════════════════════════════════════════════════
 
 const T = {
-  bg: "#0F1117", bg2: "#16181F", bg3: "#1C1F28", bg4: "#222632",
-  border: "#2A2D3A", borderH: "#3A3D4E",
-  text: "#F4F5F7", textM: "#A0A8BC", textD: "#5C6380", textMu: "#383D52",
-  blue: "#60A5FA", blueH: "#3B82F6", blueS: "rgba(96,165,250,0.12)",
-  green: "#22C55E", greenH: "#16A34A", greenS: "rgba(34,197,94,0.12)", greenG: "rgba(34,197,94,0.22)",
-  amber: "#FBBF24", amberS: "rgba(251,191,36,0.12)",
-  red: "#F87171", redS: "rgba(248,113,113,0.12)",
-  purple: "#A78BFA", purpleS: "rgba(167,139,250,0.12)",
-  teal: "#2DD4BF", tealS: "rgba(45,212,191,0.10)",
+  // Light mode — massima leggibilità al sole
+  bg:  "#F8F9FA",  // sfondo pagina — grigio ghiaccio
+  bg2: "#FFFFFF",  // card principale — bianco
+  bg3: "#F1F3F5",  // card interna / input
+  bg4: "#E9ECEF",  // hover stati
+  border:  "#DEE2E6", borderH: "#ADB5BD",
+  // Testi — alto contrasto
+  text:  "#111318",  // primario quasi nero
+  textM: "#495057",  // secondario grigio scuro
+  textD: "#868E96",  // disabilitato grigio medio
+  textMu:"#ADB5BD",  // molto attenuato
+  // Accent principale — verde Sliss scuro su sfondo chiaro
+  green:  "#16A34A", greenH: "#15803D",
+  greenS: "rgba(22,163,74,0.10)", greenG: "rgba(22,163,74,0.18)",
+  // Colori semantici — saturi per leggibilità su sfondo chiaro
+  blue:   "#2563EB", blueH: "#1D4ED8", blueS: "rgba(37,99,235,0.10)",
+  amber:  "#D97706", amberS: "rgba(217,119,6,0.10)",
+  red:    "#DC2626", redS:   "rgba(220,38,38,0.10)",
+  purple: "#7C3AED", purpleS:"rgba(124,58,237,0.10)",
+  teal:   "#0D9488", tealS:  "rgba(13,148,136,0.10)",
   r: { s: "6px", m: "10px", l: "14px", xl: "20px", full: "9999px" },
 };
 
@@ -39,7 +50,7 @@ const SlissLogo = ({size=28}) => {
         fontWeight="800"
         fontSize="34"
         letterSpacing="-1"
-        fill="#ffffff"
+        fill="#111318"
       >Sliss</text>
     </svg>
   );
@@ -48,12 +59,12 @@ const SlissLogo = ({size=28}) => {
 const GlobalCSS = () => <style>{`
   @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
   *{margin:0;padding:0;box-sizing:border-box}
-  html,body,#root{background:${T.bg};color:${T.text};font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
-  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${T.border};border-radius:3px}
-  input,textarea,select{font-family:inherit;background:${T.bg3};border:1px solid ${T.border};color:${T.text};border-radius:${T.r.m};padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%}
-  input:focus,textarea:focus,select:focus{border-color:${T.green};box-shadow:0 0 0 3px rgba(34,197,94,0.15)}
+  html,body,#root{background:#F8F9FA;color:#111318;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#DEE2E6;border-radius:3px}
+  input,textarea,select{font-family:inherit;background:#FFFFFF;border:1.5px solid #DEE2E6;color:#111318;border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%}
+  input:focus,textarea:focus,select:focus{border-color:#16A34A;box-shadow:0 0 0 3px rgba(22,163,74,0.12)}
   textarea{resize:vertical;min-height:80px;line-height:1.6}
-  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238B9DC3' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23495057' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
   button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   a{-webkit-tap-highlight-color:transparent}
   @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
@@ -245,7 +256,7 @@ const Modal = ({open,onClose,title,children,w}) => {
   return (
     <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={onClose}>
       <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.82)",backdropFilter:"blur(8px)"}} />
-      <div onClick={e=>e.stopPropagation()} style={{position:"relative",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"20px 20px 0 0",width:"100%",maxWidth:w||"580px",maxHeight:"92vh",overflow:"auto",animation:"slideUp .25s ease",boxShadow:"0 -8px 40px rgba(0,0,0,.6)"}}>
+      <div onClick={e=>e.stopPropagation()} style={{position:"relative",background:"#FFFFFF",border:"1px solid #DEE2E6",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:w||"580px",maxHeight:"92vh",overflow:"auto",animation:"slideUp .25s ease",boxShadow:"0 -8px 40px rgba(0,0,0,.6)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 22px 14px",borderBottom:`1px solid ${T.border}`}}>
           <h3 style={{fontSize:"16px",fontWeight:700}}>{title}</h3>
           <button onClick={onClose} style={{background:T.bg3,border:"none",color:T.textM,fontSize:"16px",cursor:"pointer",width:"32px",height:"32px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>✕</button>
@@ -379,7 +390,7 @@ const NAV_MAIN = [
 ];
 
 const BottomNav = ({view,setView,pendingCount}) => (
-  <nav className="mobile-only" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:T.bg,borderTop:`1px solid ${T.border}`,display:"flex",alignItems:"center",paddingBottom:"env(safe-area-inset-bottom)"}}>
+  <nav className="mobile-only" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:"#FFFFFF",borderTop:"1px solid #DEE2E6",boxShadow:"0 -1px 0 rgba(0,0,0,0.06)",display:"flex",alignItems:"center",paddingBottom:"env(safe-area-inset-bottom)"}}>
     {NAV_MAIN.map(n=>{
       const a=view===n.id;
       const showBadge=n.id==="followup"&&pendingCount>0;
@@ -430,7 +441,7 @@ const DesktopSidebar = ({view,setView}) => {
     {id:"settings", icon:"⚙️",label:"Impostazioni"},
   ];
   return (
-    <div className="desktop-only" style={{width:"210px",minHeight:"100vh",background:T.bg,borderRight:`1px solid ${T.border}`,display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,zIndex:100}}>
+    <div className="desktop-only" style={{width:"210px",minHeight:"100vh",background:"#FFFFFF",borderRight:"1px solid #DEE2E6",display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,zIndex:100}}>
       <div style={{padding:"22px 18px 18px",borderBottom:`1px solid ${T.border}`}}>
         <SlissLogo size={24} />
         <div style={{fontSize:"9px",color:T.textMu,fontWeight:500,letterSpacing:".05em",textTransform:"uppercase",marginTop:"4px"}}>Ecosistema Operativo</div>
