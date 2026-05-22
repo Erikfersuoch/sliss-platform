@@ -93,13 +93,7 @@ const emptyData = () => ({
   clients: [],
   appointments: [],
   followUps: [],
-  templates: [
-    { id: "t1", name: "Ringraziamento base", code: "R1", phase: "thankyou", channel: "WhatsApp", text: "Ciao [Nome]! Grazie per oggi 🙏 È stato un piacere. Se hai dubbi scrivimi. A presto!", active: true },
-    { id: "t2", name: "Ringraziamento tatuaggio", code: "R2", phase: "thankyou", channel: "WhatsApp", text: "Ciao [Nome]! Grazie per la sessione di oggi 🖤 Ricordati pellicola e sapone neutro. Scrivimi per qualsiasi cosa.", active: true },
-    { id: "t3", name: "Controllo guarigione", code: "C1", phase: "check", channel: "WhatsApp", text: "Ciao [Nome]! Come sta andando la cicatrizzazione? È normale che desquami un po'. Se hai dubbi mandami una foto 🙏", active: true },
-    { id: "t4", name: "Richiesta recensione", code: "RC1", phase: "review", channel: "WhatsApp", text: "Ciao [Nome]! Sono passate un po' di settimane — spero stia guarendo bene ✨ Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo.", active: true },
-    { id: "t5", name: "Riattivazione naturale", code: "RI1", phase: "reactivation", channel: "WhatsApp", text: "Ciao [Nome]! Pensavo a te — come stai? Se hai in mente qualcosa di nuovo, sono qui 🖤 Buona giornata!", active: true },
-  ],
+  templates: [],  // Template caricati dall'onboarding in base al cluster scelto
   feedbacks: [],
   orders: [],
   settings: {
@@ -130,10 +124,16 @@ const useSliss = () => useContext(Ctx);
 
 // ── Config ───────────────────────────────────────────────────────────────────
 const PHASES = {
-  thankyou:    { label: "Ringraziamento", color: T.blue,   icon: "🙏", bg: T.blueS },
-  check:       { label: "Controllo",      color: T.amber,  icon: "🔍", bg: T.amberS },
-  review:      { label: "Recensione",     color: T.purple, icon: "⭐", bg: T.purpleS },
-  reactivation:{ label: "Riattivazione",  color: T.green,  icon: "💬", bg: T.greenS },
+  // Servizi
+  thankyou:      { label: "Ringraziamento", color: T.blue,   icon: "🙏", bg: T.blueS },
+  check:         { label: "Controllo",      color: T.amber,  icon: "🔍", bg: T.amberS },
+  review:        { label: "Recensione",     color: T.purple, icon: "⭐", bg: T.purpleS },
+  reactivation:  { label: "Riattivazione",  color: T.green,  icon: "💬", bg: T.greenS },
+  // Prodotti
+  order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "📋", bg: T.blueS },
+  shipping:      { label: "In spedizione",   color: T.amber,  icon: "📦", bg: T.amberS },
+  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "✅", bg: T.tealS },
+  reorder:       { label: "Riordino",        color: T.green,  icon: "🔄", bg: T.greenS },
 };
 const PRODUCT_PHASES = {
   order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "📋", bg: T.blueS },
@@ -206,10 +206,38 @@ const CLUSTER_TEMPLATES = {
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! È un po' che non ci sentiamo — se hai bisogno di manutenzione o controllo, siamo qui 🔧", active:true },
   ],
   altro: [
-    { id:"t1", name:"Ringraziamento base", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per oggi 🙏 È stato un piacere. Se hai dubbi scrivimi. A presto!", active:true },
+    { id:"t1", name:"Ringraziamento base", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per oggi! È stato un piacere. Se hai dubbi scrivimi. A presto!", active:true },
     { id:"t2", name:"Controllo soddisfazione", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Volevo solo sapere come stai andando. Tutto ok? Se qualcosa non ti convince al 100%, dimmelo.", active:true },
-    { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero di averti soddisfatto 🙏 Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!", active:true },
+    { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero di averti soddisfatto. Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! Pensavo a te — come stai? Se hai in mente qualcosa, sono qui. Buona giornata!", active:true },
+  ],
+  // ── Template Prodotti ──────────────────────────────────────────────────────
+  stampa3d: [
+    { id:"t1", name:"Conferma ordine", code:"PO1", phase:"order_confirm", channel:"WhatsApp", text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie! Lo sto preparando in stampa. Ti avviso non appena è pronto per la spedizione.", active:true },
+    { id:"t2", name:"In spedizione", code:"PO2", phase:"shipping", channel:"WhatsApp", text:"Ciao [Nome]! Il tuo ordine è in partenza oggi. Arrivo stimato: [Data]. Se hai domande sul prodotto, sono qui!", active:true },
+    { id:"t3", name:"Feedback ricezione", code:"PO3", phase:"delivery_check", channel:"WhatsApp", text:"Ciao [Nome]! È arrivato tutto bene? Spero che il pezzo ti soddisfi. Se c'è qualcosa che non va — qualità, dimensioni, finitura — scrivimi subito.", active:true },
+    { id:"t4", name:"Richiesta recensione", code:"PO4", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero che il prodotto stia funzionando bene. Se hai un minuto, una recensione su Google mi aiuterebbe tanto a far conoscere il lavoro. Grazie!", active:true },
+    { id:"t5", name:"Riordino", code:"PO5", phase:"reorder", channel:"WhatsApp", text:"Ciao [Nome]! Sono passati un po' di mesi — se hai bisogno di riordinare o vuoi qualcosa di nuovo, sono qui. Posso anche farti un preventivo personalizzato!", active:true },
+  ],
+  negozio: [
+    { id:"t1", name:"Conferma ordine", code:"PO1", phase:"order_confirm", channel:"WhatsApp", text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie! Lo sto preparando con cura. Ti avviso non appena è in partenza.", active:true },
+    { id:"t2", name:"In spedizione", code:"PO2", phase:"shipping", channel:"WhatsApp", text:"Ciao [Nome]! Il tuo ordine è partito oggi. Arrivo stimato: [Data]. Per qualsiasi cosa sono qui!", active:true },
+    { id:"t3", name:"Feedback ricezione", code:"PO3", phase:"delivery_check", channel:"WhatsApp", text:"Ciao [Nome]! È arrivato tutto bene? Spero che il prodotto ti piaccia. Se c'è qualcosa che non va, scrivimi subito.", active:true },
+    { id:"t4", name:"Richiesta recensione", code:"PO4", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero che il prodotto ti stia soddisfacendo. Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!", active:true },
+    { id:"t5", name:"Riordino", code:"PO5", phase:"reorder", channel:"WhatsApp", text:"Ciao [Nome]! È passato un po' — se hai bisogno di riordinare o vuoi scoprire le novità, sono qui!", active:true },
+  ],
+  altro_s: [
+    { id:"t1", name:"Ringraziamento", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per oggi! È stato un piacere lavorare con te. Per qualsiasi cosa scrivimi.", active:true },
+    { id:"t2", name:"Controllo", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Come stai andando? Tutto ok? Scrivimi se hai bisogno.", active:true },
+    { id:"t3", name:"Recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Se sei soddisfatto, una recensione su Google mi aiuterebbe molto. Grazie!", active:true },
+    { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! Pensavo a te — se hai bisogno di qualcosa, sono qui. Buona giornata!", active:true },
+  ],
+  altro_p: [
+    { id:"t1", name:"Conferma ordine", code:"PO1", phase:"order_confirm", channel:"WhatsApp", text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie! Lo sto preparando. Ti aggiorno a breve.", active:true },
+    { id:"t2", name:"In spedizione", code:"PO2", phase:"shipping", channel:"WhatsApp", text:"Ciao [Nome]! Il tuo ordine è in partenza. Arrivo stimato: [Data].", active:true },
+    { id:"t3", name:"Feedback ricezione", code:"PO3", phase:"delivery_check", channel:"WhatsApp", text:"Ciao [Nome]! È arrivato tutto bene? Se c'è qualcosa che non va, scrivimi subito.", active:true },
+    { id:"t4", name:"Recensione", code:"PO4", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Se sei soddisfatto, una recensione su Google mi aiuterebbe molto. Grazie!", active:true },
+    { id:"t5", name:"Riordino", code:"PO5", phase:"reorder", channel:"WhatsApp", text:"Ciao [Nome]! Se hai bisogno di riordinare o vuoi qualcosa di nuovo, sono qui!", active:true },
   ],
 };
 
