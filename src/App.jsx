@@ -435,9 +435,9 @@ const getNavMain = (bizType) => {
 };
 const NAV_MAIN = getNavMain("");
 
-const BottomNav = ({view,setView,pendingCount}) => (
+const BottomNav = ({view,setView,pendingCount,bizType=""}) => (
   <nav className="mobile-only" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:"#FFFFFF",borderTop:"1px solid #DEE2E6",boxShadow:"0 -1px 0 rgba(0,0,0,0.06)",display:"flex",alignItems:"center",paddingBottom:"env(safe-area-inset-bottom)"}}>
-    {(getNavMain(data?.settings?.bizType||"")).map(n=>{
+    {getNavMain(bizType).map(n=>{
       const a=view===n.id;
       const showBadge=n.id==="followup"&&pendingCount>0;
       return (
@@ -1377,7 +1377,7 @@ export default function SlissPlatform() {
           {CurrentView}
         </main>
       </div>
-      <BottomNav view={view} setView={setView} pendingCount={pendingCount} />
+      <BottomNav view={view} setView={setView} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
     </Ctx.Provider>
   );
 }
