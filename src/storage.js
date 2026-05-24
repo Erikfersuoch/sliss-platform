@@ -2,9 +2,9 @@ const STORAGE_KEY = "sliss-v4";
 const ONBOARDING_KEY = "sliss-onboarded-v4";
 
 const storage = {
-  get: (key) => { try { return localStorage.getItem(key); } catch { return null; } },
-  set: (key, val) => { try { localStorage.setItem(key, val); } catch {} },
-  remove: (key) => { try { localStorage.removeItem(key); } catch {} },
+  get: (key) => { try { return localStorage.getItem(key); } catch(_) { return null; } },
+  set: (key, val) => { try { localStorage.setItem(key, val); } catch(_) {} },
+  remove: (key) => { try { localStorage.removeItem(key); } catch(_) {} },
 };
 
 export const emptyData = () => ({
@@ -50,7 +50,7 @@ export const loadData = () => {
     const r = storage.get(STORAGE_KEY);
     const parsed = r ? JSON.parse(r) : null;
     return healData(parsed);
-  } catch {
+  } catch(_) {
     return emptyData();
   }
 };
@@ -60,11 +60,11 @@ export const saveData = (data) => {
 };
 
 export const isOnboarded = () => {
-  try { return !!storage.get(ONBOARDING_KEY); } catch { return false; }
+  try { return !!storage.get(ONBOARDING_KEY); } catch(_) { return false; }
 };
 
 export const setOnboarded = () => {
-  try { storage.set(ONBOARDING_KEY, "1"); } catch {}
+  try { storage.set(ONBOARDING_KEY, "1"); } catch(_) {}
 };
 
 export const clearOnboarding = () => {
