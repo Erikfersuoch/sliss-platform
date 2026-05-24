@@ -18,13 +18,41 @@ export const emptyData = () => ({
     businessName: "",
     reviewLink: "",
     bizType: "",
+    cluster: "",
     followUpTimings: { thankyou: 0, check: 7, review: 21, reactivation: 60 },
   },
 });
 
+// Auto-healing: garantisce che la struttura dei dati sia sempre valida
+const healData = (raw) => {
+  if (!raw || typeof raw !== "object") return emptyData();
+  const def = emptyData();
+  return {
+    clients:      Array.isArray(raw.clients)      ? raw.clients.map(c => ({...c, name: c.name||"", status: c.status||"new"}))      : def.clients,
+    appointments: Array.isArray(raw.appointments) ? raw.appointments : def.appointments,
+    followUps:    Array.isArray(raw.followUps)    ? raw.followUps.map(f => ({...f, phase: f.phase||"thankyou", status: f.status||"pending"})) : def.followUps,
+    templates:    Array.isArray(raw.templates)    ? raw.templates : def.templates,
+    feedbacks:    Array.isArray(raw.feedbacks)    ? raw.feedbacks : def.feedbacks,
+    orders:       Array.isArray(raw.orders)       ? raw.orders : def.orders,
+    settings: {
+      ...def.settings,
+      ...(raw.settings && typeof raw.settings === "object" ? raw.settings : {}),
+      followUpTimings: {
+        ...def.settings.followUpTimings,
+        ...(raw.settings?.followUpTimings || {}),
+      },
+    },
+  };
+};
+
 export const loadData = () => {
-  try { const r = storage.get(STORAGE_KEY); return r ? JSON.parse(r) : emptyData(); }
-  catch { return emptyData(); }
+  try {
+    const r = storage.get(STORAGE_KEY);
+    const parsed = r ? JSON.parse(r) : null;
+    return healData(parsed);
+  } catch {
+    return emptyData();
+  }
 };
 
 export const saveData = (data) => {
