@@ -70,15 +70,15 @@ const Onboarding = ({onComplete}) => {
       </>;
       case 1: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F4BC}"}</div>
-        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come si chiama la tua attivit\u{e0}?</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparir\u{e0} nel saluto della home. Potrai cambiarlo nelle impostazioni.</p>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come si chiama la tua attività?</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparirà nel saluto della home. Potrai cambiarlo nelle impostazioni.</p>
         <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"20px"}} autoFocus />
         <Btn onClick={()=>setStep(2)} disabled={!bName.trim()} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
       </>;
       case 2: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F3AF}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come lavori?</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss si adatta al tuo tipo di attivit\u{e0}.</p>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss si adatta al tuo tipo di attività.</p>
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"20px"}}>
           {[{key:"servizi",icon:"\u{1F5D3}\u{FE0F}",label:"Offro servizi con appuntamento",desc:"Tatuaggi, barber, estetica, officine..."},{key:"prodotti",icon:"\u{1F4E6}",label:"Vendo prodotti",desc:"Stampa 3D, negozio, prodotti artigianali..."}].map(opt=>(
             <button key={opt.key} onClick={()=>{setBizType(opt.key);setCluster("");setCustomSector("");}} style={{display:"flex",alignItems:"center",gap:"14px",padding:"16px 18px",background:bizType===opt.key?T.greenS:T.bg2,border:`1.5px solid ${bizType===opt.key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
@@ -92,7 +92,7 @@ const Onboarding = ({onComplete}) => {
       case 3: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F3F7}\u{FE0F}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>In quale settore lavori?</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss adatter\u{e0} i template al tuo settore.</p>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss adatterà i template al tuo settore.</p>
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"20px"}}>
           {Object.entries(clustersForType).map(([key,cl])=>(
             <button key={key} onClick={()=>{setCluster(key);setCustomSector("");}} style={{display:"flex",alignItems:"center",gap:"14px",padding:"14px 18px",background:cluster===key?T.greenS:T.bg2,border:`1.5px solid ${cluster===key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
@@ -107,7 +107,7 @@ const Onboarding = ({onComplete}) => {
       case 4: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F680}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Sei pronto</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>{bizType==="prodotti"?"Inizia aggiungendo il tuo primo cliente, poi inserisci un ordine.":"Inizia aggiungendo il tuo primo cliente, poi inserisci un appuntamento."} Sliss generer\u{e0} i follow-up automaticamente.</p>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>{bizType==="prodotti"?"Inizia aggiungendo il tuo primo cliente, poi inserisci un ordine.":"Inizia aggiungendo il tuo primo cliente, poi inserisci un appuntamento."} Sliss genererà i follow-up automaticamente.</p>
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"24px"}}>
           {(bizType==="prodotti"?["Aggiungi un cliente","Inserisci un ordine","Sliss prepara i messaggi per te"]:["Aggiungi un cliente","Inserisci un appuntamento","Sliss prepara i messaggi per te"]).map((st,i)=>(
             <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",background:T.bg2,borderRadius:T.r.l,border:`1px solid ${T.border}`,textAlign:"left"}}>
