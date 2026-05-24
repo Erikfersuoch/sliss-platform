@@ -15,23 +15,24 @@ Fase 1 completata. Il sistema operativo è in piedi, l'app è deployata, il kick
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v3.0
+- ✅ Deploy attivo su Vercel — app v4.0
 
 ---
 
 ## Il prodotto oggi
 
-**App.jsx (v3.0)** — revisione UX/UI completata nella sessione del 20/05/2026.
+**App.jsx (v4.0)** — aggiornata il 24/05/2026.
 
-Cosa è cambiato dalla v2.0:
-- Home pulita: saluto con nome attività, 3 metriche, lista unica "Da fare oggi"
-- Follow-Up: bottoni WhatsApp/Copia diretti, tasto "Segna tutti inviati", schermata completamento
-- Clienti: modifica + eliminazione, tag cliccabile dalla lista, rimosso campo "settore"
-- Template: modifica inline + eliminazione + nuovo template
-- Feedback: logica ribaltata — lista clienti senza recensione + richiesta diretta
-- Appuntamenti: nuova sezione con generazione automatica dei 4 follow-up dalla data inserita
-- Moduli: layout a cubi compatti
-- Impostazioni: nome attività, link Google, timing personalizzabili (ringraziamento in ore)
+Cosa è cambiato dalla v3.0:
+- **Onboarding 5 step:** nome attività → tipo (servizi/prodotti) → cluster settore → template auto
+- **Due flussi paralleli:** Servizi (Appuntamenti + 4 follow-up) e Prodotti (Ordini + 5 follow-up)
+- **Light mode:** accent verde Sliss #16A34A, massima leggibilità
+- **Mobile-first:** bottom nav con badge follow-up pendenti, menu "Altro" per sezioni secondarie
+- **Desktop:** sidebar fissa adattiva per tipo attività
+- **Template per cluster:** caricati automaticamente dall'onboarding in base al settore scelto
+- **Ordini:** sezione dedicata con timeline 5 fasi (conferma → spedizione → ricezione → recensione → riordino)
+- **Storage:** localStorage con wrapper robusto, chiavi `sliss-v4` e `sliss-onboarded-v4`
+- **Guards:** tutti gli accessi a data usano `data?.tableName || []` per compatibilità dati precedenti
 
 **Modulo attivo:** M1 Follow-Up
 **Moduli bloccati fino a validazione M1:** M2, M3, M5, M6, M9

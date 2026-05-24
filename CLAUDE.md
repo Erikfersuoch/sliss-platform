@@ -7,13 +7,17 @@
 
 ## Cos'è Sliss
 
-Piattaforma web modulare per micro-business e artigiani (tatuatori, barber, estetiste, officine, freelance). Automatizza le operazioni ripetitive: follow-up post-appuntamento, reminder, FAQ, onboarding clienti.
+Piattaforma web modulare per micro-business (tatuatori, barber, estetiste, officine, stampa 3D, negozi). Automatizza follow-up, reminder, FAQ, onboarding clienti. Due flussi paralleli: servizi (con appuntamenti) e prodotti (con ordini).
 
 **Stack:** React (Vite) + Vercel + GitHub
 **Repo:** github.com/Erikfersuoch/sliss-platform
-**Deploy:** Vercel (attivo)
-**Modulo attivo:** M1 Follow-Up (4 fasi: ringraziamento, controllo, recensione, riattivazione)
-**Moduli bloccati:** M2, M3, M5, M6, M9 — nessun lavoro su questi fino a validazione M1
+**Deploy:** Vercel (attivo) — sliss-platform.vercel.app
+**App:** v4.0 · src/App.jsx
+**UI:** light mode · accent verde #16A34A · mobile-first (bottom nav) · sidebar desktop
+**Storage:** localStorage · chiavi: `sliss-v4`, `sliss-onboarded-v4`
+**Onboarding:** 5 step — nome attività → tipo (servizi/prodotti) → cluster settore
+**Flussi:** Servizi (Appuntamenti + 4 follow-up) · Prodotti (Ordini + 5 follow-up)
+**Modulo attivo:** M1 Follow-Up — non toccare M2, M3, M5, M6, M9
 
 ---
 
@@ -52,6 +56,20 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 4. **Non toccare mai:** Supabase, pricing, sito vetrina — bloccati fino a Fase 3.
 5. **Quando proponi modifiche UI/UX:** mostra prima cosa cambieresti e perché, poi aspetta ok.
 6. **Se vedi dispersione** (sto chiedendo cose fuori focus): bloccami e riportami all'obiettivo della sessione.
+
+---
+
+## Regole tecniche (imparate dai bug — non ripetere)
+
+1. **STORAGE — sempre localStorage.** `window.storage` esiste solo in Claude Artifacts. Su Vercel crasha silenziosamente. Il wrapper è in App.jsx: `const storage = { get, set, remove }`.
+
+2. **PHASES centralizzato.** Ogni fase follow-up (servizi e prodotti) DEVE essere nell'oggetto `PHASES` globale. Se manca, Follow-Up crasha con "Cannot read properties of undefined (reading 'icon')".
+
+3. **Guards sui dati.** MAI `data.tableName` diretto. Sempre `data?.tableName || []`. Le tabelle nuove possono essere undefined nei dati salvati da sessioni precedenti.
+
+4. **CSS — una sola regola `*{}`.** Due regole `*{}` separate si sovrascrivono e rompono font-family.
+
+5. **Context fuori Provider.** Componenti che usano `useSliss()` devono stare dentro `<Ctx.Provider>`. Se servono dati fuori dal Provider, passarli come prop.
 
 ---
 
