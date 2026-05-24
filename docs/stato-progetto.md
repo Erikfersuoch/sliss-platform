@@ -21,9 +21,9 @@ Fase 1 completata. Il sistema operativo è in piedi, l'app è deployata, il kick
 
 ## Il prodotto oggi
 
-**App.jsx (v4.0)** — aggiornata il 24/05/2026.
+**App.jsx (v5.0)** — aggiornata il 24/05/2026.
 
-Cosa è cambiato dalla v3.0:
+Cosa è cambiato dalla v4.0:
 - **Onboarding 5 step:** nome attività → tipo (servizi/prodotti) → cluster settore → template auto
 - **Due flussi paralleli:** Servizi (Appuntamenti + 4 follow-up) e Prodotti (Ordini + 5 follow-up)
 - **Light mode:** accent verde Sliss #16A34A, massima leggibilità

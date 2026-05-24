@@ -1,4 +1,22 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+
+class ErrorBoundary extends React.Component {
+  constructor(props) { super(props); this.state = {hasError:false}; }
+  static getDerivedStateFromError() { return {hasError:true}; }
+  render() {
+    if(this.state.hasError) return (
+      <div style={{minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",background:"#F8F9FA",padding:"20px"}}>
+        <div style={{textAlign:"center",maxWidth:"400px"}}>
+          <div style={{fontSize:"44px",marginBottom:"16px"}}>⚠️</div>
+          <h2 style={{fontSize:"18px",fontWeight:700,marginBottom:"8px",color:"#111318"}}>Qualcosa è andato storto</h2>
+          <p style={{fontSize:"14px",color:"#868E96",lineHeight:1.6,marginBottom:"20px"}}>Prova a ricaricare la pagina. Se il problema persiste, resetta i dati dalle Impostazioni.</p>
+          <button onClick={()=>window.location.reload()} style={{padding:"12px 24px",background:"#16A34A",color:"#fff",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:600,cursor:"pointer"}}>Ricarica</button>
+        </div>
+      </div>
+    );
+    return this.props.children;
+  }
+}
 import T from "./theme.js";
 import { loadData, saveData, isOnboarded, setOnboarded, emptyData, storage, ONBOARDING_KEY } from "./storage.js";
 import { PHASES, PRODUCT_PHASES, STATUSES, CLIENT_ST, CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI, CLUSTERS, CLUSTER_TEMPLATES, MODULES } from "./config.js";
@@ -164,7 +182,7 @@ const DesktopSidebar = ({view,setView}) => {
         );})}
       </nav>
       <div style={{padding:"12px 18px",borderTop:`1px solid ${T.border}`}}>
-        <div style={{fontSize:"10px",color:T.textMu}}>Sliss v4.0 · liscio come deve essere.</div>
+        <div style={{fontSize:"10px",color:T.textMu}}>Sliss v5.0 · liscio come deve essere.</div>
       </div>
     </div>
   );
@@ -207,7 +225,7 @@ const Home = ({setView}) => {
           : <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
               {pending.slice(0,3).map(fu=>{
                 const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
-                const ph=PHASES[fu.phase];
+                const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};
                 return (
                   <div key={fu.id} style={{padding:"12px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`}}>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
@@ -228,7 +246,7 @@ const Home = ({setView}) => {
         <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>Clienti</h2>
         <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
           {(data?.clients||[]).slice(0,5).map(cl=>{
-            const st=CLIENT_ST[cl.status];
+            const st=CLIENT_ST[cl.status]||{label:cl.status,color:T.textD,bg:T.bg3};
             return (<div key={cl.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.m}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:st.color,flexShrink:0}} /><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"14px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"11px",color:T.textD}}>{daysAgo(cl.lastVisit)}</div></div><Badge {...st} s /></div>);
           })}
           {(data?.clients||[]).length===0&&<div style={{fontSize:"13px",color:T.textD,textAlign:"center",padding:"12px 0"}}>Nessun cliente ancora</div>}
@@ -263,7 +281,7 @@ const FollowUp = () => {
         : !filtered.length
         ? <Empty icon={"\u{1F4ED}"} title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
         : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase];const st=STATUSES[fu.status];const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);return (
+            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);return (
               <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{animation:`fadeIn .3s ease ${i*.03}s both`}}>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <span style={{fontSize:"20px",marginTop:"2px",flexShrink:0}}>{ph.icon}</span>
@@ -279,7 +297,7 @@ const FollowUp = () => {
           </div>
       }
       <Modal open={!!sel} onClose={()=>setSel(null)} title="Dettaglio Follow-Up">
-        {sel&&(()=>{const cl=(data?.clients||[]).find(c=>c.id===sel.clientId);const ph=PHASES[sel.phase];const st=STATUSES[sel.status];return (
+        {sel&&(()=>{const cl=(data?.clients||[]).find(c=>c.id===sel.clientId);const ph=PHASES[sel.phase]||{icon:"📋",label:sel.phase,color:T.textD,bg:T.bg3};const st=STATUSES[sel.status]||{label:sel.status,color:T.textD,bg:T.bg3};return (
           <div style={{display:"flex",flexDirection:"column",gap:"16px"}}>
             <div style={{display:"flex",gap:"7px",flexWrap:"wrap"}}><Badge {...ph} /><Badge {...st} /></div>
             <div><div style={{fontWeight:700,fontSize:"17px"}}>{cl?.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{cl?.phone} · {cl?.channel}</div></div>
@@ -384,7 +402,7 @@ const Clients = () => {
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Clienti" action={<Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn>} />
       <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"16px"}}><Tabs tabs={tabs} active={sf} onChange={setSf} /><Search value={search} onChange={setSearch} placeholder="Cerca nome o email..." /></div>
-      {!filtered.length ? <Empty icon={"\u{1F465}"} title="Nessun cliente" desc="Aggiungi il tuo primo cliente per iniziare." action={<Btn onClick={()=>setShowNew(true)}>+ Aggiungi</Btn>} /> : <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>{filtered.map((cl,i)=>{const st=CLIENT_ST[cl.status];return (<Card key={cl.id} hov onClick={()=>openClient(cl)} style={{padding:"13px 16px",animation:`fadeIn .3s ease ${i*.03}s both`}}><div style={{display:"flex",alignItems:"center",gap:"12px"}}><div style={{width:"40px",height:"40px",borderRadius:"50%",background:T.bg3,border:`1px solid ${T.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"16px",fontWeight:700,color:T.textM,flexShrink:0}}>{cl.name.charAt(0).toUpperCase()}</div><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"15px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"12px",color:T.textD,marginTop:"2px"}}>{cl.channel} · {daysAgo(cl.lastVisit)}</div></div><div onClick={e=>{e.stopPropagation();update("clients",cl.id,{status:nextStatus(cl.status)});}} style={{cursor:"pointer",padding:"4px"}}><Badge {...st} s /></div></div></Card>);})}</div>}
+      {!filtered.length ? <Empty icon={"\u{1F465}"} title="Nessun cliente" desc="Aggiungi il tuo primo cliente per iniziare." action={<Btn onClick={()=>setShowNew(true)}>+ Aggiungi</Btn>} /> : <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>{filtered.map((cl,i)=>{const st=CLIENT_ST[cl.status]||{label:cl.status,color:T.textD,bg:T.bg3};return (<Card key={cl.id} hov onClick={()=>openClient(cl)} style={{padding:"13px 16px",animation:`fadeIn .3s ease ${i*.03}s both`}}><div style={{display:"flex",alignItems:"center",gap:"12px"}}><div style={{width:"40px",height:"40px",borderRadius:"50%",background:T.bg3,border:`1px solid ${T.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"16px",fontWeight:700,color:T.textM,flexShrink:0}}>{cl.name.charAt(0).toUpperCase()}</div><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"15px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"12px",color:T.textD,marginTop:"2px"}}>{cl.channel} · {daysAgo(cl.lastVisit)}</div></div><div onClick={e=>{e.stopPropagation();update("clients",cl.id,{status:nextStatus(cl.status)});}} style={{cursor:"pointer",padding:"4px"}}><Badge {...st} s /></div></div></Card>);})}</div>}
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nuovo cliente">
         <FormField label="Nome completo"><input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} placeholder="Nome Cognome" /></FormField>
         <FormField label="Telefono"><input value={form.phone} onChange={e=>setForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>
@@ -394,12 +412,12 @@ const Clients = () => {
         <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowNew(false)}>Annulla</Btn><Btn onClick={handleAdd} disabled={!form.name.trim()}>Salva</Btn></div>
       </Modal>
       <Modal open={!!sel} onClose={()=>{setSel(null);setEditMode(false);}} title="Scheda Cliente">
-        {sel&&editForm&&(()=>{const st=CLIENT_ST[sel.status];const fus=(data?.followUps||[]).filter(f=>f.clientId===sel.id).sort((a,b)=>new Date(b.scheduledDate)-new Date(a.scheduledDate));return !editMode ? (
+        {sel&&editForm&&(()=>{const st=CLIENT_ST[sel.status]||{label:sel.status,color:T.textD,bg:T.bg3};const fus=(data?.followUps||[]).filter(f=>f.clientId===sel.id).sort((a,b)=>new Date(b.scheduledDate)-new Date(a.scheduledDate));return !editMode ? (
           <div style={{display:"flex",flexDirection:"column",gap:"16px"}}>
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div><div style={{fontSize:"18px",fontWeight:700}}>{sel.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{sel.phone}{sel.email&&` · ${sel.email}`}</div></div><div style={{display:"flex",gap:"7px",alignItems:"center"}}><Badge {...st} /><Btn v="secondary" s="sm" onClick={()=>setEditMode(true)}>{"\u{270F}\u{FE0F}"}</Btn></div></div>
             {sel.notes&&<div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m,fontSize:"13px",color:T.textM,lineHeight:1.6,border:`1px solid ${T.border}`}}>{"\u{1F4DD}"} {sel.notes}</div>}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px"}}><div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Prima visita</span><div style={{fontSize:"14px",marginTop:"3px"}}>{fmtDate(sel.firstVisit)}</div></div><div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Ultima visita</span><div style={{fontSize:"14px",marginTop:"3px"}}>{fmtDate(sel.lastVisit)}</div></div></div>
-            {fus.length>0&&<div><h4 style={{fontSize:"13px",fontWeight:600,marginBottom:"8px",color:T.textM}}>Follow-Up</h4><div style={{display:"flex",flexDirection:"column",gap:"5px"}}>{fus.map(fu=>{const ph=PHASES[fu.phase];const ss=STATUSES[fu.status];return (<div key={fu.id} style={{display:"flex",alignItems:"center",gap:"8px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.s,border:`1px solid ${T.border}`}}><span style={{fontSize:"14px"}}>{ph.icon}</span><div style={{flex:1,display:"flex",gap:"5px",flexWrap:"wrap"}}><Badge {...ph} s /><Badge {...ss} s /></div><span style={{fontSize:"11px",color:T.textD}}>{fmtDate(fu.scheduledDate)}</span></div>);})}</div></div>}
+            {fus.length>0&&<div><h4 style={{fontSize:"13px",fontWeight:600,marginBottom:"8px",color:T.textM}}>Follow-Up</h4><div style={{display:"flex",flexDirection:"column",gap:"5px"}}>{fus.map(fu=>{const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const ss=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};return (<div key={fu.id} style={{display:"flex",alignItems:"center",gap:"8px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.s,border:`1px solid ${T.border}`}}><span style={{fontSize:"14px"}}>{ph.icon}</span><div style={{flex:1,display:"flex",gap:"5px",flexWrap:"wrap"}}><Badge {...ph} s /><Badge {...ss} s /></div><span style={{fontSize:"11px",color:T.textD}}>{fmtDate(fu.scheduledDate)}</span></div>);})}</div></div>}
             <div style={{paddingTop:"12px",borderTop:`1px solid ${T.border}`}}><Btn v="danger" s="sm" onClick={()=>handleDelete(sel.id)}>{"\u{1F5D1}\u{FE0F}"} Elimina</Btn></div>
           </div>
         ) : (
@@ -508,17 +526,19 @@ export default function SlissPlatform() {
   const viewMap={home:<Home setView={setView}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp/>,clients:<Clients/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={setView}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
-  if(showOnboarding) return <Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider>;
+  if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
 
   return (
-    <Ctx.Provider value={ctx}>
-      <GlobalCSS />
-      <div translate="no" lang="it" style={{display:"flex",minHeight:"100vh"}}>
-        <DesktopSidebar view={view} setView={setView} />
-        <main style={{flex:1,padding:"24px 20px",paddingBottom:"calc(80px + env(safe-area-inset-bottom))",maxWidth:"680px",margin:"0 auto",width:"100%"}} className="mobile-only">{CurrentView}</main>
-        <main style={{flex:1,marginLeft:"210px",padding:"28px 36px",maxWidth:"1040px"}} className="desktop-only">{CurrentView}</main>
-      </div>
-      <BottomNav view={view} setView={setView} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
-    </Ctx.Provider>
+    <ErrorBoundary>
+      <Ctx.Provider value={ctx}>
+        <GlobalCSS />
+        <div translate="no" lang="it" style={{display:"flex",minHeight:"100vh"}}>
+          <DesktopSidebar view={view} setView={setView} />
+          <main style={{flex:1,padding:"24px 20px",paddingBottom:"calc(80px + env(safe-area-inset-bottom))",maxWidth:"680px",margin:"0 auto",width:"100%"}} className="mobile-only">{CurrentView}</main>
+          <main style={{flex:1,marginLeft:"210px",padding:"28px 36px",maxWidth:"1040px"}} className="desktop-only">{CurrentView}</main>
+        </div>
+        <BottomNav view={view} setView={setView} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
+      </Ctx.Provider>
+    </ErrorBoundary>
   );
 }
