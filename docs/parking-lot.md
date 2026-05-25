@@ -7,19 +7,22 @@
 
 ## Idee prodotto
 
-<!-- Esempio: "Aggiungere notifiche push per i follow-up" — parcheggiata 15/05/2026 -->
+<!-- nessuna voce al momento -->
 
 ## Idee commerciali
 
-<!-- Esempio: "Bundle con tool di prenotazione esterno" — parcheggiata 20/05/2026 -->
+- **Approccio outreach 1:1** — conversazioni dirette, vocali, messaggi brevi, niente link. Da valutare per Fase 2 inoltrata quando avremo dati veri — parcheggiata 25/05/2026
+- **Riapertura Tally con framing problema** — riproporre il sondaggio con tono colloquiale e dati Moira a supporto. Da valutare per Fase 2 inoltrata — parcheggiata 25/05/2026
 
 ## Idee tecniche
 
-<!-- Esempio: "Migrare da localStorage a Supabase prima della Fase 3" — già in roadmap, non qui -->
+- **Integrazione calendario esterno** (Google Calendar / iCal) — parcheggiata Maggio 2026 (data esatta non recuperabile)
+- **Invio automatico messaggi** senza azione del professionista — parcheggiata Maggio 2026 (data esatta non recuperabile)
+- **Fix emoji su Vercel** — problema font, fix veloce, bassa priorità — parcheggiata Maggio 2026 (data esatta non recuperabile)
 
 ## Vertical alternativi
 
-- Amico stampa 3D / Motorsport → valutare per Fase 4, modulo M3 Richieste Inbound
+- **Amico stampa 3D / Motorsport** — valutare per Fase 4, modulo M3 Richieste Inbound — parcheggiato Maggio 2026 (data esatta non recuperabile)
 
 ---
 

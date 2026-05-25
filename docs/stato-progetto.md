@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-> Documento vivente · Aggiornato: maggio 2026
+> Documento vivente · Aggiornato: 25/05/2026
 > Fase corrente: **1 — Fondazione → transizione a Fase 2**
 
 ---
@@ -15,7 +15,7 @@ Fase 1 completata. Il sistema operativo è in piedi, l'app è deployata, il kick
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v4.0
+- ✅ Deploy attivo su Vercel — app v5.0
 
 ---
 
@@ -39,31 +39,27 @@ Cosa è cambiato dalla v4.0:
 
 ---
 
-## Il tester
+## I tester
 
-**Tester zero:** moglie, Momo Ink (studio tatuaggi)
-**Kickoff:** avvenuto — 19/05/2026
-**Stato:** ha visto l'app, le piace l'interfaccia. Deve iniziare l'uso sistematico.
-**Check settimanale:** da concordare (giorno e ora fissi)
+**Tester zero — Moira (moglie, Momo Ink)**
+- Kickoff: 19/05/2026
+- Stato: ha visto l'app, reazione positiva all'interfaccia. Uso sistematico da avviare.
+- Check settimanale: da concordare (giorno e ora fissi)
 
-**Primi feedback raccolti al kickoff:**
-- Interfaccia: positiva
-- Follow-up 60-90 giorni (riattivazione): lo considera inutile — il cliente deve rientrare autonomamente
-- Follow-up ringraziamento: deve essere molto vicino alla fine della prestazione (già strutturato così, da approfondire)
+**Tester uno — Luca (Kayek3D, stampa 3D)**
+- Stato: identificato il 25/05/2026
+- Kickoff: da concordare
+- Prossimo passo: contattarlo con proposta formale (30 giorni di test)
 
-→ Entrambi i punti vanno validati con i dati, non risolti a tavolino adesso.
-
-**Tester uno (futuro):** altro tatuatore della rete di tua moglie — da attivare in Fase 2.
-
-**Secondo contatto noto:** amico stampa 3D / Motorsport.
-→ NON per M1. Parcheggiato per Fase 4.
+→ Decisione del 25/05: due tester in parallelo per raccogliere dati su profili diversi.
+→ Dettaglio feedback kickoff Moira: vedi docs/test-m1/feedback-log.md
 
 ---
 
 ## I dubbi onesti
 
 1. **La struttura dei moduli convince a metà.** La risposta arriverà dai dati del test.
-2. **Il follow-up di riattivazione è contestato dalla tester.** Tono e timing da verificare sul campo.
+2. **Il follow-up di riattivazione è contestato da Moira.** Tono e timing da verificare sul campo.
 3. **Il one-man business è l'obiettivo vero.** Ogni scelta di complessità deve essere compatibile con questo.
 4. **L'uscita (vendita, guadagno) è un'ambizione legittima.** Da affrontare solo dopo Fase 2 Go.
 5. **La nebbia è il problema principale, non il tempo.** Il sistema esiste per questo.
@@ -72,9 +68,9 @@ Cosa è cambiato dalla v4.0:
 
 ## Prossimi 3 passi (in ordine)
 
-1. **Concordare check settimanale con tua moglie** — giorno fisso, 20 minuti, ogni settimana. (Ruolo: TEST)
-2. **Passare il form sondaggio professionisti** — elaborarlo e distribuirlo a una cerchia ristretta. (Ruolo: CORE)
-3. **Prima settimana di uso reale** — lei usa l'app, tu osservi. Niente modifiche al codice. (Ruolo: TEST)
+1. **Chiamata diagnostica con Moira** — 20 minuti, capire cosa blocca l'avvio dell'uso sistematico. (Ruolo: TEST)
+2. **Concordare check settimanale con Moira** — solo dopo la chiamata diagnostica, giorno e ora fissi. (Ruolo: TEST)
+3. **Contattare Luca (Kayek3D)** — proposta formale di essere tester per 30 giorni, fissare kickoff. (Ruolo: TEST)
 
 ---
 
@@ -82,16 +78,9 @@ Cosa è cambiato dalla v4.0:
 
 | Blocco | Note |
 |---|---|
-| Check settimanale non ancora concordato | Serve giorno e ora fissi prima di partire |
-| Uso sistematico tester non ancora iniziato | Il timer dei 14 giorni parte quando inizia davvero |
-
----
-
-## Parking lot (idee da rivalutare in Fase 4)
-
-- Integrazione calendario esterno (Google Calendar / iCal)
-- Invio automatico messaggi senza azione del professionista
-- Emoji nei messaggi (problema font su Vercel — fix veloce, bassa priorità)
+| Chiamata diagnostica con Moira non ancora fatta | Primo passo prima di concordare qualsiasi check |
+| Check settimanale Moira non ancora concordato | Dipende dalla chiamata diagnostica |
+| Kickoff Luca non ancora fissato | Da contattare — identificato il 25/05 |
 
 ---
 
