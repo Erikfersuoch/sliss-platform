@@ -10,7 +10,6 @@
 - [27/05/2026] Orari notifiche push configurabili da impostazioni utente — oggi hardcoded per tester, diventa setting personalizzabile in Fase 3
 - [25/05/2026] Rimuovere conferma invio messaggi — aggiungere feedback visivo post-invio al posto del confirm dialog
 - [25/05/2026] Onboarding: utenti cliccano sui numeri dei passaggi — capire se navigazione intenzionale o confusione, qualcosa manca
-- [25/05/2026] Onboarding selezioni: auto-confirm al click del campo, eliminare il tasto "avanti" esplicito
 - [25/05/2026] Rendere più visibile che il tag cliente (VIP, nuovo, ecc.) è modificabile
 - [25/05/2026] Sezione follow-up: aggiungere pulsante "modifica" su ogni messaggio nella lista
 - [25/05/2026] Recensioni Google: collegamento non funziona / valutare se la visualizzazione in-app serve — forse basta mandare la richiesta recensione e rimandare l'utente su Google
