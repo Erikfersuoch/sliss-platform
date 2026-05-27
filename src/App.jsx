@@ -33,7 +33,7 @@ class ErrorBoundary extends React.Component {
 import T from "./theme.js";
 import { loadData, saveData, isOnboarded, setOnboarded, emptyData, storage, ONBOARDING_KEY } from "./storage.js";
 import { PHASES, PRODUCT_PHASES, STATUSES, CLIENT_ST, CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI, CLUSTERS, CLUSTER_TEMPLATES, MODULES } from "./config.js";
-import { fmtDate, daysAgo, daysUntil, addDays, uid, today, greet } from "./helpers.js";
+import { fmtDate, daysAgo, daysUntil, addDays, uid, today, greet, urlBase64ToUint8Array } from "./helpers.js";
 import { Ctx, useSliss } from "./context.js";
 import SlissLogo from "./components/SlissLogo.jsx";
 import GlobalCSS from "./GlobalCSS.jsx";
@@ -54,6 +54,31 @@ const Onboarding = ({onComplete}) => {
   const isSafari = /Safari/.test(navigator.userAgent) && !/CriOS|FxiOS|OPiOS/.test(navigator.userAgent);
   const needsPWAStep = isIOS && !isStandalone;
   const needsSafariSwitch = needsPWAStep && !isSafari;
+  const requestAndSubscribe = async () => {
+    try {
+      if ('Notification' in window && 'serviceWorker' in navigator) {
+        const perm = await Notification.requestPermission();
+        if (perm === 'granted') {
+          const reg = await navigator.serviceWorker.ready;
+          const existing = await reg.pushManager.getSubscription();
+          const sub = existing || await reg.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
+          });
+          const tester = new URLSearchParams(window.location.search).get('tester') || 'unknown';
+          await fetch('/api/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subscription: sub.toJSON(), tester })
+          });
+        }
+      }
+    } catch(e) {
+      console.error('Push subscription error:', e);
+    }
+    doComplete();
+  };
+
   const doComplete = () => {
     const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:""};
     updateSettings(updates);
@@ -153,7 +178,7 @@ const Onboarding = ({onComplete}) => {
               </div>
             ))}
           </div>
-          <Btn onClick={doComplete} style={{width:"100%",justifyContent:"center",marginBottom:"12px"}}>{"Ho installato, inizia \u{2192}"}</Btn>
+          <Btn onClick={requestAndSubscribe} style={{width:"100%",justifyContent:"center",marginBottom:"12px"}}>{"Ho installato, inizia \u{2192}"}</Btn>
           <button onClick={doComplete} style={{fontSize:"14px",color:T.textD,background:"none",border:"none",cursor:"pointer",padding:"8px",width:"100%"}}>Salta per ora</button>
         </>}
       </>;
