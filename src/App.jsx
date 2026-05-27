@@ -74,12 +74,8 @@ const Onboarding = ({onComplete}) => {
   const isSafari = /Safari/.test(navigator.userAgent) && !/CriOS|FxiOS|OPiOS/.test(navigator.userAgent);
   const needsPWAStep = isIOS && !isStandalone;
   const needsSafariSwitch = needsPWAStep && !isSafari;
-  const requestAndSubscribe = async () => {
-    try { await subscribeToPush(); } catch(e) { console.error(e); }
-    doComplete();
-  };
-
-  const doComplete = () => {
+  // Salva dati e segna come onboardato — chiamato allo step 4 prima dello step Safari
+  const saveProgress = () => {
     const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:""};
     updateSettings(updates);
     if(bizType==="servizi"&&cluster&&CLUSTER_TEMPLATES[cluster]) CLUSTER_TEMPLATES[cluster].forEach(t=>addRecord("templates",{...t,id:uid()}));
@@ -88,6 +84,12 @@ const Onboarding = ({onComplete}) => {
       if(tpls) tpls.forEach(t=>addRecord("templates",{...t,id:uid()}));
     }
     setOnboarded();
+  };
+
+  const doComplete = () => { saveProgress(); onComplete(); };
+
+  const requestAndSubscribe = async () => {
+    try { await subscribeToPush(); } catch(e) { console.error(e); }
     onComplete();
   };
   const renderStep = () => {
@@ -147,7 +149,7 @@ const Onboarding = ({onComplete}) => {
             </div>
           ))}
         </div>
-        <Btn onClick={needsPWAStep?()=>setStep(5):doComplete} style={{width:"100%",justifyContent:"center"}}>{needsPWAStep?"Avanti \u{2192}":"Apri Sliss \u{2192}"}</Btn>
+        <Btn onClick={needsPWAStep?()=>{saveProgress();setStep(5);}:doComplete} style={{width:"100%",justifyContent:"center"}}>{needsPWAStep?"Avanti \u{2192}":"Apri Sliss \u{2192}"}</Btn>
       </>;
       case 5: return <>
         {needsSafariSwitch ? <>

@@ -5,7 +5,14 @@ self.addEventListener('install', e => {
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(clients.claim());
+  e.waitUntil(
+    clients.claim().then(() => {
+      // Forza reload di tutte le tab aperte quando il SW si aggiorna
+      return clients.matchAll({ type: 'window' }).then(list => {
+        list.forEach(c => c.navigate(c.url));
+      });
+    })
+  );
 });
 
 // Riceve le notifiche push dal server
