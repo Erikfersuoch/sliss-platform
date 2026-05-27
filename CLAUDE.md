@@ -50,7 +50,7 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 
 ## Regole operative per Claude Code (ruolo DEV)
 
-0. **Fine sessione — SEMPRE committare.** Prima di chiudere Claude Code, esegui `git add -A && git commit -m "sessione: [descrizione breve]"`. Senza commit, il lavoro della sessione esiste solo nella conversazione e si perde al riavvio. Questo vale anche per modifiche ai soli file docs/.
+0. **Fine sessione — SEMPRE committare E verificare Vercel.** Prima di chiudere Claude Code: (a) `git add -A && git commit -m "sessione: [descrizione breve]" && git push`; (b) controlla su Vercel dashboard che il deployment più recente corrisponda all'ultimo commit SHA. Se non coincide, esegui `git commit --allow-empty -m "chore: trigger redeploy" && git push` per forzare il deploy. Senza questa verifica, il codice committato può non essere mai deployato (webhook Vercel→GitHub inaffidabile).
 
 1. **Un passo alla volta.** Proponi, aspetta conferma, esegui.
 2. **Spiega sempre dove mettere le cose.** Non assumere che sappia dove si trova un file.
