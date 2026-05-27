@@ -50,12 +50,16 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 
 ## Regole operative per Claude Code (ruolo DEV)
 
+0. **Fine sessione — SEMPRE committare.** Prima di chiudere Claude Code, esegui `git add -A && git commit -m "sessione: [descrizione breve]"`. Senza commit, il lavoro della sessione esiste solo nella conversazione e si perde al riavvio. Questo vale anche per modifiche ai soli file docs/.
+
 1. **Un passo alla volta.** Proponi, aspetta conferma, esegui.
 2. **Spiega sempre dove mettere le cose.** Non assumere che sappia dove si trova un file.
 3. **Non toccare mai:** M2, M3, M5, M6, M9 — bloccati fino a validazione M1.
 4. **Non toccare mai:** Supabase, pricing, sito vetrina — bloccati fino a Fase 3.
 5. **Quando proponi modifiche UI/UX:** mostra prima cosa cambieresti e perché, poi aspetta ok.
 6. **Se vedi dispersione** (sto chiedendo cose fuori focus): bloccami e riportami all'obiettivo della sessione.
+7. **Notifiche push — hardcoded per tester attuali.** Moira: inserimento 19:30 / follow-up 12:30. Luca: inserimento 20:30 / follow-up 12:00. Non generalizzare. La schermata impostazioni orari viene in Fase 3.
+8. **PWA su iPhone — solo Safari.** Le notifiche push PWA funzionano solo da Safari iOS. L'onboarding deve guidare esplicitamente: apri con Safari, non con Chrome.
 
 ---
 

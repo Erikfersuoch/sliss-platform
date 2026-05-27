@@ -7,6 +7,10 @@
 
 | Data | Decisione | Motivazione |
 |---|---|---|
+| 27/05/2026 | Automazione invio messaggi confermata come feature core di Sliss, non accessoria | Senza trigger esterno il test non produce dati affidabili. |
+| 27/05/2026 | WhatsApp Business API rimandata a Fase 3 | Il flusso wa.me pre-compilato già funziona. Automazione completa richiede BSP e approvazione Meta — non giustificata prima della validazione. |
+| 27/05/2026 | M3 e M6 unificati in unico modulo "Gestione Richieste" | FAQ statica e filtro intelligente richieste condividono la stessa infrastruttura. Due livelli di complessità, un modulo solo. |
+| 27/05/2026 | Notifiche push identificate come sblocco principale del test | Il friction point di Moira non è il prodotto ma il trigger esterno. Le notifiche sostituiscono l'abitudine che non si è ancora formata. |
 | 25/05/2026 | Due tester in parallelo per M1 | Raccogliere dati su profili diversi senza aspettare il completamento del primo ciclo. |
 | 19/05/2026 | Kickoff M1 avviato con Moira (moglie, Momo Ink) | Primo uso reale dell'app. Il timer dei 14 giorni parte da qui. |
 | Maggio 2026 (data esatta non recuperabile) | Tester zero = Moira (moglie, Momo Ink) | Accesso quotidiano, target perfetto per M1, costo zero. |
