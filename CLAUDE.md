@@ -58,7 +58,7 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 4. **Non toccare mai:** Supabase, pricing, sito vetrina — bloccati fino a Fase 3.
 5. **Quando proponi modifiche UI/UX:** mostra prima cosa cambieresti e perché, poi aspetta ok.
 6. **Se vedi dispersione** (sto chiedendo cose fuori focus): bloccami e riportami all'obiettivo della sessione.
-7. **Notifiche push — hardcoded per tester attuali.** Moira: inserimento 19:30 / follow-up 12:30. Luca: inserimento 20:30 / follow-up 12:00. Non generalizzare. La schermata impostazioni orari viene in Fase 3.
+7. **Notifiche push — hardcoded per tester attuali.** Moira: inserimento 19:30 / follow-up 12:30. Luca: inserimento 20:30 / follow-up 12:00. Non generalizzare. La schermata impostazioni orari viene in Fase 3. Implementato con 4 cron giornalieri in vercel.json (`?target=&type=` nel path). Hobby plan: max 1x/giorno, precisione ±59min.
 8. **PWA su iPhone — solo Safari.** Le notifiche push PWA funzionano solo da Safari iOS. L'onboarding deve guidare esplicitamente: apri con Safari, non con Chrome.
 
 ---
