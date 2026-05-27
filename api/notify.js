@@ -1,6 +1,6 @@
 import webpush from 'web-push';
 import { Redis } from '@upstash/redis';
-const kv = Redis.fromEnv();
+const kv = new Redis({ url: process.env.KV_REST_API_URL, token: process.env.KV_REST_API_TOKEN });
 
 webpush.setVapidDetails(
   'mailto:erik.fersuoch@yahoo.com',
