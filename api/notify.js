@@ -1,5 +1,6 @@
 import webpush from 'web-push';
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
+const kv = Redis.fromEnv();
 
 webpush.setVapidDetails(
   'mailto:erik.fersuoch@yahoo.com',
