@@ -50,7 +50,7 @@ const subscribeToPush = async () => {
     userVisibleOnly: true,
     applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
   });
-  const tester = new URLSearchParams(window.location.search).get('tester') || 'unknown';
+  const tester = new URLSearchParams(window.location.search).get('tester') || localStorage.getItem('sliss-tester') || 'unknown';
   await fetch('/api/subscribe', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -597,7 +597,7 @@ export default function SlissPlatform() {
   const [loading,setLoading]=useState(true);
   const [showOnboarding,setShowOnboarding]=useState(false);
 
-  useEffect(()=>{const d=loadData();setData(d);setShowOnboarding(!isOnboarded());setLoading(false);},[]);
+  useEffect(()=>{const d=loadData();setData(d);setShowOnboarding(!isOnboarded());setLoading(false);const t=new URLSearchParams(window.location.search).get('tester');if(t)localStorage.setItem('sliss-tester',t);},[]);
   useEffect(()=>{if(data&&!loading)saveData(data);},[data,loading]);
 
   const update=useCallback((table,id,updates)=>setData(prev=>({...prev,[table]:(prev[table]||[]).map(r=>r.id===id?{...r,...updates}:r)})),[]);
