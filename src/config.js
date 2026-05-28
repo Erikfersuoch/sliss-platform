@@ -36,12 +36,12 @@ export const CLIENT_ST = {
 };
 
 export const CLUSTERS_SERVIZI = {
-  tattoo:    { label: "Tatuaggi / PMU",        icon: "\u{1F5A4}", color: T.purple },
-  barber:    { label: "Barber / Parrucchiere", icon: "\u{1F488}", color: T.blue },
-  beauty:    { label: "Estetiste / Beauty",    icon: "\u{2728}", color: T.teal },
-  officine:  { label: "Officine",              icon: "\u{1F527}", color: T.green },
-  artigiani: { label: "Artigiani / Edilizia",  icon: "\u{1F528}", color: T.amber },
-  altro_s:   { label: "Altro",                 icon: "\u{26A1}", color: T.textM, custom: true },
+  tattoo:    { label: "Tatuaggi / PMU",        icon: "\u{1F5A4}", color: T.purple, serviceTypes: ["Sessione","Ritocco","Flash","Consulenza","Copertura","PMU"] },
+  barber:    { label: "Barber / Parrucchiere", icon: "\u{1F488}", color: T.blue,   serviceTypes: ["Taglio","Barba","Taglio + Barba","Colore","Trattamento"] },
+  beauty:    { label: "Estetiste / Beauty",    icon: "\u{2728}", color: T.teal,   serviceTypes: ["Pulizia viso","Massaggio","Ceretta","Semipermanente","Manicure"] },
+  officine:  { label: "Officine",              icon: "\u{1F527}", color: T.green,  serviceTypes: ["Tagliando","Revisione","Riparazione","Cambio gomme","Controllo"] },
+  artigiani: { label: "Artigiani / Edilizia",  icon: "\u{1F528}", color: T.amber,  serviceTypes: ["Sopralluogo","Lavoro","Installazione","Manutenzione","Preventivo"] },
+  altro_s:   { label: "Altro",                 icon: "\u{26A1}", color: T.textM,  serviceTypes: ["Appuntamento","Consulenza","Servizio","Sessione"], custom: true },
 };
 
 export const CLUSTERS_PRODOTTI = {

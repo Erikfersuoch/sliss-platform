@@ -284,6 +284,8 @@ const Home = ({setView}) => {
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
   const bizType=data?.settings?.bizType||"servizi";
+  const cluster=data?.settings?.cluster||"altro_s";
+  const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td);
   const awaiting=(data?.followUps||[]).filter(f=>f.status==="sent"&&!f.satisfaction);
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
@@ -294,7 +296,7 @@ const Home = ({setView}) => {
     if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:"",channel:"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date});}
     if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings).forEach(fu=>addRecord("followUps",fu));}
     else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null).forEach(fu=>addRecord("followUps",fu));}
-    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:"Sessione",product:""});},1500);
+    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:clusterSvcTypes[0],product:""});},1500);
   };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
@@ -358,7 +360,7 @@ const Home = ({setView}) => {
             <FormField label="WhatsApp"><input value={qForm.phone} onChange={e=>setQForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>
             <FormField label={bizType==="prodotti"?"Data ordine":"Data appuntamento"}><input value={qForm.date} onChange={e=>setQForm(p=>({...p,date:e.target.value}))} type="date" /></FormField>
             {bizType==="servizi"
-              ?<FormField label="Tipo servizio"><select value={qForm.serviceType} onChange={e=>setQForm(p=>({...p,serviceType:e.target.value}))}><option>Sessione</option><option>Ritocco</option><option>Prima consulenza</option><option>Sessione lunga</option><option>Consulenza gratuita</option></select></FormField>
+              ?<FormField label="Tipo servizio"><select value={qForm.serviceType} onChange={e=>setQForm(p=>({...p,serviceType:e.target.value}))}>{clusterSvcTypes.map(s=><option key={s}>{s}</option>)}</select></FormField>
               :<FormField label="Prodotto"><input value={qForm.product} onChange={e=>setQForm(p=>({...p,product:e.target.value}))} placeholder="Es. Stampa figurina" /></FormField>
             }
             <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowQuickAdd(false)}>Annulla</Btn><Btn onClick={handleQuickAdd} disabled={!qForm.name.trim()||!qForm.phone.trim()}>Salva e genera</Btn></div>
@@ -476,7 +478,8 @@ const buildFollowUps=(apptId,clientId,clientName,apptDate,serviceType,timings)=>
 const Appointments = () => {
   const {data,addRecord,deleteRecord}=useSliss();
   const [showNew,setShowNew]=useState(false);const [form,setForm]=useState({clientId:"",date:today(),serviceType:"Sessione",notes:""});const [done,setDone]=useState(false);
-  const SERVICE_TYPES=["Sessione","Ritocco","Prima consulenza","Sessione lunga","Consulenza gratuita"];
+  const cluster=data?.settings?.cluster||"altro_s";
+  const SERVICE_TYPES=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const sorted=[...(data?.appointments||[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
   const handleAdd=()=>{if(!form.clientId||!form.date)return;const client=(data?.clients||[]).find(c=>c.id===form.clientId);if(!client)return;const apptId=uid();const timings=data.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId:form.clientId,date:form.date,serviceType:form.serviceType,notes:form.notes,followUpTriggered:true,created:today()});buildFollowUps(apptId,form.clientId,client.name,form.date,form.serviceType,timings).forEach(fu=>addRecord("followUps",fu));setDone(true);setTimeout(()=>{setDone(false);setShowNew(false);setForm({clientId:"",date:today(),serviceType:"Sessione",notes:""});},1800);};
   const handleDelete=appt=>{if(!window.confirm("Eliminare questo appuntamento e i suoi follow-up?"))return;deleteRecord("appointments",appt.id);(data?.followUps||[]).filter(f=>f.appointmentId===appt.id).forEach(f=>deleteRecord("followUps",f.id));};
