@@ -68,14 +68,11 @@ export const FormField = ({label,children,hint}) => (
   </div>
 );
 
-export const SendButtons = ({message,clientPhone}) => {
-  const [ok,setOk]=useState(false);
-  const copy=()=>{navigator.clipboard.writeText(message);setOk(true);setTimeout(()=>setOk(false),2000);};
+export const SendButtons = ({message,clientPhone,onSend}) => {
   const waLink=`https://wa.me/39${clientPhone}?text=${encodeURIComponent(message)}`;
   return (
     <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-      <a href={waLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:"#1DA851",color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{"\u{1F4F1}"} WhatsApp</a>
-      <button onClick={copy} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:ok?T.green:T.bg4,color:ok?"#fff":T.textM,border:`1px solid ${T.border}`,borderRadius:T.r.m,fontSize:"13px",fontWeight:600,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",minHeight:"44px"}}>{ok?"\u{2713} Copiato":"\u{1F4CB} Copia"}</button>
+      <a href={waLink} target="_blank" rel="noreferrer" onClick={onSend} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:"#1DA851",color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{"\u{1F4F1}"} WhatsApp</a>
     </div>
   );
 };

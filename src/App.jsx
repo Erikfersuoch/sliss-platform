@@ -360,16 +360,16 @@ const FollowUp = () => {
         : !filtered.length
         ? <Empty icon={"\u{1F4ED}"} title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
         : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);return (
-              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{animation:`fadeIn .3s ease ${i*.03}s both`}}>
+            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const cardColor=fu.status==="sent"?T.green:fu.scheduledDate<td?T.red:fu.scheduledDate===td?T.amber:T.border;return (
+              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{borderLeft:`3px solid ${cardColor}`,animation:`fadeIn .3s ease ${i*.03}s both`}}>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <span style={{fontSize:"20px",marginTop:"2px",flexShrink:0}}>{ph.icon}</span>
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:"6px",marginBottom:"4px",flexWrap:"wrap"}}><span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span><Badge {...ph} s /><Badge {...st} s /></div>
                     <div style={{fontSize:"13px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginBottom:"8px"}}>{fu.message}</div>
-                    {fu.status==="pending"&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} />}
+                    {fu.status==="pending"&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>markSent(fu)} />}
                   </div>
-                  <div style={{flexShrink:0,textAlign:"right"}}><span style={{fontSize:"11px",color:T.textMu}}>{timing}</span>{fu.status==="pending"&&<div style={{marginTop:"6px"}}><Btn v="success" s="sm" onClick={e=>{e.stopPropagation();markSent(fu);}}>{"\u{2713}"}</Btn></div>}</div>
+                  <div style={{flexShrink:0,textAlign:"right"}}><span style={{fontSize:"11px",color:T.textMu}}>{timing}</span></div>
                 </div>
               </Card>
             );})}
@@ -381,8 +381,7 @@ const FollowUp = () => {
             <div style={{display:"flex",gap:"7px",flexWrap:"wrap"}}><Badge {...ph} /><Badge {...st} /></div>
             <div><div style={{fontWeight:700,fontSize:"17px"}}>{cl?.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{cl?.phone} · {cl?.channel}</div></div>
             <div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap"}}>{sel.message}</div>
-            <SendButtons message={sel.message} clientPhone={cl?.phone||""} />
-            {sel.status==="pending"&&<Btn v="success" onClick={()=>{markSent(sel);setSel(null);}}>{"\u{2713}"} Segna inviato</Btn>}
+            <SendButtons message={sel.message} clientPhone={cl?.phone||""} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);}:undefined} />
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",paddingTop:"12px",borderTop:`1px solid ${T.border}`}}>
               <div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Programmato</span><div style={{fontSize:"14px",marginTop:"3px"}}>{fmtDate(sel.scheduledDate)}</div></div>
               <div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Inviato</span><div style={{fontSize:"14px",marginTop:"3px"}}>{sel.sentDate?fmtDate(sel.sentDate):"\u{2014}"}</div></div>
