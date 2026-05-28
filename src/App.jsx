@@ -376,6 +376,7 @@ const FollowUp = ({setView}) => {
   const [filter,setFilter]=useState("today");
   const [search,setSearch]=useState("");
   const [sel,setSel]=useState(null);
+  const [editMsg,setEditMsg]=useState(null);
   const td=today();
   const allFU=data?.followUps||[];
   const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td).length},{id:"awaiting",label:"In attesa",count:allFU.filter(f=>f.status==="sent").length},{id:"all",label:"Tutti",count:allFU.length}];
@@ -412,13 +413,16 @@ const FollowUp = ({setView}) => {
             );})}
           </div>
       }
-      <Modal open={!!sel} onClose={()=>setSel(null)} title="Dettaglio Follow-Up">
+      <Modal open={!!sel} onClose={()=>{setSel(null);setEditMsg(null);}} title="Dettaglio Follow-Up">
         {sel&&(()=>{const cl=(data?.clients||[]).find(c=>c.id===sel.clientId);const ph=PHASES[sel.phase]||{icon:"📋",label:sel.phase,color:T.textD,bg:T.bg3};const st=STATUSES[sel.status]||{label:sel.status,color:T.textD,bg:T.bg3};return (
           <div style={{display:"flex",flexDirection:"column",gap:"16px"}}>
             <div style={{display:"flex",gap:"7px",flexWrap:"wrap"}}><Badge {...ph} /><Badge {...st} /></div>
             <div><div style={{fontWeight:700,fontSize:"17px"}}>{cl?.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{cl?.phone} · {cl?.channel}</div></div>
-            <div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap"}}>{sel.message}</div>
-            <SendButtons message={sel.message} clientPhone={cl?.phone||""} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);}:undefined} />
+            {editMsg!==null
+              ?<div><textarea value={editMsg} onChange={e=>setEditMsg(e.target.value)} style={{minHeight:"120px",marginBottom:"10px"}} /><div style={{display:"flex",gap:"8px",justifyContent:"flex-end"}}><Btn v="secondary" s="sm" onClick={()=>setEditMsg(null)}>Annulla</Btn><Btn s="sm" onClick={()=>{update("followUps",sel.id,{message:editMsg});setSel({...sel,message:editMsg});setEditMsg(null);}}>Salva</Btn></div></div>
+              :<div><div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap",marginBottom:"8px"}}>{sel.message}</div>{sel.status==="pending"&&<button onClick={()=>setEditMsg(sel.message)} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"2px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"✏️ Modifica messaggio"}</button>}</div>
+            }
+            <SendButtons message={editMsg!==null?editMsg:sel.message} clientPhone={cl?.phone||""} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);setEditMsg(null);}:undefined} />
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",paddingTop:"12px",borderTop:`1px solid ${T.border}`}}>
               <div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Programmato</span><div style={{fontSize:"14px",marginTop:"3px"}}>{fmtDate(sel.scheduledDate)}</div></div>
               <div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Inviato</span><div style={{fontSize:"14px",marginTop:"3px"}}>{sel.sentDate?fmtDate(sel.sentDate):"\u{2014}"}</div></div>
