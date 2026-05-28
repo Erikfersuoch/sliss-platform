@@ -272,7 +272,7 @@ const DesktopSidebar = ({view,setView}) => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const Home = ({setView}) => {
-  const {data}=useSliss();
+  const {data,update}=useSliss();
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td);
@@ -281,10 +281,11 @@ const Home = ({setView}) => {
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
-      <div style={{marginBottom:"24px"}}>
+      <div style={{marginBottom:"16px"}}>
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         <h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()},<br/><span style={{color:T.green}}>{biz}</span> {"\u{1F44B}"}</h1>
       </div>
+      <Btn onClick={()=>setView("clients")} style={{width:"100%",justifyContent:"center",marginBottom:"20px"}}>{"+ Aggiungi cliente"}</Btn>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
         {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`}].map((s,i)=>(
           <Card key={i} style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
@@ -306,14 +307,14 @@ const Home = ({setView}) => {
                 const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
                 const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};
                 return (
-                  <div key={fu.id} style={{padding:"12px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`}}>
+                  <div key={fu.id} style={{padding:"12px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,borderLeft:`3px solid ${fu.scheduledDate<td?T.red:T.amber}`}}>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
                       <span style={{fontSize:"16px"}}>{ph.icon}</span>
                       <span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span>
                       <Badge {...ph} s />
                     </div>
                     <div style={{fontSize:"13px",color:T.textD,lineHeight:1.5,marginBottom:"10px",overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{fu.message}</div>
-                    <SendButtons message={fu.message} clientPhone={cl?.phone||""} />
+                    <SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
                   </div>
                 );
               })}
