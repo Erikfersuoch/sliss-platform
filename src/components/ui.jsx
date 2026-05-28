@@ -69,7 +69,7 @@ export const FormField = ({label,children,hint}) => (
 );
 
 export const SendButtons = ({message,clientPhone,onSend}) => {
-  const waLink=`https://wa.me/39${clientPhone}?text=${encodeURIComponent(message)}`;
+  const waLink=`whatsapp://send?phone=39${clientPhone}&text=${encodeURIComponent(message)}`;
   return (
     <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
       <a href={waLink} target="_blank" rel="noreferrer" onClick={onSend} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:"#1DA851",color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{"\u{1F4F1}"} WhatsApp</a>
