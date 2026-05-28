@@ -335,7 +335,7 @@ const Home = ({setView}) => {
   );
 };
 
-const FollowUp = () => {
+const FollowUp = ({setView}) => {
   const {data,update}=useSliss();
   const [filter,setFilter]=useState("today");
   const [search,setSearch]=useState("");
@@ -354,7 +354,8 @@ const FollowUp = () => {
         <h1 style={{fontSize:"22px",fontWeight:700}}>Follow-Up</h1>
         {pendingToday.length>0&&<Btn v="success" s="sm" onClick={markAllSent}>{"\u{2713}"} Tutti ({pendingToday.length})</Btn>}
       </div>
-      <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"16px"}}><Tabs tabs={tabs} active={filter} onChange={setFilter} /><Search value={search} onChange={setSearch} placeholder="Cerca cliente..." /></div>
+      <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"8px"}}><Tabs tabs={tabs} active={filter} onChange={setFilter} /><Search value={search} onChange={setSearch} placeholder="Cerca cliente..." /></div>
+      {setView&&<div style={{textAlign:"right",marginBottom:"12px"}}><button onClick={()=>setView("templates")} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"4px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"\u{1F4DD}"} Modifica template</button></div>}
       {allDone
         ? <div style={{textAlign:"center",padding:"60px 20px",animation:"fadeIn .4s ease"}}><div style={{fontSize:"52px",marginBottom:"16px"}}>{"\u{1F389}"}</div><div style={{fontSize:"20px",fontWeight:700,marginBottom:"8px"}}>Ottimo lavoro!</div><div style={{fontSize:"14px",color:T.textM}}>Tutti i follow-up di oggi sono stati inviati.</div><div style={{fontSize:"13px",color:T.textD,marginTop:"6px"}}>I tuoi clienti si sentiranno seguiti.</div></div>
         : !filtered.length
@@ -617,7 +618,7 @@ export default function SlissPlatform() {
   const ctx={data,update,addRecord,deleteRecord,updateSettings,resetData};
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td).length;
-  const viewMap={home:<Home setView={setView}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp/>,clients:<Clients/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={setView}/>};
+  const viewMap={home:<Home setView={setView}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp setView={setView}/>,clients:<Clients/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={setView}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
