@@ -22,6 +22,10 @@ const MESSAGES = {
     title: 'Sliss — follow-up in scadenza',
     body: 'Hai messaggi da inviare. 2 minuti bastano.',
   },
+  aggiornamento: {
+    title: 'Sliss — aggiornamento disponibile',
+    body: 'Nuove funzionalità pronte. Riapri l\'app per vederle.',
+  },
 };
 
 export default async function handler(req, res) {
