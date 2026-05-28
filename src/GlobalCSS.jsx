@@ -1,5 +1,5 @@
 const GlobalCSS = () => <style>{`
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;overflow-wrap:break-word}
   html,body,#root{background:#F8F9FA;color:#111318;font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#DEE2E6;border-radius:3px}
   input,textarea,select{font-family:inherit;background:#FFFFFF;border:1.5px solid #DEE2E6;color:#111318;border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%}
