@@ -272,20 +272,32 @@ const DesktopSidebar = ({view,setView}) => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const Home = ({setView}) => {
-  const {data,update}=useSliss();
+  const {data,update,addRecord}=useSliss();
+  const [showQuickAdd,setShowQuickAdd]=useState(false);
+  const [qDone,setQDone]=useState(false);
+  const [qForm,setQForm]=useState({name:"",phone:"",date:today(),serviceType:"Sessione",product:""});
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
+  const bizType=data?.settings?.bizType||"servizi";
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td);
   const awaiting=(data?.followUps||[]).filter(f=>f.status==="sent"&&!f.satisfaction);
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
+  const handleQuickAdd=()=>{
+    if(!qForm.name.trim()||!qForm.phone.trim())return;
+    let clientId=(data?.clients||[]).find(c=>c.phone===qForm.phone)?.id;
+    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:"",channel:"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date});}
+    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings).forEach(fu=>addRecord("followUps",fu));}
+    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null).forEach(fu=>addRecord("followUps",fu));}
+    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:"Sessione",product:""});},1500);
+  };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <div style={{marginBottom:"16px"}}>
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         <h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()},<br/><span style={{color:T.green}}>{biz}</span> {"\u{1F44B}"}</h1>
       </div>
-      <Btn onClick={()=>setView("clients")} style={{width:"100%",justifyContent:"center",marginBottom:"20px"}}>{"+ Aggiungi cliente"}</Btn>
+      <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"20px"}}>{"+ Aggiungi cliente"}</Btn>
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
         {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`}].map((s,i)=>(
           <Card key={i} style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
@@ -332,6 +344,21 @@ const Home = ({setView}) => {
           {(data?.clients||[]).length===0&&<div style={{fontSize:"13px",color:T.textD,textAlign:"center",padding:"12px 0"}}>Nessun cliente ancora</div>}
         </div>
       </Card>
+      <Modal open={showQuickAdd} onClose={()=>{setShowQuickAdd(false);setQDone(false);}} title="Nuovo cliente">
+        {qDone
+          ?<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:"44px",marginBottom:"12px"}}>{"\u{2705}"}</div><div style={{fontWeight:700,fontSize:"16px",marginBottom:"6px"}}>Salvato!</div><div style={{fontSize:"13px",color:T.textD}}>Follow-up generati automaticamente.</div></div>
+          :<>
+            <FormField label="Nome"><input value={qForm.name} onChange={e=>setQForm(p=>({...p,name:e.target.value}))} placeholder="Nome Cognome" /></FormField>
+            <FormField label="WhatsApp"><input value={qForm.phone} onChange={e=>setQForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>
+            <FormField label={bizType==="prodotti"?"Data ordine":"Data appuntamento"}><input value={qForm.date} onChange={e=>setQForm(p=>({...p,date:e.target.value}))} type="date" /></FormField>
+            {bizType==="servizi"
+              ?<FormField label="Tipo servizio"><select value={qForm.serviceType} onChange={e=>setQForm(p=>({...p,serviceType:e.target.value}))}><option>Sessione</option><option>Ritocco</option><option>Prima consulenza</option><option>Sessione lunga</option><option>Consulenza gratuita</option></select></FormField>
+              :<FormField label="Prodotto"><input value={qForm.product} onChange={e=>setQForm(p=>({...p,product:e.target.value}))} placeholder="Es. Stampa figurina" /></FormField>
+            }
+            <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowQuickAdd(false)}>Annulla</Btn><Btn onClick={handleQuickAdd} disabled={!qForm.name.trim()||!qForm.phone.trim()}>Salva e genera</Btn></div>
+          </>
+        }
+      </Modal>
     </div>
   );
 };
