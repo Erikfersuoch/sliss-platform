@@ -325,7 +325,7 @@ const Home = ({setView}) => {
                 const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
                 const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};
                 return (
-                  <div key={fu.id} style={{padding:"12px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,borderLeft:`3px solid ${fu.scheduledDate<td?T.red:T.amber}`}}>
+                  <div key={fu.id} style={{padding:"12px",background:fu.scheduledDate<td?T.redS:T.amberS,borderRadius:T.r.m,border:`1px solid ${fu.scheduledDate<td?T.red:T.amber}44`,borderLeft:`4px solid ${fu.scheduledDate<td?T.red:T.amber}`}}>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
                       <span style={{fontSize:"16px"}}>{ph.icon}</span>
                       <span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span>
@@ -395,8 +395,8 @@ const FollowUp = ({setView}) => {
         : !filtered.length
         ? <Empty icon={"\u{1F4ED}"} title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
         : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const cardColor=fu.status==="sent"?T.green:fu.scheduledDate<td?T.red:fu.scheduledDate===td?T.amber:T.border;return (
-              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{borderLeft:`3px solid ${cardColor}`,animation:`fadeIn .3s ease ${i*.03}s both`}}>
+            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const cardColor=fu.status==="sent"?T.green:fu.scheduledDate<td?T.red:fu.scheduledDate===td?T.amber:T.border;const cardBg=fu.status==="sent"?T.greenS:fu.scheduledDate<td?T.redS:fu.scheduledDate===td?T.amberS:"transparent";return (
+              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{borderLeft:`4px solid ${cardColor}`,background:cardBg,animation:`fadeIn .3s ease ${i*.03}s both`}}>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <span style={{fontSize:"20px",marginTop:"2px",flexShrink:0}}>{ph.icon}</span>
                   <div style={{flex:1,minWidth:0}}>
