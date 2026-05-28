@@ -64,6 +64,7 @@ const Onboarding = ({onComplete}) => {
   const {updateSettings, addRecord} = useSliss();
   const [step, setStep] = useState(0);
   const [bName, setBName] = useState("");
+  const [reviewLink, setReviewLink] = useState("");
   const [bizType, setBizType] = useState("");
   const [cluster, setCluster] = useState("");
   const [customSector, setCustomSector] = useState("");
@@ -76,7 +77,7 @@ const Onboarding = ({onComplete}) => {
   const needsSafariSwitch = needsPWAStep && !isSafari;
   // Salva dati e segna come onboardato — chiamato allo step 4 prima dello step Safari
   const saveProgress = () => {
-    const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:""};
+    const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:"",reviewLink:reviewLink.trim()};
     updateSettings(updates);
     if(bizType==="servizi"&&cluster&&CLUSTER_TEMPLATES[cluster]) CLUSTER_TEMPLATES[cluster].forEach(t=>addRecord("templates",{...t,id:uid()}));
     if(bizType==="prodotti") {
@@ -104,7 +105,11 @@ const Onboarding = ({onComplete}) => {
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F4BC}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come si chiama la tua attività?</h1>
         <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparirà nel saluto della home. Potrai cambiarlo nelle impostazioni.</p>
-        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"20px"}} autoFocus />
+        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"16px"}} autoFocus />
+        <div style={{marginBottom:"20px",textAlign:"left"}}>
+          <label style={{fontSize:"12px",color:T.textD,fontWeight:600,textTransform:"uppercase",letterSpacing:".06em",display:"block",marginBottom:"7px"}}>Link Google Reviews <span style={{fontWeight:400,textTransform:"none",letterSpacing:0}}>(opzionale)</span></label>
+          <input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." style={{fontSize:"14px"}} />
+        </div>
         <Btn onClick={()=>setStep(2)} disabled={!bName.trim()} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
       </>;
       case 2: return <>
@@ -297,7 +302,8 @@ const Home = ({setView}) => {
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         <h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()},<br/><span style={{color:T.green}}>{biz}</span> {"\u{1F44B}"}</h1>
       </div>
-      <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"20px"}}>{"+ Aggiungi cliente"}</Btn>
+      <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
+      {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
         {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`}].map((s,i)=>(
           <Card key={i} style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
