@@ -11,7 +11,7 @@
 
 - [30/05/2026] **[FRIZIONE] Template follow-up non salvati come default.** Creando un nuovo cliente il sistema usa il template base, anche se era stato modificato nella sezione Follow-up. Si può correggere dopo, ma è un passaggio in più. → Proposta: bottone "Salva template" (come "Salva impostazioni"), così i template ridefiniti diventano il default applicato ai nuovi clienti.
 - [30/05/2026] **[FRIZIONE] Link WhatsApp apre un foglio di scelta su iPhone** ("Messaggio / Apri in WhatsApp") invece di aprire diretto la chat → confusione. Da investigare lo schema del link usato (`whatsapp://send?phone=&text=` vs `wa.me` vs tel/sms).
-- [30/05/2026] **[DOMANDA APERTA] Home "in attesa di risposta": l'esito non è rilevabile in automatico.** Senza WhatsApp Business API (parcheggiata, Fase 3) il sistema non sa se il cliente ha risposto. Da decidere: marcatura manuale dell'esito (Risposto/Prenotato/Nessuna risposta) — utile anche per misurare la soglia M1 ">30% risposte" — oppure ripensare il contatore. Punto di prodotto, non solo tecnico.
+- [30/05/2026] **[DECISO 30/05 → opzione A: gestione manuale] Home "in attesa di risposta".** Il sistema non può rilevare la risposta in automatico (serve WhatsApp Business API, Fase 3). Scartato il rename del contatore (es. "da eseguire" duplicherebbe "da inviare"). Decisione: per ora l'esito lo gestisce/segna il professionista a mano. Dettaglio implementativo (come chiudere il follow-up a mano) da definire al momento del fix.
 
 ---
 
