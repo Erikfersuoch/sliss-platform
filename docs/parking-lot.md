@@ -10,7 +10,7 @@
 > Attriti e domande emersi dall'uso diretto di Erik. Dentro lo scope M1 → da affrontare a breve, NON parcheggiati in Fase 4.
 
 - [30/05/2026] **[✅ FATTO 30/05] Template follow-up non salvati come default.** Creando un nuovo cliente il sistema usava il template base, anche se modificato nella sezione Template. → RISOLTO meglio del previsto: la generazione dei follow-up ora legge i template salvati (`data.templates`), quindi modificare un template si applica in automatico ai nuovi clienti, senza bottone "Salva" né passaggi extra. Commit 71eb0bd.
-- [30/05/2026] **[FRIZIONE] Link WhatsApp apre un foglio di scelta su iPhone** ("Messaggio / Apri in WhatsApp") invece di aprire diretto la chat → confusione. Da investigare lo schema del link usato (`whatsapp://send?phone=&text=` vs `wa.me` vs tel/sms).
+- [30/05/2026] **[🔧 FIX APPLICATO 30/05 — da verificare su iPhone] Link WhatsApp apre un foglio di scelta su iPhone.** Causa: il numero veniva passato grezzo (con spazi/`+39`) a `whatsapp://`, rendendolo non interpretabile → iOS mostrava il ripiego "Messaggio / Apri in WhatsApp". Fix: numero normalizzato (solo cifre, prefisso 39 una volta) in ui.jsx SendButtons. Commit f718422. PIANO B se persiste: passare a link universale `https://wa.me/<num>?text=`.
 - [30/05/2026] **[DECISO 30/05 → opzione A: gestione manuale] Home "in attesa di risposta".** Il sistema non può rilevare la risposta in automatico (serve WhatsApp Business API, Fase 3). Scartato il rename del contatore (es. "da eseguire" duplicherebbe "da inviare"). Decisione: per ora l'esito lo gestisce/segna il professionista a mano. Dettaglio implementativo (come chiudere il follow-up a mano) da definire al momento del fix.
 
 ---
