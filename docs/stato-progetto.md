@@ -1,38 +1,36 @@
 # Sliss — Stato del Progetto
 
-> Documento vivente · Aggiornato: 25/05/2026
-> Fase corrente: **1 — Fondazione → transizione a Fase 2**
+> Documento vivente · Aggiornato: 30/05/2026
+> Fase corrente: **1 — Fondazione**
 
 ---
 
 ## Dove sono adesso
 
-Fase 1 completata. Il sistema operativo è in piedi, l'app è deployata, il kickoff con la tester è avvenuto.
+Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
 
 **Setup tecnico — tutto completato:**
 - ✅ Repo `sliss-platform` su GitHub (account: Erikfersuoch)
 - ✅ Claude Code installato e funzionante
 - ✅ CLAUDE.md nel repo
-- ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1)
+- ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.0
+- ✅ Deploy attivo su Vercel — app v5.1
 
 ---
 
 ## Il prodotto oggi
 
-**App.jsx (v5.0)** — aggiornata il 24/05/2026.
+**App.jsx (v5.1)** — aggiornata il 28/05/2026.
 
-Cosa è cambiato dalla v4.0:
-- **Onboarding 5 step:** nome attività → tipo (servizi/prodotti) → cluster settore → template auto
-- **Due flussi paralleli:** Servizi (Appuntamenti + 4 follow-up) e Prodotti (Ordini + 5 follow-up)
-- **Light mode:** accent verde Sliss #16A34A, massima leggibilità
-- **Mobile-first:** bottom nav con badge follow-up pendenti, menu "Altro" per sezioni secondarie
-- **Desktop:** sidebar fissa adattiva per tipo attività
-- **Template per cluster:** caricati automaticamente dall'onboarding in base al settore scelto
-- **Ordini:** sezione dedicata con timeline 5 fasi (conferma → spedizione → ricezione → recensione → riordino)
-- **Storage:** localStorage con wrapper robusto, chiavi `sliss-v4` e `sliss-onboarded-v4`
-- **Guards:** tutti gli accessi a data usano `data?.tableName || []` per compatibilità dati precedenti
+Miglioramenti dalla v5.0 (sessione 28/05):
+- **Follow-up highlight:** border 4px colorato + sfondo tinto per stato (verde=inviato, arancio=oggi, rosso=scaduto)
+- **Scheda cliente M1:** metriche pulite — Visite/Ordini totali (full-width), Ultima visita/Ultimo ordine, stato Follow-up
+- **Feedback:** rimossi counter, aggiunto link "Vedi recensioni" GMB nell'header
+- **Tipi servizio per cluster:** ogni settore ha la propria lista nel form quick entry e Appuntamenti (tattoo, barber, beauty, officine, artigiani, altro)
+- **Edit messaggio follow-up:** dal modale di dettaglio, tasto "✏️ Modifica messaggio" su pending — modifica, salva, WhatsApp aggiornato in tempo reale
+- **BizType in Settings:** "Tipo attività" (Servizi/Prodotti) ora modificabile da Impostazioni — cluster si adatta, tutto il nav si aggiorna al salvataggio
+- **Notifica aggiornamento:** nuovo tipo push `aggiornamento` nell'API notify — triggera manualmente con curl
 
 **Modulo attivo:** M1 Follow-Up
 **Moduli bloccati fino a validazione M1:** M2, M3, M5, M6, M9
@@ -43,16 +41,15 @@ Cosa è cambiato dalla v4.0:
 
 **Tester zero — Moira (moglie, Momo Ink)**
 - Kickoff: 19/05/2026
-- Stato: ha visto l'app, reazione positiva all'interfaccia. Uso sistematico da avviare.
-- Check settimanale: da concordare (giorno e ora fissi)
+- Stato: uso in corso. Subscription push da riattivare (Impostazioni → Notifiche)
+- Check settimanale: da concordare
 
 **Tester uno — Luca (Kayek3D, stampa 3D)**
-- Stato: identificato il 25/05/2026
-- Kickoff: da concordare
-- Prossimo passo: contattarlo con proposta formale (30 giorni di test)
+- Identificato: 25/05/2026
+- Stato: subscription push da riattivare (Impostazioni → Notifiche)
+- Kickoff formale: da concordare
 
-→ Decisione del 25/05: due tester in parallelo per raccogliere dati su profili diversi.
-→ Dettaglio feedback kickoff Moira: vedi docs/test-m1/feedback-log.md
+**Nota push:** entrambe le subscription Redis risultano scadute. Basta che riaprano la PWA e premano "Attiva notifiche" in Impostazioni per ripristinarle.
 
 ---
 
@@ -68,9 +65,9 @@ Cosa è cambiato dalla v4.0:
 
 ## Prossimi 3 passi (in ordine)
 
-1. **Chiamata diagnostica con Moira** — 20 minuti, capire cosa blocca l'avvio dell'uso sistematico. (Ruolo: TEST)
+1. **Chiamata diagnostica con Moira** — 20 minuti, capire cosa blocca l'uso sistematico. (Ruolo: TEST)
 2. **Concordare check settimanale con Moira** — solo dopo la chiamata diagnostica, giorno e ora fissi. (Ruolo: TEST)
-3. **Contattare Luca (Kayek3D)** — proposta formale di essere tester per 30 giorni, fissare kickoff. (Ruolo: TEST)
+3. **Contattare Luca (Kayek3D)** — proposta formale 30 giorni di test, fissare kickoff. (Ruolo: TEST)
 
 ---
 
@@ -80,7 +77,18 @@ Cosa è cambiato dalla v4.0:
 |---|---|
 | Chiamata diagnostica con Moira non ancora fatta | Primo passo prima di concordare qualsiasi check |
 | Check settimanale Moira non ancora concordato | Dipende dalla chiamata diagnostica |
-| Kickoff Luca non ancora fissato | Da contattare — identificato il 25/05 |
+| Kickoff Luca non ancora fissato | Da contattare |
+| Subscription push entrambi i tester scaduta | Si risolve da soli aprendo Impostazioni → Notifiche |
+
+---
+
+## Parcheggiato (non adesso)
+
+- Tipi servizio personalizzabili in Settings
+- Orari notifiche configurabili da utente
+- Automazioni avanzate (WhatsApp Business API, invio automatico)
+
+Vedi lista completa in `docs/parking-lot.md`.
 
 ---
 
