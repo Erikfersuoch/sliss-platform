@@ -46,10 +46,21 @@ export default async function handler(req, res) {
   }
 
   const { title, body } = MESSAGES[type];
-  await webpush.sendNotification(
-    subscription,
-    JSON.stringify({ title, body, tag: `sliss-${type}`, url: '/' })
-  );
+  try {
+    await webpush.sendNotification(
+      subscription,
+      JSON.stringify({ title, body, tag: `sliss-${type}`, url: '/' })
+    );
+  } catch (err) {
+    // 404/410 = subscription scaduta o revocata → rimuovila dal database
+    if (err.statusCode === 404 || err.statusCode === 410) {
+      await kv.del(`sub:${target}`);
+      console.log(`[notify] subscription scaduta per ${target}, rimossa`);
+      return res.status(200).json({ ok: true, skipped: true, reason: 'subscription expired, removed' });
+    }
+    console.error(`[notify] errore invio a ${target}:`, err.statusCode, err.body);
+    return res.status(500).json({ ok: false, error: 'send failed', statusCode: err.statusCode });
+  }
 
   console.log(`[notify] sent ${type} to ${target}`);
   return res.status(200).json({ ok: true, sent: { target, type } });
