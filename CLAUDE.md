@@ -100,6 +100,7 @@ docs/
   stato-progetto.md     → stato attuale, blocchi, prossimi passi (documento vivente)
   decisioni.md          → log delle decisioni importanti con data e motivazione
   parking-lot.md        → idee da rivalutare in futuro, non adesso
+  note-al-volo.md       → inbox cattura rapida di Erik (idee/dubbi al volo, da smistare). Usata anche da remoto.
   social.md             → comunicazione social: post pubblicati, idee, prossimi contenuti
   settimane/            → una nota per settimana (obiettivo + cosa è successo)
   test-m1/              → feedback tester, metriche, log osservazioni
