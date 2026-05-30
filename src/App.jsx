@@ -423,6 +423,15 @@ const FollowUp = ({setView}) => {
               :<div><div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap",marginBottom:"8px"}}>{sel.message}</div>{sel.status==="pending"&&<button onClick={()=>setEditMsg(sel.message)} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"2px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"✏️ Modifica messaggio"}</button>}</div>
             }
             <SendButtons message={editMsg!==null?editMsg:sel.message} clientPhone={cl?.phone||""} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);setEditMsg(null);}:undefined} />
+            {sel.status==="sent"&&!sel.satisfaction&&(
+              <div style={{paddingTop:"4px"}}>
+                <div style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em",marginBottom:"8px"}}>Esito</div>
+                <div style={{display:"flex",gap:"8px"}}>
+                  <Btn v="success" s="sm" onClick={()=>{update("followUps",sel.id,{status:"replied",satisfaction:"replied"});setSel(null);setEditMsg(null);}} style={{flex:1,justifyContent:"center"}}>{"\u{1F44D}"} Ha risposto</Btn>
+                  <Btn v="secondary" s="sm" onClick={()=>{update("followUps",sel.id,{status:"completed",satisfaction:"no_reply"});setSel(null);setEditMsg(null);}} style={{flex:1,justifyContent:"center"}}>{"\u{1F44E}"} Nessuna risposta</Btn>
+                </div>
+              </div>
+            )}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",paddingTop:"12px",borderTop:`1px solid ${T.border}`}}>
               <div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Programmato</span><div style={{fontSize:"14px",marginTop:"3px"}}>{fmtDate(sel.scheduledDate)}</div></div>
               <div><span style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em"}}>Inviato</span><div style={{fontSize:"14px",marginTop:"3px"}}>{sel.sentDate?fmtDate(sel.sentDate):"\u{2014}"}</div></div>
