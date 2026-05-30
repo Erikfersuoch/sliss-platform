@@ -1,5 +1,9 @@
 # CLAUDE.md — Sliss Platform
 
+<!-- SYNC ▸ v5.1 · 2026-05-30 · fonte: docs/stato-progetto.md
+     Versione / fase / stato tester NON si scrivono qui: vivono solo in docs/stato-progetto.md.
+     Questa riga è solo un checksum: a fine sessione verifica che combaci con la FONTE DI VERITÀ. -->
+
 > Questo file viene letto automaticamente da Claude Code ad ogni sessione.
 > Non serve spiegare il progetto da zero: il contesto è qui.
 
@@ -12,7 +16,7 @@ Piattaforma web modulare per micro-business (tatuatori, barber, estetiste, offic
 **Stack:** React (Vite) + Vercel + GitHub
 **Repo:** github.com/Erikfersuoch/sliss-platform
 **Deploy:** Vercel (attivo) — sliss-platform.vercel.app
-**App:** v5.0 · src/App.jsx (split modulare: config.js, storage.js, helpers.js, context.js, theme.js, GlobalCSS.jsx, components/ui.jsx, components/SlissLogo.jsx)
+**App:** versione corrente → vedi `docs/stato-progetto.md` · src/App.jsx (split modulare: config.js, storage.js, helpers.js, context.js, theme.js, GlobalCSS.jsx, components/ui.jsx, components/SlissLogo.jsx)
 **UI:** light mode · accent verde #16A34A · mobile-first (bottom nav) · sidebar desktop
 **Storage:** localStorage · chiavi: `sliss-v4`, `sliss-onboarded-v4`
 **Onboarding:** 5 step — nome attività → tipo (servizi/prodotti) → cluster settore
@@ -50,7 +54,7 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 
 ## Regole operative per Claude Code (ruolo DEV)
 
-0. **Fine sessione — SEMPRE committare E verificare Vercel.** Prima di chiudere Claude Code: (a) `git add -A && git commit -m "sessione: [descrizione breve]" && git push`; (b) controlla su Vercel dashboard che il deployment più recente corrisponda all'ultimo commit SHA. Se non coincide, esegui `git commit --allow-empty -m "chore: trigger redeploy" && git push` per forzare il deploy. Senza questa verifica, il codice committato può non essere mai deployato (webhook Vercel→GitHub inaffidabile).
+0. **Fine sessione — SEMPRE committare E verificare Vercel.** Prima di chiudere Claude Code: (a) `git add -A && git commit -m "sessione: [descrizione breve]" && git push`; (b) controlla su Vercel dashboard che il deployment più recente corrisponda all'ultimo commit SHA. Se non coincide, esegui `git commit --allow-empty -m "chore: trigger redeploy" && git push` per forzare il deploy. Senza questa verifica, il codice committato può non essere mai deployato (webhook Vercel→GitHub inaffidabile). (c) **Allineamento doc:** se è cambiata versione/fase/stato, aggiorna la riga `SYNC ▸ FONTE DI VERITÀ` in `docs/stato-progetto.md`, poi propaga lo stesso valore agli stamp `SYNC ▸` degli altri file (questo CLAUDE.md + memoria). Gli stamp devono SEMPRE combaciare con la fonte.
 
 1. **Un passo alla volta.** Proponi, aspetta conferma, esegui.
 2. **Spiega sempre dove mettere le cose.** Non assumere che sappia dove si trova un file.

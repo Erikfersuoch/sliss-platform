@@ -1,5 +1,9 @@
 # Sliss — Stato del Progetto
 
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.1 · 2026-05-30 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+     Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
+     A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
+
 > Documento vivente · Aggiornato: 30/05/2026
 > Fase corrente: **1 — Fondazione**
 
