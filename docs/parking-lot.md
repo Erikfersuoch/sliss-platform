@@ -14,10 +14,21 @@
 - [25/05/2026] Sezione follow-up: aggiungere pulsante "modifica" su ogni messaggio nella lista
 - [25/05/2026] Recensioni Google: collegamento non funziona / valutare se la visualizzazione in-app serve — forse basta mandare la richiesta recensione e rimandare l'utente su Google
 
+- [28/05/2026] Selezione canale invio (WhatsApp/SMS/Telegram/email) — Fase 3
+- [28/05/2026] Notifiche configurabili da impostazioni utente — Fase 3
+- [28/05/2026] Home evolve con automatismi attivi — Fase 3
+- [28/05/2026] M3 Gestione Richieste (M3+M6 unificati) — parcheggiata 28/05/2026
+- [28/05/2026] Gestione messaggi giorni di chiusura — parcheggiata 28/05/2026
+- [28/05/2026] WhatsApp Business API via BSP — parcheggiata 28/05/2026
+- [28/05/2026] Notifica conferma operazioni automatiche — parcheggiata 28/05/2026
+- [28/05/2026] Notifiche anti-stress utente finale — parcheggiata 28/05/2026
+
 ## Idee commerciali
 
 - **Approccio outreach 1:1** — conversazioni dirette, vocali, messaggi brevi, niente link. Da valutare per Fase 2 inoltrata quando avremo dati veri — parcheggiata 25/05/2026
 - **Riapertura Tally con framing problema** — riproporre il sondaggio con tono colloquiale e dati Moira a supporto. Da valutare per Fase 2 inoltrata — parcheggiata 25/05/2026
+
+- [28/05/2026] Tipi servizio personalizzabili in Settings — oggi derivati dal cluster (defaults), in futuro campo editabile in Impostazioni che sovrascrive i default. Implementazione: `data.settings.serviceTypes[]`, fallback a `CLUSTERS_SERVIZI[cluster].serviceTypes`
 
 ## Idee tecniche
 

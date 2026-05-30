@@ -60,6 +60,8 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 6. **Se vedi dispersione** (sto chiedendo cose fuori focus): bloccami e riportami all'obiettivo della sessione.
 7. **Notifiche push — hardcoded per tester attuali.** Moira: inserimento 19:30 / follow-up 12:30. Luca: inserimento 20:30 / follow-up 12:00. Non generalizzare. La schermata impostazioni orari viene in Fase 3. Implementato con 4 cron giornalieri in vercel.json (`?target=&type=` nel path). Hobby plan: max 1x/giorno, precisione ±59min.
 8. **PWA su iPhone — solo Safari.** Le notifiche push PWA funzionano solo da Safari iOS. L'onboarding deve guidare esplicitamente: apri con Safari, non con Chrome.
+9. **Scheda cliente è parte di M1**, non modulo separato. Dati: visite totali, data ultimo appuntamento, recensione lasciata, stato ciclo follow-up.
+10. **docs/social.md** è il riferimento per tutta la comunicazione social.
 
 ---
 
@@ -94,6 +96,7 @@ docs/
   stato-progetto.md     → stato attuale, blocchi, prossimi passi (documento vivente)
   decisioni.md          → log delle decisioni importanti con data e motivazione
   parking-lot.md        → idee da rivalutare in futuro, non adesso
+  social.md             → comunicazione social: post pubblicati, idee, prossimi contenuti
   settimane/            → una nota per settimana (obiettivo + cosa è successo)
   test-m1/              → feedback tester, metriche, log osservazioni
 ```
