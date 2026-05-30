@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.1 · 2026-05-30 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.2 · 2026-05-30 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -19,7 +19,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.1
+- ✅ Deploy attivo su Vercel — app v5.2
 
 ---
 
@@ -35,6 +35,13 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 - **Edit messaggio follow-up:** dal modale di dettaglio, tasto "✏️ Modifica messaggio" su pending — modifica, salva, WhatsApp aggiornato in tempo reale
 - **BizType in Settings:** "Tipo attività" (Servizi/Prodotti) ora modificabile da Impostazioni — cluster si adatta, tutto il nav si aggiorna al salvataggio
 - **Notifica aggiornamento:** nuovo tipo push `aggiornamento` nell'API notify — triggera manualmente con curl
+
+**Sessione 30/05 (v5.2) — notifiche affidabili:**
+- **Diagnosi:** le subscription push venivano salvate come `sub:unknown` invece di `sub:moira`/`sub:luca`. Su PWA iOS il parametro `?tester=` si perde all'apertura da icona (start_url "/") e lo storage standalone è separato da Safari. I cron cercavano `sub:moira`/`sub:luca` → non trovavano nulla → zero notifiche. Confermato dal DB Upstash (unica chiave: `sub:unknown`).
+- **Fix definitivo:** campo **Codice tester** in Impostazioni → Notifiche. Si scrive il proprio codice (erik/moira/luca), salvato in localStorage nello stesso contesto della PWA. Aggiunto bottone "Aggiorna iscrizione".
+- `api/notify.js` ora gestisce e rimuove le subscription scadute (404/410).
+- Nuovo tipo push `conferma` ("è tutto a posto").
+- **Confermato end-to-end:** notifica di prova ricevuta sull'iPhone di Erik (`sub:ceoerik`).
 
 **Modulo attivo:** M1 Follow-Up
 **Moduli bloccati fino a validazione M1:** M2, M3, M5, M6, M9
@@ -53,7 +60,7 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 - Stato: subscription push da riattivare (Impostazioni → Notifiche)
 - Kickoff formale: da concordare
 
-**Nota push:** entrambe le subscription Redis risultano scadute. Basta che riaprano la PWA e premano "Attiva notifiche" in Impostazioni per ripristinarle.
+**Nota push (agg. 30/05):** root cause risolta (vedi v5.2). Il 30/05 inviato ai tester il messaggio con istruzioni: aprire app → Impostazioni → scrivere il proprio codice (moira/luca) nel campo Codice tester → "Aggiorna iscrizione". DA VERIFICARE: che compaiano `sub:moira` e `sub:luca` nel DB, poi cancellare il vecchio `sub:unknown`. Erik si è aggiunto al test notifiche come `sub:ceoerik` (solo verifica, niente reminder ricorrenti).
 
 ---
 
