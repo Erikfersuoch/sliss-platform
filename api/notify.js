@@ -26,6 +26,10 @@ const MESSAGES = {
     title: 'Sliss — aggiornamento disponibile',
     body: 'Nuove funzionalità pronte. Riapri l\'app per vederle.',
   },
+  conferma: {
+    title: 'Sliss — è tutto a posto ✅',
+    body: 'Notifiche attive e funzionanti. Sistema pronto!',
+  },
 };
 
 export default async function handler(req, res) {
