@@ -7,6 +7,11 @@
 
 | Data | Decisione | Motivazione |
 |---|---|---|
+| 30/05/2026 | Direzione prodotto = Opzione A ("Sliss alleggerisce, non sostituisce") | Sliss si aggancia agli strumenti che il cliente già usa (Google Calendar, WhatsApp), non li ricostruisce. Scartata Opzione B (mini-gestionale): mercato affollato, troppo lavoro per one-man business. Vedi docs/roadmap-v6.md. |
+| 30/05/2026 | Tolto il messaggio pre-appuntamento dalla sequenza follow-up | Feedback Moira: non serve. Era ipotesi di Claude, scartata. |
+| 30/05/2026 | Onboarding = chiusura della conversazione di persona + link self-service | Moira fissa l'appuntamento dal vivo, poi manda un link; il cliente inserisce i propri dati legati a quell'appuntamento. Zero doppia digitazione. |
+| 30/05/2026 | Follow-up disattivabili uno per uno (non più 4 fissi) | Feedback Moira: il numero di follow-up va adattato, non imposto. |
+| 30/05/2026 | Spesa rinviata: €0 fino al gate Fase 2 | Onboarding link costruibile su Upstash + Vercel serverless (free tier), senza nuovi servizi a pagamento. Pricing/finanziamento = Fase 3. |
 | 28/05/2026 | Scheda cliente aggiunta a M1 | Dati: visite totali, data ultimo appuntamento, recensione lasciata, stato ciclo follow-up. Non è modulo separato. |
 | 28/05/2026 | Tasto Copia rimosso, tenuto solo WhatsApp | Selezione canale rinviata a Fase 3. Riduzione friction operativo. |
 | 28/05/2026 | Spunta manuale eliminata | Colore verde sostituisce la conferma visiva. Meno click, stesso risultato. |
