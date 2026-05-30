@@ -294,8 +294,8 @@ const Home = ({setView}) => {
     if(!qForm.name.trim()||!qForm.phone.trim())return;
     let clientId=(data?.clients||[]).find(c=>c.phone===qForm.phone)?.id;
     if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:"",channel:"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date});}
-    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings).forEach(fu=>addRecord("followUps",fu));}
-    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null).forEach(fu=>addRecord("followUps",fu));}
+    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
+    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
     setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:clusterSvcTypes[0],product:""});},1500);
   };
   return (
@@ -434,7 +434,17 @@ const FollowUp = ({setView}) => {
   );
 };
 
-const buildProductFollowUps = (orderId, clientId, clientName, orderDate, estimatedDelivery) => {
+// Restituisce il testo del template salvato per quella fase (con [Nome]/[Data] sostituiti),
+// oppure il testo di default se l'utente non ha un template per quella fase.
+const tplMessage = (templates, phase, clientName, fallback, date) => {
+  const t = (templates||[]).find(t => t.phase===phase && t.active!==false);
+  let txt = t ? t.text : fallback;
+  txt = (txt||"").replace(/\[Nome\]/g, clientName||"");
+  if (date) txt = txt.replace(/\[Data\]/g, fmtDate(date));
+  return txt;
+};
+
+const buildProductFollowUps = (orderId, clientId, clientName, orderDate, estimatedDelivery, templates) => {
   const deliveryDate = estimatedDelivery || addDays(orderDate, 7);
   return [
     {id:uid(),orderId,clientId,phase:"order_confirm",status:"pending",scheduledDate:orderDate,sentDate:null,message:`Ciao ${clientName}! Ho ricevuto il tuo ordine, grazie mille \u{1F64F} Lo sto preparando con cura. Ti avviso non appena \u{e8} in partenza!`},
@@ -442,7 +452,7 @@ const buildProductFollowUps = (orderId, clientId, clientName, orderDate, estimat
     {id:uid(),orderId,clientId,phase:"delivery_check",status:"pending",scheduledDate:addDays(deliveryDate,3),sentDate:null,message:`Ciao ${clientName}! \u{C8} arrivato tutto bene? Spero che il prodotto ti piaccia \u{1F64F} Se c'\u{e8} qualcosa che non va, scrivimi subito.`},
     {id:uid(),orderId,clientId,phase:"review",status:"pending",scheduledDate:addDays(deliveryDate,14),sentDate:null,message:`Ciao ${clientName}! Spero che stia usando il prodotto con soddisfazione \u{2728} Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!`},
     {id:uid(),orderId,clientId,phase:"reorder",status:"pending",scheduledDate:addDays(deliveryDate,60),sentDate:null,message:`Ciao ${clientName}! Sono passati un po' di mesi \u{2014} se hai bisogno di riordinare o vuoi scoprire qualcosa di nuovo, sono qui \u{1F64F}`},
-  ];
+  ].map(fu => ({...fu, message: tplMessage(templates, fu.phase, clientName, fu.message, deliveryDate)}));
 };
 
 const Orders = () => {
@@ -450,7 +460,7 @@ const Orders = () => {
   const [showNew,setShowNew]=useState(false);const [done,setDone]=useState(false);
   const [form,setForm]=useState({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});
   const sorted=[...(data?.orders||[])].sort((a,b)=>new Date(b.orderDate)-new Date(a.orderDate));
-  const handleAdd=()=>{if(!form.clientId||!form.product.trim())return;const client=(data?.clients||[]).find(c=>c.id===form.clientId);if(!client)return;const orderId=uid();const deliveryDate=addDays(form.orderDate,parseInt(form.deliveryDays)||7);addRecord("orders",{id:orderId,clientId:form.clientId,product:form.product,orderDate:form.orderDate,deliveryDate,notes:form.notes,status:"pending",created:today()});buildProductFollowUps(orderId,form.clientId,client.name,form.orderDate,deliveryDate).forEach(fu=>addRecord("followUps",fu));setDone(true);setTimeout(()=>{setDone(false);setShowNew(false);setForm({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});},1800);};
+  const handleAdd=()=>{if(!form.clientId||!form.product.trim())return;const client=(data?.clients||[]).find(c=>c.id===form.clientId);if(!client)return;const orderId=uid();const deliveryDate=addDays(form.orderDate,parseInt(form.deliveryDays)||7);addRecord("orders",{id:orderId,clientId:form.clientId,product:form.product,orderDate:form.orderDate,deliveryDate,notes:form.notes,status:"pending",created:today()});buildProductFollowUps(orderId,form.clientId,client.name,form.orderDate,deliveryDate,data?.templates).forEach(fu=>addRecord("followUps",fu));setDone(true);setTimeout(()=>{setDone(false);setShowNew(false);setForm({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});},1800);};
   const markShipped=(order)=>{update("orders",order.id,{status:"shipped",shippedDate:today()});const shippingFU=(data?.followUps||[]).find(f=>f.orderId===order.id&&f.phase==="shipping"&&f.awaitShipping);if(shippingFU)update("followUps",shippingFU.id,{scheduledDate:today(),status:"pending"});};
   const handleDelete=(order)=>{if(!window.confirm("Eliminare questo ordine?"))return;deleteRecord("orders",order.id);(data?.followUps||[]).filter(f=>f.orderId===order.id).forEach(f=>deleteRecord("followUps",f.id));};
   const statusLabel={pending:"In preparazione",shipped:"Spedito",delivered:"Consegnato"};const statusColor={pending:T.amber,shipped:T.blue,delivered:T.green};
@@ -473,10 +483,10 @@ const Orders = () => {
   );
 };
 
-const buildFollowUps=(apptId,clientId,clientName,apptDate,serviceType,timings)=>{
+const buildFollowUps=(apptId,clientId,clientName,apptDate,serviceType,timings,templates)=>{
   const tm={thankyou:timings.thankyou||0,check:timings.check||7,review:timings.review||21,reactivation:timings.reactivation||60};
   const msgs={thankyou:serviceType==="Ritocco"?`Ciao ${clientName}! Grazie per il ritocco di oggi \u{1F64F} Scrivimi per qualsiasi cosa.`:`Ciao ${clientName}! Grazie per oggi \u{1F5A4} Ricordati pellicola e sapone neutro. Scrivimi se hai dubbi.`,check:`Ciao ${clientName}! Come sta andando? \u{C8} normale che desquami un po'. Se hai dubbi mandami una foto \u{1F64F}`,review:`Ciao ${clientName}! Sono passate un po' di settimane \u{2728} Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo.`,reactivation:`Ciao ${clientName}! Pensavo a te \u{2014} come stai? Se hai in mente qualcosa di nuovo, sono qui \u{1F5A4}`};
-  return ["thankyou","check","review","reactivation"].map(phase=>({id:uid(),appointmentId:apptId,clientId,phase,status:"pending",scheduledDate:addDays(apptDate,tm[phase]),sentDate:null,satisfaction:null,message:msgs[phase]}));
+  return ["thankyou","check","review","reactivation"].map(phase=>({id:uid(),appointmentId:apptId,clientId,phase,status:"pending",scheduledDate:addDays(apptDate,tm[phase]),sentDate:null,satisfaction:null,message:tplMessage(templates,phase,clientName,msgs[phase])}));
 };
 
 const Appointments = () => {
@@ -485,7 +495,7 @@ const Appointments = () => {
   const cluster=data?.settings?.cluster||"altro_s";
   const SERVICE_TYPES=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const sorted=[...(data?.appointments||[])].sort((a,b)=>new Date(b.date)-new Date(a.date));
-  const handleAdd=()=>{if(!form.clientId||!form.date)return;const client=(data?.clients||[]).find(c=>c.id===form.clientId);if(!client)return;const apptId=uid();const timings=data.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId:form.clientId,date:form.date,serviceType:form.serviceType,notes:form.notes,followUpTriggered:true,created:today()});buildFollowUps(apptId,form.clientId,client.name,form.date,form.serviceType,timings).forEach(fu=>addRecord("followUps",fu));setDone(true);setTimeout(()=>{setDone(false);setShowNew(false);setForm({clientId:"",date:today(),serviceType:"Sessione",notes:""});},1800);};
+  const handleAdd=()=>{if(!form.clientId||!form.date)return;const client=(data?.clients||[]).find(c=>c.id===form.clientId);if(!client)return;const apptId=uid();const timings=data.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId:form.clientId,date:form.date,serviceType:form.serviceType,notes:form.notes,followUpTriggered:true,created:today()});buildFollowUps(apptId,form.clientId,client.name,form.date,form.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));setDone(true);setTimeout(()=>{setDone(false);setShowNew(false);setForm({clientId:"",date:today(),serviceType:"Sessione",notes:""});},1800);};
   const handleDelete=appt=>{if(!window.confirm("Eliminare questo appuntamento e i suoi follow-up?"))return;deleteRecord("appointments",appt.id);(data?.followUps||[]).filter(f=>f.appointmentId===appt.id).forEach(f=>deleteRecord("followUps",f.id));};
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
