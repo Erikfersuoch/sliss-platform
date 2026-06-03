@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.3 · 2026-06-03 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.4 · 2026-06-03 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 30/05/2026
+> Documento vivente · Aggiornato: 03/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -13,13 +13,15 @@
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
 
+**Sessione 03/06/2026 (v5.4) — qualità UI Home:** primo audit `/impeccable` sulla Home (baseline 10/20). Creato `PRODUCT.md` come baseline di design (register=product, mission piattaforma multi-fase). Spediti e deployati: contrasto testo a norma WCAG AA, rimossi i bordi-striscia laterali, stato follow-up con etichetta testuale (non solo colore), card cliccabili accessibili da tastiera, `prefers-reduced-motion`, eliminato il doppio render (due `<main>` → uno). Poi sostituite le emoji di sistema con un set di icone a tratto coerente (nuovo componente `<Icon>`, stile Lucide) su navigazione e fasi follow-up. Restano a emoji per scelta: pagina Moduli, settori nei select, illustrazioni stati vuoti, saluto Home.
+
 **Setup tecnico — tutto completato:**
 - ✅ Repo `sliss-platform` su GitHub (account: Erikfersuoch)
 - ✅ Claude Code installato e funzionante
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.3
+- ✅ Deploy attivo su Vercel — app v5.4
 
 ---
 
