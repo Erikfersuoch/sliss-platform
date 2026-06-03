@@ -307,8 +307,8 @@ const Home = ({setView}) => {
       <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
       {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
-        {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`}].map((s,i)=>(
-          <Card key={i} style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
+        {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta",go:"followup"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
+          <Card key={i} onClick={()=>setView(s.go)} hov style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
             <span style={{fontSize:"11px",color:T.textD,fontWeight:500}}>{s.label}</span>
             <span style={{fontSize:"26px",fontWeight:700,color:s.color,letterSpacing:"-.02em",lineHeight:1}}>{s.value}</span>
             <span style={{fontSize:"11px",color:T.textMu}}>{s.sub}</span>
