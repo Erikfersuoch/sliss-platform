@@ -1,22 +1,22 @@
 import T from "./theme.js";
 
 export const PHASES = {
-  thankyou:      { label: "Ringraziamento", color: T.blue,   icon: "\u{1F64F}", bg: T.blueS },
-  check:         { label: "Controllo",      color: T.amber,  icon: "\u{1F50D}", bg: T.amberS },
-  review:        { label: "Recensione",     color: T.purple, icon: "\u{2B50}", bg: T.purpleS },
-  reactivation:  { label: "Riattivazione",  color: T.green,  icon: "\u{1F4AC}", bg: T.greenS },
-  order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "\u{1F4CB}", bg: T.blueS },
-  shipping:      { label: "In spedizione",   color: T.amber,  icon: "\u{1F4E6}", bg: T.amberS },
-  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "\u{2705}", bg: T.tealS },
-  reorder:       { label: "Riordino",        color: T.green,  icon: "\u{1F504}", bg: T.greenS },
+  thankyou:      { label: "Ringraziamento", color: T.blue,   icon: "heart",     bg: T.blueS },
+  check:         { label: "Controllo",      color: T.amber,  icon: "check",     bg: T.amberS },
+  review:        { label: "Recensione",     color: T.purple, icon: "star",      bg: T.purpleS },
+  reactivation:  { label: "Riattivazione",  color: T.green,  icon: "rotate",    bg: T.greenS },
+  order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "clipboard", bg: T.blueS },
+  shipping:      { label: "In spedizione",   color: T.amber,  icon: "truck",     bg: T.amberS },
+  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "check",     bg: T.tealS },
+  reorder:       { label: "Riordino",        color: T.green,  icon: "rotate",    bg: T.greenS },
 };
 
 export const PRODUCT_PHASES = {
-  order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "\u{1F4CB}", bg: T.blueS },
-  shipping:      { label: "In spedizione",   color: T.amber,  icon: "\u{1F4E6}", bg: T.amberS },
-  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "\u{2705}", bg: T.tealS },
-  review:        { label: "Recensione",      color: T.purple, icon: "\u{2B50}", bg: T.purpleS },
-  reorder:       { label: "Riordino",        color: T.green,  icon: "\u{1F504}", bg: T.greenS },
+  order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "clipboard", bg: T.blueS },
+  shipping:      { label: "In spedizione",   color: T.amber,  icon: "truck",     bg: T.amberS },
+  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "check",     bg: T.tealS },
+  review:        { label: "Recensione",      color: T.purple, icon: "star",      bg: T.purpleS },
+  reorder:       { label: "Riordino",        color: T.green,  icon: "rotate",    bg: T.greenS },
 };
 
 export const STATUSES = {
