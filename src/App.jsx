@@ -327,11 +327,12 @@ const Home = ({setView}) => {
                 const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
                 const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};
                 return (
-                  <div key={fu.id} style={{padding:"12px",background:fu.scheduledDate<td?T.redS:T.amberS,borderRadius:T.r.m,border:`1px solid ${fu.scheduledDate<td?T.red:T.amber}44`,borderLeft:`4px solid ${fu.scheduledDate<td?T.red:T.amber}`}}>
+                  <div key={fu.id} style={{padding:"12px",background:fu.scheduledDate<td?T.redS:T.amberS,borderRadius:T.r.m,border:`1px solid ${fu.scheduledDate<td?T.red:T.amber}44`}}>
                     <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
                       <span style={{fontSize:"16px"}}>{ph.icon}</span>
                       <span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span>
                       <Badge {...ph} s />
+                      <span style={{marginLeft:"auto",fontSize:"11px",fontWeight:700,color:fu.scheduledDate<td?T.red:T.amberD}}>{fu.scheduledDate<td?"Scaduto":"Oggi"}</span>
                     </div>
                     <div style={{fontSize:"13px",color:T.textD,lineHeight:1.5,marginBottom:"10px",overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{fu.message}</div>
                     <SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
@@ -399,7 +400,7 @@ const FollowUp = ({setView}) => {
         ? <Empty icon={"\u{1F4ED}"} title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
         : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
             {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"📋",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const cardColor=fu.status==="sent"?T.green:fu.scheduledDate<td?T.red:fu.scheduledDate===td?T.amber:T.border;const cardBg=fu.status==="sent"?T.greenS:fu.scheduledDate<td?T.redS:fu.scheduledDate===td?T.amberS:"transparent";return (
-              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{borderLeft:`4px solid ${cardColor}`,background:cardBg,animation:`fadeIn .3s ease ${i*.03}s both`}}>
+              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{border:`1px solid ${cardColor}`,background:cardBg,animation:`fadeIn .3s ease ${i*.03}s both`}}>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <span style={{fontSize:"20px",marginTop:"2px",flexShrink:0}}>{ph.icon}</span>
                   <div style={{flex:1,minWidth:0}}>
@@ -697,8 +698,7 @@ export default function SlissPlatform() {
         <GlobalCSS />
         <div translate="no" lang="it" style={{display:"flex",minHeight:"100vh"}}>
           <DesktopSidebar view={view} setView={setView} />
-          <main style={{flex:1,padding:"24px 20px",paddingBottom:"calc(80px + env(safe-area-inset-bottom))",maxWidth:"680px",margin:"0 auto",width:"100%"}} className="mobile-only">{CurrentView}</main>
-          <main style={{flex:1,marginLeft:"210px",padding:"28px 36px",maxWidth:"1040px"}} className="desktop-only">{CurrentView}</main>
+          <main className="app-main">{CurrentView}</main>
         </div>
         <BottomNav view={view} setView={setView} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
       </Ctx.Provider>

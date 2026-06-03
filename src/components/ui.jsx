@@ -15,7 +15,8 @@ export const Btn = ({children,v="primary",s="md",onClick,style,disabled}) => {
 
 export const Card = ({children,style,onClick,hov}) => {
   const [h,setH]=useState(false);
-  return <div onClick={onClick} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{background:T.bg2,border:`1px solid ${h&&hov?T.borderH:T.border}`,borderRadius:T.r.l,padding:"16px 18px",transition:"border-color .2s",cursor:hov?"pointer":"default",animation:"fadeIn .3s ease",...style}}>{children}</div>;
+  const kb=onClick?{role:"button",tabIndex:0,onKeyDown:e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();onClick(e);}}}:{};
+  return <div onClick={onClick} {...kb} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{background:T.bg2,border:`1px solid ${h&&hov?T.borderH:T.border}`,borderRadius:T.r.l,padding:"16px 18px",transition:"border-color .2s",cursor:hov?"pointer":"default",animation:"fadeIn .3s ease",...style}}>{children}</div>;
 };
 
 export const Empty = ({icon,title,desc,action}) => (
@@ -52,7 +53,7 @@ export const Modal = ({open,onClose,title,children,w}) => {
       <div onClick={e=>e.stopPropagation()} style={{position:"relative",background:"#FFFFFF",border:"1px solid #DEE2E6",borderRadius:"20px 20px 0 0",width:"100%",maxWidth:w||"580px",maxHeight:"92vh",overflowX:"hidden",overflowY:"auto",animation:"slideUp .25s ease",boxShadow:"0 -8px 40px rgba(0,0,0,.6)"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 22px 14px",borderBottom:`1px solid ${T.border}`}}>
           <h3 style={{fontSize:"16px",fontWeight:700}}>{title}</h3>
-          <button onClick={onClose} style={{background:T.bg3,border:"none",color:T.textM,fontSize:"16px",cursor:"pointer",width:"32px",height:"32px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center"}}>{"\u{2715}"}</button>
+          <button onClick={onClose} aria-label="Chiudi" style={{background:T.bg3,border:"none",color:T.textM,fontSize:"16px",cursor:"pointer",width:"40px",height:"40px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{"\u{2715}"}</button>
         </div>
         <div style={{padding:"20px 22px",paddingBottom:"calc(20px + env(safe-area-inset-bottom))"}}>{children}</div>
       </div>
