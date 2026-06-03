@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.2 · 2026-05-30 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.3 · 2026-06-03 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -19,7 +19,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.2
+- ✅ Deploy attivo su Vercel — app v5.3
 
 ---
 
@@ -42,6 +42,12 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 - `api/notify.js` ora gestisce e rimuove le subscription scadute (404/410).
 - Nuovo tipo push `conferma` ("è tutto a posto").
 - **Confermato end-to-end:** notifica di prova ricevuta sull'iPhone di Erik (`sub:ceoerik`).
+
+**Sessione 03/06 (v5.3) — feedback tester + direzione v6:**
+- Definita **direzione prodotto Opzione A** ("Sliss alleggerisce, non sostituisce"). Vedi `docs/roadmap-v6.md` e `decisioni.md`. Nata dal confronto con Moira.
+- Spedito: follow-up disattivabili (toggle Attivo/Disattivato nei Template), "Nuovo appuntamento/ordine" dalla scheda cliente, card Home cliccabili (feedback Luca).
+- Luca: tester attivo, lo sta usando; feedback più completo atteso in settimana.
+- Prossimi passi roadmap: ponte "Aggiungi a Google Calendar" → poi onboarding cliente via link (Upstash + serverless, free tier).
 
 **Modulo attivo:** M1 Follow-Up
 **Moduli bloccati fino a validazione M1:** M2, M3, M5, M6, M9
