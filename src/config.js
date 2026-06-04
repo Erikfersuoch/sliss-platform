@@ -21,8 +21,8 @@ export const PRODUCT_PHASES = {
 
 export const STATUSES = {
   pending:   { label: "In attesa",  color: T.amber,  bg: T.amberS },
-  sent:      { label: "Inviato",    color: T.blue,   bg: T.blueS },
-  replied:   { label: "Risposto",   color: T.green,  bg: T.greenS },
+  sent:      { label: "Inviato",    color: T.green,  bg: T.greenS },
+  replied:   { label: "Risposto",   color: T.blue,   bg: T.blueS },
   completed: { label: "Completato", color: T.textD,  bg: "rgba(90,111,148,0.10)" },
   skipped:   { label: "Saltato",    color: T.textMu, bg: "rgba(61,81,120,0.08)" },
 };

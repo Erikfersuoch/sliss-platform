@@ -5,4 +5,6 @@ export const addDays = (dateStr, days) => { const d=new Date(dateStr); d.setDate
 export const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 export const today = () => new Date().toISOString().split("T")[0];
 export const greet = () => { const h=new Date().getHours(); return h<12?"Buongiorno":h<18?"Buonasera":"Buonasera"; };
+// true se la fase ha template ma nessuno attivo (tipo follow-up disattivato dall'utente)
+export const isPhaseOff = (templates, phase) => { const t=templates||[]; return t.some(x=>x.phase===phase) && !t.some(x=>x.phase===phase&&x.active!==false); };
 export const urlBase64ToUint8Array = b64 => { const pad='='.repeat((4-b64.length%4)%4); const b=(b64+pad).replace(/-/g,'+').replace(/_/g,'/'); const raw=atob(b); return Uint8Array.from([...raw].map(c=>c.charCodeAt(0))); };

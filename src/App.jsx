@@ -33,7 +33,7 @@ class ErrorBoundary extends React.Component {
 import T from "./theme.js";
 import { loadData, saveData, isOnboarded, setOnboarded, emptyData, storage, ONBOARDING_KEY } from "./storage.js";
 import { PHASES, PRODUCT_PHASES, STATUSES, CLIENT_ST, CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI, CLUSTERS, CLUSTER_TEMPLATES, MODULES } from "./config.js";
-import { fmtDate, daysAgo, daysUntil, addDays, uid, today, greet, urlBase64ToUint8Array } from "./helpers.js";
+import { fmtDate, daysAgo, daysUntil, addDays, uid, today, greet, isPhaseOff, urlBase64ToUint8Array } from "./helpers.js";
 import { Ctx, useSliss } from "./context.js";
 import SlissLogo from "./components/SlissLogo.jsx";
 import Icon from "./components/Icon.jsx";
@@ -287,7 +287,7 @@ const Home = ({setView}) => {
   const bizType=data?.settings?.bizType||"servizi";
   const cluster=data?.settings?.cluster||"altro_s";
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
-  const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td);
+  const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
   const awaiting=(data?.followUps||[]).filter(f=>f.status==="sent"&&!f.satisfaction);
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
@@ -308,8 +308,8 @@ const Home = ({setView}) => {
       <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
       {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
-        {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta",go:"followup"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
-          <Card key={i} onClick={()=>setView(s.go)} hov style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
+        {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
+          <Card key={i} onClick={()=>setView(s.go,s.gf?{fuFilter:s.gf}:undefined)} hov style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
             <span style={{fontSize:"11px",color:T.textD,fontWeight:500}}>{s.label}</span>
             <span style={{fontSize:"26px",fontWeight:700,color:s.color,letterSpacing:"-.02em",lineHeight:1}}>{s.value}</span>
             <span style={{fontSize:"11px",color:T.textMu}}>{s.sub}</span>
@@ -373,18 +373,20 @@ const Home = ({setView}) => {
   );
 };
 
-const FollowUp = ({setView}) => {
+const FollowUp = ({setView,initialFilter}) => {
   const {data,update}=useSliss();
-  const [filter,setFilter]=useState("today");
+  const [filter,setFilter]=useState(initialFilter||"today");
   const [search,setSearch]=useState("");
   const [sel,setSel]=useState(null);
   const [editMsg,setEditMsg]=useState(null);
   const td=today();
   const allFU=data?.followUps||[];
-  const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td).length},{id:"awaiting",label:"In attesa",count:allFU.filter(f=>f.status==="sent").length},{id:"all",label:"Tutti",count:allFU.length}];
-  const filtered=allFU.filter(fu=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ms=!search||cl?.name.toLowerCase().includes(search.toLowerCase());const mf=filter==="all"||(filter==="today"&&fu.status==="pending"&&fu.scheduledDate<=td)||(filter==="awaiting"&&fu.status==="sent");return ms&&mf;}).sort((a,b)=>new Date(a.scheduledDate)-new Date(b.scheduledDate));
+  const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length},{id:"awaiting",label:"In attesa",count:allFU.filter(f=>f.status==="sent").length},{id:"all",label:"Tutti",count:allFU.length}];
+  const filtered=allFU.filter(fu=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ms=!search||cl?.name.toLowerCase().includes(search.toLowerCase());const mf=filter==="all"||(filter==="today"&&fu.status==="pending"&&fu.scheduledDate<=td&&!isPhaseOff(data?.templates,fu.phase))||(filter==="awaiting"&&fu.status==="sent");return ms&&mf;}).sort((a,b)=>new Date(a.scheduledDate)-new Date(b.scheduledDate));
   const markSent=fu=>{update("followUps",fu.id,{status:"sent",sentDate:today()});if(sel?.id===fu.id)setSel({...fu,status:"sent",sentDate:today()});};
-  const pendingToday=allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td);
+  const markReplied=fu=>{update("followUps",fu.id,{status:"replied",satisfaction:"replied"});if(sel?.id===fu.id)setSel(null);};
+  const markNoReply=fu=>{update("followUps",fu.id,{status:"completed",satisfaction:"no_reply"});if(sel?.id===fu.id)setSel(null);};
+  const pendingToday=allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
   const markAllSent=()=>{if(!pendingToday.length)return;if(!window.confirm(`Segna tutti i ${pendingToday.length} follow-up come inviati?`))return;pendingToday.forEach(fu=>update("followUps",fu.id,{status:"sent",sentDate:today()}));};
   const allDone=filter==="today"&&pendingToday.length===0&&allFU.some(f=>f.sentDate===td);
   return (
@@ -400,14 +402,20 @@ const FollowUp = ({setView}) => {
         : !filtered.length
         ? <Empty icon={"\u{1F4ED}"} title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
         : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const cardColor=fu.status==="sent"?T.green:fu.scheduledDate<td?T.red:fu.scheduledDate===td?T.amber:T.border;const cardBg=fu.status==="sent"?T.greenS:fu.scheduledDate<td?T.redS:fu.scheduledDate===td?T.amberS:"transparent";return (
-              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{border:`1px solid ${cardColor}`,background:cardBg,animation:`fadeIn .3s ease ${i*.03}s both`}}>
+            {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const isReplied=fu.status==="replied";const isSent=fu.status==="sent";const isOverdue=fu.status==="pending"&&fu.scheduledDate<td;const phaseOff=fu.status==="pending"&&isPhaseOff(data?.templates,fu.phase);const cardColor=phaseOff?T.border:isReplied?T.blue:isSent?T.green:isOverdue?T.red:fu.status==="pending"?T.amber:T.border;const cardBg=phaseOff?"transparent":isReplied?T.blueS:isSent?T.greenS:isOverdue?T.redS:fu.status==="pending"?T.amberS:"transparent";return (
+              <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{border:`1px solid ${cardColor}`,background:cardBg,opacity:phaseOff?0.55:1,animation:`fadeIn .3s ease ${i*.03}s both`}}>
                 <div style={{display:"flex",alignItems:"flex-start",gap:"10px"}}>
                   <Icon name={ph.icon} size={20} color={ph.color} style={{marginTop:"2px"}} />
                   <div style={{flex:1,minWidth:0}}>
-                    <div style={{display:"flex",alignItems:"center",gap:"6px",marginBottom:"4px",flexWrap:"wrap"}}><span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span><Badge {...ph} s /><Badge {...st} s /></div>
+                    <div style={{display:"flex",alignItems:"center",gap:"6px",marginBottom:"4px",flexWrap:"wrap"}}><span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span><Badge {...ph} s /><Badge {...st} s />{phaseOff&&<Badge label="Disattivato" color={T.textMu} bg={T.bg3} s />}</div>
                     <div style={{fontSize:"13px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginBottom:"8px"}}>{fu.message}</div>
-                    {fu.status==="pending"&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>markSent(fu)} />}
+                    {fu.status==="pending"&&!phaseOff&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>markSent(fu)} />}
+                    {fu.status==="sent"&&!fu.satisfaction&&(
+                      <div onClick={e=>e.stopPropagation()} style={{display:"flex",gap:"6px",marginTop:"2px"}}>
+                        <Btn v="success" s="sm" onClick={()=>markReplied(fu)} style={{flex:1,justifyContent:"center"}}>{"\u{1F44D}"} Risposto</Btn>
+                        <Btn v="secondary" s="sm" onClick={()=>markNoReply(fu)} style={{flex:1,justifyContent:"center"}}>{"\u{1F44E}"} No</Btn>
+                      </div>
+                    )}
                   </div>
                   <div style={{flexShrink:0,textAlign:"right"}}><span style={{fontSize:"11px",color:T.textMu}}>{timing}</span></div>
                 </div>
@@ -670,6 +678,7 @@ const Settings = () => {
 // ═══════════════════════════════════════════════════════════════════════════
 export default function SlissPlatform() {
   const [view,setView]=useState("home");
+  const [fuFilter,setFuFilter]=useState(null);
   const [data,setData]=useState(null);
   const [loading,setLoading]=useState(true);
   const [showOnboarding,setShowOnboarding]=useState(false);
@@ -682,13 +691,15 @@ export default function SlissPlatform() {
   const deleteRecord=useCallback((table,id)=>setData(prev=>({...prev,[table]:(prev[table]||[]).filter(r=>r.id!==id)})),[]);
   const updateSettings=useCallback((updates)=>setData(prev=>({...prev,settings:{...prev.settings,...updates}})),[]);
   const resetData=useCallback(()=>{const d=emptyData();setData(d);saveData(d);storage.remove(ONBOARDING_KEY);},[]);
+  // Navigazione: imposta vista e, opzionalmente, il filtro iniziale Follow-Up (resettato per ogni navigazione normale)
+  const go=useCallback((v,opts)=>{setFuFilter(opts&&opts.fuFilter?opts.fuFilter:null);setView(v);},[]);
 
   if(loading||!data) return (<div style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:T.bg}}><div style={{textAlign:"center"}}><div style={{marginBottom:"16px"}}><SlissLogo size={28} /></div><div style={{color:T.textD,fontSize:"13px",animation:"pulse 1.5s infinite"}}>Caricamento...</div></div></div>);
 
   const ctx={data,update,addRecord,deleteRecord,updateSettings,resetData};
   const td=today();
-  const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td).length;
-  const viewMap={home:<Home setView={setView}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp setView={setView}/>,clients:<Clients/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={setView}/>};
+  const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp setView={go} initialFilter={fuFilter}/>,clients:<Clients/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
@@ -698,10 +709,10 @@ export default function SlissPlatform() {
       <Ctx.Provider value={ctx}>
         <GlobalCSS />
         <div translate="no" lang="it" style={{display:"flex",minHeight:"100vh"}}>
-          <DesktopSidebar view={view} setView={setView} />
+          <DesktopSidebar view={view} setView={go} />
           <main className="app-main">{CurrentView}</main>
         </div>
-        <BottomNav view={view} setView={setView} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
+        <BottomNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
       </Ctx.Provider>
     </ErrorBoundary>
   );
