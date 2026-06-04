@@ -693,10 +693,10 @@ export default function SlissPlatform() {
   const resetData=useCallback(()=>{const d=emptyData();setData(d);saveData(d);storage.remove(ONBOARDING_KEY);},[]);
   // Navigazione: imposta vista e, opzionalmente, il filtro iniziale Follow-Up (resettato per ogni navigazione normale)
   const go=useCallback((v,opts)=>{setFuFilter(opts&&opts.fuFilter?opts.fuFilter:null);setView(v);},[]);
+  // ctx memoizzato PRIMA di ogni return condizionale: le hook non vanno mai saltate tra un render e l'altro
+  const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData}),[data,update,addRecord,deleteRecord,updateSettings,resetData]);
 
   if(loading||!data) return (<div style={{display:"flex",alignItems:"center",justifyContent:"center",minHeight:"100vh",background:T.bg}}><div style={{textAlign:"center"}}><div style={{marginBottom:"16px"}}><SlissLogo size={28} /></div><div style={{color:T.textD,fontSize:"13px",animation:"pulse 1.5s infinite"}}>Caricamento...</div></div></div>);
-
-  const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData}),[data,update,addRecord,deleteRecord,updateSettings,resetData]);
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
   const viewMap={home:<Home setView={go}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp setView={go} initialFilter={fuFilter}/>,clients:<Clients/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
