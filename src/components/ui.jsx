@@ -48,11 +48,13 @@ export const Tabs = ({tabs,active,onChange}) => (
 export const Modal = ({open,onClose,title,children,w}) => {
   const panelRef=useRef(null);
   const titleId=useId();
+  // Focus sul pannello SOLO all'apertura (dipende da `open`, non da `onClose`):
+  // così non ruba il focus all'input mentre si digita.
+  useEffect(()=>{ if(open) panelRef.current?.focus(); },[open]);
   useEffect(()=>{
     if(!open) return;
     const onKey=e=>{if(e.key==="Escape"&&onClose)onClose();};
     document.addEventListener("keydown",onKey);
-    panelRef.current?.focus();
     return ()=>document.removeEventListener("keydown",onKey);
   },[open,onClose]);
   if(!open) return null;
