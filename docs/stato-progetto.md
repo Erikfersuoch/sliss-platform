@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.4 · 2026-06-03 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.5 · 2026-06-04 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 03/06/2026
+> Documento vivente · Aggiornato: 04/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 04/06/2026 (v5.5) — batch usabilità Follow-Up:** schema colori coerente **per-stato** (🟢 inviato · 🟠 da inviare · 🔴 scaduto · 🔵 risposto), risolta la contraddizione del rosso su "Risposto" (era colorato per data). Azioni "Risposto / No" **inline** dalla lista, senza aprire il dettaglio. Disattivando un tipo di follow-up i `pending` di quella fase **escono dai conteggi** (Home, badge nav, tab) e nella tab "Tutti" restano **sbiaditi e disabilitati** con badge "Disattivato" (helper condiviso `isPhaseOff`). Contatori Home aprono la pagina **già filtrata** (Da inviare / In attesa / Attivi). Deploy Vercel READY (commit `66eebce`). **Rimandato:** Agenda come vista calendario (Step 5, task dedicato).
 
 **Sessione 03/06/2026 (v5.4) — qualità UI Home:** primo audit `/impeccable` sulla Home (baseline 10/20). Creato `PRODUCT.md` come baseline di design (register=product, mission piattaforma multi-fase). Spediti e deployati: contrasto testo a norma WCAG AA, rimossi i bordi-striscia laterali, stato follow-up con etichetta testuale (non solo colore), card cliccabili accessibili da tastiera, `prefers-reduced-motion`, eliminato il doppio render (due `<main>` → uno). Poi sostituite le emoji di sistema con un set di icone a tratto coerente (nuovo componente `<Icon>`, stile Lucide) su navigazione e fasi follow-up. Restano a emoji per scelta: pagina Moduli, settori nei select, illustrazioni stati vuoti, saluto Home.
 
@@ -21,7 +23,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.4
+- ✅ Deploy attivo su Vercel — app v5.5
 
 ---
 
