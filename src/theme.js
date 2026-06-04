@@ -14,7 +14,7 @@ const T = {
   amber:  "#D97706", amberD: "#B45309", amberS: "rgba(217,119,6,0.10)",
   red:    "#DC2626", redS:   "rgba(220,38,38,0.10)",
   purple: "#7C3AED", purpleS:"rgba(124,58,237,0.10)",
-  teal:   "#0D9488", tealS:  "rgba(13,148,136,0.10)",
+  teal:   "#0D9488", tealD: "#0F766E", tealS:  "rgba(13,148,136,0.10)",
   r: { s: "6px", m: "10px", l: "14px", xl: "20px", full: "9999px" },
 };
 

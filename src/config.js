@@ -2,26 +2,26 @@ import T from "./theme.js";
 
 export const PHASES = {
   thankyou:      { label: "Ringraziamento", color: T.blue,   icon: "heart",     bg: T.blueS },
-  check:         { label: "Controllo",      color: T.amber,  icon: "check",     bg: T.amberS },
+  check:         { label: "Controllo",      color: T.amberD, icon: "check",     bg: T.amberS },
   review:        { label: "Recensione",     color: T.purple, icon: "star",      bg: T.purpleS },
-  reactivation:  { label: "Riattivazione",  color: T.green,  icon: "rotate",    bg: T.greenS },
+  reactivation:  { label: "Riattivazione",  color: T.greenH, icon: "rotate",    bg: T.greenS },
   order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "clipboard", bg: T.blueS },
-  shipping:      { label: "In spedizione",   color: T.amber,  icon: "truck",     bg: T.amberS },
-  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "check",     bg: T.tealS },
-  reorder:       { label: "Riordino",        color: T.green,  icon: "rotate",    bg: T.greenS },
+  shipping:      { label: "In spedizione",   color: T.amberD, icon: "truck",     bg: T.amberS },
+  delivery_check:{ label: "Ricezione",       color: T.tealD,  icon: "check",     bg: T.tealS },
+  reorder:       { label: "Riordino",        color: T.greenH, icon: "rotate",    bg: T.greenS },
 };
 
 export const PRODUCT_PHASES = {
   order_confirm: { label: "Conferma ordine", color: T.blue,   icon: "clipboard", bg: T.blueS },
-  shipping:      { label: "In spedizione",   color: T.amber,  icon: "truck",     bg: T.amberS },
-  delivery_check:{ label: "Ricezione",       color: T.teal,   icon: "check",     bg: T.tealS },
+  shipping:      { label: "In spedizione",   color: T.amberD, icon: "truck",     bg: T.amberS },
+  delivery_check:{ label: "Ricezione",       color: T.tealD,  icon: "check",     bg: T.tealS },
   review:        { label: "Recensione",      color: T.purple, icon: "star",      bg: T.purpleS },
-  reorder:       { label: "Riordino",        color: T.green,  icon: "rotate",    bg: T.greenS },
+  reorder:       { label: "Riordino",        color: T.greenH, icon: "rotate",    bg: T.greenS },
 };
 
 export const STATUSES = {
-  pending:   { label: "In attesa",  color: T.amber,  bg: T.amberS },
-  sent:      { label: "Inviato",    color: T.green,  bg: T.greenS },
+  pending:   { label: "In attesa",  color: T.amberD, bg: T.amberS },
+  sent:      { label: "Inviato",    color: T.greenH, bg: T.greenS },
   replied:   { label: "Risposto",   color: T.blue,   bg: T.blueS },
   completed: { label: "Completato", color: T.textD,  bg: "rgba(90,111,148,0.10)" },
   skipped:   { label: "Saltato",    color: T.textMu, bg: "rgba(61,81,120,0.08)" },
@@ -29,9 +29,9 @@ export const STATUSES = {
 
 export const CLIENT_ST = {
   new:           { label: "Nuovo",         color: T.blue,   bg: T.blueS },
-  active:        { label: "Attivo",        color: T.green,  bg: T.greenS },
+  active:        { label: "Attivo",        color: T.greenH, bg: T.greenS },
   vip:           { label: "VIP",           color: T.purple, bg: T.purpleS },
-  to_reactivate: { label: "Da riattivare", color: T.amber,  bg: T.amberS },
+  to_reactivate: { label: "Da riattivare", color: T.amberD, bg: T.amberS },
   inactive:      { label: "Inattivo",      color: T.textD,  bg: "rgba(90,111,148,0.10)" },
 };
 
