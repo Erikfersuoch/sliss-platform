@@ -106,10 +106,10 @@ const Onboarding = ({onComplete}) => {
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F4BC}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come si chiama la tua attività?</h1>
         <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparirà nel saluto della home. Potrai cambiarlo nelle impostazioni.</p>
-        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"16px"}} autoFocus />
+        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" aria-label="Nome della tua attività" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"16px"}} autoFocus />
         <div style={{marginBottom:"20px",textAlign:"left"}}>
           <label style={{fontSize:"12px",color:T.textD,fontWeight:600,textTransform:"uppercase",letterSpacing:".06em",display:"block",marginBottom:"7px"}}>Link Google Reviews <span style={{fontWeight:400,textTransform:"none",letterSpacing:0}}>(opzionale)</span></label>
-          <input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." style={{fontSize:"14px"}} />
+          <input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." aria-label="Link Google Reviews (opzionale)" style={{fontSize:"14px"}} />
         </div>
         <Btn onClick={()=>setStep(2)} disabled={!bName.trim()} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
       </>;
@@ -139,7 +139,7 @@ const Onboarding = ({onComplete}) => {
           ))}
         </div>
         {isCustomCluster&&<>
-          <input value={customSector} onChange={e=>setCustomSector(e.target.value)} placeholder="Descrivi il tuo settore..." style={{fontSize:"15px",margin:"0 0 20px"}} autoFocus />
+          <input value={customSector} onChange={e=>setCustomSector(e.target.value)} placeholder="Descrivi il tuo settore..." aria-label="Descrizione del tuo settore" style={{fontSize:"15px",margin:"0 0 20px"}} autoFocus />
           <Btn onClick={()=>setStep(4)} disabled={!customSector.trim()} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
         </>}
       </>;
@@ -281,7 +281,7 @@ const Home = ({setView}) => {
   const {data,update,addRecord}=useSliss();
   const [showQuickAdd,setShowQuickAdd]=useState(false);
   const [qDone,setQDone]=useState(false);
-  const [qForm,setQForm]=useState({name:"",phone:"",date:today(),serviceType:"Sessione",product:""});
+  const [qForm,setQForm]=useState({name:"",phone:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
   const bizType=data?.settings?.bizType||"servizi";
@@ -294,10 +294,10 @@ const Home = ({setView}) => {
   const handleQuickAdd=()=>{
     if(!qForm.name.trim()||!qForm.phone.trim())return;
     let clientId=(data?.clients||[]).find(c=>c.phone===qForm.phone)?.id;
-    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:"",channel:"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date});}
+    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:"",channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
     if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
     else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
-    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:clusterSvcTypes[0],product:""});},1500);
+    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
   };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
@@ -360,6 +360,7 @@ const Home = ({setView}) => {
           :<>
             <FormField label="Nome"><input value={qForm.name} onChange={e=>setQForm(p=>({...p,name:e.target.value}))} placeholder="Nome Cognome" /></FormField>
             <FormField label="WhatsApp"><input value={qForm.phone} onChange={e=>setQForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>
+            <FormField label="Metodo di contatto"><select value={qForm.channel} onChange={e=>setQForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
             <FormField label={bizType==="prodotti"?"Data ordine":"Data appuntamento"}><input value={qForm.date} onChange={e=>setQForm(p=>({...p,date:e.target.value}))} type="date" /></FormField>
             {bizType==="servizi"
               ?<FormField label="Tipo servizio"><select value={qForm.serviceType} onChange={e=>setQForm(p=>({...p,serviceType:e.target.value}))}>{clusterSvcTypes.map(s=><option key={s}>{s}</option>)}</select></FormField>
@@ -559,7 +560,7 @@ const Clients = () => {
         <FormField label="Nome completo"><input value={form.name} onChange={e=>setForm(p=>({...p,name:e.target.value}))} placeholder="Nome Cognome" /></FormField>
         <FormField label="Telefono"><input value={form.phone} onChange={e=>setForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>
         <FormField label="Email"><input value={form.email} onChange={e=>setForm(p=>({...p,email:e.target.value}))} placeholder="email@esempio.com" type="email" /></FormField>
-        <FormField label="Canale"><select value={form.channel} onChange={e=>setForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
+        <FormField label="Metodo di contatto"><select value={form.channel} onChange={e=>setForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
         <FormField label="Note"><textarea value={form.notes} onChange={e=>setForm(p=>({...p,notes:e.target.value}))} placeholder="Preferenze, info utili..." /></FormField>
         <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowNew(false)}>Annulla</Btn><Btn onClick={handleAdd} disabled={!form.name.trim()}>Salva</Btn></div>
       </Modal>
@@ -570,7 +571,7 @@ const Clients = () => {
             :<div style={{display:"flex",flexDirection:"column",gap:"0"}}><div style={{fontWeight:600,fontSize:"15px",marginBottom:"14px",color:T.textM}}>{(bizType==="prodotti"?"Nuovo ordine":"Nuovo appuntamento")+" per "+sel.name}</div><FormField label={bizType==="prodotti"?"Data ordine":"Data"} hint="I follow-up si calcolano da questa data"><input type="date" value={newApptForm.date} onChange={e=>setNewApptForm(p=>({...p,date:e.target.value}))} /></FormField>{bizType==="servizi"&&<FormField label="Tipo servizio"><select value={newApptForm.serviceType||clusterSvcTypes[0]} onChange={e=>setNewApptForm(p=>({...p,serviceType:e.target.value}))}>{clusterSvcTypes.map(s=><option key={s}>{s}</option>)}</select></FormField>}{bizType==="prodotti"&&<FormField label="Prodotto"><input value={newApptForm.product||""} onChange={e=>setNewApptForm(p=>({...p,product:e.target.value}))} placeholder="Es. Stampa..." /></FormField>}<FormField label="Note (opzionale)"><textarea value={newApptForm.notes} onChange={e=>setNewApptForm(p=>({...p,notes:e.target.value}))} style={{minHeight:"60px"}} /></FormField><div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setNewApptMode(false)}>Annulla</Btn><Btn onClick={handleNewAppt} disabled={!newApptForm.date||(bizType==="prodotti"&&!(newApptForm.product||"").trim())}>Salva e genera</Btn></div></div>
         ) : !editMode ? (
           <div style={{display:"flex",flexDirection:"column",gap:"16px"}}>
-            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div><div style={{fontSize:"18px",fontWeight:700}}>{sel.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{sel.phone}{sel.email&&` · ${sel.email}`}</div></div><div style={{display:"flex",gap:"7px",alignItems:"center"}}><Badge {...st} /><Btn v="secondary" s="sm" onClick={()=>setEditMode(true)}>{"\u{270F}\u{FE0F}"}</Btn></div></div>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div><div style={{fontSize:"18px",fontWeight:700}}>{sel.name}</div><div style={{fontSize:"13px",color:T.textD,marginTop:"2px"}}>{sel.phone}{sel.email&&` · ${sel.email}`}</div></div><div style={{display:"flex",gap:"7px",alignItems:"center"}}><Badge {...st} /><Btn v="secondary" s="sm" aria="Modifica cliente" onClick={()=>setEditMode(true)}>{"\u{270F}\u{FE0F}"}</Btn></div></div>
             {sel.notes&&<div style={{padding:"10px 14px",background:T.bg3,borderRadius:T.r.m,fontSize:"13px",color:T.textM,lineHeight:1.6,border:`1px solid ${T.border}`}}>{"\u{1F4DD}"} {sel.notes}</div>}
             {(()=>{const bizType=data?.settings?.bizType||"servizi";const appts=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.clientId===sel.id):(data?.appointments||[]).filter(a=>a.clientId===sel.id);const visite=appts.length;const lastDate=appts.length?[...appts].sort((a,b)=>new Date(b.date||b.orderDate)-new Date(a.date||a.orderDate))[0]?.date||[...appts].sort((a,b)=>new Date(b.date||b.orderDate)-new Date(a.date||a.orderDate))[0]?.orderDate:null;const haReview=(data?.followUps||[]).some(f=>f.clientId===sel.id&&(f.phase==="review")&&f.status==="sent");const td2=today();const pendingFus=fus.filter(f=>f.status==="pending");const ciclo=fus.length===0?"—":pendingFus.length===0?"Completato":pendingFus.some(f=>f.scheduledDate<=td2)?"In corso":"Programmato";return(<div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"8px"}}>{[{label:bizType==="prodotti"?"Ordini totali":"Visite totali",value:visite,color:T.green,span:true,big:true},{label:bizType==="prodotti"?"Ultimo ordine":"Ultima visita",value:lastDate?fmtDate(lastDate):"—"},{label:"Follow-up",value:ciclo,color:ciclo==="In corso"?T.amber:ciclo==="Completato"?T.green:T.textD}].map((m,i)=>(<div key={i} style={{padding:"10px 12px",background:T.bg3,borderRadius:T.r.m,gridColumn:m.span?"1/-1":undefined}}><div style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em",marginBottom:"4px"}}>{m.label}</div><div style={{fontSize:m.big?"22px":"14px",fontWeight:700,color:m.color||T.text}}>{m.value}</div></div>))}</div>);})()}
             {fus.length>0&&<div><h4 style={{fontSize:"13px",fontWeight:600,marginBottom:"8px",color:T.textM}}>Follow-Up</h4><div style={{display:"flex",flexDirection:"column",gap:"5px"}}>{fus.map(fu=>{const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};const ss=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const off=fu.status==="pending"&&isPhaseOff(data?.templates,fu.phase);return (<div key={fu.id} style={{display:"flex",alignItems:"center",gap:"8px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.s,border:`1px solid ${T.border}`,opacity:off?0.5:1}}><Icon name={ph.icon} size={15} color={ph.color} /><div style={{flex:1,display:"flex",gap:"5px",flexWrap:"wrap"}}><Badge {...ph} s /><Badge {...ss} s />{off&&<Badge label="Disattivato" color={T.textMu} bg={T.bg3} s />}</div><span style={{fontSize:"11px",color:T.textD}}>{fmtDate(fu.scheduledDate)}</span></div>);})}</div></div>}
@@ -581,7 +582,7 @@ const Clients = () => {
             <FormField label="Nome"><input value={editForm.name} onChange={e=>setEditForm(p=>({...p,name:e.target.value}))} /></FormField>
             <FormField label="Telefono"><input value={editForm.phone} onChange={e=>setEditForm(p=>({...p,phone:e.target.value}))} type="tel" /></FormField>
             <FormField label="Email"><input value={editForm.email} onChange={e=>setEditForm(p=>({...p,email:e.target.value}))} type="email" /></FormField>
-            <FormField label="Canale"><select value={editForm.channel} onChange={e=>setEditForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
+            <FormField label="Metodo di contatto"><select value={editForm.channel} onChange={e=>setEditForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
             <FormField label="Stato"><select value={editForm.status} onChange={e=>setEditForm(p=>({...p,status:e.target.value}))}><option value="new">Nuovo</option><option value="active">Attivo</option><option value="vip">VIP</option><option value="to_reactivate">Da riattivare</option><option value="inactive">Inattivo</option></select></FormField>
             <FormField label="Note"><textarea value={editForm.notes} onChange={e=>setEditForm(p=>({...p,notes:e.target.value}))} /></FormField>
             <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setEditMode(false)}>Annulla</Btn><Btn onClick={handleEdit} disabled={!editForm.name?.trim()}>Salva</Btn></div>
@@ -613,7 +614,7 @@ const Templates = () => {
       }
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nuovo template">
         <FormField label="Nome"><input value={newForm.name} onChange={e=>setNewForm(p=>({...p,name:e.target.value}))} placeholder="Es. Ringraziamento personalizzato" /></FormField>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}><FormField label="Fase"><select value={newForm.phase} onChange={e=>setNewForm(p=>({...p,phase:e.target.value}))}><option value="thankyou">Ringraziamento</option><option value="check">Controllo</option><option value="review">Recensione</option><option value="reactivation">Riattivazione</option></select></FormField><FormField label="Canale"><select value={newForm.channel} onChange={e=>setNewForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField></div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}><FormField label="Fase"><select value={newForm.phase} onChange={e=>setNewForm(p=>({...p,phase:e.target.value}))}><option value="thankyou">Ringraziamento</option><option value="check">Controllo</option><option value="review">Recensione</option><option value="reactivation">Riattivazione</option></select></FormField><FormField label="Metodo di contatto"><select value={newForm.channel} onChange={e=>setNewForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField></div>
         <FormField label="Testo" hint="Usa [Nome] come segnaposto."><textarea value={newForm.text} onChange={e=>setNewForm(p=>({...p,text:e.target.value}))} placeholder="Ciao [Nome]! ..." style={{minHeight:"100px"}} /></FormField>
         <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowNew(false)}>Annulla</Btn><Btn onClick={handleAdd} disabled={!newForm.name.trim()||!newForm.text.trim()}>Salva</Btn></div>
       </Modal>
