@@ -281,7 +281,7 @@ const Home = ({setView}) => {
   const {data,update,addRecord}=useSliss();
   const [showQuickAdd,setShowQuickAdd]=useState(false);
   const [qDone,setQDone]=useState(false);
-  const [qForm,setQForm]=useState({name:"",phone:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
+  const [qForm,setQForm]=useState({name:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
   const bizType=data?.settings?.bizType||"servizi";
@@ -292,12 +292,13 @@ const Home = ({setView}) => {
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
   const handleQuickAdd=()=>{
-    if(!qForm.name.trim()||!qForm.phone.trim())return;
-    let clientId=(data?.clients||[]).find(c=>c.phone===qForm.phone)?.id;
-    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:"",channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
+    const needEmail=qForm.channel==="Email";
+    if(!qForm.name.trim()||(needEmail?!qForm.email.trim():!qForm.phone.trim()))return;
+    let clientId=(data?.clients||[]).find(c=>(qForm.phone.trim()&&c.phone===qForm.phone.trim())||(qForm.email.trim()&&c.email===qForm.email.trim()))?.id;
+    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:qForm.email.trim(),channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
     if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
     else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
-    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
+    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",email:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
   };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
@@ -336,7 +337,7 @@ const Home = ({setView}) => {
                       <span style={{marginLeft:"auto",fontSize:"11px",fontWeight:700,color:fu.scheduledDate<td?T.red:T.amberD}}>{fu.scheduledDate<td?"Scaduto":"Oggi"}</span>
                     </div>
                     <div style={{fontSize:"13px",color:T.textD,lineHeight:1.5,marginBottom:"10px",overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{fu.message}</div>
-                    <SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
+                    <SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
                   </div>
                 );
               })}
@@ -359,14 +360,16 @@ const Home = ({setView}) => {
           ?<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:"44px",marginBottom:"12px"}}>{"\u{2705}"}</div><div style={{fontWeight:700,fontSize:"16px",marginBottom:"6px"}}>Salvato!</div><div style={{fontSize:"13px",color:T.textD}}>Follow-up generati automaticamente.</div></div>
           :<>
             <FormField label="Nome"><input value={qForm.name} onChange={e=>setQForm(p=>({...p,name:e.target.value}))} placeholder="Nome Cognome" /></FormField>
-            <FormField label="WhatsApp"><input value={qForm.phone} onChange={e=>setQForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>
             <FormField label="Metodo di contatto"><select value={qForm.channel} onChange={e=>setQForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
+            {qForm.channel==="Email"
+              ? <FormField label="Email"><input value={qForm.email} onChange={e=>setQForm(p=>({...p,email:e.target.value}))} placeholder="email@esempio.com" type="email" /></FormField>
+              : <FormField label={qForm.channel==="SMS"?"Numero di telefono":"Numero WhatsApp"}><input value={qForm.phone} onChange={e=>setQForm(p=>({...p,phone:e.target.value}))} placeholder="347 123 4567" type="tel" /></FormField>}
             <FormField label={bizType==="prodotti"?"Data ordine":"Data appuntamento"}><input value={qForm.date} onChange={e=>setQForm(p=>({...p,date:e.target.value}))} type="date" /></FormField>
             {bizType==="servizi"
               ?<FormField label="Tipo servizio"><select value={qForm.serviceType} onChange={e=>setQForm(p=>({...p,serviceType:e.target.value}))}>{clusterSvcTypes.map(s=><option key={s}>{s}</option>)}</select></FormField>
               :<FormField label="Prodotto"><input value={qForm.product} onChange={e=>setQForm(p=>({...p,product:e.target.value}))} placeholder="Es. Stampa figurina" /></FormField>
             }
-            <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowQuickAdd(false)}>Annulla</Btn><Btn onClick={handleQuickAdd} disabled={!qForm.name.trim()||!qForm.phone.trim()}>Salva e genera</Btn></div>
+            <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowQuickAdd(false)}>Annulla</Btn><Btn onClick={handleQuickAdd} disabled={!qForm.name.trim()||(qForm.channel==="Email"?!qForm.email.trim():!qForm.phone.trim())}>Salva e genera</Btn></div>
           </>
         }
       </Modal>
@@ -410,7 +413,7 @@ const FollowUp = ({setView,initialFilter}) => {
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:"6px",marginBottom:"4px",flexWrap:"wrap"}}><span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span><Badge {...ph} s /><Badge {...st} s />{phaseOff&&<Badge label="Disattivato" color={T.textMu} bg={T.bg3} s />}</div>
                     <div style={{fontSize:"13px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginBottom:"8px"}}>{fu.message}</div>
-                    {fu.status==="pending"&&!phaseOff&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} onSend={()=>markSent(fu)} />}
+                    {fu.status==="pending"&&!phaseOff&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} onSend={()=>markSent(fu)} />}
                     {fu.status==="sent"&&!fu.satisfaction&&(
                       <div onClick={e=>e.stopPropagation()} style={{display:"flex",gap:"6px",marginTop:"2px"}}>
                         <Btn v="success" s="sm" onClick={()=>markReplied(fu)} style={{flex:1,justifyContent:"center"}}>{"\u{1F44D}"} Ha risposto</Btn>
@@ -433,7 +436,7 @@ const FollowUp = ({setView,initialFilter}) => {
               ?<div><textarea value={editMsg} onChange={e=>setEditMsg(e.target.value)} style={{minHeight:"120px",marginBottom:"10px"}} /><div style={{display:"flex",gap:"8px",justifyContent:"flex-end"}}><Btn v="secondary" s="sm" onClick={()=>setEditMsg(null)}>Annulla</Btn><Btn s="sm" onClick={()=>{update("followUps",sel.id,{message:editMsg});setSel({...sel,message:editMsg});setEditMsg(null);}}>Salva</Btn></div></div>
               :<div><div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap",marginBottom:"8px"}}>{sel.message}</div>{sel.status==="pending"&&<button onClick={()=>setEditMsg(sel.message)} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"2px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"✏️ Modifica messaggio"}</button>}</div>
             }
-            <SendButtons message={editMsg!==null?editMsg:sel.message} clientPhone={cl?.phone||""} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);setEditMsg(null);}:undefined} />
+            <SendButtons message={editMsg!==null?editMsg:sel.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);setEditMsg(null);}:undefined} />
             {sel.status==="sent"&&!sel.satisfaction&&(
               <div style={{paddingTop:"4px"}}>
                 <div style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em",marginBottom:"8px"}}>Esito</div>
@@ -630,7 +633,7 @@ const Feedback = () => {
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Feedback" action={reviewLink&&<a href={reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:T.bg2,color:T.textM,border:`1px solid ${T.border}`,borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{"⭐ Vedi recensioni"}</a>} />
-      {clientsWithout.length>0&&<Card style={{marginBottom:"16px"}}><h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>Richiedi recensione <span style={{fontSize:"12px",fontWeight:400,color:T.textD,marginLeft:"4px"}}>{clientsWithout.length} clienti</span></h2><div style={{display:"flex",flexDirection:"column",gap:"10px"}}>{clientsWithout.map(cl=>(<div key={cl.id} style={{padding:"12px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`}}><div style={{fontWeight:600,fontSize:"14px",marginBottom:"3px"}}>{cl.name}</div><div style={{fontSize:"12px",color:T.textD,marginBottom:"10px"}}>{cl.channel} · {daysAgo(cl.lastVisit)}</div><SendButtons message={reviewMsg(cl.name)} clientPhone={cl.phone} /></div>))}</div></Card>}
+      {clientsWithout.length>0&&<Card style={{marginBottom:"16px"}}><h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>Richiedi recensione <span style={{fontSize:"12px",fontWeight:400,color:T.textD,marginLeft:"4px"}}>{clientsWithout.length} clienti</span></h2><div style={{display:"flex",flexDirection:"column",gap:"10px"}}>{clientsWithout.map(cl=>(<div key={cl.id} style={{padding:"12px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`}}><div style={{fontWeight:600,fontSize:"14px",marginBottom:"3px"}}>{cl.name}</div><div style={{fontSize:"12px",color:T.textD,marginBottom:"10px"}}>{cl.channel} · {daysAgo(cl.lastVisit)}</div><SendButtons message={reviewMsg(cl.name)} clientPhone={cl.phone} clientEmail={cl.email} channel={cl.channel} /></div>))}</div></Card>}
       <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px",color:T.textM}}>Ricevuti</h2>
       {!feedbacks.length ? <Empty icon={"\u{2B50}"} title="Nessun feedback" desc="Appariranno qui quando i clienti risponderanno." /> : <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>{feedbacks.map((fb,i)=>{const cl=clients.find(c=>c.id===fb.clientId);return (<Card key={fb.id} style={{animation:`fadeIn .3s ease ${i*.05}s both`}}><div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}><div><div style={{fontWeight:600,fontSize:"14px",marginBottom:"5px"}}>{cl?.name||"\u{2014}"}</div><div style={{fontSize:"17px",marginBottom:"7px"}}>{"\u{2B50}".repeat(fb.rating)}{"\u{2606}".repeat(5-fb.rating)}</div>{fb.comment&&<div style={{fontSize:"13px",color:T.textM,lineHeight:1.6,fontStyle:"italic"}}>"{fb.comment}"</div>}</div><div style={{textAlign:"right",flexShrink:0}}><div style={{fontSize:"11px",color:T.textD,marginBottom:"5px"}}>{fmtDate(fb.date)}</div>{fb.wouldRecommend&&<Badge label="Consiglia" color={T.green} bg={T.greenS} s />}</div></div></Card>);})}</div>}
     </div>
