@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conferma appuntamento</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #F8FAF8;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 32px 20px 48px;
+    }
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 18px;
+      padding: 32px 24px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 800;
+      color: #16A34A;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+    .appt-box {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 24px;
+    }
+    .appt-label { font-size: 11px; color: #6B7280; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+    .appt-date { font-size: 18px; font-weight: 700; color: #111318; }
+    .appt-biz { font-size: 13px; color: #374151; margin-top: 2px; }
+    h1 { font-size: 20px; font-weight: 700; color: #111318; margin-bottom: 6px; letter-spacing: -0.02em; }
+    p.sub { font-size: 14px; color: #6B7280; line-height: 1.6; margin-bottom: 24px; }
+    label { display: block; font-size: 12px; font-weight: 600; color: #374151; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+    .field { margin-bottom: 18px; }
+    input, textarea {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 10px;
+      font-size: 16px;
+      font-family: inherit;
+      color: #111318;
+      background: #fff;
+      transition: border-color .15s;
+      outline: none;
+    }
+    input:focus, textarea:focus { border-color: #16A34A; }
+    textarea { min-height: 80px; resize: vertical; font-size: 15px; }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: #16A34A;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .15s;
+      margin-top: 8px;
+    }
+    button:hover { background: #15803D; }
+    button:disabled { background: #D1D5DB; cursor: not-allowed; }
+    .success {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .success .icon { font-size: 56px; margin-bottom: 16px; }
+    .success h2 { font-size: 22px; font-weight: 700; margin-bottom: 8px; color: #111318; }
+    .success p { font-size: 14px; color: #6B7280; line-height: 1.7; }
+    .error-msg { font-size: 13px; color: #DC2626; margin-top: 8px; display: none; }
+    .req { color: #DC2626; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">Sliss</div>
+
+  <div id="form-section">
+    <div class="appt-box">
+      <div class="appt-label">Il tuo appuntamento</div>
+      <div class="appt-date" id="appt-date">—</div>
+      <div class="appt-biz" id="appt-biz"></div>
+    </div>
+
+    <h1>Completa i tuoi dati</h1>
+    <p class="sub">Ci vogliono 30 secondi. Servono per tenerti aggiornato prima e dopo.</p>
+
+    <div class="field">
+      <label>Nome e cognome <span class="req">*</span></label>
+      <input id="name" type="text" placeholder="Mario Rossi" autocomplete="name" />
+    </div>
+    <div class="field">
+      <label>Numero WhatsApp <span class="req">*</span></label>
+      <input id="phone" type="tel" placeholder="347 123 4567" autocomplete="tel" />
+    </div>
+    <div class="field">
+      <label>Note <span style="font-weight:400;text-transform:none;letter-spacing:0">(facoltativo)</span></label>
+      <textarea id="notes" placeholder="Es. allergie, zona del corpo, riferimenti..."></textarea>
+    </div>
+
+    <button id="submit-btn" onclick="handleSubmit()">Conferma appuntamento</button>
+    <div class="error-msg" id="error-msg">Qualcosa è andato storto. Riprova.</div>
+  </div>
+
+  <div class="success" id="success-section" style="display:none">
+    <div class="icon">✅</div>
+    <h2>Perfetto!</h2>
+    <p id="success-text">I tuoi dati sono stati inviati.<br/>A presto!</p>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const slotId = params.get('slot');
+  const dateStr = params.get('date');
+  const biz = params.get('biz') || '';
+  const owner = params.get('o') || '';
+
+  if (dateStr) {
+    const d = new Date(dateStr + 'T12:00:00');
+    document.getElementById('appt-date').textContent = d.toLocaleDateString('it-IT', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+  }
+  if (biz) {
+    document.getElementById('appt-biz').textContent = biz;
+  }
+
+  async function handleSubmit() {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const notes = document.getElementById('notes').value.trim();
+    const btn = document.getElementById('submit-btn');
+    const errMsg = document.getElementById('error-msg');
+
+    if (!name || !phone) {
+      errMsg.textContent = 'Nome e numero WhatsApp sono obbligatori.';
+      errMsg.style.display = 'block';
+      return;
+    }
+    if (!slotId) {
+      errMsg.textContent = 'Link non valido. Chiedi un nuovo link.';
+      errMsg.style.display = 'block';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Invio in corso...';
+    errMsg.style.display = 'none';
+
+    try {
+      const res = await fetch('/api/onboarding-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slotId, name, phone, notes, owner }),
+      });
+
+      if (!res.ok) throw new Error('server error');
+
+      document.getElementById('form-section').style.display = 'none';
+      const successText = document.getElementById('success-text');
+      successText.innerHTML = `I tuoi dati sono stati inviati${biz ? ' a <strong>' + biz + '</strong>' : ''}.<br/>A presto!`;
+      document.getElementById('success-section').style.display = 'block';
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = 'Conferma appuntamento';
+      errMsg.textContent = 'Errore di connessione. Riprova tra qualche secondo.';
+      errMsg.style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
