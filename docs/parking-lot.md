@@ -47,7 +47,8 @@
 - [27/05/2026] Automazione WhatsApp Business API via BSP (Twilio o 360dialog) — costo stimato 10-20€/mese scaricabile sul pricing cliente. Da attivare solo in Fase 3 con clienti paganti
 - [25/05/2026] Integrare follow-up con WhatsApp Business: etichettando cliente con "follow up" su WA Business il sistema parte in automatico senza dover usare la piattaforma (da valutare fattibilità)
 - [25/05/2026] Logo Sliss in app non corrisponde all'originale — allineare al file sorgente (Sliss_logo_png.png sul desktop)
-- **Integrazione calendario esterno** (Google Calendar / iCal) — parcheggiata Maggio 2026
+- **Integrazione calendario esterno** (Google Calendar / iCal) — risolta come *ponte leggero*: bottone "Aggiungi a Google Calendar" sull'appuntamento (05/06/2026). Sync bidirezionale vera = Fase 3.
+- **Calendario visuale in-app (ex Step 5)** — ARCHIVIATO 05/06/2026: contraddice Opzione A (il calendario resta Google). Vedi decisioni.md.
 - **Invio automatico messaggi** senza azione del professionista — parcheggiata Maggio 2026
 - **Fix emoji su Vercel** — problema font, fix veloce, bassa priorità — parcheggiata Maggio 2026
 
