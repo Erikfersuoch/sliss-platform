@@ -108,6 +108,10 @@
       <input id="phone" type="tel" placeholder="347 123 4567" autocomplete="tel" />
     </div>
     <div class="field">
+      <label>Email <span style="font-weight:400;text-transform:none;letter-spacing:0">(facoltativo)</span></label>
+      <input id="email" type="email" placeholder="mario.rossi@email.it" autocomplete="email" />
+    </div>
+    <div class="field">
       <label>Note <span style="font-weight:400;text-transform:none;letter-spacing:0">(facoltativo)</span></label>
       <textarea id="notes" placeholder="Es. allergie, preferenze, riferimenti..."></textarea>
     </div>
@@ -145,6 +149,7 @@
   async function handleSubmit() {
     const name = document.getElementById('name').value.trim();
     const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
     const notes = document.getElementById('notes').value.trim();
     const btn = document.getElementById('submit-btn');
     const errMsg = document.getElementById('error-msg');
@@ -168,7 +173,7 @@
       const res = await fetch('/api/onboarding-submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slotId, name, phone, notes, owner }),
+        body: JSON.stringify({ slotId, name, phone, email, notes, owner }),
       });
 
       if (!res.ok) throw new Error('server error');

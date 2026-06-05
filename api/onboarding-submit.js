@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { slotId, name, phone, notes, owner } = req.body;
+  const { slotId, name, phone, email, notes, owner } = req.body;
   if (!slotId || !name?.trim() || !phone?.trim()) {
     return res.status(400).json({ error: 'missing fields' });
   }
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
     slotId,
     name: name.trim(),
     phone: phone.trim(),
+    email: email?.trim() || '',
     notes: notes?.trim() || '',
     submitted: new Date().toISOString(),
   }, { ex: 60 * 60 * 24 * 30 });
