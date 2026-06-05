@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.6 · 2026-06-05 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.7 · 2026-06-05 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 05/06/2026 (v5.7) — ponte Google Calendar (roadmap v6 COMPLETATA):** aggiunto bottone **📅 "Aggiungi a Google Calendar"** sulla card appuntamento in Agenda: apre Google Calendar con un evento **giornaliero** pre-compilato (titolo `servizio · cliente`, data, note nei dettagli), link `calendar.google.com/render`, **zero backend**. Formato link verificato (evento si genera correttamente). **Caveat:** gli appuntamenti hanno solo la data, non l'ora → evento all-day; aggiungere l'orario è un'evoluzione futura. Con questo si **chiudono tutti e 4 i passi della roadmap v6 Opzione A** (1 follow-up disattivabili · 2 nuovo appuntamento da scheda · 3 ponte Google Calendar · 4 onboarding cliente via link). Deploy commit `4bb4eea`.
 
 **Sessione 05/06/2026 (v5.6) — onboarding cliente via link (spedito):** integrato il lavoro avviato da telefono (branch `claude/status-check-NoBBi`) su `main`. In Agenda nuovo flusso **"Prepara scheda"**: si genera un link (data + tipo servizio, es. "Consulenza") da mandare al cliente; il cliente compila un form pubblico (`onboarding.html`: nome, WhatsApp, **email facoltativa**, note) → dati su Upstash + **notifica push** al titolare → all'apertura dell'app l'**anagrafica entra in automatico** tra i clienti (no appuntamento: quello si aggiunge dopo dal profilo, così i follow-up partono dalla data giusta). Aggiunte: **modifica data appuntamento inline** con ricalcolo follow-up (✏️), invio link **solo via WhatsApp** (un tasto), e campo **"WhatsApp cliente" opzionale** così il tasto apre direttamente la chat del cliente (`whatsapp://send?phone=`, come i follow-up). Backend API verificato live (submit + check, email inclusa). Aggiunta anche **modifica data della scheda in attesa** (✏️, rigenera il link). Deploy Vercel commit `88224e5`. **Limite noto:** su iOS non si può forzare WhatsApp **Business** (schema condiviso, decide il sistema). **Verifica (05/06):** Erik ha provato il flusso, ok. **Moira proverà nei prossimi giorni** (uso reale: consulenza → link → anagrafica).
 
@@ -25,7 +27,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.6
+- ✅ Deploy attivo su Vercel — app v5.7
 
 ---
 
