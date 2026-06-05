@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.7 · 2026-06-05 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.8 · 2026-06-05 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 05/06/2026 (v5.8) — revisione tecnica + split di App.jsx (qualità, no nuove feature):** revisione del codice da senior engineer (richiesta di Erik). Giudizio: base solida. Interventi tecnici, **UI/UX e comportamento invariati**: (1) ESLint reso affidabile (config per-cartella browser/Node/serviceworker + codice morto rimosso); (2) **`App.jsx` da 749 → 67 righe**: pagine in `src/pages/`, nav+ErrorBoundary in `src/components/`, builder follow-up in `src/followups.js`, push in `src/push.js` (38 moduli, era 24) — fine dei merge-conflict sul file gigante, navigazione e diff più leggeri; (3) caricamento lazy (`useState(()=>loadData())`) → niente più stato `loading`/flash. **Lint progetto da 35 → 0 problemi.** Build + runtime verificati (Erik ha controllato l'app in locale). Stili inline lasciati intatti (eventuale futura migrazione a token CSS, bassa priorità). Vedi `docs/decisioni.md`.
 
 **Sessione 05/06/2026 (v5.7) — ponte Google Calendar (roadmap v6 COMPLETATA):** aggiunto bottone **📅 "Aggiungi a Google Calendar"** sulla card appuntamento in Agenda: apre Google Calendar con un evento **giornaliero** pre-compilato (titolo `servizio · cliente`, data, note nei dettagli), link `calendar.google.com/render`, **zero backend**. Formato link verificato (evento si genera correttamente). **Caveat:** gli appuntamenti hanno solo la data, non l'ora → evento all-day; aggiungere l'orario è un'evoluzione futura. Con questo si **chiudono tutti e 4 i passi della roadmap v6 Opzione A** (1 follow-up disattivabili · 2 nuovo appuntamento da scheda · 3 ponte Google Calendar · 4 onboarding cliente via link). Deploy commit `4bb4eea`.
 
@@ -27,7 +29,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.7
+- ✅ Deploy attivo su Vercel — app v5.8
 
 ---
 
