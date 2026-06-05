@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.5 · 2026-06-04 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.6 · 2026-06-05 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 04/06/2026
+> Documento vivente · Aggiornato: 05/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 05/06/2026 (v5.6) — onboarding cliente via link (spedito):** integrato il lavoro avviato da telefono (branch `claude/status-check-NoBBi`) su `main`. In Agenda nuovo flusso **"Prepara scheda"**: si genera un link (data + tipo servizio, es. "Consulenza") da mandare al cliente; il cliente compila un form pubblico (`onboarding.html`: nome, WhatsApp, **email facoltativa**, note) → dati su Upstash + **notifica push** al titolare → all'apertura dell'app l'**anagrafica entra in automatico** tra i clienti (no appuntamento: quello si aggiunge dopo dal profilo, così i follow-up partono dalla data giusta). Aggiunte: **modifica data appuntamento inline** con ricalcolo follow-up (✏️), invio link **solo via WhatsApp** (un tasto), e campo **"WhatsApp cliente" opzionale** così il tasto apre direttamente la chat del cliente (`whatsapp://send?phone=`, come i follow-up). Backend API verificato live (submit + check, email inclusa). Deploy Vercel del commit `19c141b`. **Limite noto:** su iOS non si può forzare WhatsApp **Business** (schema condiviso, decide il sistema). **Da verificare sul telefono:** giro end-to-end completo + comportamento tasto WhatsApp.
 
 **Sessione 04/06/2026 (v5.5) — batch usabilità Follow-Up:** schema colori coerente **per-stato** (🟢 inviato · 🟠 da inviare · 🔴 scaduto · 🔵 risposto), risolta la contraddizione del rosso su "Risposto" (era colorato per data). Azioni "Risposto / No" **inline** dalla lista, senza aprire il dettaglio. Disattivando un tipo di follow-up i `pending` di quella fase **escono dai conteggi** (Home, badge nav, tab) e nella tab "Tutti" restano **sbiaditi e disabilitati** con badge "Disattivato" (helper condiviso `isPhaseOff`). Contatori Home aprono la pagina **già filtrata** (Da inviare / In attesa / Attivi). Deploy Vercel READY (commit `66eebce`). **Rimandato:** Agenda come vista calendario (Step 5, task dedicato).
 
@@ -23,7 +25,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.5
+- ✅ Deploy attivo su Vercel — app v5.6
 
 ---
 
