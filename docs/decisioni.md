@@ -7,6 +7,7 @@
 
 | Data | Decisione | Motivazione |
 |---|---|---|
+| 05/06/2026 | Revisione tecnica del codice (senior review) + lint reso affidabile | Giudizio: base solida (`storage.js` healData auto-healing, ErrorBoundary, pattern React corretti, no over-engineering). Fatto subito: config ESLint per-cartella (browser `src` / Node `api` / serviceworker `sw.js`) + rimozione codice morto → **da 35 a 1 problema lint**. In coda (passo dedicato): split `App.jsx` (750 righe, 18 componenti → `src/pages/`) e refactor caricamento (init lazy, elimina l'ultimo `set-state-in-effect`). UI/UX lasciata intatta su richiesta di Erik. Stili inline NON toccati (alto rumore, zero valore ora). |
 | 30/05/2026 | Direzione prodotto = Opzione A ("Sliss alleggerisce, non sostituisce") | Sliss si aggancia agli strumenti che il cliente già usa (Google Calendar, WhatsApp), non li ricostruisce. Scartata Opzione B (mini-gestionale): mercato affollato, troppo lavoro per one-man business. Vedi docs/roadmap-v6.md. |
 | 30/05/2026 | Tolto il messaggio pre-appuntamento dalla sequenza follow-up | Feedback Moira: non serve. Era ipotesi di Claude, scartata. |
 | 30/05/2026 | Onboarding = chiusura della conversazione di persona + link self-service | Moira fissa l'appuntamento dal vivo, poi manda un link; il cliente inserisce i propri dati legati a quell'appuntamento. Zero doppia digitazione. |
