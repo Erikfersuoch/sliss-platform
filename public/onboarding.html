@@ -97,7 +97,7 @@
     </div>
 
     <h1>Completa i tuoi dati</h1>
-    <p class="sub">Ci vogliono 30 secondi. Servono per tenerti aggiornato prima e dopo.</p>
+    <p class="sub">Ci vogliono 30 secondi. Servono per tenerti aggiornato sull'appuntamento.</p>
 
     <div class="field">
       <label>Nome e cognome <span class="req">*</span></label>
@@ -109,7 +109,7 @@
     </div>
     <div class="field">
       <label>Note <span style="font-weight:400;text-transform:none;letter-spacing:0">(facoltativo)</span></label>
-      <textarea id="notes" placeholder="Es. allergie, zona del corpo, riferimenti..."></textarea>
+      <textarea id="notes" placeholder="Es. allergie, preferenze, riferimenti..."></textarea>
     </div>
 
     <button id="submit-btn" onclick="handleSubmit()">Conferma appuntamento</button>
@@ -129,12 +129,14 @@
   const dateStr = params.get('date');
   const biz = params.get('biz') || '';
   const owner = params.get('o') || '';
+  const svc = params.get('svc') || '';
 
   if (dateStr) {
     const d = new Date(dateStr + 'T12:00:00');
-    document.getElementById('appt-date').textContent = d.toLocaleDateString('it-IT', {
+    const dateLabel = d.toLocaleDateString('it-IT', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
+    document.getElementById('appt-date').textContent = svc ? svc + ' · ' + dateLabel : dateLabel;
   }
   if (biz) {
     document.getElementById('appt-biz').textContent = biz;

@@ -32,8 +32,8 @@ export default async function handler(req, res) {
     if (sub) {
       try {
         await webpush.sendNotification(sub, JSON.stringify({
-          title: 'Sliss — nuovo cliente pronto 🎉',
-          body: `${name.trim()} ha compilato il form. Apri Sliss per importare.`,
+          title: 'Sliss — nuovo cliente 🎉',
+          body: `${name.trim()} ha compilato la scheda. Lo trovi tra i clienti.`,
           tag: 'sliss-onboarding',
           url: '/',
         }));
