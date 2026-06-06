@@ -72,14 +72,15 @@
 
 ## Tester uno — Luca (Kayek3D, stampa 3D)
 
-**Kickoff:** da concordare
-**Settore:** Stampa 3D
+**Kickoff:** in uso reale (kickoff formale da concordare)
+**Settore:** Stampa 3D · vendita prodotti
+**Canali ordini:** WhatsApp Business + eBay (lo shop vero) + Instagram. Catalogo prodotti su WhatsApp.
 
 ### Metriche (aggiornate settimanalmente)
 
 | Settimana | Giorni di uso / 7 | Tempo medio / giorno | Risposte clienti ricevute | Recensioni generate |
 |---|---|---|---|---|
-| 1 | | | | |
+| 1 | (non ancora rilevato) | | | |
 | 2 | | | | |
 | 3 | | | | |
 | 4 | | | | |
@@ -92,22 +93,25 @@
 
 ### Log feedback
 
-<!-- Copia il blocco "#### Check — [DATA]" ogni settimana -->
+#### Check — 06/06/2026 (riportato da Erik)
 
-#### Check — [DATA]
-
-**Cosa ha usato:**
+**Cosa ha usato:** i follow-up, concretamente.
 
 **Cosa ha funzionato:**
+- ✅ I follow-up gli piacciono **così come li abbiamo strutturati** (valore M1 confermato sul flusso prodotti).
+- ✅ Le notifiche gli arrivano (`sub:luca` ok — step zero superato).
 
-**Cosa ha creato frizione:**
+**Cosa ha creato frizione (IL punto):**
+- 🔴 **Perde richieste in entrata su WhatsApp** e a volte le **ritarda di settimane**. Il dolore è *a monte* dell'ordine (gestione delle richieste che arrivano), non nel follow-up. Erik lo indica come "punto di apertura" per aiutarlo.
 
-**Richieste esplicite:**
+**Richieste esplicite:** nessuna diretta da Luca. La "bacchetta magica" (#6) non ancora raccolta da lui — Erik ha un'intuizione da confermare.
+
+**Metriche:** uso/tempo non ancora rilevati.
 
 **Categoria:**
 - [ ] Bloccante → fix immediato
-- [ ] Frizione → backlog prioritario
-- [ ] Richiesta feature → parking-lot
-- [ ] Insight → da tenere sotto osservazione
+- [x] Frizione → backlog prioritario (richieste in entrata perse)
+- [x] Richiesta feature → tocca **M3 Gestione Richieste** (oggi bloccato fino a validazione M1)
+- [x] Insight → conferma che il caso d'uso primario di Luca è l'**inbound**, non il follow-up
 
 ---
