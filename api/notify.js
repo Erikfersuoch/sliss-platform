@@ -29,6 +29,7 @@ const MESSAGES = {
   feedback: {
     title: 'Sliss — è ora dei feedback 🗣️',
     body: 'Com\'è andata? Due minuti per dirmi, mi serve la tua.',
+    url: '/?goto=feedback',
   },
   conferma: {
     title: 'Sliss — è tutto a posto ✅',
@@ -53,11 +54,11 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, skipped: true, reason: 'no subscription' });
   }
 
-  const { title, body } = MESSAGES[type];
+  const { title, body, url } = MESSAGES[type];
   try {
     await webpush.sendNotification(
       subscription,
-      JSON.stringify({ title, body, tag: `sliss-${type}`, url: '/' })
+      JSON.stringify({ title, body, tag: `sliss-${type}`, url: url || '/' })
     );
   } catch (err) {
     // 404/410 = subscription scaduta o revocata → rimuovila dal database

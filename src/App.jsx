@@ -5,6 +5,7 @@ import { Ctx } from "./context.js";
 import GlobalCSS from "./GlobalCSS.jsx";
 import { BottomNav, MoreMenu, DesktopSidebar } from "./components/Nav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
+import FeedbackNudge from "./components/FeedbackNudge.jsx";
 import Onboarding from "./pages/Onboarding.jsx";
 import Home from "./pages/Home.jsx";
 import FollowUp from "./pages/FollowUp.jsx";
@@ -22,10 +23,14 @@ export default function SlissPlatform() {
   // localStorage è sincrono: inizializziamo i dati subito (niente stato "loading", niente flash all'avvio)
   const [data,setData]=useState(()=>loadData());
   const [showOnboarding,setShowOnboarding]=useState(()=>!isOnboarded());
+  // Notifica "è ora dei feedback" → apre l'app su ?goto=feedback: mostriamo la schermata dedicata
+  const [showFeedbackNudge,setShowFeedbackNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='feedback');
   const autoCheckRef=useRef(false);
 
   // Cattura il codice tester dall'URL (?tester=) una sola volta, senza toccare lo stato React
   useEffect(()=>{const t=new URLSearchParams(window.location.search).get('tester');if(t)localStorage.setItem('sliss-tester',t);},[]);
+  // Pulisce ?goto dall'URL dopo averlo letto (così un refresh non riapre la schermata)
+  useEffect(()=>{const p=new URLSearchParams(window.location.search);if(p.get('goto')){p.delete('goto');const qs=p.toString();window.history.replaceState({},"",window.location.pathname+(qs?`?${qs}`:""));}},[]);
   useEffect(()=>{saveData(data);},[data]);
 
   const update=useCallback((table,id,updates)=>setData(prev=>({...prev,[table]:(prev[table]||[]).map(r=>r.id===id?{...r,...updates}:r)})),[]);
@@ -61,6 +66,7 @@ export default function SlissPlatform() {
           <main className="app-main">{CurrentView}</main>
         </div>
         <BottomNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
+        {showFeedbackNudge && <FeedbackNudge onClose={()=>setShowFeedbackNudge(false)} />}
       </Ctx.Provider>
     </ErrorBoundary>
   );

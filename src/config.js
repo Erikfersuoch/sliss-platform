@@ -1,5 +1,9 @@
 import T from "./theme.js";
 
+// Numero WhatsApp del founder (Erik) — usato dalla schermata feedback dei tester.
+// Formato internazionale senza + né spazi (es. 39347xxxxxxx). Vuoto = apre WhatsApp senza chat.
+export const FOUNDER_WA = "393316351951";
+
 export const PHASES = {
   thankyou:      { label: "Ringraziamento", color: T.blue,   icon: "heart",     bg: T.blueS },
   check:         { label: "Controllo",      color: T.amberD, icon: "check",     bg: T.amberS },

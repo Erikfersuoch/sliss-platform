@@ -28,14 +28,18 @@ self.addEventListener('push', e => {
   e.waitUntil(self.registration.showNotification(title, options));
 });
 
-// Click sulla notifica → apre l'app
+// Click sulla notifica → apre l'app SULLA destinazione giusta
+// (anche se una finestra è già aperta: prima navigava solo a fuoco = "non sai cosa hai aperto")
 self.addEventListener('notificationclick', e => {
   e.notification.close();
+  const url = e.notification.data?.url ?? '/';
   e.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
       const existing = list.find(c => c.url.includes(self.location.origin));
-      if (existing) return existing.focus();
-      return clients.openWindow(e.notification.data?.url ?? '/');
+      if (existing) {
+        return Promise.resolve(existing.navigate(url)).catch(() => null).then(() => existing.focus());
+      }
+      return clients.openWindow(url);
     })
   );
 });
