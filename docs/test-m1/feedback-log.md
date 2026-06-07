@@ -52,6 +52,40 @@
 
 <!-- Copia il blocco "#### Check — [DATA]" ogni settimana -->
 
+#### Check — 07/06/2026 (questionario 6 domande, riportato da Erik)
+
+**Cosa ha usato:** app usata **poco**. Follow-up: li ha mandati davvero. Notifiche: le riceve.
+
+**Cosa ha funzionato:**
+- ✅ La notifica/promemoria **aiuta a ricordarsi** (valore del reminder confermato).
+- ✅ Follow-up mandati davvero ai clienti.
+- ✅ Notifiche ricevute (step zero ok).
+
+**Cosa ha creato frizione (IL punto):**
+- 🔴 **"Mi aggiunge tempo di lavoro al momento."** Equazione costo/beneficio negativa: il promemoria aiuta, ma l'**inserimento dei dati costa più del beneficio percepito** → uso basso. Segnale di validazione M1 **debole** sul criterio "risparmia tempo".
+
+**Canali ingresso (D3):** clienti/appuntamenti da **tutti e 3** (WhatsApp, Instagram, di persona).
+
+**Gestione (D4):** "prendo appuntamento" — usa l'agenda; non lamenta mancanza di stati.
+
+**Bacchetta magica (D6) — il dolore vero:** *"Segnare i dati e gli appuntamenti, ricordarli, e sapere come stanno guarendo."* → **COMBACIA con la missione di M1** (registrare + ricordare + seguire la guarigione). La direzione è giusta; il valore è **strozzato dal costo d'inserimento manuale**.
+
+**Metriche:** uso = basso ("poco", sotto soglia ≥5/7). Tempo = "aggiunge", non risparmia. Follow-up inviati: sì. Tasso risposta: da leggere in-app.
+
+**Categoria:**
+- [x] Frizione → backlog prioritario (**attrito d'inserimento**: "aggiunge tempo")
+- [x] Insight → la bacchetta magica conferma la direzione di M1; valore reale ma **costo d'ingresso troppo alto**
+- [ ] Bloccante
+- [ ] Richiesta feature
+
+**Ipotesi da verificare (prossimo giro con Moira):**
+1. DOVE esattamente aggiunge tempo? (inserire il cliente? l'appuntamento? entrambi?)
+2. Usa il flusso **"Prepara scheda"** (onboarding via link, il cliente compila i dati da sé)? Se no, è la leva diretta per azzerare l'inserimento manuale.
+
+---
+
+<!-- Copia il blocco "#### Check — [DATA]" ogni settimana -->
+
 #### Check — [DATA]
 
 **Cosa ha usato:**
