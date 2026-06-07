@@ -26,6 +26,10 @@ const MESSAGES = {
     title: 'Sliss — aggiornamento disponibile',
     body: 'Nuove funzionalità pronte. Riapri l\'app per vederle.',
   },
+  feedback: {
+    title: 'Sliss — è ora dei feedback 🗣️',
+    body: 'Com\'è andata? Due minuti per dirmi, mi serve la tua.',
+  },
   conferma: {
     title: 'Sliss — è tutto a posto ✅',
     body: 'Notifiche attive e funzionanti. Sistema pronto!',

@@ -42,6 +42,7 @@
 
 ## Idee tecniche
 
+- [07/06/2026] **Azioni rapide da notifica push** (action button → cambio stato) — al servizio del Modulo Richieste: la push "Nuova richiesta da X" porta un pulsante "Presa in carico" che aggiorna lo stato della richiesta SENZA aprire l'app. Catena: `actions` nel payload → `sw.js` cattura `notificationclick` → `fetch` a endpoint nuovo (`/api/ack` o simile) → aggiorna su Upstash. Stesso meccanismo utile anche per ack-lettura. ⚠️ LIMITE iOS: i pulsanti nelle notifiche PWA iOS sono inaffidabili (Safari li mostra male/non li mostra) — il *tap* semplice sulla notifica è più solido del pulsante. Da valutare quando si costruisce il modulo. Nota: per la semplice "conferma ricezione" NON vale (WhatsApp ha già le spunte blu).
 - [27/05/2026] M3 Gestione Richieste (M3 + M6 unificati) — modulo unico con due livelli: Base = FAQ statica / Avanzato = filtro intelligente richieste in entrata con percorso guidato a step. Obiettivo: il professionista gestisce solo i task complessi, il sistema risolve i semplici in autonomia. Caso d'uso primario: Luca / stampa 3D
 - [27/05/2026] Gestione messaggi giorni di chiusura — risposta automatica intelligente nei giorni di chiusura. Obiettivo: convertire anche quando non ci sei. Estensione naturale di M1, non modulo separato
 - [27/05/2026] Automazione WhatsApp Business API via BSP (Twilio o 360dialog) — costo stimato 10-20€/mese scaricabile sul pricing cliente. Da attivare solo in Fase 3 con clienti paganti

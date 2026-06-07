@@ -1,7 +1,32 @@
 # Modulo "Richieste" — definizione in corso (per Luca / prodotti)
 
-> Stato: **in DEFINIZIONE** (non ancora iniziato). Documento di ripresa per la prossima sessione.
+> Stato: **in DEFINIZIONE — in attesa info da Luca** (non ancora iniziato).
 > Aperto il 06/06/2026. Nato dal feedback di Luca (vedi `docs/test-m1/feedback-log.md`).
+> Aggiornato il 07/06/2026.
+
+---
+
+## ⏳ AGGIORNAMENTO 07/06/2026 — fondamento rivisto + info richieste a Luca
+
+**Fondamento corretto.** La visione di Erik è lo **smistamento automatico bidirezionale**: il cliente scrive → standard si chiude da sola verso eBay/catalogo (zero effort Luca) / particolare arriva a Luca tracciata. Il sistema NON può *leggere* il messaggio senza WhatsApp Business **API** (= Fase 3). La versione fattibile oggi sposta lo smistamento **al primo contatto**, non dentro il messaggio:
+
+- **Deviatore automatico = messaggio di benvenuto automatico di WhatsApp Business app** (gratuito, NON l'API). Si attiva da solo al primo messaggio del cliente, presenta un menu → il **cliente si auto-classifica** con un tap (il "giudice" è il cliente, non l'AI):
+  - Via 1 "cerco un prodotto pronto" → link eBay/catalogo → **vendita si chiude da sola**, Luca non tocca nulla.
+  - Via 2 "personalizzato / su misura" → link Sliss → mini-form → **richiesta tracciata + push a Luca**.
+- **Sliss costruisce solo la Via 2** (pagina-richiesta + cattura + lista). Il deviatore lo fa WhatsApp gratis.
+
+**Contesto Luca confermato (07/06):** usa **WhatsApp Business** ✓ (quindi il benvenuto auto è disponibile). Vende **prodotti pronti + personalizzazione + su misura + magazzino** (quindi la Via 1 non è marginale). **Usa MOLTO le etichette** WA per organizzarsi.
+
+**Insight etichette (chiave per il design):** Luca ha già un sistema (le etichette). Il modulo NON deve duplicarle (→ doppia lista = abbandono). Il dolore non è *organizzare* (le etichette lo fanno), è il **buco temporale prima**: tra "arriva il messaggio" e "lo gestisco". WhatsApp organizza ma **non richiama** (una chat etichettata non ti ripinga). Valore differenziale di Sliss = **cattura all'ingresso + promemoria attivo che torna**. Mossa a costo zero: progettare gli **stati della lista Richieste = uguali alle etichette che Luca già usa** (ponte naturale verso l'automazione futura). Leggere le etichette in automatico = API = Fase 3.
+
+**Info richieste a Luca via WhatsApp (in attesa):**
+1. Screenshot della **lista etichette** che usa.
+2. **3-4 messaggi reali** inoltrati (facile / personalizzazione / su misura) → per tarare le voci del menu di benvenuto.
+3. **Volume settimanale** (stima) → per dimensionare il tipo di promemoria.
+
+**Deciso 07/06:** niente push Sliss a Luca per questa richiesta (il WhatsApp già notifica; spunte blu = conferma). Idea "azioni rapide da notifica" (action button → cambio stato) → **parking-lot**, per il modulo, con caveat limite pulsanti iOS.
+
+**➡️ Riprendere quando arrivano le risposte di Luca:** mappare etichette→stati, definire le voci del menu benvenuto, dimensionare il promemoria → poi scope preciso e build un passo alla volta.
 
 ---
 
