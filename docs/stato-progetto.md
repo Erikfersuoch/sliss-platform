@@ -98,11 +98,17 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 ---
 
-## Prossimi 3 passi (in ordine)
+## Prossimi passi (decisi 07/06, da riprendere in chat nuova)
 
-1. **Raccogliere le risposte al questionario** (Luca + Moira, inviato 07/06) → trascrivere in `feedback-log.md` e categorizzare. (Ruolo: TEST) — **IN ATTESA**
-2. **Tracking minimo d'uso** (ping apertura + sync tasso risposta) per i numeri oggettivi del gate. Da costruire dopo i primi riscontri. (Ruolo: DEV)
-3. **Decisione go/no-go M1 al 21/06/2026** coi dati in mano → se validato, si apre il Modulo Richieste. (Ruolo: CORE)
+**Nato dal feedback di Moira (07/06):** valore di M1 confermato (la sua "bacchetta magica" = la missione di M1) MA *"mi aggiunge tempo"* → **attrito d'inserimento**. Il flusso "Prepara scheda" (che dovrebbe togliere l'attrito) è esso stesso **legnoso**. Da qui il piano DEV, in ordine:
+
+1. **🔒 SICUREZZA DATI — backup cloud additivo su Upstash** [approccio APPROVATO da Erik]. Oggi tutti i dati (clienti, appuntamenti, follow-up) vivono **solo in localStorage** → si perdono a cambio telefono/reinstallo/pulizia. Fix: `localStorage` resta primario (zero rischio), + copia best-effort nel cloud (legata al codice tester) + **ripristino manuale** in Impostazioni. Piccoli passi: endpoint → salvataggio → ripristino. **PRIORITÀ 1** (principio [[feedback-safety-first]]: il sistema non deve far perdere dati). Limite noto: privacy dati clienti su Upstash → ok per tester, formalizzare (consenso/cifratura) in Fase 3.
+2. **📅 Calendario visualizzatore sotto Agenda** — vista mese **read-only** degli appuntamenti Sliss (NON legge Google = sync vera è Fase 3, deciso di accontentarsi) + transizione **"Apri su Google al giorno"** per modificare. Tasto crea appuntamento resta. NON viola Opzione A (mostra dati propri). NB onestà: mostra solo gli appuntamenti creati in Sliss, non quelli messi solo su Google.
+3. **✏️ Redesign "Prepara scheda" → spostarlo sotto CLIENTI** — linguaggio umano (via "slot"/"scheda in attesa"). **Logica INVARIATA**: cliente e appuntamento restano separati di proposito (link pre-consulenza → cliente entra; l'appuntamento del **tatuaggio** si definisce DOPO la consulenza → da lì i follow-up). Solo parole e posto, NON toccare il flusso.
+
+**In parallelo (TEST):** Luca → attesa risposte questionario 6 domande · **decisione go/no-go M1 al 21/06/2026**.
+
+**Promemoria per la chat nuova:** muoversi chirurgici e additivi, build+eslint+prova reale ad ogni passo, non rompere logiche già strutturate ([[feedback-auto-healing]]). Flusso confermato: *chat → consulenza → link auto-inserimento cliente → consulenza → appuntamento tatuaggio → follow-up*.
 
 ---
 
