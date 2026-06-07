@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.8 · 2026-06-05 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v5.9 · 2026-06-07 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 05/06/2026
+> Documento vivente · Aggiornato: 07/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -12,6 +12,11 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 07/06/2026 (v5.9) — validazione M1 + notifiche contestuali (ruolo CORE+DEV):**
+- **Modulo "Richieste" (M3, bloccato): fondamento RIVISTO, in definizione, in attesa info Luca.** La visione è lo *smistamento automatico bidirezionale* (richiesta standard → si chiude da sola su eBay/catalogo · personalizzata → arriva a Luca tracciata). Senza WhatsApp Business **API** il sistema non legge il messaggio (=Fase 3); la versione di oggi sposta lo smistamento al **primo contatto**: deviatore = **messaggio di benvenuto automatico di WhatsApp Business app** (gratis) → il cliente si auto-classifica con un tap. Sliss costruirebbe solo la "Via 2" (cattura personalizzate). Luca: usa WA Business ✓, vende pronti+personalizzazione+su misura, **usa molto le etichette** → gli stati della futura lista Richieste = sue etichette (no doppione). Dettagli in `docs/modulo-richieste-v1.md`.
+- **Validazione M1 — scoperta chiave:** le metriche del gate sono **vuote** dopo ~19gg → M1 è in *uso non misurato*. Mandato a Luca e Moira il **questionario 6 domande** (`docs/test-m1/check-luca-2026-06.md`). Fissata la **decisione go/no-go M1 al 21/06/2026**. Il tasso di risposta (>30%) è **già catturato in-app** (bottoni 👍/👎). Prossimo passo tecnico concordato (rimandato): **tracking minimo d'uso** (ping apertura + sync tasso risposta) per avere i numeri oggettivi.
+- **Notifiche push — nuovo tipo `feedback` + pattern "notifica → vista contestuale":** corretto `sw.js` (al click **naviga alla destinazione** anche con app già aperta — prima faceva solo `focus` = "si apriva nel vuoto"); il tipo `feedback` apre `/?goto=feedback` → nuova schermata `FeedbackNudge` (ponte WhatsApp al founder, `FOUNDER_WA` in config). **Testato live** da Erik. Pattern riusabile per il Modulo Richieste (notifica → "Presa in carico"). Push `feedback` inviata a Luca/Moira/Erik: **tutte e tre le subscription sono VIVE** (Moira inclusa). Idea "azioni rapide da notifica" → parking-lot. Deploy commit `7691b07`.
 
 **Sessione 05/06/2026 (v5.8) — revisione tecnica + split di App.jsx (qualità, no nuove feature):** revisione del codice da senior engineer (richiesta di Erik). Giudizio: base solida. Interventi tecnici, **UI/UX e comportamento invariati**: (1) ESLint reso affidabile (config per-cartella browser/Node/serviceworker + codice morto rimosso); (2) **`App.jsx` da 749 → 67 righe**: pagine in `src/pages/`, nav+ErrorBoundary in `src/components/`, builder follow-up in `src/followups.js`, push in `src/push.js` (38 moduli, era 24) — fine dei merge-conflict sul file gigante, navigazione e diff più leggeri; (3) caricamento lazy (`useState(()=>loadData())`) → niente più stato `loading`/flash. **Lint progetto da 35 → 0 problemi.** Build + runtime verificati (Erik ha controllato l'app in locale). Stili inline lasciati intatti (eventuale futura migrazione a token CSS, bassa priorità). Vedi `docs/decisioni.md`.
 
@@ -29,7 +34,7 @@ Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha 
 - ✅ CLAUDE.md nel repo
 - ✅ docs/ strutturata (decisioni, parking-lot, settimane, test-m1, social)
 - ✅ Node.js + Git installati
-- ✅ Deploy attivo su Vercel — app v5.8
+- ✅ Deploy attivo su Vercel — app v5.9
 
 ---
 
@@ -68,15 +73,18 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 **Tester zero — Moira (moglie, Momo Ink)**
 - Kickoff: 19/05/2026
-- Stato: uso in corso. Subscription push da riattivare (Impostazioni → Notifiche)
-- Check settimanale: da concordare
+- Stato: uso in corso. **Subscription push VIVA** (confermata 07/06, push `feedback` consegnata)
+- Check settimanale: da concordare · questionario 6 domande inviato 07/06
 
 **Tester uno — Luca (Kayek3D, stampa 3D)**
 - Identificato: 25/05/2026
-- Stato: subscription push da riattivare (Impostazioni → Notifiche)
-- Kickoff formale: da concordare
+- Stato: uso reale (follow-up). **Subscription push VIVA** (confermata 07/06)
+- Kickoff formale: da concordare · questionario 6 domande inviato 07/06
+- Dolore primario emerso: **richieste in entrata WhatsApp perse** → Modulo Richieste (M3, bloccato fino a validazione M1)
 
-**Nota push (agg. 30/05):** root cause risolta (vedi v5.2). Il 30/05 inviato ai tester il messaggio con istruzioni: aprire app → Impostazioni → scrivere il proprio codice (moira/luca) nel campo Codice tester → "Aggiorna iscrizione". DA VERIFICARE: che compaiano `sub:moira` e `sub:luca` nel DB, poi cancellare il vecchio `sub:unknown`. Erik si è aggiunto al test notifiche come `sub:ceoerik` (solo verifica, niente reminder ricorrenti).
+**Nota push (agg. 07/06):** tutte e tre le subscription (`sub:luca`, `sub:moira`, `sub:ceoerik`) **verificate vive** inviando la push `feedback`. Lo step zero notifiche è confermato su entrambi i tester.
+
+**Nota push (storico 30/05):** root cause risolta (vedi v5.2). Il 30/05 inviato ai tester il messaggio con istruzioni: aprire app → Impostazioni → scrivere il proprio codice (moira/luca) nel campo Codice tester → "Aggiorna iscrizione". DA VERIFICARE: che compaiano `sub:moira` e `sub:luca` nel DB, poi cancellare il vecchio `sub:unknown`. Erik si è aggiunto al test notifiche come `sub:ceoerik` (solo verifica, niente reminder ricorrenti).
 
 ---
 
@@ -92,9 +100,9 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 ## Prossimi 3 passi (in ordine)
 
-1. **Chiamata diagnostica con Moira** — 20 minuti, capire cosa blocca l'uso sistematico. (Ruolo: TEST)
-2. **Concordare check settimanale con Moira** — solo dopo la chiamata diagnostica, giorno e ora fissi. (Ruolo: TEST)
-3. **Contattare Luca (Kayek3D)** — proposta formale 30 giorni di test, fissare kickoff. (Ruolo: TEST)
+1. **Raccogliere le risposte al questionario** (Luca + Moira, inviato 07/06) → trascrivere in `feedback-log.md` e categorizzare. (Ruolo: TEST) — **IN ATTESA**
+2. **Tracking minimo d'uso** (ping apertura + sync tasso risposta) per i numeri oggettivi del gate. Da costruire dopo i primi riscontri. (Ruolo: DEV)
+3. **Decisione go/no-go M1 al 21/06/2026** coi dati in mano → se validato, si apre il Modulo Richieste. (Ruolo: CORE)
 
 ---
 
@@ -105,7 +113,8 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 | Chiamata diagnostica con Moira non ancora fatta | Primo passo prima di concordare qualsiasi check |
 | Check settimanale Moira non ancora concordato | Dipende dalla chiamata diagnostica |
 | Kickoff Luca non ancora fissato | Da contattare |
-| Subscription push entrambi i tester scaduta | Si risolve da soli aprendo Impostazioni → Notifiche |
+| Metriche validazione M1 vuote | Decisione go/no-go fissata al 21/06. Prossimo passo: tracking minimo d'uso (rimandato). Questionari inviati 07/06 |
+| ~~Subscription push tester scaduta~~ | ✅ RISOLTO 07/06: tutte e tre le sub verificate vive |
 
 ---
 

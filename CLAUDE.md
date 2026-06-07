@@ -1,6 +1,6 @@
 # CLAUDE.md — Sliss Platform
 
-<!-- SYNC ▸ v5.8 · 2026-06-05 · fonte: docs/stato-progetto.md
+<!-- SYNC ▸ v5.9 · 2026-06-07 · fonte: docs/stato-progetto.md
      Versione / fase / stato tester NON si scrivono qui: vivono solo in docs/stato-progetto.md.
      Questa riga è solo un checksum: a fine sessione verifica che combaci con la FONTE DI VERITÀ. -->
 
@@ -16,7 +16,7 @@ Piattaforma web modulare per micro-business (tatuatori, barber, estetiste, offic
 **Stack:** React (Vite) + Vercel + GitHub
 **Repo:** github.com/Erikfersuoch/sliss-platform
 **Deploy:** Vercel (attivo) — sliss-platform.vercel.app
-**App:** versione corrente → vedi `docs/stato-progetto.md`. Struttura: `src/App.jsx` = solo root (stato + Provider + routing viste). Pagine in `src/pages/` (Home, FollowUp, Appointments, Orders, Clients, Templates, Feedback, Settings, ModulesMap, Onboarding); `src/components/` (Nav, ErrorBoundary, ui, Icon, SlissLogo); logica condivisa: config.js, storage.js, helpers.js, context.js, theme.js, GlobalCSS.jsx, followups.js, push.js
+**App:** versione corrente → vedi `docs/stato-progetto.md`. Struttura: `src/App.jsx` = solo root (stato + Provider + routing viste). Pagine in `src/pages/` (Home, FollowUp, Appointments, Orders, Clients, Templates, Feedback, Settings, ModulesMap, Onboarding); `src/components/` (Nav, ErrorBoundary, ui, Icon, SlissLogo, FeedbackNudge); logica condivisa: config.js, storage.js, helpers.js, context.js, theme.js, GlobalCSS.jsx, followups.js, push.js
 **UI:** light mode · accent verde #16A34A · mobile-first (bottom nav) · sidebar desktop
 **Storage:** localStorage · chiavi: `sliss-v4`, `sliss-onboarded-v4`
 **Onboarding:** 5 step — nome attività → tipo (servizi/prodotti) → cluster settore
