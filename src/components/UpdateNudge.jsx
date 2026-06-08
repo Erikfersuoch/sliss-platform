@@ -3,8 +3,9 @@ import T from "../theme.js";
 // Schermata mostrata quando il tester apre la notifica "ci sono novità" (?goto=novita).
 // Changelog leggibile delle ultime modifiche nate dal feedback dei tester.
 const CHANGES = [
-  { emoji: "\u{1F9F9}", title: "Via la conferma “ha risposto / no”", desc: "Dopo l'invio non ti viene più chiesto l'esito. Inviato = fatto." },
-  { emoji: "\u{1F680}", title: "Tasto “Ready to go”", desc: "Quando l'ordine è pronto, dalla Home (sezione “Ordini da spedire”) un tocco e parte il messaggio su WhatsApp." },
+  { emoji: "\u{1F9F9}", title: "Via la conferma “ha risposto / no”", desc: "Dopo l'invio non ti viene più chiesto l'esito. Inviato = fatto, un tocco in meno." },
+  { emoji: "\u{1F4C5}", title: "Calendario in Agenda", desc: "Per chi usa gli appuntamenti: nuova vista mese in Agenda, con il tasto per aprire Google Calendar al giorno giusto." },
+  { emoji: "\u{1F680}", title: "Tasto “Ready to go”", desc: "Per chi vende prodotti: quando l'ordine è pronto, dalla Home un tocco e parte la spedizione su WhatsApp." },
   { emoji: "\u{21A9}\u{FE0F}", title: "Annulla invio", desc: "Inviato per sbaglio? Lo riporti tra quelli da inviare con un tocco." },
   { emoji: "\u{1F464}", title: "Schede clienti dalla Home", desc: "Tocchi il nome di un cliente nella lista e si apre la sua scheda." },
 ];
