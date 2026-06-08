@@ -85,7 +85,7 @@ export const FormField = ({label,children,hint}) => {
   );
 };
 
-export const SendButtons = ({message,clientPhone,clientEmail,channel,onSend}) => {
+export const SendButtons = ({message,clientPhone,clientEmail,channel,onSend,labelOverride}) => {
   // Sceglie il canale d'invio in base alla preferenza del cliente, con ripiego
   // sui contatti effettivamente disponibili. Numero locale (10 cifre) -> prefisso 39.
   const digits=String(clientPhone||"").replace(/\D/g,"");
@@ -102,7 +102,7 @@ export const SendButtons = ({message,clientPhone,clientEmail,channel,onSend}) =>
   else return <span style={{fontSize:"12px",color:T.textMu}}>Nessun contatto disponibile</span>;
   return (
     <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-      <a href={href} target="_blank" rel="noreferrer" onClick={onSend} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:bg,color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{label}</a>
+      <a href={href} target="_blank" rel="noreferrer" onClick={onSend} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:bg,color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{labelOverride||label}</a>
     </div>
   );
 };

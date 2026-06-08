@@ -1,7 +1,7 @@
 import { useState } from "react";
 import T from "../theme.js";
 import { PHASES, CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
-import { daysAgo, uid, today, greet, isPhaseOff } from "../helpers.js";
+import { daysAgo, uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
 import { Badge, Btn, Card, Modal, FormField, SendButtons } from "../components/ui.jsx";
@@ -18,9 +18,11 @@ const Home = ({setView}) => {
   const cluster=data?.settings?.cluster||"altro_s";
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
-  const awaiting=(data?.followUps||[]).filter(f=>f.status==="sent"&&!f.satisfaction);
+  const sent=(data?.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed");
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
+  const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];
+  const markReady=(order)=>{const cl=(data?.clients||[]).find(c=>c.id===order.clientId);const fu=(data?.followUps||[]).find(f=>f.orderId===order.id&&f.phase==="shipping");update("orders",order.id,{status:"shipped",shippedDate:today()});if(fu){update("followUps",fu.id,{scheduledDate:today(),status:"sent",sentDate:today()});openSend(sendHref(fu.message,cl?.phone,cl?.email,cl?.channel));}};
   const handleQuickAdd=()=>{
     const needEmail=qForm.channel==="Email";
     if(!qForm.name.trim()||(needEmail?!qForm.email.trim():!qForm.phone.trim()))return;
@@ -39,7 +41,7 @@ const Home = ({setView}) => {
       <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
       {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
-        {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"In attesa",value:awaiting.length,color:T.blue,sub:"risposta",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
+        {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
           <Card key={i} onClick={()=>setView(s.go,s.gf?{fuFilter:s.gf}:undefined)} hov style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
             <span style={{fontSize:"11px",color:T.textD,fontWeight:500}}>{s.label}</span>
             <span style={{fontSize:"26px",fontWeight:700,color:s.color,letterSpacing:"-.02em",lineHeight:1}}>{s.value}</span>
@@ -67,7 +69,7 @@ const Home = ({setView}) => {
                       <span style={{marginLeft:"auto",fontSize:"11px",fontWeight:700,color:fu.scheduledDate<td?T.red:T.amberD}}>{fu.scheduledDate<td?"Scaduto":"Oggi"}</span>
                     </div>
                     <div style={{fontSize:"13px",color:T.textD,lineHeight:1.5,marginBottom:"10px",overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{fu.message}</div>
-                    <SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
+                    <SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} labelOverride={fu.phase==="shipping"?"\u{1F680} Ready to go":undefined} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
                   </div>
                 );
               })}
@@ -75,12 +77,23 @@ const Home = ({setView}) => {
             </div>
         }
       </Card>
+      {toShip.length>0&&<Card style={{marginBottom:"14px"}}>
+        <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>{"\u{1F4E6}"} Ordini da spedire</h2>
+        <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
+          {toShip.map(o=>{const cl=(data?.clients||[]).find(c=>c.id===o.clientId);return (
+            <div key={o.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px",background:T.bg3,borderRadius:T.r.m}}>
+              <div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"14px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl?.name||"\u{2014}"}</div><div style={{fontSize:"12px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{o.product}</div></div>
+              <Btn s="sm" onClick={()=>markReady(o)}>{"\u{1F680}"} Ready to go</Btn>
+            </div>
+          );})}
+        </div>
+      </Card>}
       <Card>
         <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>Clienti</h2>
         <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
           {(data?.clients||[]).slice(0,5).map(cl=>{
             const st=CLIENT_ST[cl.status]||{label:cl.status,color:T.textD,bg:T.bg3};
-            return (<div key={cl.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.m}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:st.color,flexShrink:0}} /><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"14px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"11px",color:T.textD}}>{daysAgo(cl.lastVisit)}</div></div><Badge {...st} s /></div>);
+            return (<div key={cl.id} onClick={()=>setView("clients",{clientId:cl.id})} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.m,cursor:"pointer"}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:st.color,flexShrink:0}} /><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"14px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"11px",color:T.textD}}>{daysAgo(cl.lastVisit)}</div></div><Badge {...st} s /><span style={{color:T.textMu,fontSize:"18px",lineHeight:1,flexShrink:0}}>{"\u{203A}"}</span></div>);
           })}
           {(data?.clients||[]).length===0&&<div style={{fontSize:"13px",color:T.textD,textAlign:"center",padding:"12px 0"}}>Nessun cliente ancora</div>}
         </div>

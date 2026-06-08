@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anteprima modifiche — feedback Luca</title>
+<style>
+  :root{
+    --bg:#F8F9FA; --bg2:#FFFFFF; --bg3:#F1F3F5; --bg4:#E9ECEF;
+    --border:#DEE2E6; --text:#111318; --textM:#495057; --textD:#5C636A; --textMu:#6C757D;
+    --green:#16A34A; --greenS:rgba(22,163,74,.10);
+    --blue:#2563EB; --blueS:rgba(37,99,235,.10);
+    --amber:#D97706; --amberD:#B45309; --amberS:rgba(217,119,6,.10);
+    --red:#DC2626; --redS:rgba(220,38,38,.10);
+    --purple:#7C3AED; --teal:#0D9488;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:28px 16px 60px}
+  .wrap{max-width:880px;margin:0 auto}
+  header{text-align:center;margin-bottom:8px}
+  header h1{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  header .sub{color:var(--textD);font-size:14px;margin-top:4px}
+  .legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin:18px 0 32px;font-size:12px;color:var(--textD)}
+  .legend b{font-weight:700}
+  .change{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:22px;margin-bottom:22px}
+  .change-head{display:flex;align-items:flex-start;gap:12px;margin-bottom:18px}
+  .num{flex-shrink:0;width:30px;height:30px;border-radius:9px;background:var(--green);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+  .change-head h2{font-size:17px;font-weight:700}
+  .change-head p{font-size:13px;color:var(--textD);margin-top:3px}
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:680px){.cols{grid-template-columns:1fr}}
+  .col .tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:inline-block}
+  .col.prima .tag{color:var(--textMu)}
+  .col.dopo .tag{color:var(--green)}
+  .panel{border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--bg);min-height:60px}
+  .panel.dopo{border-color:rgba(22,163,74,.35);background:#fbfdfb}
+  /* mini-ui */
+  .fu-card{background:var(--amberS);border:1px solid rgba(217,119,6,.35);border-radius:10px;padding:11px;margin-top:8px}
+  .fu-top{display:flex;align-items:center;gap:7px;margin-bottom:7px;font-size:13px;font-weight:600}
+  .badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px}
+  .b-amber{color:var(--amber);background:var(--amberS)} .b-blue{color:var(--blue);background:var(--blueS)}
+  .b-green{color:var(--green);background:var(--greenS)} .b-purple{color:var(--purple);background:var(--purpleS)}
+  .b-teal{color:var(--teal);background:rgba(13,148,136,.10)}
+  .msg{font-size:12px;color:var(--textD);margin-bottom:9px}
+  .btn{font-size:12px;font-weight:600;padding:7px 12px;border-radius:8px;border:1px solid transparent;display:inline-flex;align-items:center;gap:5px}
+  .btn-green{background:var(--green);color:#fff} .btn-grey{background:var(--bg4);color:var(--textM)}
+  .btn-row{display:flex;gap:6px}
+  .strike{position:relative;opacity:.6}
+  .strike::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(220,38,38,.12) 6px,rgba(220,38,38,.12) 8px);border-radius:8px}
+  .rm{display:inline-block;font-size:11px;font-weight:700;color:var(--red);background:var(--redS);padding:2px 8px;border-radius:999px;margin-top:8px}
+  .add{display:inline-block;font-size:11px;font-weight:700;color:var(--green);background:var(--greenS);padding:2px 8px;border-radius:999px;margin-top:8px}
+  /* stat cards */
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+  .stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:9px 8px}
+  .stat .l{font-size:10px;color:var(--textD)} .stat .v{font-size:20px;font-weight:700;line-height:1.1}
+  .stat .s{font-size:10px;color:var(--textMu)}
+  /* client rows */
+  .crow{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg3);border-radius:9px;margin-bottom:5px}
+  .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .crow .n{font-weight:600;font-size:13px;flex:1}
+  .crow.tap{background:#fff;border:1px solid rgba(22,163,74,.30);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+  .chev{color:var(--green);font-weight:700}
+  .note{margin-top:14px;font-size:12.5px;color:var(--textM);background:var(--bg3);border-radius:9px;padding:10px 12px}
+  .note b{color:var(--text)}
+  .ask{background:#fffdf5;border:1px solid rgba(217,119,6,.4);border-radius:9px;padding:10px 12px;margin-top:12px;font-size:12.5px;color:var(--amberD)}
+  footer{text-align:center;color:var(--textMu);font-size:12px;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Anteprima modifiche — feedback Luca</h1>
+    <div class="sub">Come cambia l'app prima di toccare il codice · 08/06/2026</div>
+  </header>
+  <div class="legend">
+    <span><span class="rm">– rimosso</span></span>
+    <span><span class="add">+ nuovo</span></span>
+    <span><b>Logica dei follow-up:</b> invariata</span>
+  </div>
+
+  <!-- CHANGE 1 -->
+  <div class="change">
+    <div class="change-head">
+      <div class="num">1</div>
+      <div>
+        <h2>Via la conferma "Ha risposto / Nessuna risposta"</h2>
+        <p>Dopo l'invio non ti viene più chiesto l'esito. Inviato = fatto. Vale per prodotti <b>e</b> servizi (Luca + Moira).</p>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="col prima">
+        <span class="tag">Prima</span>
+        <div class="panel">
+          <div class="fu-card">
+            <div class="fu-top"><span>Mario Rossi</span><span class="badge b-green">Inviato</span></div>
+            <div class="btn-row strike">
+              <span class="btn btn-green">👍 Ha risposto</span>
+              <span class="btn btn-grey">👎 Nessuna risposta</span>
+            </div>
+          </div>
+          <span class="rm">– questo passaggio sparisce</span>
+        </div>
+      </div>
+      <div class="col dopo">
+        <span class="tag">Dopo</span>
+        <div class="panel dopo">
+          <div class="fu-card" style="background:var(--greenS);border-color:rgba(22,163,74,.35)">
+            <div class="fu-top"><span>Mario Rossi</span><span class="badge b-green">Inviato ✓</span></div>
+            <div class="msg" style="margin:0;color:var(--green);font-weight:600;font-size:12px">Fatto. Nessuna azione richiesta.</div>
+          </div>
+          <span class="add">+ un tocco in meno per ogni cliente</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <b>Effetto a catena (da confermare):</b> oggi in Home e nei Follow-Up c'è il contatore <b>"In attesa / risposta"</b>. Senza l'esito non ha più senso → propongo di trasformarlo in <b>"Inviati"</b> (storico di ciò che hai mandato), così non perdi la vista ma sparisce il lavoro.
+    </div>
+    <div class="cols" style="margin-top:12px">
+      <div class="col prima">
+        <span class="tag">Home — prima</span>
+        <div class="panel"><div class="stats">
+          <div class="stat"><div class="l">Da inviare</div><div class="v" style="color:var(--amber)">3</div><div class="s">oggi</div></div>
+          <div class="stat strike"><div class="l">In attesa</div><div class="v" style="color:var(--blue)">5</div><div class="s">risposta</div></div>
+          <div class="stat"><div class="l">Attivi</div><div class="v" style="color:var(--green)">12</div><div class="s">2 da riatt.</div></div>
+        </div></div>
+      </div>
+      <div class="col dopo">
+        <span class="tag">Home — dopo</span>
+        <div class="panel dopo"><div class="stats">
+          <div class="stat"><div class="l">Da inviare</div><div class="v" style="color:var(--amber)">3</div><div class="s">oggi</div></div>
+          <div class="stat"><div class="l">Inviati</div><div class="v" style="color:var(--green)">18</div><div class="s">storico</div></div>
+          <div class="stat"><div class="l">Attivi</div><div class="v" style="color:var(--green)">12</div><div class="s">2 da riatt.</div></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE 2 -->
+  <div class="change">
+    <div class="change-head">
+      <div class="num">2</div>
+      <div>
+        <h2>Pulsante "Ready to go" per il 2° messaggio</h2>
+        <p>1° messaggio automatico alla creazione ordine. Il 2° (spedizione) non è a tempo: lo attivi tu col tasto quando l'ordine è pronto a partire.</p>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="col prima">
+        <span class="tag">Prima</span>
+        <div class="panel">
+          <div style="font-size:13px;font-weight:700;margin-bottom:2px">Luca M. · Supporto 3D</div>
+          <div style="font-size:11px;color:var(--textD);margin-bottom:8px">In preparazione</div>
+          <span class="btn btn-green">📦 Segna spedito</span>
+          <span class="rm" style="display:block">– etichetta poco chiara</span>
+        </div>
+      </div>
+      <div class="col dopo">
+        <span class="tag">Dopo</span>
+        <div class="panel dopo">
+          <div style="font-size:13px;font-weight:700;margin-bottom:2px">Luca M. · Supporto 3D</div>
+          <div style="font-size:11px;color:var(--textD);margin-bottom:8px">In preparazione</div>
+          <span class="btn btn-green" style="font-size:13px;padding:9px 16px">🚀 Ready to go</span>
+          <span class="add" style="display:block">+ premuto → il 2° messaggio compare subito in "Da inviare"</span>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      Il meccanismo c'è già (oggi si chiama "Segna spedito"): cambia <b>nome e chiarezza</b>, la logica resta. Gli altri 3 follow-up (Ricezione, Recensione, Riordino) <b>non si toccano</b>.
+    </div>
+    <div class="note" style="background:var(--greenS)">
+      <b>+ Novità in Home:</b> il tasto arriva anche in Home, in una nuova sezione <b>"📦 Ordini da spedire"</b> sotto "Da fare oggi". Così Home diventa l'unico posto operativo. (Appare solo per chi vende prodotti e solo se ci sono ordini in attesa.)
+    </div>
+    <div class="cols" style="margin-top:12px">
+      <div class="col prima">
+        <span class="tag">Home — prima</span>
+        <div class="panel">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px">Da fare oggi</div>
+          <div class="fu-card"><div class="fu-top"><span>Luca M.</span><span class="badge b-blue">Conferma ordine</span></div><span class="btn btn-green">Invia su WhatsApp</span></div>
+          <span class="rm" style="display:block">– per spedire devi uscire e andare in "Ordini"</span>
+        </div>
+      </div>
+      <div class="col dopo">
+        <span class="tag">Home — dopo</span>
+        <div class="panel dopo">
+          <div style="font-size:13px;font-weight:700;margin-bottom:8px">Da fare oggi</div>
+          <div class="fu-card"><div class="fu-top"><span>Luca M.</span><span class="badge b-blue">Conferma ordine</span></div><span class="btn btn-green">Invia su WhatsApp</span></div>
+          <div style="font-size:13px;font-weight:700;margin:12px 0 8px">📦 Ordini da spedire</div>
+          <div class="crow tap"><span class="n" style="flex:1">Luca M. · Supporto 3D</span><span class="btn btn-green" style="padding:6px 12px">🚀 Ready to go</span></div>
+          <span class="add" style="display:block">+ spedisci senza uscire dalla Home</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE 3 -->
+  <div class="change">
+    <div class="change-head">
+      <div class="num">3</div>
+      <div>
+        <h2>Righe clienti cliccabili dalla Home</h2>
+        <p>Dalla Home tocchi il nome del cliente e apri la sua scheda per vedere l'andamento dei follow-up.</p>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="col prima">
+        <span class="tag">Prima</span>
+        <div class="panel">
+          <div class="crow"><span class="dot" style="background:var(--green)"></span><span class="n">Mario Rossi</span><span class="badge b-green">Attivo</span></div>
+          <div class="crow"><span class="dot" style="background:var(--blue)"></span><span class="n">Giulia Bianchi</span><span class="badge b-blue">Nuovo</span></div>
+          <span class="rm">– righe statiche, non si aprono</span>
+        </div>
+      </div>
+      <div class="col dopo">
+        <span class="tag">Dopo</span>
+        <div class="panel dopo">
+          <div class="crow tap"><span class="dot" style="background:var(--green)"></span><span class="n">Mario Rossi</span><span class="badge b-green">Attivo</span><span class="chev">›</span></div>
+          <div class="crow tap"><span class="dot" style="background:var(--blue)"></span><span class="n">Giulia Bianchi</span><span class="badge b-blue">Nuovo</span><span class="chev">›</span></div>
+          <span class="add">+ tocca → si apre la scheda cliente</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE 4 -->
+  <div class="change">
+    <div class="change-head">
+      <div class="num">4</div>
+      <div>
+        <h2>"Annulla invio" — rimediare agli errori</h2>
+        <p>Se mandi un follow-up per sbaglio, lo riporti in "Da inviare" con un tocco. Sempre disponibile, non solo subito dopo.</p>
+      </div>
+    </div>
+    <div class="cols">
+      <div class="col prima">
+        <span class="tag">Prima</span>
+        <div class="panel">
+          <div class="fu-card" style="background:var(--greenS);border-color:rgba(22,163,74,.35)">
+            <div class="fu-top"><span>Mario Rossi</span><span class="badge b-green">Inviato ✓</span></div>
+            <div class="msg" style="margin:0;font-size:12px">Nessun modo per tornare indietro.</div>
+          </div>
+          <span class="rm">– errore irreversibile</span>
+        </div>
+      </div>
+      <div class="col dopo">
+        <span class="tag">Dopo</span>
+        <div class="panel dopo">
+          <div class="fu-card" style="background:var(--greenS);border-color:rgba(22,163,74,.35)">
+            <div class="fu-top"><span>Mario Rossi</span><span class="badge b-green">Inviato ✓</span></div>
+            <span class="btn btn-grey" style="font-size:11px;padding:5px 10px">↩️ Annulla invio</span>
+          </div>
+          <span class="add">+ torna in "Da inviare" al suo posto</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ask" style="background:var(--greenS);border-color:rgba(22,163,74,.4);color:var(--text)">
+    <b>Tutto deciso ✓</b> — 1) via l'esito 👍/👎 (prodotti + servizi) · 2) "In attesa" → "Inviati" storico · 3) "🚀 Ready to go" in Home + Ordini · 4) righe clienti cliccabili in Home · 5) "↩️ Annulla invio" su ogni inviato.<br>
+    <b>Manca solo il tuo via libera per iniziare a scrivere il codice.</b>
+  </div>
+
+  <footer>Sliss · anteprima interna — non è l'app, è un mockup statico delle modifiche</footer>
+</div>
+</body>
+</html>

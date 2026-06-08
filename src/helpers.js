@@ -8,3 +8,15 @@ export const greet = () => { const h=new Date().getHours(); return h<12?"Buongio
 // true se la fase ha template ma nessuno attivo (tipo follow-up disattivato dall'utente)
 export const isPhaseOff = (templates, phase) => { const t=templates||[]; return t.some(x=>x.phase===phase) && !t.some(x=>x.phase===phase&&x.active!==false); };
 export const urlBase64ToUint8Array = b64 => { const pad='='.repeat((4-b64.length%4)%4); const b=(b64+pad).replace(/-/g,'+').replace(/_/g,'/'); const raw=atob(b); return Uint8Array.from([...raw].map(c=>c.charCodeAt(0))); };
+// Link d'invio (stessa logica di SendButtons): sceglie il canale e ripiega sui contatti disponibili
+export const sendHref = (message, clientPhone, clientEmail, channel) => {
+  const digits=String(clientPhone||"").replace(/\D/g,""); const phone=digits.length===10?`39${digits}`:digits;
+  const email=String(clientEmail||"").trim(); const body=encodeURIComponent(message||""); const subj=encodeURIComponent("Un messaggio per te"); const ch=channel||"WhatsApp";
+  if(ch==="Email"&&email) return `mailto:${email}?subject=${subj}&body=${body}`;
+  if(ch==="SMS"&&digits) return `sms:${phone}?&body=${body}`;
+  if(digits) return `whatsapp://send?phone=${phone}&text=${body}`;
+  if(email) return `mailto:${email}?subject=${subj}&body=${body}`;
+  return null;
+};
+// Apre il link d'invio in modo affidabile anche per schemi custom (whatsapp://) — come un click su <a target=_blank>
+export const openSend = href => { if(!href) return; const a=document.createElement("a"); a.href=href; a.target="_blank"; a.rel="noreferrer"; document.body.appendChild(a); a.click(); a.remove(); };

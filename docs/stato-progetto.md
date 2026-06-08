@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v5.9 · 2026-06-07 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.0 · 2026-06-08 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 07/06/2026
+> Documento vivente · Aggiornato: 08/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 08/06/2026 (v6.0) — fix UX da feedback Luca (ruolo DEV):** 5 modifiche chirurgiche e additive al flusso M1, tutte da richieste reali di Luca (prodotti). (1) **Tolto l'esito 👍/👎** dopo l'invio (prodotti + servizi → vale anche per Moira): inviato = fatto, un tocco in meno. (2) Contatore Home/Follow-Up **"In attesa" → "Inviati"** (storico). (3) **"🚀 Ready to go"**: il 2° follow-up (spedizione) non è più a tempo ma si attiva con un tasto — nuova sezione **"📦 Ordini da spedire" in Home** + tasto rinominato in Ordini; **un click apre WhatsApp diretto** (no doppio click) e il tasto resta "Ready to go" anche dopo un annulla (label override su `SendButtons` per la fase `shipping`). (4) **"↩️ Annulla invio"** su ogni follow-up inviato → torna in "Da inviare" (rimedio agli errori, [[feedback-safety-first]]). (5) **Righe clienti cliccabili in Home** → aprono la scheda (`go` esteso con `clientId`, init al mount in Clients). File: FollowUp/Home/Orders/Clients/App + helpers (`sendHref`/`openSend`) + ui (`labelOverride`). **Bug auto-inflitto risolto:** helper `isSent` in collisione con variabile locale → rinominato `isDone` ([[feedback-bug-lessons]]: controllare shadowing quando si aggiunge un helper). Lint 0, build OK, **provato live da Erik**. Anteprima prima/dopo + paginetta tester per Luca in `docs/test-m1/`. **Backup dati torna la prossima priorità.**
 
 **Sessione 07/06/2026 (v5.9) — validazione M1 + notifiche contestuali (ruolo CORE+DEV):**
 - **Modulo "Richieste" (M3, bloccato): fondamento RIVISTO, in definizione, in attesa info Luca.** La visione è lo *smistamento automatico bidirezionale* (richiesta standard → si chiude da sola su eBay/catalogo · personalizzata → arriva a Luca tracciata). Senza WhatsApp Business **API** il sistema non legge il messaggio (=Fase 3); la versione di oggi sposta lo smistamento al **primo contatto**: deviatore = **messaggio di benvenuto automatico di WhatsApp Business app** (gratis) → il cliente si auto-classifica con un tap. Sliss costruirebbe solo la "Via 2" (cattura personalizzate). Luca: usa WA Business ✓, vende pronti+personalizzazione+su misura, **usa molto le etichette** → gli stati della futura lista Richieste = sue etichette (no doppione). Dettagli in `docs/modulo-richieste-v1.md`.
@@ -98,15 +100,17 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 ---
 
-## Prossimi passi (decisi 07/06, da riprendere in chat nuova)
+## Prossimi passi
 
-**Nato dal feedback di Moira (07/06):** valore di M1 confermato (la sua "bacchetta magica" = la missione di M1) MA *"mi aggiunge tempo"* → **attrito d'inserimento**. Il flusso "Prepara scheda" (che dovrebbe togliere l'attrito) è esso stesso **legnoso**. Da qui il piano DEV, in ordine:
+**✅ FATTO 08/06 (v6.0):** i 3 fix da feedback Luca (esito tolto · Ready to go · clienti cliccabili) + Annulla invio + tab Inviati. Spediti.
 
-1. **🔒 SICUREZZA DATI — backup cloud additivo su Upstash** [approccio APPROVATO da Erik]. Oggi tutti i dati (clienti, appuntamenti, follow-up) vivono **solo in localStorage** → si perdono a cambio telefono/reinstallo/pulizia. Fix: `localStorage` resta primario (zero rischio), + copia best-effort nel cloud (legata al codice tester) + **ripristino manuale** in Impostazioni. Piccoli passi: endpoint → salvataggio → ripristino. **PRIORITÀ 1** (principio [[feedback-safety-first]]: il sistema non deve far perdere dati). Limite noto: privacy dati clienti su Upstash → ok per tester, formalizzare (consenso/cifratura) in Fase 3.
+**Piano DEV residuo (in ordine):**
+
+1. **🔒 SICUREZZA DATI — backup cloud additivo su Upstash** [approccio APPROVATO da Erik] — **ORA PRIORITÀ 1**. Oggi tutti i dati (clienti, appuntamenti, follow-up) vivono **solo in localStorage** → si perdono a cambio telefono/reinstallo/pulizia. Fix: `localStorage` resta primario (zero rischio), + copia best-effort nel cloud (legata al codice tester `localStorage['sliss-tester']`) + **ripristino manuale** in Impostazioni. Piccoli passi: endpoint `api/backup.js` (GET/POST, env `KV_REST_API_URL`/`KV_REST_API_TOKEN`) → salvataggio → ripristino. (principio [[feedback-safety-first]]). Limite noto: privacy dati clienti su Upstash → ok per tester, formalizzare (consenso/cifratura) in Fase 3.
 2. **📅 Calendario visualizzatore sotto Agenda** — vista mese **read-only** degli appuntamenti Sliss (NON legge Google = sync vera è Fase 3, deciso di accontentarsi) + transizione **"Apri su Google al giorno"** per modificare. Tasto crea appuntamento resta. NON viola Opzione A (mostra dati propri). NB onestà: mostra solo gli appuntamenti creati in Sliss, non quelli messi solo su Google.
 3. **✏️ Redesign "Prepara scheda" → spostarlo sotto CLIENTI** — linguaggio umano (via "slot"/"scheda in attesa"). **Logica INVARIATA**: cliente e appuntamento restano separati di proposito (link pre-consulenza → cliente entra; l'appuntamento del **tatuaggio** si definisce DOPO la consulenza → da lì i follow-up). Solo parole e posto, NON toccare il flusso.
 
-**In parallelo (TEST):** Luca → attesa risposte questionario 6 domande · **decisione go/no-go M1 al 21/06/2026**.
+**In parallelo (TEST):** Luca → mandare la paginetta `docs/test-m1/aggiornamento-luca-08-06.html` + attesa risposte questionario 6 domande · **decisione go/no-go M1 al 21/06/2026**.
 
 **Promemoria per la chat nuova:** muoversi chirurgici e additivi, build+eslint+prova reale ad ogni passo, non rompere logiche già strutturate ([[feedback-auto-healing]]). Flusso confermato: *chat → consulenza → link auto-inserimento cliente → consulenza → appuntamento tatuaggio → follow-up*.
 

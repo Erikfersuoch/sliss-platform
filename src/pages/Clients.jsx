@@ -7,10 +7,12 @@ import Icon from "../components/Icon.jsx";
 import { Badge, Btn, Card, Empty, Search, Tabs, Modal, FormField, PageHeader } from "../components/ui.jsx";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 
-const Clients = () => {
+const Clients = ({initialClientId}) => {
   const {data,addRecord,update,deleteRecord}=useSliss();
-  const [search,setSearch]=useState("");const [sf,setSf]=useState("all");const [sel,setSel]=useState(null);const [showNew,setShowNew]=useState(false);const [editMode,setEditMode]=useState(false);
-  const [form,setForm]=useState({name:"",phone:"",email:"",channel:"WhatsApp",notes:""});const [editForm,setEditForm]=useState(null);
+  // Apertura diretta della scheda quando si arriva dalla Home (?clientId): init al mount, niente effect
+  const _initC=initialClientId?(data?.clients||[]).find(x=>x.id===initialClientId):null;
+  const [search,setSearch]=useState("");const [sf,setSf]=useState("all");const [sel,setSel]=useState(_initC||null);const [showNew,setShowNew]=useState(false);const [editMode,setEditMode]=useState(false);
+  const [form,setForm]=useState({name:"",phone:"",email:"",channel:"WhatsApp",notes:""});const [editForm,setEditForm]=useState(_initC?{name:_initC.name,phone:_initC.phone,email:_initC.email,channel:_initC.channel,notes:_initC.notes||"",status:_initC.status}:null);
   const bizType=data?.settings?.bizType||"servizi";const clientCluster=data?.settings?.cluster||"altro_s";const clusterSvcTypes=(CLUSTERS_SERVIZI[clientCluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const [newApptMode,setNewApptMode]=useState(false);const [newApptDone,setNewApptDone]=useState(false);const [newApptForm,setNewApptForm]=useState({date:today(),serviceType:"",notes:"",product:""});
   const handleNewAppt=()=>{if(!sel||!newApptForm.date)return;if(bizType==="servizi"){const apptId=uid();const svcType=newApptForm.serviceType||clusterSvcTypes[0]||"Sessione";const timings=data.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId:sel.id,date:newApptForm.date,serviceType:svcType,notes:newApptForm.notes,followUpTriggered:true,created:today()});buildFollowUps(apptId,sel.id,sel.name,newApptForm.date,svcType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}else{const orderId=uid();const deliveryDate=addDays(newApptForm.date,7);addRecord("orders",{id:orderId,clientId:sel.id,product:newApptForm.product||"Ordine",orderDate:newApptForm.date,deliveryDate,notes:newApptForm.notes,status:"pending",created:today()});buildProductFollowUps(orderId,sel.id,sel.name,newApptForm.date,deliveryDate,data?.templates).forEach(fu=>addRecord("followUps",fu));}setNewApptDone(true);setTimeout(()=>{setNewApptMode(false);setNewApptDone(false);setNewApptForm({date:today(),serviceType:"",notes:"",product:""});},1500);};

@@ -14,11 +14,11 @@ const FollowUp = ({setView,initialFilter}) => {
   const [editMsg,setEditMsg]=useState(null);
   const td=today();
   const allFU=data?.followUps||[];
-  const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length},{id:"awaiting",label:"In attesa",count:allFU.filter(f=>f.status==="sent").length},{id:"all",label:"Tutti",count:allFU.length}];
-  const filtered=allFU.filter(fu=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ms=!search||cl?.name.toLowerCase().includes(search.toLowerCase());const mf=filter==="all"||(filter==="today"&&fu.status==="pending"&&fu.scheduledDate<=td&&!isPhaseOff(data?.templates,fu.phase))||(filter==="awaiting"&&fu.status==="sent");return ms&&mf;}).sort((a,b)=>new Date(a.scheduledDate)-new Date(b.scheduledDate));
+  const isDone=f=>f.status==="sent"||f.status==="replied"||f.status==="completed";
+  const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length},{id:"awaiting",label:"Inviati",count:allFU.filter(isDone).length},{id:"all",label:"Tutti",count:allFU.length}];
+  const filtered=allFU.filter(fu=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ms=!search||cl?.name.toLowerCase().includes(search.toLowerCase());const mf=filter==="all"||(filter==="today"&&fu.status==="pending"&&fu.scheduledDate<=td&&!isPhaseOff(data?.templates,fu.phase))||(filter==="awaiting"&&isDone(fu));return ms&&mf;}).sort((a,b)=>new Date(a.scheduledDate)-new Date(b.scheduledDate));
   const markSent=fu=>{update("followUps",fu.id,{status:"sent",sentDate:today()});if(sel?.id===fu.id)setSel({...fu,status:"sent",sentDate:today()});};
-  const markReplied=fu=>{update("followUps",fu.id,{status:"replied",satisfaction:"replied"});if(sel?.id===fu.id)setSel(null);};
-  const markNoReply=fu=>{update("followUps",fu.id,{status:"completed",satisfaction:"no_reply"});if(sel?.id===fu.id)setSel(null);};
+  const markUnsend=fu=>{update("followUps",fu.id,{status:"pending",sentDate:null,satisfaction:null});if(sel?.id===fu.id)setSel({...fu,status:"pending",sentDate:null,satisfaction:null});};
   const pendingToday=allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
   const markAllSent=()=>{if(!pendingToday.length)return;if(!window.confirm(`Segna tutti i ${pendingToday.length} follow-up come inviati?`))return;pendingToday.forEach(fu=>update("followUps",fu.id,{status:"sent",sentDate:today()}));};
   const allDone=filter==="today"&&pendingToday.length===0&&allFU.some(f=>f.sentDate===td);
@@ -42,11 +42,10 @@ const FollowUp = ({setView,initialFilter}) => {
                   <div style={{flex:1,minWidth:0}}>
                     <div style={{display:"flex",alignItems:"center",gap:"6px",marginBottom:"4px",flexWrap:"wrap"}}><span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span><Badge {...ph} s /><Badge {...st} s />{phaseOff&&<Badge label="Disattivato" color={T.textMu} bg={T.bg3} s />}</div>
                     <div style={{fontSize:"13px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap",marginBottom:"8px"}}>{fu.message}</div>
-                    {fu.status==="pending"&&!phaseOff&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} onSend={()=>markSent(fu)} />}
-                    {fu.status==="sent"&&!fu.satisfaction&&(
-                      <div onClick={e=>e.stopPropagation()} style={{display:"flex",gap:"6px",marginTop:"2px"}}>
-                        <Btn v="success" s="sm" onClick={()=>markReplied(fu)} style={{flex:1,justifyContent:"center"}}>{"\u{1F44D}"} Ha risposto</Btn>
-                        <Btn v="secondary" s="sm" onClick={()=>markNoReply(fu)} style={{flex:1,justifyContent:"center"}}>{"\u{1F44E}"} Nessuna risposta</Btn>
+                    {fu.status==="pending"&&!phaseOff&&<SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} labelOverride={fu.phase==="shipping"?"\u{1F680} Ready to go":undefined} onSend={()=>markSent(fu)} />}
+                    {isDone(fu)&&(
+                      <div onClick={e=>e.stopPropagation()} style={{marginTop:"2px"}}>
+                        <Btn v="secondary" s="sm" onClick={()=>markUnsend(fu)}>{"\u{21A9}\u{FE0F}"} Annulla invio</Btn>
                       </div>
                     )}
                   </div>
@@ -65,14 +64,10 @@ const FollowUp = ({setView,initialFilter}) => {
               ?<div><textarea value={editMsg} onChange={e=>setEditMsg(e.target.value)} style={{minHeight:"120px",marginBottom:"10px"}} /><div style={{display:"flex",gap:"8px",justifyContent:"flex-end"}}><Btn v="secondary" s="sm" onClick={()=>setEditMsg(null)}>Annulla</Btn><Btn s="sm" onClick={()=>{update("followUps",sel.id,{message:editMsg});setSel({...sel,message:editMsg});setEditMsg(null);}}>Salva</Btn></div></div>
               :<div><div style={{padding:"14px",background:T.bg3,borderRadius:T.r.m,border:`1px solid ${T.border}`,fontSize:"14px",lineHeight:1.7,whiteSpace:"pre-wrap",marginBottom:"8px"}}>{sel.message}</div>{sel.status==="pending"&&<button onClick={()=>setEditMsg(sel.message)} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"2px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"✏️ Modifica messaggio"}</button>}</div>
             }
-            <SendButtons message={editMsg!==null?editMsg:sel.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);setEditMsg(null);}:undefined} />
-            {sel.status==="sent"&&!sel.satisfaction&&(
+            <SendButtons message={editMsg!==null?editMsg:sel.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} labelOverride={sel.phase==="shipping"?"\u{1F680} Ready to go":undefined} onSend={sel.status==="pending"?()=>{markSent(sel);setSel(null);setEditMsg(null);}:undefined} />
+            {isDone(sel)&&(
               <div style={{paddingTop:"4px"}}>
-                <div style={{fontSize:"11px",color:T.textD,textTransform:"uppercase",letterSpacing:".05em",marginBottom:"8px"}}>Esito</div>
-                <div style={{display:"flex",gap:"8px"}}>
-                  <Btn v="success" s="sm" onClick={()=>{update("followUps",sel.id,{status:"replied",satisfaction:"replied"});setSel(null);setEditMsg(null);}} style={{flex:1,justifyContent:"center"}}>{"\u{1F44D}"} Ha risposto</Btn>
-                  <Btn v="secondary" s="sm" onClick={()=>{update("followUps",sel.id,{status:"completed",satisfaction:"no_reply"});setSel(null);setEditMsg(null);}} style={{flex:1,justifyContent:"center"}}>{"\u{1F44E}"} Nessuna risposta</Btn>
-                </div>
+                <Btn v="secondary" s="sm" onClick={()=>markUnsend(sel)}>{"\u{21A9}\u{FE0F}"} Annulla invio</Btn>
               </div>
             )}
             <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"10px",paddingTop:"12px",borderTop:`1px solid ${T.border}`}}>
