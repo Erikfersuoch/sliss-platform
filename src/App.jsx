@@ -6,6 +6,7 @@ import GlobalCSS from "./GlobalCSS.jsx";
 import { BottomNav, MoreMenu, DesktopSidebar } from "./components/Nav.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import FeedbackNudge from "./components/FeedbackNudge.jsx";
+import UpdateNudge from "./components/UpdateNudge.jsx";
 import Onboarding from "./pages/Onboarding.jsx";
 import Home from "./pages/Home.jsx";
 import FollowUp from "./pages/FollowUp.jsx";
@@ -26,6 +27,7 @@ export default function SlissPlatform() {
   const [showOnboarding,setShowOnboarding]=useState(()=>!isOnboarded());
   // Notifica "è ora dei feedback" → apre l'app su ?goto=feedback: mostriamo la schermata dedicata
   const [showFeedbackNudge,setShowFeedbackNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='feedback');
+  const [showUpdateNudge,setShowUpdateNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='novita');
   const autoCheckRef=useRef(false);
 
   // Cattura il codice tester dall'URL (?tester=) una sola volta, senza toccare lo stato React
@@ -68,6 +70,7 @@ export default function SlissPlatform() {
         </div>
         <BottomNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
         {showFeedbackNudge && <FeedbackNudge onClose={()=>setShowFeedbackNudge(false)} />}
+        {showUpdateNudge && <UpdateNudge onClose={()=>setShowUpdateNudge(false)} />}
       </Ctx.Provider>
     </ErrorBoundary>
   );

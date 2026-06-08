@@ -23,8 +23,9 @@ const MESSAGES = {
     body: 'Hai messaggi da inviare. 2 minuti bastano.',
   },
   aggiornamento: {
-    title: 'Sliss — aggiornamento disponibile',
-    body: 'Nuove funzionalità pronte. Riapri l\'app per vederle.',
+    title: 'Sliss — ci sono novità 🎉',
+    body: 'Tocca per vedere cosa è cambiato grazie al tuo feedback.',
+    url: '/?goto=novita',
   },
   feedback: {
     title: 'Sliss — è ora dei feedback 🗣️',

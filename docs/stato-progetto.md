@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.0 · 2026-06-08 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.1 · 2026-06-08 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 08/06/2026 (v6.1) — sistema "aggiorna i tester" (ruolo DEV+CORE):** stabilito un **modus operandi** (deciso con Erik): a ogni miglioria importante/rilevante si avvisa il tester con una **notifica push Sliss** che al tap apre una **schermata "Novità" in-app** (pattern notifica → vista contestuale, come i feedback). Più professionale e gratificante per i tester (vedono che rispondiamo alle loro esigenze). Implementato: tipo push `aggiornamento` ora ha `url:'/?goto=novita'`; nuova `src/components/UpdateNudge.jsx` (changelog leggibile, array `CHANGES` **da aggiornare a ogni release**); `App.jsx` mostra la schermata su `?goto=novita`. **Prima notifica inviata a Luca** per le novità v6.0. Evoluzione di [[feedback-tester-update-pages]] (le pagine HTML restano per changelog più ricchi). Lint 0, build OK.
 
 **Sessione 08/06/2026 (v6.0) — fix UX da feedback Luca (ruolo DEV):** 5 modifiche chirurgiche e additive al flusso M1, tutte da richieste reali di Luca (prodotti). (1) **Tolto l'esito 👍/👎** dopo l'invio (prodotti + servizi → vale anche per Moira): inviato = fatto, un tocco in meno. (2) Contatore Home/Follow-Up **"In attesa" → "Inviati"** (storico). (3) **"🚀 Ready to go"**: il 2° follow-up (spedizione) non è più a tempo ma si attiva con un tasto — nuova sezione **"📦 Ordini da spedire" in Home** + tasto rinominato in Ordini; **un click apre WhatsApp diretto** (no doppio click) e il tasto resta "Ready to go" anche dopo un annulla (label override su `SendButtons` per la fase `shipping`). (4) **"↩️ Annulla invio"** su ogni follow-up inviato → torna in "Da inviare" (rimedio agli errori, [[feedback-safety-first]]). (5) **Righe clienti cliccabili in Home** → aprono la scheda (`go` esteso con `clientId`, init al mount in Clients). File: FollowUp/Home/Orders/Clients/App + helpers (`sendHref`/`openSend`) + ui (`labelOverride`). **Bug auto-inflitto risolto:** helper `isSent` in collisione con variabile locale → rinominato `isDone` ([[feedback-bug-lessons]]: controllare shadowing quando si aggiunge un helper). Lint 0, build OK, **provato live da Erik**. Anteprima prima/dopo + paginetta tester per Luca in `docs/test-m1/`. **Backup dati torna la prossima priorità.**
 
