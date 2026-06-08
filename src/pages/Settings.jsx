@@ -4,14 +4,27 @@ import { CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI } from "../config.js";
 import { useSliss } from "../context.js";
 import { Btn, Card, FormField, PageHeader } from "../components/ui.jsx";
 import { subscribeToPush } from "../push.js";
+import { loadBackup } from "../backup.js";
 
 const Settings = () => {
-  const {data,updateSettings,resetData}=useSliss();const s=data.settings||{};
+  const {data,updateSettings,resetData,importData}=useSliss();const s=data.settings||{};
   const [bName,setBName]=useState(s.businessName||"");const [currentBizType,setCurrentBizType]=useState(s.bizType||"servizi");const [currentCluster,setCurrentCluster]=useState(s.cluster||"altro");const [reviewLink,setReviewLink]=useState(s.reviewLink||"");const [timings,setTimings]=useState(s.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60});const [saved,setSaved]=useState(false);
   const [notifStatus,setNotifStatus]=useState(()=>'Notification' in window?Notification.permission:'unsupported');
   const [testerCode,setTesterCode]=useState(()=>localStorage.getItem('sliss-tester')||"");
   const handleSave=()=>{updateSettings({businessName:bName,reviewLink,bizType:currentBizType,cluster:currentCluster,followUpTimings:timings});setSaved(true);setTimeout(()=>setSaved(false),2000);};
   const handleNotif=async()=>{const ok=await subscribeToPush();setNotifStatus(ok?'granted':'denied');};
+  const [restoring,setRestoring]=useState(false);const [restoreMsg,setRestoreMsg]=useState("");
+  const handleRestore=async()=>{
+    if(!testerCode){setRestoreMsg("Inserisci prima il codice tester qui sopra.");return;}
+    setRestoring(true);setRestoreMsg("");
+    const b=await loadBackup(testerCode);
+    setRestoring(false);
+    if(!b||!b.data){setRestoreMsg("Nessun backup trovato nel cloud per questo codice.");return;}
+    const when=b.savedAt?new Date(b.savedAt).toLocaleString("it-IT"):"data sconosciuta";
+    if(!window.confirm(`Ripristinare i dati dal backup del ${when}?\nI dati attuali su questo telefono verranno sostituiti.`))return;
+    importData(b.data);
+    setRestoreMsg("\u{2713} Dati ripristinati dal backup del "+when+".");
+  };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Impostazioni" />
@@ -25,7 +38,15 @@ const Settings = () => {
         {notifStatus==='default' && <><p style={{fontSize:"13px",color:T.textM,lineHeight:1.6,marginBottom:"12px"}}>Ricevi un reminder quando inserire i clienti e quando hai follow-up in scadenza.</p><Btn disabled={!testerCode} onClick={handleNotif} style={{width:"100%",justifyContent:"center"}}>{"🔔 Attiva notifiche"}</Btn></>}
         {notifStatus==='unsupported' && <p style={{fontSize:"13px",color:T.textD}}>{"Le notifiche non sono supportate su questo browser. Usa Safari su iPhone."}</p>}
       </Card>
-      <Card style={{marginBottom:"20px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Dati</h3><p style={{fontSize:"13px",color:T.textD,lineHeight:1.7,marginBottom:"14px"}}>I dati sono salvati nel browser. Usa sempre lo stesso dispositivo e browser.</p><Btn v="danger" s="sm" onClick={()=>{if(window.confirm("Reset completo? Tutti i dati verranno eliminati."))resetData();}}>{"\u{1F5D1}\u{FE0F}"} Reset dati</Btn></Card>
+      <Card style={{marginBottom:"20px"}}>
+        <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Dati e backup</h3>
+        <p style={{fontSize:"13px",color:T.textD,lineHeight:1.7,marginBottom:"12px"}}>I dati vivono su questo telefono. Se hai impostato il <b>codice tester</b>, una copia di sicurezza viene salvata automaticamente nel cloud: se cambi telefono o reinstalli l'app, puoi ripristinarla da qui.</p>
+        <Btn v="secondary" s="sm" disabled={!testerCode||restoring} onClick={handleRestore}>{restoring?"Controllo backup\u{2026}":"\u{2601}\u{FE0F} Ripristina da backup"}</Btn>
+        {restoreMsg&&<p style={{fontSize:"12px",color:restoreMsg.startsWith("\u{2713}")?T.green:T.textD,marginTop:"10px",lineHeight:1.5}}>{restoreMsg}</p>}
+        <div style={{borderTop:`1px solid ${T.border}`,marginTop:"14px",paddingTop:"14px"}}>
+          <Btn v="danger" s="sm" onClick={()=>{if(window.confirm("Reset completo? Tutti i dati verranno eliminati."))resetData();}}>{"\u{1F5D1}\u{FE0F}"} Reset dati</Btn>
+        </div>
+      </Card>
       <Btn onClick={handleSave} style={{width:"100%",justifyContent:"center"}}>{saved?"\u{2713} Salvato!":"Salva impostazioni"}</Btn>
     </div>
   );

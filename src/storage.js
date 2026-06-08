@@ -73,4 +73,4 @@ export const clearOnboarding = () => {
   storage.remove(ONBOARDING_KEY);
 };
 
-export { STORAGE_KEY, ONBOARDING_KEY, storage };
+export { STORAGE_KEY, ONBOARDING_KEY, storage, healData };

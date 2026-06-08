@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { loadData, saveData, isOnboarded, emptyData, storage, ONBOARDING_KEY } from "./storage.js";
+import { loadData, saveData, isOnboarded, emptyData, storage, ONBOARDING_KEY, healData } from "./storage.js";
+import { saveBackup } from "./backup.js";
 import { uid, today, isPhaseOff } from "./helpers.js";
 import { Ctx } from "./context.js";
 import GlobalCSS from "./GlobalCSS.jsx";
@@ -35,12 +36,16 @@ export default function SlissPlatform() {
   // Pulisce ?goto dall'URL dopo averlo letto (così un refresh non riapre la schermata)
   useEffect(()=>{const p=new URLSearchParams(window.location.search);if(p.get('goto')){p.delete('goto');const qs=p.toString();window.history.replaceState({},"",window.location.pathname+(qs?`?${qs}`:""));}},[]);
   useEffect(()=>{saveData(data);},[data]);
+  // Backup cloud best-effort: copia i dati nel cloud poco dopo ogni modifica (solo se c'è un codice tester). Mai bloccante.
+  useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const id=setTimeout(()=>{saveBackup(tester,data);},8000);return ()=>clearTimeout(id);},[data]);
 
   const update=useCallback((table,id,updates)=>setData(prev=>({...prev,[table]:(prev[table]||[]).map(r=>r.id===id?{...r,...updates}:r)})),[]);
   const addRecord=useCallback((table,record)=>setData(prev=>({...prev,[table]:[...(prev[table]||[]),record]})),[]);
   const deleteRecord=useCallback((table,id)=>setData(prev=>({...prev,[table]:(prev[table]||[]).filter(r=>r.id!==id)})),[]);
   const updateSettings=useCallback((updates)=>setData(prev=>({...prev,settings:{...prev.settings,...updates}})),[]);
   const resetData=useCallback(()=>{const d=emptyData();setData(d);saveData(d);storage.remove(ONBOARDING_KEY);},[]);
+  // Ripristino da backup: sostituisce i dati locali con quelli passati (sanati dalla stessa heal di loadData).
+  const importData=useCallback((d)=>{const healed=healData(d);setData(healed);saveData(healed);},[]);
   // Navigazione: imposta vista e, opzionalmente, il filtro iniziale Follow-Up (resettato per ogni navigazione normale)
   const go=useCallback((v,opts)=>{setFuFilter(opts&&opts.fuFilter?opts.fuFilter:null);setSelClientId(opts&&opts.clientId?opts.clientId:null);setView(v);},[]);
   // Auto-import schede onboarding: una sola volta, importa gli slot già compilati dal cliente
@@ -51,7 +56,7 @@ export default function SlissPlatform() {
     if(!waiting.length)return;
     waiting.forEach(async slot=>{try{const r=await fetch(`/api/onboarding-check?slot=${slot.id}`);const d=await r.json();if(d.found){const clientId=uid();addRecord("clients",{id:clientId,name:d.name,phone:d.phone,email:d.email||"",channel:"WhatsApp",status:"new",tags:[],notes:d.notes||"",firstVisit:today(),lastVisit:today()});update("slots",slot.id,{status:"imported"});}}catch(e){console.error("[auto-check]",e);}});
   },[data,addRecord,update]);
-  const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData}),[data,update,addRecord,deleteRecord,updateSettings,resetData]);
+  const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData,importData}),[data,update,addRecord,deleteRecord,updateSettings,resetData,importData]);
 
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
