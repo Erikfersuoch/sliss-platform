@@ -2,7 +2,16 @@
 
 > Stato: **in DEFINIZIONE — in attesa info da Luca** (non ancora iniziato).
 > Aperto il 06/06/2026. Nato dal feedback di Luca (vedi `docs/test-m1/feedback-log.md`).
-> Aggiornato il 07/06/2026.
+> Aggiornato l'08/06/2026.
+
+---
+
+## 🆕 AGGIORNAMENTO 08/06/2026 — risposta di Luca (cosa vuole davvero)
+
+Luca, alla domanda su cosa lo aiuterebbe di più, risponde:
+> **«La gestione del cliente quando entra nella chat, con scrematura e/o indirizzamento al catalogo per riempire direttamente il carrello spesa.»**
+
+Conferma in pieno lo **smistamento al primo contatto** e aggiunge un pezzo nuovo: non solo *classificare* (standard/particolare), ma **indirizzare al catalogo → carrello**. Cioè il cliente "pronto" viene guidato a **comporre l'ordine da solo** (self-service sul catalogo), così Luca riceve già il carrello composto invece di gestire la trattativa a mano. Spunto per la "Via 1" (standard): non solo rimando a eBay, ma un **mini-catalogo/carrello** dove il cliente sceglie e Luca riceve l'ordine pronto. Da valutare per M3 **dopo il gate M1 (21/06)**. ⚠️ M3 resta bloccato fino a validazione M1 — registrato per non perderlo, non si inizia ora.
 
 ---
 

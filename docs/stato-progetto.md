@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.1 · 2026-06-08 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.2 · 2026-06-08 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 08/06/2026 (v6.2) — backup dati + calendario (ruolo DEV):** chiusi i punti 1 e 2 del piano. **(1) 🔒 Backup cloud additivo su Upstash** [PRIORITÀ 1, fatta]: `api/backup.js` (POST salva `backup:<tester>`, GET rilegge), `src/backup.js` (client best-effort, errori silenziosi), **backup automatico ~8s dopo ogni modifica** in App.jsx (solo se c'è codice tester), **ripristino manuale** in Impostazioni ("Dati e backup" → "Ripristina da backup", usa `importData`+`healData`). localStorage resta primario, zero rischio. **Endpoint testato live** (POST+GET ok). **(2) 📅 Calendario read-only sotto Agenda** [fatto]: nuovo `MonthCalendar.jsx`, toggle **Lista/Calendario** in Agenda, vista mese con appuntamenti Sliss segnati, tap giorno → lista + **"Apri su Google Calendar a quel giorno"** (`calendar.google.com/r/day/Y/M/D`). Read-only (non legge Google = Fase 3). Lint 0, build OK, calendario provato live da Erik. **Punto 3 (redesign "Prepara scheda") → PARCHEGGIATO** (è UX, richiede anteprima; vedi `parking-lot.md`). Risposta di Luca su catalogo/carrello registrata in `docs/modulo-richieste-v1.md` (M3, dopo gate 21/06).
 
 **Sessione 08/06/2026 (v6.1) — sistema "aggiorna i tester" (ruolo DEV+CORE):** stabilito un **modus operandi** (deciso con Erik): a ogni miglioria importante/rilevante si avvisa il tester con una **notifica push Sliss** che al tap apre una **schermata "Novità" in-app** (pattern notifica → vista contestuale, come i feedback). Più professionale e gratificante per i tester (vedono che rispondiamo alle loro esigenze). Implementato: tipo push `aggiornamento` ora ha `url:'/?goto=novita'`; nuova `src/components/UpdateNudge.jsx` (changelog leggibile, array `CHANGES` **da aggiornare a ogni release**); `App.jsx` mostra la schermata su `?goto=novita`. **Prima notifica inviata a Luca** per le novità v6.0. Evoluzione di [[feedback-tester-update-pages]] (le pagine HTML restano per changelog più ricchi). Lint 0, build OK.
 
@@ -104,15 +106,14 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 ## Prossimi passi
 
-**✅ FATTO 08/06 (v6.0):** i 3 fix da feedback Luca (esito tolto · Ready to go · clienti cliccabili) + Annulla invio + tab Inviati. Spediti.
+**✅ FATTO 08/06:** v6.0 fix Luca (esito tolto · Ready to go · Annulla invio · tab Inviati · clienti cliccabili) · v6.1 sistema "aggiorna i tester" (push→schermata Novità, prima inviata a Luca) · v6.2 **🔒 backup dati cloud + 📅 calendario read-only** (entrambi online e verificati).
 
-**Piano DEV residuo (in ordine):**
+**Residuo:**
 
-1. **🔒 SICUREZZA DATI — backup cloud additivo su Upstash** [approccio APPROVATO da Erik] — **ORA PRIORITÀ 1**. Oggi tutti i dati (clienti, appuntamenti, follow-up) vivono **solo in localStorage** → si perdono a cambio telefono/reinstallo/pulizia. Fix: `localStorage` resta primario (zero rischio), + copia best-effort nel cloud (legata al codice tester `localStorage['sliss-tester']`) + **ripristino manuale** in Impostazioni. Piccoli passi: endpoint `api/backup.js` (GET/POST, env `KV_REST_API_URL`/`KV_REST_API_TOKEN`) → salvataggio → ripristino. (principio [[feedback-safety-first]]). Limite noto: privacy dati clienti su Upstash → ok per tester, formalizzare (consenso/cifratura) in Fase 3.
-2. **📅 Calendario visualizzatore sotto Agenda** — vista mese **read-only** degli appuntamenti Sliss (NON legge Google = sync vera è Fase 3, deciso di accontentarsi) + transizione **"Apri su Google al giorno"** per modificare. Tasto crea appuntamento resta. NON viola Opzione A (mostra dati propri). NB onestà: mostra solo gli appuntamenti creati in Sliss, non quelli messi solo su Google.
-3. **✏️ Redesign "Prepara scheda" → spostarlo sotto CLIENTI** — linguaggio umano (via "slot"/"scheda in attesa"). **Logica INVARIATA**: cliente e appuntamento restano separati di proposito (link pre-consulenza → cliente entra; l'appuntamento del **tatuaggio** si definisce DOPO la consulenza → da lì i follow-up). Solo parole e posto, NON toccare il flusso.
+- ⏸️ **Redesign "Prepara scheda" → sotto CLIENTI** — **PARCHEGGIATO** (vedi `parking-lot.md`). È UX → serve anteprima prima/dopo. Linguaggio umano, **logica INVARIATA** (cliente e appuntamento separati di proposito; solo parole e posto). Da abbinare alla **notifica novità per Moira** (servizi) insieme al calendario.
+- 📲 **Notificare Moira** delle novità che la riguardano (calendario + esito tolto + Annulla invio + clienti cliccabili) — quando facciamo anche "Prepara scheda", così riceve un aggiornamento sensato e completo.
 
-**In parallelo (TEST):** Luca → mandare la paginetta `docs/test-m1/aggiornamento-luca-08-06.html` + attesa risposte questionario 6 domande · **decisione go/no-go M1 al 21/06/2026**.
+**In parallelo (TEST):** **decisione go/no-go M1 al 21/06/2026.** Modulo Richieste (M3): nuova info di Luca (catalogo→carrello) registrata in `docs/modulo-richieste-v1.md`, **bloccato** fino a validazione M1.
 
 **Promemoria per la chat nuova:** muoversi chirurgici e additivi, build+eslint+prova reale ad ogni passo, non rompere logiche già strutturate ([[feedback-auto-healing]]). Flusso confermato: *chat → consulenza → link auto-inserimento cliente → consulenza → appuntamento tatuaggio → follow-up*.
 
