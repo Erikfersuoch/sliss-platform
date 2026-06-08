@@ -111,7 +111,7 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 **Residuo:**
 
 - ⏸️ **Redesign "Prepara scheda" → sotto CLIENTI** — **PARCHEGGIATO** (vedi `parking-lot.md`). È UX → serve anteprima prima/dopo. Linguaggio umano, **logica INVARIATA** (cliente e appuntamento separati di proposito; solo parole e posto). Da abbinare alla **notifica novità per Moira** (servizi) insieme al calendario.
-- 📲 **Notificare Moira** delle novità che la riguardano (calendario + esito tolto + Annulla invio + clienti cliccabili) — quando facciamo anche "Prepara scheda", così riceve un aggiornamento sensato e completo.
+- ✅ **Moira notificata 08/06** (push novità con changelog completo — calendario + esito tolto + Annulla invio + clienti cliccabili; sub viva). Anche Luca notificato 08/06. Resta da mostrarle "Prepara scheda" quando sarà pronto.
 
 **In parallelo (TEST):** **decisione go/no-go M1 al 21/06/2026.** Modulo Richieste (M3): nuova info di Luca (catalogo→carrello) registrata in `docs/modulo-richieste-v1.md`, **bloccato** fino a validazione M1.
 
