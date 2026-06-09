@@ -22,6 +22,7 @@ import Settings from "./pages/Settings.jsx";
 export default function SlissPlatform() {
   const [view,setView]=useState("home");
   const [fuFilter,setFuFilter]=useState(null);
+  const [selFuId,setSelFuId]=useState(null);
   const [selClientId,setSelClientId]=useState(null);
   // localStorage è sincrono: inizializziamo i dati subito (niente stato "loading", niente flash all'avvio)
   const [data,setData]=useState(()=>loadData());
@@ -47,7 +48,7 @@ export default function SlissPlatform() {
   // Ripristino da backup: sostituisce i dati locali con quelli passati (sanati dalla stessa heal di loadData).
   const importData=useCallback((d)=>{const healed=healData(d);setData(healed);saveData(healed);},[]);
   // Navigazione: imposta vista e, opzionalmente, il filtro iniziale Follow-Up (resettato per ogni navigazione normale)
-  const go=useCallback((v,opts)=>{setFuFilter(opts&&opts.fuFilter?opts.fuFilter:null);setSelClientId(opts&&opts.clientId?opts.clientId:null);setView(v);},[]);
+  const go=useCallback((v,opts)=>{setFuFilter(opts&&opts.fuFilter?opts.fuFilter:null);setSelFuId(opts&&opts.fuId?opts.fuId:null);setSelClientId(opts&&opts.clientId?opts.clientId:null);setView(v);},[]);
   // Auto-import schede onboarding: una sola volta, importa gli slot già compilati dal cliente
   useEffect(()=>{
     if(autoCheckRef.current)return;
@@ -60,7 +61,7 @@ export default function SlissPlatform() {
 
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
-  const viewMap={home:<Home setView={go}/>,appointments:<Appointments/>,orders:<Orders/>,followup:<FollowUp setView={go} initialFilter={fuFilter}/>,clients:<Clients initialClientId={selClientId}/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go}/>,orders:<Orders/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId}/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;

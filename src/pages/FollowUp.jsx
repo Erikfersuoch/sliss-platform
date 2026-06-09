@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import T from "../theme.js";
 import { PHASES, STATUSES } from "../config.js";
 import { fmtDate, daysAgo, daysUntil, today, isPhaseOff } from "../helpers.js";
@@ -6,8 +6,8 @@ import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
 import { Badge, Btn, Card, Empty, Search, Tabs, Modal, SendButtons } from "../components/ui.jsx";
 
-const FollowUp = ({setView,initialFilter}) => {
-  const {data,update}=useSliss();
+const FollowUp = ({setView,initialFilter,initialFuId}) => {
+  const {data,update,deleteRecord}=useSliss();
   const [filter,setFilter]=useState(initialFilter||"today");
   const [search,setSearch]=useState("");
   const [sel,setSel]=useState(null);
@@ -21,7 +21,9 @@ const FollowUp = ({setView,initialFilter}) => {
   const markUnsend=fu=>{update("followUps",fu.id,{status:"pending",sentDate:null,satisfaction:null});if(sel?.id===fu.id)setSel({...fu,status:"pending",sentDate:null,satisfaction:null});};
   const pendingToday=allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
   const markAllSent=()=>{if(!pendingToday.length)return;if(!window.confirm(`Segna tutti i ${pendingToday.length} follow-up come inviati?`))return;pendingToday.forEach(fu=>update("followUps",fu.id,{status:"sent",sentDate:today()}));};
+  const deleteFU=fu=>{if(!window.confirm("Eliminare questo follow-up?"))return;deleteRecord("followUps",fu.id);if(sel?.id===fu.id)setSel(null);};
   const allDone=filter==="today"&&pendingToday.length===0&&allFU.some(f=>f.sentDate===td);
+  useEffect(()=>{if(initialFuId){const fu=(data?.followUps||[]).find(f=>f.id===initialFuId);if(fu)setSel(fu);}},[initialFuId]);
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"18px"}}>
@@ -49,7 +51,10 @@ const FollowUp = ({setView,initialFilter}) => {
                       </div>
                     )}
                   </div>
-                  <div style={{flexShrink:0,textAlign:"right"}}><span style={{fontSize:"11px",color:T.textMu}}>{timing}</span></div>
+                  <div style={{flexShrink:0,textAlign:"right",display:"flex",flexDirection:"column",alignItems:"flex-end",gap:"8px"}}>
+                    <span style={{fontSize:"11px",color:T.textMu}}>{timing}</span>
+                    {fu.status==="pending"&&!phaseOff&&<button onClick={e=>{e.stopPropagation();deleteFU(fu);}} style={{background:"none",border:"none",cursor:"pointer",padding:"2px",color:T.textMu,fontSize:"15px",lineHeight:1}} title="Elimina">🗑️</button>}
+                  </div>
                 </div>
               </Card>
             );})}
