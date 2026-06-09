@@ -29,7 +29,26 @@ const Settings = () => {
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Impostazioni" />
       <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"16px"}}>{"Attivit\u{e0}"}</h3><FormField label={"Nome attivit\u{e0}"} hint="Appare nel saluto della Home"><input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" /></FormField><FormField label="Tipo attività" hint="Cambia il flusso: appuntamenti o ordini"><select value={currentBizType} onChange={e=>{const t=e.target.value;setCurrentBizType(t);setCurrentCluster(t==="prodotti"?Object.keys(CLUSTERS_PRODOTTI)[0]:Object.keys(CLUSTERS_SERVIZI)[0]);}}><option value="servizi">Servizi — appuntamenti</option><option value="prodotti">Prodotti — ordini</option></select></FormField><FormField label="Settore" hint="Usato per adattare i template"><select value={currentCluster} onChange={e=>setCurrentCluster(e.target.value)}>{Object.entries(currentBizType==="prodotti"?CLUSTERS_PRODOTTI:CLUSTERS_SERVIZI).map(([key,cl])=>(<option key={key} value={key}>{cl.icon} {cl.label}</option>))}</select></FormField><FormField label="Link Google Reviews" hint="Aggiunto ai messaggi di recensione"><input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." /></FormField></Card>
-      <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>Timing follow-up</h3><p style={{fontSize:"12px",color:T.textD,marginBottom:"16px"}}>Quando inviare ogni fase dopo l'appuntamento.</p><div style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"14px"}}><div style={{flex:1}}><div style={{fontSize:"14px",fontWeight:500}}>Ringraziamento</div><div style={{fontSize:"12px",color:T.textMu}}>Ore dopo l'appuntamento</div></div><div style={{display:"flex",alignItems:"center",gap:"8px"}}><input type="number" min="0" max="48" value={timings.thankyouHours||2} onChange={e=>setTimings(p=>({...p,thankyouHours:parseInt(e.target.value)||0}))} style={{width:"70px",textAlign:"center"}} /><span style={{fontSize:"13px",color:T.textD}}>ore</span></div></div>{[{key:"check",label:"Controllo",note:"7 giorni"},{key:"review",label:"Recensione",note:"21 giorni"},{key:"reactivation",label:"Riattivazione",note:"60 giorni"}].map(({key,label,note})=>(<div key={key} style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"14px"}}><div style={{flex:1}}><div style={{fontSize:"14px",fontWeight:500}}>{label}</div><div style={{fontSize:"12px",color:T.textMu}}>Di solito {note}</div></div><div style={{display:"flex",alignItems:"center",gap:"8px"}}><input type="number" min="0" max="365" value={timings[key]} onChange={e=>setTimings(p=>({...p,[key]:parseInt(e.target.value)||0}))} style={{width:"70px",textAlign:"center"}} /><span style={{fontSize:"13px",color:T.textD}}>giorni</span></div></div>))}</Card>
+      <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>Timing follow-up</h3><p style={{fontSize:"12px",color:T.textD,marginBottom:"16px"}}>Quando inviare ogni fase dopo l'appuntamento.</p>
+        {[
+          {key:"thankyouHours",label:"Ringraziamento",unit:"ore",step:1,min:0,max:48,def:2},
+          {key:"check",label:"Controllo",unit:"giorni",step:1,min:0,max:365,def:7},
+          {key:"review",label:"Recensione",unit:"giorni",step:5,min:0,max:365,def:21},
+          {key:"reactivation",label:"Riattivazione",unit:"giorni",step:10,min:0,max:365,def:60},
+        ].map(({key,label,unit,step,min,max,def})=>{
+          const val=timings[key]??def;
+          const btnStyle={width:"36px",height:"36px",border:`1px solid ${T.border}`,borderRadius:T.r.m,background:T.bg3,color:T.text,fontSize:"18px",cursor:"pointer",fontFamily:"inherit",display:"flex",alignItems:"center",justifyContent:"center"};
+          return (<div key={key} style={{display:"flex",alignItems:"center",gap:"14px",marginBottom:"14px"}}>
+            <div style={{flex:1}}><div style={{fontSize:"14px",fontWeight:500}}>{label}</div><div style={{fontSize:"12px",color:T.textMu}}>step: {step} {unit}</div></div>
+            <div style={{display:"flex",alignItems:"center",gap:"8px"}}>
+              <button style={btnStyle} onClick={()=>setTimings(p=>({...p,[key]:Math.max(min,val-step)}))}>−</button>
+              <span style={{minWidth:"42px",textAlign:"center",fontSize:"15px",fontWeight:600}}>{val}</span>
+              <button style={btnStyle} onClick={()=>setTimings(p=>({...p,[key]:Math.min(max,val+step)}))}>+</button>
+              <span style={{fontSize:"13px",color:T.textD,minWidth:"32px"}}>{unit}</span>
+            </div>
+          </div>);
+        })}
+      </Card>
       <Card style={{marginBottom:"14px"}}>
         <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Notifiche</h3>
         <FormField label="Codice tester" hint="Identifica il tuo telefono per i reminder. Scrivi: erik, moira o luca."><input value={testerCode} onChange={e=>{const v=e.target.value.trim().toLowerCase();setTesterCode(v);if(v)localStorage.setItem('sliss-tester',v);}} placeholder="es. erik" /></FormField>
