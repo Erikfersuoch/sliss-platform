@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import T from "../theme.js";
 import { PHASES, STATUSES } from "../config.js";
 import { fmtDate, daysAgo, daysUntil, today, isPhaseOff } from "../helpers.js";
@@ -10,7 +10,9 @@ const FollowUp = ({setView,initialFilter,initialFuId}) => {
   const {data,update,deleteRecord}=useSliss();
   const [filter,setFilter]=useState(initialFilter||"today");
   const [search,setSearch]=useState("");
-  const [sel,setSel]=useState(null);
+  // Apertura diretta del follow-up quando si arriva dall'Agenda (initialFuId): init al mount, niente effect
+  const _initFu=initialFuId?(data?.followUps||[]).find(f=>f.id===initialFuId):null;
+  const [sel,setSel]=useState(_initFu||null);
   const [editMsg,setEditMsg]=useState(null);
   const td=today();
   const allFU=data?.followUps||[];
@@ -23,7 +25,6 @@ const FollowUp = ({setView,initialFilter,initialFuId}) => {
   const markAllSent=()=>{if(!pendingToday.length)return;if(!window.confirm(`Segna tutti i ${pendingToday.length} follow-up come inviati?`))return;pendingToday.forEach(fu=>update("followUps",fu.id,{status:"sent",sentDate:today()}));};
   const deleteFU=fu=>{if(!window.confirm("Eliminare questo follow-up?"))return;deleteRecord("followUps",fu.id);if(sel?.id===fu.id)setSel(null);};
   const allDone=filter==="today"&&pendingToday.length===0&&allFU.some(f=>f.sentDate===td);
-  useEffect(()=>{if(initialFuId){const fu=(data?.followUps||[]).find(f=>f.id===initialFuId);if(fu)setSel(fu);}},[initialFuId]);
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"18px"}}>
