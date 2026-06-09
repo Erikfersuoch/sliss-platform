@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anteprima — Onboarding piattaforma + sistema "i"</title>
+<style>
+  :root{
+    --bg:#F8F9FA; --bg2:#FFFFFF; --bg3:#F1F3F5; --bg4:#E9ECEF;
+    --border:#DEE2E6; --text:#111318; --textM:#495057; --textD:#5C636A; --textMu:#6C757D;
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10);
+    --blue:#2563EB; --blueS:rgba(37,99,235,.10);
+    --amber:#D97706; --amberS:rgba(217,119,6,.10);
+    --purple:#7C3AED; --purpleS:rgba(124,58,237,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding:28px 16px 60px}
+  .wrap{max-width:920px;margin:0 auto}
+  header{text-align:center;margin-bottom:26px}
+  header h1{font-size:23px;font-weight:800;letter-spacing:-.02em}
+  header .sub{color:var(--textD);font-size:14px;margin-top:5px}
+  h2.sec{font-size:16px;font-weight:800;margin:30px 0 4px;display:flex;align-items:center;gap:9px}
+  h2.sec .n{width:26px;height:26px;border-radius:8px;background:var(--green);color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .seclead{font-size:13px;color:var(--textD);margin:0 0 16px 35px}
+  .phones{display:flex;gap:16px;flex-wrap:wrap}
+  .phone{flex:1;min-width:240px;background:var(--bg2);border:1px solid var(--border);border-radius:22px;padding:22px 18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+  .phone .emoji{font-size:40px;margin-bottom:12px}
+  .phone h3{font-size:18px;font-weight:700;letter-spacing:-.02em;margin-bottom:8px}
+  .phone p{font-size:13px;color:var(--textM);line-height:1.6}
+  .dots{display:flex;gap:5px;justify-content:center;margin-top:16px}
+  .dots i{width:6px;height:6px;border-radius:3px;background:var(--border)}
+  .dots i.on{width:18px;background:var(--green)}
+  .modchip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:999px;margin:3px}
+  .modchip.live{background:var(--greenS);color:var(--green);border:1px solid var(--green)}
+  .modchip.soon{background:var(--bg3);color:var(--textMu);border:1px dashed var(--border)}
+  .btn{display:inline-block;background:var(--green);color:#fff;font-size:13px;font-weight:600;padding:10px 18px;border-radius:10px;margin-top:14px}
+  .infohint{font-size:12px;color:var(--textD);background:var(--blueS);border-radius:9px;padding:8px 11px;margin-top:14px;display:inline-flex;align-items:center;gap:7px}
+  .i{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;font-size:12px;font-weight:700;font-style:normal;flex-shrink:0}
+  .i.sm{width:16px;height:16px;font-size:11px}
+  /* info system examples */
+  .examples{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.examples{grid-template-columns:1fr}}
+  .ex{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px}
+  .ex .where{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;margin-bottom:10px}
+  .pop{background:var(--text);color:#fff;border-radius:11px;padding:12px 14px;font-size:12.5px;line-height:1.55;position:relative}
+  .pop b{color:#fff}
+  .pop::before{content:"";position:absolute;top:-6px;left:18px;width:12px;height:12px;background:var(--text);transform:rotate(45deg)}
+  .pop .t{font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:6px}
+  .note{margin-top:20px;font-size:12.5px;color:var(--textM);background:var(--bg3);border-radius:10px;padding:12px 14px}
+  .note b{color:var(--text)}
+  .ok{background:var(--greenS);border:1px solid rgba(22,163,74,.4);border-radius:10px;padding:12px 14px;margin-top:22px;font-size:13px}
+  footer{text-align:center;color:var(--textMu);font-size:12px;margin-top:28px}
+  .legrow{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--textM);margin-top:5px}
+  .sq{width:16px;height:16px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:9px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Anteprima — Onboarding di piattaforma + sistema "i"</h1>
+    <div class="sub">Come cambia prima di toccare il codice · 09/06/2026</div>
+  </header>
+
+  <!-- SEZIONE 1: ONBOARDING -->
+  <h2 class="sec"><span class="n">1</span> Onboarding ripensato — la piattaforma, non solo i follow-up</h2>
+  <p class="seclead">Setup invariato (nome · servizi/prodotti · settore). Cambiano l'inizio e la fine: si racconta Sliss come piattaforma che cresce per moduli, e si spiega cos'è il primo modulo.</p>
+  <div class="phones">
+    <div class="phone">
+      <div class="emoji">👋</div>
+      <h3>Benvenuto in Sliss</h3>
+      <p>Cura i tuoi clienti come meritano e <b>riprenditi il tempo</b>: basta gestirli a mano, uno per uno. Tu pensi al mestiere, Sliss tiene il filo con i clienti.</p>
+      <span class="btn">Inizia →</span>
+      <div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="phone">
+      <div class="emoji">🧩</div>
+      <h3>I moduli di Sliss</h3>
+      <p style="margin-bottom:10px">Oggi è attivo il primo. Gli altri arriveranno.</p>
+      <div>
+        <span class="modchip live">● Follow-Up · attivo</span>
+        <span class="modchip soon">Richieste · presto</span>
+        <span class="modchip soon">Recensioni · presto</span>
+        <span class="modchip soon">Riattivazione · presto</span>
+      </div>
+      <div class="dots"><i></i><i></i><i></i><i class="on"></i><i></i></div>
+    </div>
+    <div class="phone">
+      <div class="emoji">💬</div>
+      <h3>Cos'è il Follow-Up?</h3>
+      <p>Sono i messaggi di cortesia che mandi al cliente <b>dopo</b>: il grazie, un controllo su come va, l'invito a una recensione, un promemoria per tornare. Curano il cliente e lo fanno tornare. <b>Sliss te li ricorda al momento giusto e te li scrive già pronti</b>: oggi controlli e invii con un tap, <b>in futuro li manderà in automatico</b>.</p>
+      <div class="infohint"><span class="i">i</span> Se qualcosa non è chiaro, tocca la "i" ovunque la vedi.</div>
+      <div class="dots"><i></i><i></i><i></i><i></i><i class="on"></i></div>
+    </div>
+  </div>
+
+  <!-- SEZIONE 2: SISTEMA I -->
+  <h2 class="sec"><span class="n">2</span> Sistema "i" contestuale — spiegazioni dove servono</h2>
+  <p class="seclead">Una piccola <span class="i sm">i</span> accanto alle cose che potrebbero non essere chiare. La tocchi → spiegazione breve. Non solo i moduli: ovunque serva. Ecco alcuni esempi.</p>
+  <div class="examples">
+
+    <div class="ex">
+      <div class="where">Follow-Up <span class="i sm">i</span></div>
+      <div class="pop"><div class="t"><span class="i sm">i</span> Cos'è</div>Messaggi di cortesia dopo il servizio/ordine (grazie, controllo, recensione, ritorno). Sliss te li ricorda e li prepara: tu invii con un tap.</div>
+    </div>
+
+    <div class="ex">
+      <div class="where">I quadratini delle fasi <span class="i sm">i</span></div>
+      <div class="pop"><div class="t"><span class="i sm">i</span> Legenda fasi</div>Ogni quadratino è una fase del follow-up.
+        <div class="legrow"><span class="sq" style="background:var(--greenS);color:var(--green)">✓</span> verde = inviato</div>
+        <div class="legrow"><span class="sq" style="background:var(--amberS);color:var(--amber)">●</span> ambra = da inviare</div>
+      </div>
+    </div>
+
+    <div class="ex">
+      <div class="where">Prepara scheda <span class="i sm">i</span></div>
+      <div class="pop"><div class="t"><span class="i sm">i</span> A cosa serve</div>Crea un link da mandare al cliente: lo compila lui (nome, contatto) e la scheda entra da sola nei tuoi clienti. Comodo per la consulenza prima dell'appuntamento.</div>
+    </div>
+
+    <div class="ex">
+      <div class="where">Codice tester <span class="i sm">i</span></div>
+      <div class="pop"><div class="t"><span class="i sm">i</span> Cos'è</div>Identifica il tuo telefono per i reminder. Serve solo in fase di test.</div>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <b>Come funziona sotto:</b> un componentino riutilizzabile <code>&lt;Info&gt;</code> (la "i") + un elenco unico dei testi d'aiuto, così sono coerenti e facili da aggiornare. Additivo: non cambia nessun flusso esistente, i tester continuano a usare l'app come prima. Quando arriveranno nuovi moduli, ognuno avrà le sue "i".
+  </div>
+
+  <div class="ok">
+    <b>Da approvare:</b> ti torna questa impostazione (onboarding piattaforma + moduli futuri + spiegazione Follow-Up + "i" ovunque)? Dimmi anche dove vuoi la "i" della guida-modulo principale: <b>in Home in alto</b> o nel <b>menu "Altro"</b>. Poi parto col codice (additivo, lint+build+prova).
+  </div>
+
+  <footer>Sliss · anteprima interna — mockup statico, non è l'app</footer>
+</div>
+</body>
+</html>

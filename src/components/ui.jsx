@@ -113,3 +113,18 @@ export const PageHeader = ({title,action}) => (
     {action}
   </div>
 );
+
+// "i" contestuale: tocchi → si apre una scheda con la spiegazione. Riusa il Modal.
+export const Info = ({title,body}) => {
+  const [open,setOpen]=useState(false);
+  return (
+    <>
+      <button type="button" onClick={e=>{e.stopPropagation();setOpen(true);}} aria-label={`Informazioni: ${title}`} style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:"18px",height:"18px",minWidth:"18px",borderRadius:"50%",background:T.blueS,color:T.blue,border:"none",cursor:"pointer",fontSize:"12px",fontWeight:700,fontFamily:"inherit",padding:0,flexShrink:0,lineHeight:1}}>i</button>
+      <Modal open={open} onClose={()=>setOpen(false)} title={title}>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",fontSize:"14px",color:T.textM,lineHeight:1.7}}>
+          {(Array.isArray(body)?body:[body]).map((p,i)=><p key={i}>{p}</p>)}
+        </div>
+      </Modal>
+    </>
+  );
+};

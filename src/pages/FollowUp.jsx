@@ -4,7 +4,8 @@ import { PHASES, STATUSES } from "../config.js";
 import { fmtDate, daysAgo, daysUntil, today, isPhaseOff } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Empty, Search, Tabs, Modal, SendButtons } from "../components/ui.jsx";
+import { Badge, Btn, Card, Empty, Search, Tabs, Modal, SendButtons, Info } from "../components/ui.jsx";
+import { HELP } from "../help.js";
 
 const FollowUp = ({setView,initialFilter,initialFuId}) => {
   const {data,update,deleteRecord}=useSliss();
@@ -28,7 +29,7 @@ const FollowUp = ({setView,initialFilter,initialFuId}) => {
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"18px"}}>
-        <h1 style={{fontSize:"22px",fontWeight:700}}>Follow-Up</h1>
+        <div style={{display:"flex",alignItems:"center",gap:"8px"}}><h1 style={{fontSize:"22px",fontWeight:700}}>Follow-Up</h1><Info {...HELP.followup} /></div>
         {pendingToday.length>0&&<Btn v="success" s="sm" onClick={markAllSent}>{"\u{2713}"} Tutti ({pendingToday.length})</Btn>}
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"8px"}}><Tabs tabs={tabs} active={filter} onChange={setFilter} /><Search value={search} onChange={setSearch} placeholder="Cerca cliente..." /></div>

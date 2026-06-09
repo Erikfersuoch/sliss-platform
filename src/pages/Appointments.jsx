@@ -4,7 +4,8 @@ import { PHASES, CLUSTERS_SERVIZI } from "../config.js";
 import { fmtDate, daysUntil, addDays, uid, today, isPhaseOff } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Empty, Modal, FormField, PageHeader } from "../components/ui.jsx";
+import { Badge, Btn, Card, Empty, Modal, FormField, PageHeader, Info } from "../components/ui.jsx";
+import { HELP } from "../help.js";
 import { buildFollowUps } from "../followups.js";
 import MonthCalendar from "../components/MonthCalendar.jsx";
 
@@ -30,7 +31,7 @@ const Appointments = ({setView}) => {
   const gcalLink=(appt,clientName)=>{const start=String(appt.date||"").replace(/-/g,"");const end=addDays(appt.date,1).replace(/-/g,"");const title=encodeURIComponent(`${appt.serviceType||"Appuntamento"} · ${clientName||"Cliente"}`);const details=encodeURIComponent((appt.notes?appt.notes+"\n\n":"")+"Creato con Sliss");return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}`;};
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
-      <PageHeader title="Agenda" action={<div style={{display:"flex",gap:"6px"}}><Btn v="secondary" s="sm" onClick={()=>{setShowSlot(true);setSlotDone(false);setSlotLink("");setSlotForm({date:today(),phone:""});}}>Prepara scheda</Btn><Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn></div>} />
+      <PageHeader title="Agenda" action={<div style={{display:"flex",gap:"6px",alignItems:"center"}}><Info {...HELP.preparaScheda} /><Btn v="secondary" s="sm" onClick={()=>{setShowSlot(true);setSlotDone(false);setSlotLink("");setSlotForm({date:today(),phone:""});}}>Prepara scheda</Btn><Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn></div>} />
       <div style={{marginBottom:"10px"}}><p style={{fontSize:"13px",color:T.textD}}>{"Aggiungi un appuntamento \u{2192} i follow-up si generano in automatico"}</p></div>
       <div style={{display:"flex",gap:"6px",marginBottom:"14px"}}>{[{id:"month",label:"Calendario"},{id:"list",label:"Lista"}].map(t=>(<button key={t.id} onClick={()=>setCalView(t.id)} style={{flex:1,padding:"9px 0",borderRadius:T.r.m,border:`1px solid ${calView===t.id?T.green:T.border}`,background:calView===t.id?T.greenS:T.bg2,color:calView===t.id?T.green:T.textD,fontWeight:600,fontSize:"13px",cursor:"pointer",fontFamily:"inherit"}}>{t.label}</button>))}</div>
       {calView==="month"&&<MonthCalendar appointments={data?.appointments||[]} clients={data?.clients||[]} onPrepareScheda={date=>{setSlotForm({date,phone:""});setSlotDone(false);setSlotLink("");setShowSlot(true);}} />}

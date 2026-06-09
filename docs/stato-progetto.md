@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.3 · 2026-06-09 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.4 · 2026-06-09 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 09/06/2026 (v6.4) — audit /impeccable + auto-evidenza "primo utente" (DEV+CORE):** fatto un **audit critique** con `/impeccable` (28/40 "Good", snapshot in `.impeccable/critique/`). Domanda guida di Erik: *"un nuovo utente lo usa da solo?"*. Interventi mirati: (1) **🆕 Sistema "i" contestuale** — componente riusabile `<Info>` (ui.jsx, riusa il Modal) + testi centralizzati `src/help.js`; "i" piazzate in Home (guida modulo: cos'è Sliss + flusso + legenda fasi + moduli futuri), Follow-Up (cos'è), Agenda (Prepara scheda). Additivo, non tocca i flussi → safe in validazione. (2) **Onboarding ripensato**: benvenuto sulla **missione** (curare i clienti + riprendersi il tempo, non più "senza perdere tempo"); nuovo step **"I moduli di Sliss"** (Follow-Up attivo + Richieste/Recensioni/Riattivazione "presto"); step **"Il tuo primo modulo: Follow-Up"** che **spiega cos'è un follow-up** (la gente non lo sa) + "in futuro sarà automatico" + nota "tocca la i"; progress dots a 6/7. (3) **Tolto il bordo-striscia** su "Schede in attesa" (detector ora pulito). **Emoji: lasciate** (scelta di Erik, basta sobrietà). **Upgrade estetico "molto più figo" = lavoro futuro dedicato** (non ora). Lint 0, build OK, provato live da Erik. Anteprima in `docs/test-m1/anteprima-onboarding-info.html`.
 
 **Sessione 09/06/2026 (v6.3) — lavoro da altro PC + scheda cliente + tracking d'uso + gate M1 (DEV+CORE):** (1) **Integrato e deployato il lavoro sviluppato da Erik da un altro PC** (branch `claude/blissful-turing-i32b80`, fast-forward su main): elimina follow-up pending, tap riquadrini Agenda → apre follow-up, "Prepara scheda" dal calendario sul giorno selezionato, consulenza auto + **stepper** timing follow-up. ⚠️ Conteneva un **bug di lint** (`set-state-in-effect` in FollowUp per `initialFuId`) sfuggito alla build → corretto con init al mount ([[feedback-bug-lessons]]: il codice da altro PC va sempre lintato dopo il merge). (2) **Scheda Cliente ripulita**: rimossa la lista follow-up ridondante (resta il riepilogo "Follow-up: stato"). (3) **🆕 Tracking minimo d'uso (Option B)** per il gate M1: `api/track.js` (ping all'apertura → set `usedays:<tester>` + snapshot conteggi `usage:<tester>`; GET per leggere), `src/track.js`, ping silenzioso in App.jsx. **Endpoint testato live.** Solo conteggi, zero dati personali. (4) **Gate M1 ufficiale** (criteri go/no-go + cosa fare se GO/NO-GO) scritto in `decisioni.md` (09/06). (5) Notifica novità 09/06 a **Luca, Moira ed Erik** (Erik via `ceoerik`). Branch social (`claude/social-media-update-content-I038T`) = **ignorato** (creato per errore, base vecchia). Lint 0, build OK.
 

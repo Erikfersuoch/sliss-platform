@@ -4,7 +4,8 @@ import { PHASES, CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
 import { daysAgo, uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Modal, FormField, SendButtons } from "../components/ui.jsx";
+import { Badge, Btn, Card, Modal, FormField, SendButtons, Info } from "../components/ui.jsx";
+import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 
 const Home = ({setView}) => {
@@ -34,6 +35,9 @@ const Home = ({setView}) => {
   };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
+      <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"-4px"}}>
+        <span style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:T.textD}}>Come funziona <Info {...HELP.moduleGuide} /></span>
+      </div>
       <div style={{marginBottom:"16px"}}>
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         <h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()},<br/><span style={{color:T.green}}>{biz}</span> {"\u{1F44B}"}</h1>

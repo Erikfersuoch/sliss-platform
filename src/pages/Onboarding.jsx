@@ -46,7 +46,7 @@ const Onboarding = ({onComplete}) => {
       case 0: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F44B}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Benvenuto in Sliss</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"24px"}}>Lo strumento operativo per professionisti che vogliono curare i propri clienti senza perdere tempo.</p>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"24px"}}>Cura i tuoi clienti come meritano e riprenditi il tempo: basta gestirli a mano, uno per uno. Tu pensi al mestiere, Sliss tiene il filo con i clienti.</p>
         <Btn onClick={()=>setStep(1)} style={{width:"100%",justifyContent:"center"}}>{"Inizia \u{2192}"}</Btn>
       </>;
       case 1: return <>
@@ -91,10 +91,20 @@ const Onboarding = ({onComplete}) => {
         </>}
       </>;
       case 4: return <>
-        <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F680}"}</div>
-        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Sei pronto</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>{bizType==="prodotti"?"Inizia aggiungendo il tuo primo cliente, poi inserisci un ordine.":"Inizia aggiungendo il tuo primo cliente, poi inserisci un appuntamento."} Sliss genererà i follow-up automaticamente.</p>
-        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"24px"}}>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F9E9}"}</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>I moduli di Sliss</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"18px"}}>Sliss segue il cliente in più fasi del rapporto. Oggi è attivo il primo modulo; gli altri arriveranno.</p>
+        <div style={{display:"flex",flexWrap:"wrap",gap:"8px",justifyContent:"center",marginBottom:"24px"}}>
+          <span style={{fontSize:"13px",fontWeight:600,padding:"7px 13px",borderRadius:"999px",background:T.greenS,color:T.green,border:`1px solid ${T.green}`}}>{"\u{25CF}"} Follow-Up · attivo</span>
+          {["Richieste","Recensioni","Riattivazione"].map(m=><span key={m} style={{fontSize:"13px",fontWeight:600,padding:"7px 13px",borderRadius:"999px",background:T.bg3,color:T.textMu,border:`1px dashed ${T.border}`}}>{m} · presto</span>)}
+        </div>
+        <Btn onClick={()=>setStep(5)} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
+      </>;
+      case 5: return <>
+        <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F4AC}"}</div>
+        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Il tuo primo modulo: Follow-Up</h1>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"16px"}}>I follow-up sono i messaggi di cortesia che mandi al cliente <b>dopo</b>: il grazie, un controllo, l'invito a una recensione, un promemoria per tornare. Sliss te li ricorda e te li scrive già pronti: oggi li invii con un tap, in futuro li manderà in automatico.</p>
+        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"18px"}}>
           {(bizType==="prodotti"?["Aggiungi un cliente","Inserisci un ordine","Sliss prepara i messaggi per te"]:["Aggiungi un cliente","Inserisci un appuntamento","Sliss prepara i messaggi per te"]).map((st,i)=>(
             <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",background:T.bg2,borderRadius:T.r.l,border:`1px solid ${T.border}`,textAlign:"left"}}>
               <div style={{width:"26px",height:"26px",borderRadius:"50%",background:T.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"12px",fontWeight:700,color:"#fff",flexShrink:0}}>{i+1}</div>
@@ -102,9 +112,10 @@ const Onboarding = ({onComplete}) => {
             </div>
           ))}
         </div>
-        <Btn onClick={needsPWAStep?()=>{saveProgress();setStep(5);}:doComplete} style={{width:"100%",justifyContent:"center"}}>{needsPWAStep?"Avanti \u{2192}":"Apri Sliss \u{2192}"}</Btn>
+        <p style={{fontSize:"13px",color:T.textD,marginBottom:"20px",display:"flex",alignItems:"center",gap:"7px",justifyContent:"center"}}><span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:"18px",height:"18px",borderRadius:"50%",background:T.blueS,color:T.blue,fontSize:"12px",fontWeight:700,flexShrink:0}}>i</span> Se qualcosa non è chiaro, tocca la "i" nell'app.</p>
+        <Btn onClick={needsPWAStep?()=>{saveProgress();setStep(6);}:doComplete} style={{width:"100%",justifyContent:"center"}}>{needsPWAStep?"Avanti \u{2192}":"Apri Sliss \u{2192}"}</Btn>
       </>;
-      case 5: return <>
+      case 6: return <>
         {needsSafariSwitch ? <>
           <div style={{fontSize:"52px",marginBottom:"20px"}}>{"🌐"}</div>
           <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Apri Sliss con Safari</h1>
@@ -146,7 +157,7 @@ const Onboarding = ({onComplete}) => {
         <div style={{marginBottom:"20px"}}><SlissLogo size={32} /></div>
         {renderStep()}
         <div style={{display:"flex",gap:"6px",justifyContent:"center",marginTop:"28px"}}>
-          {Array.from({length:needsPWAStep?6:5},(_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
+          {Array.from({length:needsPWAStep?7:6},(_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
         </div>
       </div>
     </div>
