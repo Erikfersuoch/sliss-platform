@@ -3,15 +3,17 @@ import T from "../theme.js";
 import { CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
 import { fmtDate, daysAgo, addDays, uid, today } from "../helpers.js";
 import { useSliss } from "../context.js";
-import { Badge, Btn, Card, Empty, Search, Tabs, Modal, FormField, PageHeader } from "../components/ui.jsx";
+import { Badge, Btn, Card, Empty, Search, Tabs, Modal, FormField, PageHeader, Info } from "../components/ui.jsx";
+import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
+import InviteClient from "../components/InviteClient.jsx";
 
 const Clients = ({initialClientId}) => {
   const {data,addRecord,update,deleteRecord}=useSliss();
   // Apertura diretta della scheda quando si arriva dalla Home (?clientId): init al mount, niente effect
   const _initC=initialClientId?(data?.clients||[]).find(x=>x.id===initialClientId):null;
   const [search,setSearch]=useState("");const [sf,setSf]=useState("all");const [sel,setSel]=useState(_initC||null);const [showNew,setShowNew]=useState(false);const [editMode,setEditMode]=useState(false);
-  const [form,setForm]=useState({name:"",phone:"",email:"",channel:"WhatsApp",notes:""});const [editForm,setEditForm]=useState(_initC?{name:_initC.name,phone:_initC.phone,email:_initC.email,channel:_initC.channel,notes:_initC.notes||"",status:_initC.status}:null);
+  const [form,setForm]=useState({name:"",phone:"",email:"",channel:"WhatsApp",notes:""});const [editForm,setEditForm]=useState(_initC?{name:_initC.name,phone:_initC.phone,email:_initC.email,channel:_initC.channel,notes:_initC.notes||"",status:_initC.status}:null);const [showInvite,setShowInvite]=useState(false);
   const bizType=data?.settings?.bizType||"servizi";const clientCluster=data?.settings?.cluster||"altro_s";const clusterSvcTypes=(CLUSTERS_SERVIZI[clientCluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const [newApptMode,setNewApptMode]=useState(false);const [newApptDone,setNewApptDone]=useState(false);const [newApptForm,setNewApptForm]=useState({date:today(),serviceType:"",notes:"",product:""});
   const handleNewAppt=()=>{if(!sel||!newApptForm.date)return;if(bizType==="servizi"){const apptId=uid();const svcType=newApptForm.serviceType||clusterSvcTypes[0]||"Sessione";const timings=data.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId:sel.id,date:newApptForm.date,serviceType:svcType,notes:newApptForm.notes,followUpTriggered:true,created:today()});buildFollowUps(apptId,sel.id,sel.name,newApptForm.date,svcType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}else{const orderId=uid();const deliveryDate=addDays(newApptForm.date,7);addRecord("orders",{id:orderId,clientId:sel.id,product:newApptForm.product||"Ordine",orderDate:newApptForm.date,deliveryDate,notes:newApptForm.notes,status:"pending",created:today()});buildProductFollowUps(orderId,sel.id,sel.name,newApptForm.date,deliveryDate,data?.templates).forEach(fu=>addRecord("followUps",fu));}setNewApptDone(true);setTimeout(()=>{setNewApptMode(false);setNewApptDone(false);setNewApptForm({date:today(),serviceType:"",notes:"",product:""});},1500);};
@@ -26,7 +28,8 @@ const Clients = ({initialClientId}) => {
   const nextStatus=cur=>{const idx=statusOrder.indexOf(cur);return statusOrder[(idx+1)%statusOrder.length];};
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
-      <PageHeader title="Clienti" action={<Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn>} />
+      <PageHeader title="Clienti" action={<div style={{display:"flex",gap:"6px",alignItems:"center"}}><Info {...HELP.invitaCliente} /><Btn v="secondary" s="sm" onClick={()=>setShowInvite(true)}>{"\u{1F517} Invita cliente"}</Btn><Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn></div>} />
+      {showInvite && <InviteClient onClose={()=>setShowInvite(false)} />}
       <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"16px"}}><Tabs tabs={tabs} active={sf} onChange={setSf} /><Search value={search} onChange={setSearch} placeholder="Cerca nome o email..." /></div>
       {!filtered.length ? <Empty icon={"\u{1F465}"} title="Nessun cliente" desc="Aggiungi il tuo primo cliente per iniziare." action={<Btn onClick={()=>setShowNew(true)}>+ Aggiungi</Btn>} /> : <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>{filtered.map((cl,i)=>{const st=CLIENT_ST[cl.status]||{label:cl.status,color:T.textD,bg:T.bg3};return (<Card key={cl.id} hov onClick={()=>openClient(cl)} style={{padding:"13px 16px",animation:`fadeIn .3s ease ${i*.03}s both`}}><div style={{display:"flex",alignItems:"center",gap:"12px"}}><div style={{width:"40px",height:"40px",borderRadius:"50%",background:T.bg3,border:`1px solid ${T.border}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"16px",fontWeight:700,color:T.textM,flexShrink:0}}>{cl.name.charAt(0).toUpperCase()}</div><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"15px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"12px",color:T.textD,marginTop:"2px"}}>{cl.channel} · {daysAgo(cl.lastVisit)}</div></div><div onClick={e=>{e.stopPropagation();update("clients",cl.id,{status:nextStatus(cl.status)});}} style={{cursor:"pointer",padding:"4px"}}><Badge {...st} s /></div></div></Card>);})}</div>}
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nuovo cliente">

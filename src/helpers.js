@@ -20,3 +20,11 @@ export const sendHref = (message, clientPhone, clientEmail, channel) => {
 };
 // Apre il link d'invio in modo affidabile anche per schemi custom (whatsapp://) — come un click su <a target=_blank>
 export const openSend = href => { if(!href) return; const a=document.createElement("a"); a.href=href; a.target="_blank"; a.rel="noreferrer"; document.body.appendChild(a); a.click(); a.remove(); };
+// Messaggio WhatsApp per "Invita cliente": testo caldo, link in fondo (Opzione 1). Col numero apre la sua chat;
+// senza numero ripiega sul selettore contatti. Numero locale (10 cifre) -> prefisso 39.
+export const inviteWaLink = (phone, link, dateStr) => {
+  const digits=String(phone||"").replace(/\D/g,""); const p=digits.length===10?`39${digits}`:digits;
+  const quando=dateStr?` del ${fmtDate(dateStr)}`:"";
+  const text=encodeURIComponent(`Ciao! \u{1F60A} Per la nostra consulenza${quando} ti ho preparato la scheda: compila i tuoi dati qui, è un minuto \u{1F447}\n${link}\nA presto!`);
+  return p?`whatsapp://send?phone=${p}&text=${text}`:`https://wa.me/?text=${text}`;
+};

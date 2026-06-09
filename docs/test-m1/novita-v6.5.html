@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sliss — Novità</title>
+<style>
+  :root{
+    --bg:#F8F9FA; --bg2:#FFFFFF; --bg3:#F1F3F5; --bg4:#E9ECEF;
+    --border:#DEE2E6; --borderH:#ADB5BD;
+    --text:#111318; --textM:#495057; --textD:#5C636A; --textMu:#6C757D;
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,0.10);
+    --amber:#D97706; --amberS:rgba(217,119,6,0.10);
+    --r-m:10px; --r-l:14px; --r-xl:20px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg3); color:var(--text); line-height:1.5;
+    padding:34px 18px 70px; -webkit-font-smoothing:antialiased;
+  }
+  .sheet{max-width:440px;margin:0 auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--r-xl);
+    padding:34px 24px;box-shadow:0 10px 40px rgba(16,19,24,.08)}
+  .top{text-align:center;margin-bottom:26px}
+  .emoji{font-size:52px;margin-bottom:12px}
+  h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:9px}
+  .lead{font-size:15px;color:var(--textM);line-height:1.6}
+  .ver{display:inline-block;margin-top:12px;font-size:11px;font-weight:700;color:var(--green);background:var(--greenS);padding:3px 11px;border-radius:999px;letter-spacing:.04em}
+
+  .card{display:flex;gap:14px;align-items:flex-start;background:var(--bg2);border:1px solid var(--border);
+    border-radius:var(--r-l);padding:16px;margin-bottom:10px}
+  .card .ic{font-size:24px;line-height:1;flex-shrink:0}
+  .card .ti{font-size:15px;font-weight:700}
+  .card .de{font-size:13.5px;color:var(--textD);margin-top:3px;line-height:1.5}
+
+  .ba{margin:6px 0 16px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-l);padding:15px 16px}
+  .ba .lbl{font-size:11px;font-weight:700;color:var(--textMu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:9px}
+  .row{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+  .row:last-child{margin-bottom:0}
+  .pill{font-size:12px;font-weight:600;border-radius:var(--r-m);padding:7px 11px;white-space:nowrap;border:1px solid transparent}
+  .pill.pri{background:var(--green);color:#fff}
+  .pill.sec{background:var(--bg2);color:var(--textM);border-color:var(--borderH)}
+  .ar{color:var(--borderH);font-size:15px}
+  .ba .note{font-size:12px;color:var(--textMu);margin-top:4px;line-height:1.5}
+  .strike{opacity:.55;text-decoration:line-through}
+
+  .val{margin-top:18px;background:var(--greenS);border:1px solid rgba(22,163,74,.22);border-radius:var(--r-l);padding:18px}
+  .val .vt{font-size:15px;font-weight:700;color:var(--greenH);margin-bottom:7px}
+  .val p{font-size:13.5px;color:var(--textM);line-height:1.65}
+  .cta{margin-top:22px;width:100%;background:var(--green);color:#fff;border:none;border-radius:var(--r-m);
+    font-size:16px;font-weight:600;padding:15px;text-align:center}
+  .foot{text-align:center;font-size:12px;color:var(--textMu);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="sheet">
+  <div class="top">
+    <div class="emoji">🎉</div>
+    <h1>Ci sono novità</h1>
+    <p class="lead">Nate dal tuo feedback. Ecco cosa cambia 👇</p>
+    <span class="ver">aggiornamento di giugno</span>
+  </div>
+
+  <div class="card">
+    <div class="ic">🔗</div>
+    <div><div class="ti">"Invita cliente" — più chiaro</div>
+      <div class="de">Per far entrare un cliente nuovo col link ora c'è un tasto dedicato “Invita cliente”, sia in Agenda sia in Clienti. Niente più dubbio su quale tasto premere.</div></div>
+  </div>
+
+  <!-- before / after dei tasti -->
+  <div class="ba">
+    <div class="lbl">Prima → Adesso</div>
+    <div class="row">
+      <span class="pill sec strike">Prepara scheda</span>
+      <span class="pill pri strike">+ Nuovo</span>
+      <span class="note" style="margin:0 0 0 4px">due tasti gemelli, confusi</span>
+    </div>
+    <div class="row">
+      <span class="pill pri">+ Nuovo appuntamento</span>
+      <span class="ar">·</span>
+      <span class="pill sec">🔗 Invita cliente</span>
+    </div>
+    <div class="note">Uno per chi è già cliente, uno per chi è nuovo. Si capisce a colpo d'occhio.</div>
+  </div>
+
+  <div class="card">
+    <div class="ic">💬</div>
+    <div><div class="ti">Messaggio più curato</div>
+      <div class="de">Il link che mandi al cliente arriva dentro un messaggio caldo e ordinato, non più come un link spoglio.</div></div>
+  </div>
+
+  <div class="val">
+    <div class="vt">⏳ Ora tocca a te</div>
+    <p>Con questo workflow più chiaro è iniziato il <b>periodo di prova vero</b>. Per capire insieme se Sliss ti serve davvero ho bisogno che lo usi con <b>costanza</b> in questi giorni: aggiungi i clienti, manda i follow-up, fallo entrare nel tuo lavoro di tutti i giorni. Il tuo uso reale è quello che conta di più.</p>
+  </div>
+
+  <div class="cta">Ci sono, parto</div>
+  <div class="foot">Sliss · liscio come deve essere</div>
+</div>
+</body>
+</html>

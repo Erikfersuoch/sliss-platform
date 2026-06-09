@@ -76,7 +76,7 @@ export default function MonthCalendar({ appointments, clients, onPrepareScheda }
                   <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: "13px", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{nameOf(a.clientId)}</div><div style={{ fontSize: "11px", color: T.textD }}>{a.serviceType || "Appuntamento"}</div></div>
                 </div>
               ))}</div>}
-          {onPrepareScheda && <Btn s="sm" onClick={() => onPrepareScheda(selDay)} style={{ width: "100%", justifyContent: "center", marginBottom: "8px" }}>Prepara scheda</Btn>}
+          {onPrepareScheda && <Btn s="sm" onClick={() => onPrepareScheda(selDay)} style={{ width: "100%", justifyContent: "center", marginBottom: "8px" }}>{"\u{1F517} Invita cliente"}</Btn>}
           <Btn v="secondary" s="sm" onClick={() => openGoogleDay(selDay)} style={{ width: "100%", justifyContent: "center" }}>{"\u{1F4C5}"} Apri su Google Calendar</Btn>
         </div>
       )}

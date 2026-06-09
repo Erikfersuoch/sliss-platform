@@ -19,9 +19,9 @@ export const HELP = {
     title: "Le fasi del follow-up",
     body: ["Ogni quadratino \u{e8} una fase. Verde = inviato, ambra = da inviare. L'icona indica il tipo: ringraziamento, controllo, recensione, riattivazione\u{2026}"],
   },
-  preparaScheda: {
-    title: "Prepara scheda",
-    body: ["Crea un link da mandare al cliente: lo compila lui (nome, contatto) e la scheda entra da sola tra i tuoi clienti. Comodo per la consulenza prima dell'appuntamento."],
+  invitaCliente: {
+    title: "Invita cliente",
+    body: ["Gli mandi un link: lo compila lui (nome, contatto) ed entra da solo tra i tuoi clienti. Comodo per la consulenza prima dell'appuntamento \u{2014} l'appuntamento vero lo aggiungi dopo, dalla sua scheda."],
   },
   testerCode: {
     title: "Codice tester",

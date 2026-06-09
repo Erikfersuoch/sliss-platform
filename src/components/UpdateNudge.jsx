@@ -2,11 +2,10 @@ import T from "../theme.js";
 
 // Schermata mostrata quando il tester apre la notifica "ci sono novità" (?goto=novita).
 // Changelog leggibile delle ultime modifiche nate dal feedback dei tester.
+// AGGIORNARE A OGNI RELEASE: lascia solo le novità dell'ultimo aggiornamento.
 const CHANGES = [
-  { emoji: "\u{1F5D1}\u{FE0F}", title: "Elimina follow-up", desc: "Puoi togliere un follow-up che non ti serve, direttamente dalla lista." },
-  { emoji: "\u{1F4C5}", title: "Prepara scheda dal calendario", desc: "Per chi usa gli appuntamenti: dal calendario, sul giorno scelto, prepari subito la scheda cliente." },
-  { emoji: "\u{1F446}", title: "Apri il follow-up dall'Agenda", desc: "Tocca i quadratini delle fasi su un appuntamento e si apre il follow-up." },
-  { emoji: "\u{1F9F9}", title: "Scheda cliente più pulita", desc: "Tolto l'elenco follow-up ripetuto nella scheda: lo trovi nella pagina Follow-Up." },
+  { emoji: "\u{1F517}", title: "\"Invita cliente\" — più chiaro", desc: "Per far entrare un cliente nuovo col link ora c'è un tasto dedicato \u{201C}Invita cliente\u{201D}, sia in Agenda sia in Clienti. Niente più dubbio su quale tasto premere." },
+  { emoji: "\u{1F4AC}", title: "Messaggio più curato", desc: "Il link che mandi al cliente arriva dentro un messaggio caldo e ordinato, non più come un link spoglio." },
 ];
 
 export default function UpdateNudge({ onClose }) {
@@ -29,11 +28,16 @@ export default function UpdateNudge({ onClose }) {
             </div>
           ))}
         </div>
+        {/* Blocco periodo di convalida — RIMUOVERE dopo il gate del 21/06 */}
+        <div style={{marginTop:"18px",background:T.greenS,border:`1px solid ${T.green}33`,borderRadius:T.r.l,padding:"18px"}}>
+          <div style={{fontSize:"15px",fontWeight:700,color:T.greenH,marginBottom:"7px"}}>{"\u{23F3} Ora tocca a te"}</div>
+          <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.65}}>Con questo workflow più chiaro è iniziato il periodo di prova vero. Per capire insieme se Sliss ti serve davvero ho bisogno che lo usi con costanza in questi giorni: aggiungi i clienti, manda i follow-up, fallo entrare nel tuo lavoro di tutti i giorni. Il tuo uso reale è quello che conta di più.</p>
+        </div>
         <button
           onClick={onClose}
-          style={{marginTop:"26px",width:"100%",background:T.green,border:"none",color:"#fff",borderRadius:T.r.m,fontSize:"16px",fontWeight:600,cursor:"pointer",fontFamily:"inherit",padding:"15px 24px",minHeight:"44px"}}
+          style={{marginTop:"22px",width:"100%",background:T.green,border:"none",color:"#fff",borderRadius:T.r.m,fontSize:"16px",fontWeight:600,cursor:"pointer",fontFamily:"inherit",padding:"15px 24px",minHeight:"44px"}}
         >
-          Inizia a usarle
+          Ci sono, parto
         </button>
       </div>
     </div>

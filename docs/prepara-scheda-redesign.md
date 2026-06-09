@@ -1,5 +1,9 @@
 # Brief sessione — Redesign "Prepara scheda"
 
+> ✅ **COMPLETATO 09/06/2026 (v6.5).** Esito: rinominato **"Invita cliente"** (Agenda box + Clienti tasto/"i"), bivio sciolto, messaggio link reso caldo, logica invariata. Scelto lo scope "chiarire, non spostare" (rischio basso in validazione). Dettagli in `docs/decisioni.md` + `docs/stato-progetto.md` (sessione v6.5). Residui post-gate: spostare sotto Clienti (Opz. B) + link corto (Opz. 2). Anteprima: `docs/test-m1/prepara-scheda-anteprima.html`.
+>
+> _Brief storico qui sotto (com'era prima dell'intervento)._
+>
 > Aperto 09/06/2026 come handoff per la prossima sessione. Ruolo: DEV (+ CORE per le scelte UX).
 > SYNC: la versione/stato vive in `docs/stato-progetto.md`.
 

@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.4 · 2026-06-09 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.5 · 2026-06-09 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 09/06/2026 (v6.5) — redesign "Prepara scheda" → "Invita cliente" (DEV+CORE):** chiuso il residuo parcheggiato (brief `docs/prepara-scheda-redesign.md`). Problema: in Agenda due tasti gemelli ("Prepara scheda" / "+ Nuovo") confondevano il nuovo utente (feedback Moira + audit P1). **Metodo: anteprima prima/dopo approvata da Erik** (`docs/test-m1/prepara-scheda-anteprima.html`, colori reali) → poi codice. **Fatto:** (1) rinominato **"Invita cliente"**, stesso nome in **Agenda** (box descrittivo con mini-spiegazione) e **Clienti** (tasto + "i" `HELP.invitaCliente`); entrambi aprono la stessa generazione link → nuovo componente condiviso `components/InviteClient.jsx` (montato on-open = init al mount, niente setState-in-effect). (2) Agenda con **un solo primario** "+ Nuovo appuntamento" → sciolto il bivio. (3) Messaggio WhatsApp del link reso **caldo** (Opzione 1, helper `inviteWaLink` in helpers.js, link in fondo). **Logica invariata** (cliente/appuntamento separati). Scelto lo scope a rischio basso (non spostare, non rompere l'abitudine di Moira in validazione); **Opzione B** (spostare sotto Clienti) e **Opzione 2** (link corto `…/c/<id>`, serve mini-backend) → **post-gate**. Lint 0, build OK, provato live da Erik. **Novità tester:** `UpdateNudge` aggiornato (le 2 migliorie + blocco "periodo di convalida → presa in carico seria", da rimuovere dopo il 21/06) + paginetta `docs/test-m1/novita-v6.5.html`. Push `aggiornamento` da inviare a deploy vivo.
 
 **Sessione 09/06/2026 (v6.4) — audit /impeccable + auto-evidenza "primo utente" (DEV+CORE):** fatto un **audit critique** con `/impeccable` (28/40 "Good", snapshot in `.impeccable/critique/`). Domanda guida di Erik: *"un nuovo utente lo usa da solo?"*. Interventi mirati: (1) **🆕 Sistema "i" contestuale** — componente riusabile `<Info>` (ui.jsx, riusa il Modal) + testi centralizzati `src/help.js`; "i" piazzate in Home (guida modulo: cos'è Sliss + flusso + legenda fasi + moduli futuri), Follow-Up (cos'è), Agenda (Prepara scheda). Additivo, non tocca i flussi → safe in validazione. (2) **Onboarding ripensato**: benvenuto sulla **missione** (curare i clienti + riprendersi il tempo, non più "senza perdere tempo"); nuovo step **"I moduli di Sliss"** (Follow-Up attivo + Richieste/Recensioni/Riattivazione "presto"); step **"Il tuo primo modulo: Follow-Up"** che **spiega cos'è un follow-up** (la gente non lo sa) + "in futuro sarà automatico" + nota "tocca la i"; progress dots a 6/7. (3) **Tolto il bordo-striscia** su "Schede in attesa" (detector ora pulito). **Emoji: lasciate** (scelta di Erik, basta sobrietà). **Upgrade estetico "molto più figo" = lavoro futuro dedicato** (non ora). Lint 0, build OK, provato live da Erik. Anteprima in `docs/test-m1/anteprima-onboarding-info.html`.
 
@@ -119,7 +121,7 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 - 🗳️ **Decisione go/no-go M1 al 21/06/2026** sui criteri ufficiali in `decisioni.md` (uso ≥10/14 + valore + bilancio; riferimento = Moira). **GO** → sblocca M3 + tester "freddo"; **NO-GO** → diagnosi → fix+mini-validazione o pivot.
 
 **Residuo parcheggiato:**
-- ⏸️ Redesign "Prepara scheda" → sotto Clienti (UX, serve anteprima). Parte già fatta dall'altro PC (prepara scheda dal calendario + consulenza auto); resta l'eventuale spostamento/linguaggio sotto Clienti. Vedi `parking-lot.md`.
+- ✅ ~~Redesign "Prepara scheda"~~ → FATTO 09/06 (v6.5): rinominato "Invita cliente", bivio sciolto. Post-gate: eventuale spostamento sotto Clienti (Opzione B) + **link corto** (Opzione 2). Vedi `parking-lot.md`.
 - 🗂️ Modulo Richieste (M3): info di Luca (catalogo→carrello) in `docs/modulo-richieste-v1.md`, **bloccato** fino a validazione M1.
 
 **Promemoria per la chat nuova:** muoversi chirurgici e additivi, build+eslint+prova reale ad ogni passo, non rompere logiche già strutturate ([[feedback-auto-healing]]). Flusso confermato: *chat → consulenza → link auto-inserimento cliente → consulenza → appuntamento tatuaggio → follow-up*.
