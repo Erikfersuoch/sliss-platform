@@ -113,6 +113,7 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 **▶️ FOCUS ORA → arrivare al gate del 21/06 con i dati:**
 
 - 📊 **Lasciare girare il tracking d'uso** (ogni apertura registra il giorno per tester). Al 21/06: `GET https://sliss-platform.vercel.app/api/track?tester=moira` (e `luca`) per i numeri (giorni attivi, follow-up inviati).
+- 🔔 **Report giornaliero automatico** — cron Vercel `/api/gate-report` ogni giorno alle **21 CEST** (19:00 UTC): legge il tracking e manda una **push solo a Erik** (`sub:ceoerik`) con giorni attivi Moira/Luca + follow-up inviati + giorni al gate. Auto-silenzio oltre il gate. ⚠️ **Da rimuovere da `vercel.json` dopo il 21/06.**
 - 🗳️ **Decisione go/no-go M1 al 21/06/2026** sui criteri ufficiali in `decisioni.md` (uso ≥10/14 + valore + bilancio; riferimento = Moira). **GO** → sblocca M3 + tester "freddo"; **NO-GO** → diagnosi → fix+mini-validazione o pivot.
 
 **Residuo parcheggiato:**
