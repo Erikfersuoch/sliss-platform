@@ -114,15 +114,30 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 **✅ FATTO 08–09/06:** v6.0–v6.2 (fix Luca · sistema aggiorna-tester · backup dati · calendario) · v6.3 (lavoro da altro PC integrato · scheda cliente pulita · **tracking d'uso** · **gate M1 definito**). Luca, Moira ed Erik notificati delle novità.
 
-**▶️ FOCUS ORA → arrivare al gate del 21/06 con i dati:**
+**▶️ FOCUS ORA → arrivare al gate del 21/06 con i dati.** Piano pianificato il 09/06 (v6.5), diviso in *durante l'attesa* e *post-gate*. **Regola della finestra:** non rompere l'abitudine dei tester, niente feature nuove, solo cose a rischio nullo.
 
-- 📊 **Lasciare girare il tracking d'uso** (ogni apertura registra il giorno per tester). Al 21/06: `GET https://sliss-platform.vercel.app/api/track?tester=moira` (e `luca`) per i numeri (giorni attivi, follow-up inviati).
-- 🔔 **Report giornaliero automatico** — cron Vercel `/api/gate-report` ogni giorno alle **21 CEST** (19:00 UTC): legge il tracking e manda una **push solo a Erik** (`sub:ceoerik`) con giorni attivi Moira/Luca + follow-up inviati + giorni al gate. Auto-silenzio oltre il gate. ⚠️ **Da rimuovere da `vercel.json` dopo il 21/06.**
-- 🗳️ **Decisione go/no-go M1 al 21/06/2026** sui criteri ufficiali in `decisioni.md` (uso ≥10/14 + valore + bilancio; riferimento = Moira). **GO** → sblocca M3 + tester "freddo"; **NO-GO** → diagnosi → fix+mini-validazione o pivot.
+### A · Durante l'attesa (09/06 → 21/06) — NON espandere
+- 📊 **Lasciar girare il tracking d'uso** (ogni apertura registra il giorno per tester). Niente da fare, solo lasciarlo lavorare.
+- 🔔 **Leggere il report giornaliero** — la push automatica a Erik (`/api/gate-report`, 21 CEST) dà ogni sera giorni attivi Moira/Luca + follow-up + giorni al gate. Tenerlo d'occhio come polso del test.
+- 👀 **Verificare che la v6.5 "attecchisca":** che Moira (e Luca) vedano la schermata Novità e usino "Invita cliente" senza intoppi. Se emergono attriti → annotare in `docs/test-m1/`, NON correre a patchare.
+- 🤝 **TEST (ruolo TEST, lato Erik, non codice):** chiamata diagnostica con Moira · concordare il check settimanale · kickoff formale Luca. (Vedi *Blocchi attivi*.)
+- 🗳️ **Preparare la decisione go/no-go** per il 21/06: al giorno, `GET …/api/track?tester=moira` (e `luca`) per i numeri, poi applicare i criteri di `decisioni.md` (uso ≥10/14 + valore + bilancio; rif. Moira).
+- ⏸️ *Candidato anticipabile solo se serve (safety, non estetica):* rendere **visibili i fallimenti di backup**. Deciso 09/06 di **lasciarlo post-gate** salvo problemi reali.
 
-**Residuo parcheggiato:**
-- ✅ ~~Redesign "Prepara scheda"~~ → FATTO 09/06 (v6.5): rinominato "Invita cliente", bivio sciolto. Post-gate: eventuale spostamento sotto Clienti (Opzione B) + **link corto** (Opzione 2). Vedi `parking-lot.md`.
-- 🗂️ Modulo Richieste (M3): info di Luca (catalogo→carrello) in `docs/modulo-richieste-v1.md`, **bloccato** fino a validazione M1.
+### B · Post-gate (dopo il 21/06)
+**B0 · Pulizia del temporaneo (subito dopo la decisione):**
+- ⚠️ Rimuovere il cron `/api/gate-report` da `vercel.json`.
+- ⚠️ Rimuovere il blocco "periodo di convalida → presa in carico seria" da `UpdateNudge.jsx` (commento già segnato nel file).
+
+**B1 · Se GO →** espansione (Fase 2): (a) **M3 "Richieste" Via-2** per Luca (info catalogo→carrello in `docs/modulo-richieste-v1.md`); (b) 1 tester "freddo" fuori cerchia; (c) solo dopo: pricing/Fase 3.
+**B1 · Se NO-GO →** diagnosi (tracking + questionari) → fix + mini-validazione ~14gg, oppure **pivot** della punta di lancia. Niente nuovi moduli finché non c'è un "sì".
+
+**B2 · Pass "verso il top" (da audit 29/40, backlog in `parking-lot.md`):**
+- **[P1] Hardening error-recovery** — far emergere i fallimenti di rete (backup/onboarding/track) + validazione inline (telefono/email). → `/impeccable harden`.
+- **[P2]** riquadrini-fase: piazzare `HELP.phases` (già pronto) · emoji→`<Icon>` · skeleton/feedback caricamento.
+- **Upgrade estetico dedicato** ("molto più figo", Home meno densa).
+
+**B3 · Residui "Invita cliente":** Opzione B (spostare l'invito *sotto* Clienti togliendolo da Agenda) · **Opzione 2 link corto** (`…/c/<id>`, salva slot su Upstash + redirect). Vedi `parking-lot.md`.
 
 **Promemoria per la chat nuova:** muoversi chirurgici e additivi, build+eslint+prova reale ad ogni passo, non rompere logiche già strutturate ([[feedback-auto-healing]]). Flusso confermato: *chat → consulenza → link auto-inserimento cliente → consulenza → appuntamento tatuaggio → follow-up*.
 
