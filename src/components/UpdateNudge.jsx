@@ -3,11 +3,10 @@ import T from "../theme.js";
 // Schermata mostrata quando il tester apre la notifica "ci sono novità" (?goto=novita).
 // Changelog leggibile delle ultime modifiche nate dal feedback dei tester.
 const CHANGES = [
-  { emoji: "\u{1F9F9}", title: "Via la conferma “ha risposto / no”", desc: "Dopo l'invio non ti viene più chiesto l'esito. Inviato = fatto, un tocco in meno." },
-  { emoji: "\u{1F4C5}", title: "Calendario in Agenda", desc: "Per chi usa gli appuntamenti: nuova vista mese in Agenda, con il tasto per aprire Google Calendar al giorno giusto." },
-  { emoji: "\u{1F680}", title: "Tasto “Ready to go”", desc: "Per chi vende prodotti: quando l'ordine è pronto, dalla Home un tocco e parte la spedizione su WhatsApp." },
-  { emoji: "\u{21A9}\u{FE0F}", title: "Annulla invio", desc: "Inviato per sbaglio? Lo riporti tra quelli da inviare con un tocco." },
-  { emoji: "\u{1F464}", title: "Schede clienti dalla Home", desc: "Tocchi il nome di un cliente nella lista e si apre la sua scheda." },
+  { emoji: "\u{1F5D1}\u{FE0F}", title: "Elimina follow-up", desc: "Puoi togliere un follow-up che non ti serve, direttamente dalla lista." },
+  { emoji: "\u{1F4C5}", title: "Prepara scheda dal calendario", desc: "Per chi usa gli appuntamenti: dal calendario, sul giorno scelto, prepari subito la scheda cliente." },
+  { emoji: "\u{1F446}", title: "Apri il follow-up dall'Agenda", desc: "Tocca i quadratini delle fasi su un appuntamento e si apre il follow-up." },
+  { emoji: "\u{1F9F9}", title: "Scheda cliente più pulita", desc: "Tolto l'elenco follow-up ripetuto nella scheda: lo trovi nella pagina Follow-Up." },
 ];
 
 export default function UpdateNudge({ onClose }) {
