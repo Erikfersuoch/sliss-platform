@@ -3,6 +3,7 @@
     { "path": "/api/notify?target=moira&type=inserimento", "schedule": "30 17 * * *" },
     { "path": "/api/notify?target=moira&type=followup",    "schedule": "30 10 * * *" },
     { "path": "/api/notify?target=luca&type=inserimento",  "schedule": "30 18 * * *" },
-    { "path": "/api/notify?target=luca&type=followup",     "schedule": "0 10 * * *"  }
+    { "path": "/api/notify?target=luca&type=followup",     "schedule": "0 10 * * *"  },
+    { "path": "/api/gate-report",                          "schedule": "0 19 * * *"  }
   ]
 }
