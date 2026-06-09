@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.2 · 2026-06-08 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.3 · 2026-06-09 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -12,6 +12,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 09/06/2026 (v6.3) — lavoro da altro PC + scheda cliente + tracking d'uso + gate M1 (DEV+CORE):** (1) **Integrato e deployato il lavoro sviluppato da Erik da un altro PC** (branch `claude/blissful-turing-i32b80`, fast-forward su main): elimina follow-up pending, tap riquadrini Agenda → apre follow-up, "Prepara scheda" dal calendario sul giorno selezionato, consulenza auto + **stepper** timing follow-up. ⚠️ Conteneva un **bug di lint** (`set-state-in-effect` in FollowUp per `initialFuId`) sfuggito alla build → corretto con init al mount ([[feedback-bug-lessons]]: il codice da altro PC va sempre lintato dopo il merge). (2) **Scheda Cliente ripulita**: rimossa la lista follow-up ridondante (resta il riepilogo "Follow-up: stato"). (3) **🆕 Tracking minimo d'uso (Option B)** per il gate M1: `api/track.js` (ping all'apertura → set `usedays:<tester>` + snapshot conteggi `usage:<tester>`; GET per leggere), `src/track.js`, ping silenzioso in App.jsx. **Endpoint testato live.** Solo conteggi, zero dati personali. (4) **Gate M1 ufficiale** (criteri go/no-go + cosa fare se GO/NO-GO) scritto in `decisioni.md` (09/06). (5) Notifica novità 09/06 a **Luca, Moira ed Erik** (Erik via `ceoerik`). Branch social (`claude/social-media-update-content-I038T`) = **ignorato** (creato per errore, base vecchia). Lint 0, build OK.
 
 **Sessione 08/06/2026 (v6.2) — backup dati + calendario (ruolo DEV):** chiusi i punti 1 e 2 del piano. **(1) 🔒 Backup cloud additivo su Upstash** [PRIORITÀ 1, fatta]: `api/backup.js` (POST salva `backup:<tester>`, GET rilegge), `src/backup.js` (client best-effort, errori silenziosi), **backup automatico ~8s dopo ogni modifica** in App.jsx (solo se c'è codice tester), **ripristino manuale** in Impostazioni ("Dati e backup" → "Ripristina da backup", usa `importData`+`healData`). localStorage resta primario, zero rischio. **Endpoint testato live** (POST+GET ok). **(2) 📅 Calendario read-only sotto Agenda** [fatto]: nuovo `MonthCalendar.jsx`, toggle **Lista/Calendario** in Agenda, vista mese con appuntamenti Sliss segnati, tap giorno → lista + **"Apri su Google Calendar a quel giorno"** (`calendar.google.com/r/day/Y/M/D`). Read-only (non legge Google = Fase 3). Lint 0, build OK, calendario provato live da Erik. **Punto 3 (redesign "Prepara scheda") → PARCHEGGIATO** (è UX, richiede anteprima; vedi `parking-lot.md`). Risposta di Luca su catalogo/carrello registrata in `docs/modulo-richieste-v1.md` (M3, dopo gate 21/06).
 
@@ -106,14 +108,16 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 ## Prossimi passi
 
-**✅ FATTO 08/06:** v6.0 fix Luca (esito tolto · Ready to go · Annulla invio · tab Inviati · clienti cliccabili) · v6.1 sistema "aggiorna i tester" (push→schermata Novità, prima inviata a Luca) · v6.2 **🔒 backup dati cloud + 📅 calendario read-only** (entrambi online e verificati).
+**✅ FATTO 08–09/06:** v6.0–v6.2 (fix Luca · sistema aggiorna-tester · backup dati · calendario) · v6.3 (lavoro da altro PC integrato · scheda cliente pulita · **tracking d'uso** · **gate M1 definito**). Luca, Moira ed Erik notificati delle novità.
 
-**Residuo:**
+**▶️ FOCUS ORA → arrivare al gate del 21/06 con i dati:**
 
-- ⏸️ **Redesign "Prepara scheda" → sotto CLIENTI** — **PARCHEGGIATO** (vedi `parking-lot.md`). È UX → serve anteprima prima/dopo. Linguaggio umano, **logica INVARIATA** (cliente e appuntamento separati di proposito; solo parole e posto). Da abbinare alla **notifica novità per Moira** (servizi) insieme al calendario.
-- ✅ **Moira notificata 08/06** (push novità con changelog completo — calendario + esito tolto + Annulla invio + clienti cliccabili; sub viva). Anche Luca notificato 08/06. Resta da mostrarle "Prepara scheda" quando sarà pronto.
+- 📊 **Lasciare girare il tracking d'uso** (ogni apertura registra il giorno per tester). Al 21/06: `GET https://sliss-platform.vercel.app/api/track?tester=moira` (e `luca`) per i numeri (giorni attivi, follow-up inviati).
+- 🗳️ **Decisione go/no-go M1 al 21/06/2026** sui criteri ufficiali in `decisioni.md` (uso ≥10/14 + valore + bilancio; riferimento = Moira). **GO** → sblocca M3 + tester "freddo"; **NO-GO** → diagnosi → fix+mini-validazione o pivot.
 
-**In parallelo (TEST):** **decisione go/no-go M1 al 21/06/2026.** Modulo Richieste (M3): nuova info di Luca (catalogo→carrello) registrata in `docs/modulo-richieste-v1.md`, **bloccato** fino a validazione M1.
+**Residuo parcheggiato:**
+- ⏸️ Redesign "Prepara scheda" → sotto Clienti (UX, serve anteprima). Parte già fatta dall'altro PC (prepara scheda dal calendario + consulenza auto); resta l'eventuale spostamento/linguaggio sotto Clienti. Vedi `parking-lot.md`.
+- 🗂️ Modulo Richieste (M3): info di Luca (catalogo→carrello) in `docs/modulo-richieste-v1.md`, **bloccato** fino a validazione M1.
 
 **Promemoria per la chat nuova:** muoversi chirurgici e additivi, build+eslint+prova reale ad ogni passo, non rompere logiche già strutturate ([[feedback-auto-healing]]). Flusso confermato: *chat → consulenza → link auto-inserimento cliente → consulenza → appuntamento tatuaggio → follow-up*.
 
