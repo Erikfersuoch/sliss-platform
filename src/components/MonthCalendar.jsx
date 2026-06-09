@@ -8,7 +8,7 @@ const WD = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
 const MONTHS = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"];
 const ymd = (y, m, d) => `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 
-export default function MonthCalendar({ appointments, clients }) {
+export default function MonthCalendar({ appointments, clients, onPrepareScheda }) {
   const now = new Date();
   const [ym, setYm] = useState({ y: now.getFullYear(), m: now.getMonth() });
   const [selDay, setSelDay] = useState(null);
@@ -76,6 +76,7 @@ export default function MonthCalendar({ appointments, clients }) {
                   <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: "13px", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{nameOf(a.clientId)}</div><div style={{ fontSize: "11px", color: T.textD }}>{a.serviceType || "Appuntamento"}</div></div>
                 </div>
               ))}</div>}
+          {onPrepareScheda && <Btn s="sm" onClick={() => onPrepareScheda(selDay)} style={{ width: "100%", justifyContent: "center", marginBottom: "8px" }}>Prepara scheda</Btn>}
           <Btn v="secondary" s="sm" onClick={() => openGoogleDay(selDay)} style={{ width: "100%", justifyContent: "center" }}>{"\u{1F4C5}"} Apri su Google Calendar</Btn>
         </div>
       )}
