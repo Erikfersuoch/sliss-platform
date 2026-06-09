@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { loadData, saveData, isOnboarded, emptyData, storage, ONBOARDING_KEY, healData } from "./storage.js";
 import { saveBackup } from "./backup.js";
+import { pingUsage } from "./track.js";
 import { uid, today, isPhaseOff } from "./helpers.js";
 import { Ctx } from "./context.js";
 import GlobalCSS from "./GlobalCSS.jsx";
@@ -34,6 +35,8 @@ export default function SlissPlatform() {
 
   // Cattura il codice tester dall'URL (?tester=) una sola volta, senza toccare lo stato React
   useEffect(()=>{const t=new URLSearchParams(window.location.search).get('tester');if(t)localStorage.setItem('sliss-tester',t);},[]);
+  // Tracking minimo d'uso (gate M1): ping silenzioso all'apertura, registra il giorno d'uso + conteggi aggregati
+  useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const d=loadData();pingUsage(tester,{clients:(d.clients||[]).length,followUpsSent:(d.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed").length,followUpsPending:(d.followUps||[]).filter(f=>f.status==="pending").length});},[]);
   // Pulisce ?goto dall'URL dopo averlo letto (così un refresh non riapre la schermata)
   useEffect(()=>{const p=new URLSearchParams(window.location.search);if(p.get('goto')){p.delete('goto');const qs=p.toString();window.history.replaceState({},"",window.location.pathname+(qs?`?${qs}`:""));}},[]);
   useEffect(()=>{saveData(data);},[data]);
