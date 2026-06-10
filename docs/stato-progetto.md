@@ -4,7 +4,7 @@
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 08/06/2026
+> Documento vivente · Aggiornato: 10/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 10/06/2026 — workflow & pulizia repo (NESSUN codice app toccato):** (1) **Consolidati su `main`** i 3 branch paralleli (workflow, rischi-legali, social) + cancellati tutti i branch vecchi → **repo pulito, solo `main`** (verifica "0 commit fuori da main" prima di ogni cancellazione). (2) **Workflow:** regola **0b** ora verifica il deploy via **MCP Vercel** (non più dashboard, ID in CLAUDE.md); **`docs/check-sync.sh --fix`** auto-propaga lo stamp SYNC in CLAUDE.md (memoria a mano); criteri agenti paralleli Fase 3 scritti (`parking-lot.md`). Voto workflow interno 7.8 → **~8.7/10**. (3) **Deciso:** incoerenza emoji↔icone → **Strada A: tutto icone** (premium, coerente con PRODUCT.md), da fare **post-gate**. (4) Nuovo `docs/rischi-legali.md` (marchio/copyright/GDPR/fiscale) + contenuti social. **Audit UI invariato (29/40)** di proposito (nessun cambio app → si rifà post-gate insieme a icone+error-recovery). **I tester non vedono differenze.** Focus invariato: dati per il **gate 21/06**.
 
 **Sessione 09/06/2026 (v6.5) — redesign "Prepara scheda" → "Invita cliente" (DEV+CORE):** chiuso il residuo parcheggiato (brief `docs/prepara-scheda-redesign.md`). Problema: in Agenda due tasti gemelli ("Prepara scheda" / "+ Nuovo") confondevano il nuovo utente (feedback Moira + audit P1). **Metodo: anteprima prima/dopo approvata da Erik** (`docs/test-m1/prepara-scheda-anteprima.html`, colori reali) → poi codice. **Fatto:** (1) rinominato **"Invita cliente"**, stesso nome in **Agenda** (box descrittivo con mini-spiegazione) e **Clienti** (tasto + "i" `HELP.invitaCliente`); entrambi aprono la stessa generazione link → nuovo componente condiviso `components/InviteClient.jsx` (montato on-open = init al mount, niente setState-in-effect). (2) Agenda con **un solo primario** "+ Nuovo appuntamento" → sciolto il bivio. (3) Messaggio WhatsApp del link reso **caldo** (Opzione 1, helper `inviteWaLink` in helpers.js, link in fondo). **Logica invariata** (cliente/appuntamento separati). Scelto lo scope a rischio basso (non spostare, non rompere l'abitudine di Moira in validazione); **Opzione B** (spostare sotto Clienti) e **Opzione 2** (link corto `…/c/<id>`, serve mini-backend) → **post-gate**. Lint 0, build OK, provato live da Erik. **Novità tester:** `UpdateNudge` aggiornato (le 2 migliorie + blocco "periodo di convalida → presa in carico seria", da rimuovere dopo il 21/06) + paginetta `docs/test-m1/novita-v6.5.html`. Push `aggiornamento` da inviare a deploy vivo.
 
