@@ -79,15 +79,65 @@
 
 ---
 
+## 6. Forma giuridica / fiscale
+
+- **Stato:** ✅ non applicabile finché non si fattura
+- **Rischio:** incassare denaro da clienti senza una forma fiscale adeguata
+  (es. P.IVA forfettaria) è un problema legale/fiscale, non rimandabile
+- **Azione:** scegliere e attivare il regime fiscale adatto PRIMA di chiedere
+  il primo pagamento, non dopo
+- **Trigger di rivalutazione:** Fase 3, prima del primo incasso/pagamento da
+  un cliente
+
+---
+
+## 7. Dominio proprio
+
+- **Stato:** ⚠️ DA VALUTARE — oggi su `sliss-platform.vercel.app`
+- **Rischio:** basso, ma è l'unico punto "primo arrivato primo servito" — un
+  dominio `sliss.it`/`sliss.com` potrebbe essere preso da altri nel frattempo
+- **Azione:** verificare disponibilità e valutare registrazione (pochi euro/anno)
+  quando si vuole consolidare il branding
+- **Trigger di rivalutazione:** prima di campagne marketing/social su larga
+  scala, o quando si vuole un naming definitivo
+
+---
+
+## 8. Dipendenza da servizi terzi (Vercel, WhatsApp link)
+
+- **Stato:** ✅ ok per scala attuale (2-3 tester)
+- **Rischio:** non legale ma di continuità prodotto — Vercel hobby plan o
+  policy WhatsApp `wa.me` potrebbero limitare l'uso a volumi più alti
+- **Azione:** nessuna ora. Coperto in parte dal parcheggio "WhatsApp Business
+  API via BSP" per quando si scala
+- **Trigger di rivalutazione:** quando si supera la decina di clienti attivi
+  o si nota un limite imposto da Vercel/WhatsApp
+
+---
+
+## 9. Assicurazione RC professionale
+
+- **Stato:** ✅ non applicabile finché non ci sono clienti paganti reali
+- **Rischio:** un errore software che causa un danno operativo a un cliente
+  (es. messaggio sbagliato inviato a un suo cliente) potrebbe generare
+  richieste di responsabilità
+- **Azione:** valutare una polizza RC professionale quando si hanno clienti
+  paganti con operatività reale
+- **Trigger di rivalutazione:** Fase 3, dopo i primi clienti paganti stabili
+
+---
+
 ## Checklist rapida — quando rivalutare l'intero documento
 
-- Prima di registrare il marchio
+- Prima di registrare il marchio (anteriorità professionale)
 - Prima di pubblicare su app store / store pubblici
 - Prima di introdurre Supabase
-- Prima del primo cliente pagante
+- Prima del primo incasso / primo cliente pagante
 - Prima di campagne marketing/social su larga scala
+- Quando si supera la decina di clienti attivi (dipendenze terzi)
+- Ogni volta che si aggiunge una dipendenza/libreria/asset esterno non banale
 - Ogni volta che si aggiunge una dipendenza/libreria/asset esterno non banale
 
 ---
 
-*Ultimo aggiornamento: 10/06/2026 — verifica marchio "Sliss" completata, nessun conflitto rilevato*
+*Ultimo aggiornamento: 10/06/2026 — aggiunte voci 6-9 (fiscale, dominio, dipendenze terzi, RC professionale)*
