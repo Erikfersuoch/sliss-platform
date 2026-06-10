@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.5 · 2026-06-09 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.6 · 2026-06-10 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -133,17 +133,19 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 
 **✅ FATTO 08–09/06:** v6.0–v6.2 (fix Luca · sistema aggiorna-tester · backup dati · calendario) · v6.3 (lavoro da altro PC integrato · scheda cliente pulita · **tracking d'uso** · **gate M1 definito**). Luca, Moira ed Erik notificati delle novità.
 
-**▶️ FOCUS ORA → arrivare al gate del 21/06 con i dati.** Piano pianificato il 09/06 (v6.5), diviso in *durante l'attesa* e *post-gate*. **Regola della finestra:** non rompere l'abitudine dei tester, niente feature nuove, solo cose a rischio nullo.
+**✅ FATTO 10/06:** (1) **"Invita cliente" anche in Home** (sotto "Aggiungi cliente", riusa `InviteClient`); (2) **tasto "Aggiungi al calendario"** nel modale invito (ponte a un tap verso Google Calendar, come WhatsApp — *non* sync automatica, quella è Fase 3); `gcalLink` spostata in `helpers.js` e riusata in Agenda. Anteprima approvata, lint 0, build OK, provato live, deploy READY.
 
-### A · Durante l'attesa (09/06 → 21/06) — NON espandere
+**▶️ FOCUS ORA → arrivare al gate con i dati.** **Gate rivisto il 10/06 (vedi `decisioni.md`): non più data fissa 21/06 ma "occasioni reali"** — Moira/Luca hanno una flessione di lavoro nuovo, quindi pochi giorni d'uso = mancanza di dati, non bocciatura. Nuovi criteri: copertura ≥80% dei clienti reali passati da Sliss + ~8 usi reali + valore + bilancio; check settimanale + backstop morbido fine luglio. **Regola della finestra:** non rompere l'abitudine dei tester, niente feature nuove, solo cose a rischio nullo.
+
+### A · Durante l'attesa — NON espandere
 - 📊 **Lasciar girare il tracking d'uso** (ogni apertura registra il giorno per tester). Niente da fare, solo lasciarlo lavorare.
 - 🔔 **Leggere il report giornaliero** — la push automatica a Erik (`/api/gate-report`, 21 CEST) dà ogni sera giorni attivi Moira/Luca + follow-up + giorni al gate. Tenerlo d'occhio come polso del test.
 - 👀 **Verificare che la v6.5 "attecchisca":** che Moira (e Luca) vedano la schermata Novità e usino "Invita cliente" senza intoppi. Se emergono attriti → annotare in `docs/test-m1/`, NON correre a patchare.
 - 🤝 **TEST (ruolo TEST, lato Erik, non codice):** chiamata diagnostica con Moira · concordare il check settimanale · kickoff formale Luca. (Vedi *Blocchi attivi*.)
-- 🗳️ **Preparare la decisione go/no-go** per il 21/06: al giorno, `GET …/api/track?tester=moira` (e `luca`) per i numeri, poi applicare i criteri di `decisioni.md` (uso ≥10/14 + valore + bilancio; rif. Moira).
+- 🗳️ **Preparare la decisione go/no-go** (metrica 10/06, non più data fissa): `GET …/api/track?tester=moira` (e `luca`) per gli usi reali, + chiedere a Moira la **copertura** ("dei clienti avuti, quanti con Sliss?"). Applicare i criteri di `decisioni.md` (copertura ≥80% + ~8 usi + valore + bilancio; rif. Moira; backstop fine luglio).
 - ⏸️ *Candidato anticipabile solo se serve (safety, non estetica):* rendere **visibili i fallimenti di backup**. Deciso 09/06 di **lasciarlo post-gate** salvo problemi reali.
 
-### B · Post-gate (dopo il 21/06)
+### B · Post-gate (dopo la decisione gate)
 **B0 · Pulizia del temporaneo (subito dopo la decisione):**
 - ⚠️ Rimuovere il cron `/api/gate-report` da `vercel.json`.
 - ⚠️ Rimuovere il blocco "periodo di convalida → presa in carico seria" da `UpdateNudge.jsx` (commento già segnato nel file).
