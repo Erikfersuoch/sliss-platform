@@ -17,7 +17,7 @@
 - [31/05/2026] dubbio: il follow-up di riattivazione serve davvero?
 -->
 
-_(vuota — pronta per le tue note)_
+- [10/06/2026] idea: aggiungere alla Home un tasto "Invita cliente" (in più, oltre a quelli già in Agenda e Clienti)
 
 ---
 
