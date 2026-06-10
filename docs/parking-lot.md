@@ -37,7 +37,7 @@
 
 ## Rischi legali / IP
 
-- [10/06/2026] **Verifica marchio "Sliss"** — esiste già un'app "SLISS" su Google Play (settore investimenti, diverso dal nostro). Conflitto diretto improbabile ma da escludere prima di registrare marchio o pubblicare su store. Vedi sistema completo in `docs/rischi-legali.md` (struttura pensata per essere mantenuta anche da un agente autonomo, con trigger di rivalutazione per ogni voce). Azione immediata: ricerca EUIPO/UIBM (~10 min, gratis).
+- [10/06/2026] **[✅ VERIFICATO] Marchio "Sliss"** — nessun marchio identico registrato in classi 9/42 su EUIPO e UIBM (ricerca frase esatta). Esiste solo un'app "SLISS" su Google Play (settore investimenti, diverso). Da ricontrollare solo prima di registrazione formale del marchio. Sistema completo di tracciamento rischi legali/IP in `docs/rischi-legali.md` (struttura pensata anche per agente autonomo, con trigger di rivalutazione per ogni voce).
 
 ## Idee commerciali
 

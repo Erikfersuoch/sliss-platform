@@ -13,16 +13,19 @@
 
 ## 1. Marchio "Sliss"
 
-- **Stato:** ⚠️ DA VERIFICARE — non ancora controllato su database ufficiali
-- **Rischio:** esiste già "SLISS" come app (Google Play, gestione fondi/investimenti,
-  settore finanziario) — settore diverso, conflitto diretto improbabile ma da
-  escludere prima di investire in branding/marchio registrato
-- **Azione:**
-  1. Ricerca su https://euipo.europa.eu/eSearch/ — "Sliss", classi 9 (software) e 42 (SaaS)
-  2. Ricerca su https://www.uibm.gov.it — marchi italiani
-- **Trigger di rivalutazione:** prima di registrare il marchio, prima di pubblicare
-  su app store, prima di campagne ads/social su larga scala
-- **Owner:** Erik (ricerca manuale, ~10 min)
+- **Stato:** ✅ VERIFICATO 10/06/2026 — nessun marchio identico "Sliss" registrato
+  in classi 9 (software) e 42 (SaaS), né su EUIPO né su UIBM (ricerca frase esatta).
+  Esiste solo "SLISS" come app Google Play (settore investimenti/fondi, diverso) —
+  conflitto diretto improbabile.
+- **Rischio residuo:** basso. Da ricontrollare se si entra in contatto diretto con
+  l'app finanziaria omonima (es. comparsa su stessi store/categorie) o prima di
+  un'eventuale registrazione formale del marchio (la ricerca preliminare non
+  sostituisce una ricerca di anteriorità professionale pre-deposito)
+- **Azione:** nessuna azione immediata. Verifica preliminare completata.
+- **Trigger di rivalutazione:** prima di registrare formalmente il marchio
+  (ripetere ricerca + valutare ricerca di anteriorità professionale), prima di
+  pubblicare su app store, prima di campagne ads/social su larga scala
+- **Owner:** Erik
 
 ---
 
@@ -87,4 +90,4 @@
 
 ---
 
-*Ultimo aggiornamento: 10/06/2026*
+*Ultimo aggiornamento: 10/06/2026 — verifica marchio "Sliss" completata, nessun conflitto rilevato*
