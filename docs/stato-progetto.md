@@ -19,11 +19,10 @@
 
 | Branch | Contenuto | Stato (10/06/2026) |
 |---|---|---|
-| `claude/social-media-update-content-I038T` | Post social pronti da pubblicare (`docs/social.md`) | Non mergeato — da rivedere e mergiare |
-| `claude/relaxed-volta-twlti4` | `docs/check-sync.sh` + criteri Fase 3 + update CLAUDE.md | Non mergeato — da rivedere e mergiare |
+| _(nessuno pendente)_ | — | ✅ Tutti consolidati su `main` il 10/06/2026 |
 
-Branch già mergeati e da cancellare manualmente da GitHub (Settings → Branches):
-`claude/blissful-turing-i32b80`, `claude/status-check-NoBBi`
+**Consolidati su main il 10/06/2026** (workflow di pulizia branch): `claude/relaxed-volta-twlti4` (workflow + `check-sync.sh` + regola 0b check deploy MCP + criteri Fase 3), `claude/busy-noether-5fbb1i` (`docs/rischi-legali.md` + tracciamento legale/IP), `claude/social-media-update-content-I038T` (contenuti `docs/social.md`).
+Già mergeati in precedenza: `claude/blissful-turing-i32b80`, `claude/status-check-NoBBi`.
 
 ---
 
