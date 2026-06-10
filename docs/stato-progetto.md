@@ -22,7 +22,7 @@
 | _(nessuno pendente)_ | — | ✅ Tutti consolidati su `main` il 10/06/2026 |
 
 **Consolidati su main il 10/06/2026** (workflow di pulizia branch): `claude/relaxed-volta-twlti4` (workflow + `check-sync.sh` + regola 0b check deploy MCP + criteri Fase 3), `claude/busy-noether-5fbb1i` (`docs/rischi-legali.md` + tracciamento legale/IP), `claude/social-media-update-content-I038T` (contenuti `docs/social.md`).
-Già mergeati in precedenza: `claude/blissful-turing-i32b80`, `claude/status-check-NoBBi`.
+Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-check`). **Repo pulito al 10/06/2026: rimane solo `main`.**
 
 ---
 
