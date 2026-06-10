@@ -9,6 +9,24 @@
 
 ---
 
+## ⚠️ Branch attivi non mergeati — controllo a inizio sessione
+
+> Lavoro da più postazioni (web/remoto + PC casa). Per non perdere pezzi:
+> ad inizio sessione fai `git fetch origin --prune` e controlla se questi
+> branch sono ancora aperti. Se sì, valuta se contengono lavoro da mergiare
+> prima di iniziare cose nuove. Quando un branch è mergeato in `main`,
+> cancellalo e rimuovi la riga qui sotto.
+
+| Branch | Contenuto | Stato (10/06/2026) |
+|---|---|---|
+| `claude/social-media-update-content-I038T` | Post social pronti da pubblicare (`docs/social.md`) | Non mergeato — da rivedere e mergiare |
+| `claude/relaxed-volta-twlti4` | `docs/check-sync.sh` + criteri Fase 3 + update CLAUDE.md | Non mergeato — da rivedere e mergiare |
+
+Branch già mergeati e da cancellare manualmente da GitHub (Settings → Branches):
+`claude/blissful-turing-i32b80`, `claude/status-check-NoBBi`
+
+---
+
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
