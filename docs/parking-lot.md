@@ -57,6 +57,7 @@
 - **Invio automatico messaggi** senza azione del professionista — parcheggiata Maggio 2026
 - **Fix emoji su Vercel** — problema font, fix veloce, bassa priorità — parcheggiata Maggio 2026
 
+- [10/06/2026] **TARGET dichiarato da Erik: range 8.5-9.5/10**, sia per workflow/uso Claude Code sia per valutazione del prodotto. Da tenere come riferimento nelle prossime review/valutazioni numeriche (mantenere obiettività alta come richiesto, non gonfiare i voti per "centrare" il target).
 - [10/06/2026] **Automazioni workflow Claude Code** (da review interna, voto 7.8/10): (1) automatizzare check deploy Vercel a fine sessione via MCP Vercel (`get_deployment`/`list_deployments`) invece di check manuale dashboard; (2) hook/script per propagare automaticamente lo stamp `SYNC ▸ FONTE DI VERITÀ` da stato-progetto.md agli altri file invece di farlo a mano; (3) potatura periodica di stato-progetto.md (archiviare sessioni vecchie in docs/settimane/) quando supera ~40KB; (4) agenti paralleli — NON ora, valutare solo in Fase 3 quando più moduli saranno attivi in parallelo. Punti deboli identificati: leva tecnica MCP non sfruttata (5/10), pianificazione agenti futuri non scritta (6/10) — il resto (setup, doc, scope discipline, workflow preview→ok) era già 8-9/10.
 
 ## Vertical alternativi
