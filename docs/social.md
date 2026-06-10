@@ -1,6 +1,9 @@
 # Sliss — Social & Comunicazione
 > Documento vivente
 
+## Linee guida
+- **CTA leggera in chiusura** (da 09/06): ogni post chiude con una domanda diretta al lettore — abbassa la barriera al commento, non è "engagement bait" pesante. Esempi: "Tu cosa avresti risposto?", "Vi è mai capitato?".
+
 ## Post pubblicati
 <!-- data | piattaforma | tipo -->
 
@@ -24,6 +27,8 @@ Sliss è il tentativo di togliergli un po' di peso. È ancora piccolo, ancora in
 
 E questo cambia tutto.
 
+Tu, se ti facessero quella domanda oggi — cosa risponderesti?
+
 #buildinpublic #purpose #microbusiness
 
 ---
@@ -38,6 +43,8 @@ Rispondere non è stato immediato. Ma la risposta è arrivata: qualcosa di utile
 Sliss è quello. Ancora piccolo, ancora in fase di test. Ma è mio, e ha un perché.
 
 Per questo non smetto.
+
+Vi è mai capitato un momento così — in cui avete sentito che dovevate cambiare strada?
 
 ---
 
@@ -55,6 +62,8 @@ Lezione presa: ho mandato un questionario di 6 domande ai tester e fissato una d
 
 Si costruisce così, un blocco alla volta. 🧱
 
+A voi è mai capitato di scoprire di aver misurato la cosa sbagliata?
+
 #buildinpublic #microbusiness #startup
 
 ---
@@ -69,6 +78,8 @@ Non perché non lo stessero usando — ma perché avevo costruito tutto per *mis
 Quindi niente vittoria da raccontare oggi, ma una correzione di rotta presa sul serio: ho mandato un questionario di 6 domande ai tester e fissato una data precisa — il 21 giugno — per decidere se questo modulo regge o no.
 
 Si costruisce così: un blocco alla volta, anche quando il blocco è ammettere che ti sei perso un pezzo.
+
+Voi come fate a capire se uno strumento sta funzionando davvero, e non solo "venendo usato"?
 
 ---
 
