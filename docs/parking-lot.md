@@ -35,6 +35,10 @@
 - [28/05/2026] Notifica conferma operazioni automatiche — parcheggiata 28/05/2026
 - [28/05/2026] Notifiche anti-stress utente finale — parcheggiata 28/05/2026
 
+## Rischi legali / IP
+
+- [10/06/2026] **Verifica marchio "Sliss"** — esiste già un'app "SLISS" su Google Play (settore investimenti, diverso dal nostro). Conflitto diretto improbabile ma da escludere prima di registrare marchio o pubblicare su store. Vedi sistema completo in `docs/rischi-legali.md` (struttura pensata per essere mantenuta anche da un agente autonomo, con trigger di rivalutazione per ogni voce). Azione immediata: ricerca EUIPO/UIBM (~10 min, gratis).
+
 ## Idee commerciali
 
 - **Approccio outreach 1:1** — conversazioni dirette, vocali, messaggi brevi, niente link. Da valutare per Fase 2 inoltrata quando avremo dati veri — parcheggiata 25/05/2026
