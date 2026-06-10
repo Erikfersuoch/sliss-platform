@@ -7,10 +7,12 @@ import Icon from "../components/Icon.jsx";
 import { Badge, Btn, Card, Modal, FormField, SendButtons, Info } from "../components/ui.jsx";
 import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
+import InviteClient from "../components/InviteClient.jsx";
 
 const Home = ({setView}) => {
   const {data,update,addRecord}=useSliss();
   const [showQuickAdd,setShowQuickAdd]=useState(false);
+  const [showInvite,setShowInvite]=useState(false);
   const [qDone,setQDone]=useState(false);
   const [qForm,setQForm]=useState({name:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
   const td=today();
@@ -43,6 +45,8 @@ const Home = ({setView}) => {
         <h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()},<br/><span style={{color:T.green}}>{biz}</span> {"\u{1F44B}"}</h1>
       </div>
       <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
+      <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"\u{1F517} Invita cliente"}</Btn>
+      {showInvite&&<InviteClient onClose={()=>setShowInvite(false)} />}
       {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
       <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
         {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(

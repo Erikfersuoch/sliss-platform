@@ -28,3 +28,11 @@ export const inviteWaLink = (phone, link, dateStr) => {
   const text=encodeURIComponent(`Ciao! \u{1F60A} Per la nostra consulenza${quando} ti ho preparato la scheda: compila i tuoi dati qui, è un minuto \u{1F447}\n${link}\nA presto!`);
   return p?`whatsapp://send?phone=${p}&text=${text}`:`https://wa.me/?text=${text}`;
 };
+// Ponte calendario leggero: link che pre-compila un evento (giornaliero) su Google Calendar. Zero backend.
+// Usato sia in Agenda (appuntamento confermato) sia in Invita cliente (data della consulenza).
+export const gcalLink = (date, title, notes="") => {
+  const start=String(date||"").replace(/-/g,""); const end=addDays(date,1).replace(/-/g,"");
+  const t=encodeURIComponent(title||"Appuntamento");
+  const details=encodeURIComponent((notes?notes+"\n\n":"")+"Creato con Sliss");
+  return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${t}&dates=${start}/${end}&details=${details}`;
+};
