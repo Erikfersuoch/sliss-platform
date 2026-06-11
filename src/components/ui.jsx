@@ -185,17 +185,18 @@ export const SendCoach = () => {
 
 // Dritte "Lo sapevi?" dedicate ai tester CALDI (chi già usa l'app): fanno scoprire funzioni
 // che probabilmente non sfruttano. Una alla volta, dismissibile (✕), avanza alla successiva;
-// finite le dritte sparisce. Progresso persistito in localStorage. Scelta di fase test.
+// finite le dritte sparisce. Progresso in sessionStorage: tornano riaprendo l'app (così uno
+// può rivederle), ma non si ripetono navigando dentro la stessa sessione. Scelta di fase test.
 const WARM_TIPS = [
   { emoji: "\u{270F}\u{FE0F}", text: "Puoi modificare il messaggio di un follow-up prima di inviarlo: aprilo e tocca “Modifica messaggio”." },
   { emoji: "\u{1F515}", text: "Non usi tutti i follow-up? Disattiva quelli che non ti servono dai Template.", view: "templates", cta: "Apri Template" },
   { emoji: "\u{1F517}", text: "Puoi far compilare i dati al cliente con un link, col tasto “Invita cliente”." },
 ];
 export const WarmTips = ({ setView }) => {
-  const [idx, setIdx] = useState(() => Number(localStorage.getItem("sliss-tips-idx") || 0));
+  const [idx, setIdx] = useState(() => Number(sessionStorage.getItem("sliss-tips-idx") || 0));
   if (idx >= WARM_TIPS.length) return null;
   const t = WARM_TIPS[idx];
-  const advance = () => { const n = idx + 1; localStorage.setItem("sliss-tips-idx", String(n)); setIdx(n); };
+  const advance = () => { const n = idx + 1; sessionStorage.setItem("sliss-tips-idx", String(n)); setIdx(n); };
   return (
     <div style={{display:"flex",alignItems:"flex-start",gap:"11px",background:T.blueS,border:`1px solid ${T.blue}33`,borderRadius:T.r.l,padding:"12px 13px",marginBottom:"14px"}}>
       <span style={{fontSize:"18px",flexShrink:0,lineHeight:1.2}} aria-hidden="true">{t.emoji}</span>
