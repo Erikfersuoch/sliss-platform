@@ -8,10 +8,20 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-// Orari UTC — Italy CEST = UTC+2 (estate)
-// moira: inserimento 19:30 CEST = 17:30 UTC | followup 12:30 CEST = 10:30 UTC
-// luca:  inserimento 20:30 CEST = 18:30 UTC | followup 12:00 CEST = 10:00 UTC
-// Hobby plan: ogni cron gira 1x/giorno con precisione ±59min
+// ─────────────────────────────────────────────────────────────────────────
+// Vincolo Vercel Hobby: MAX 2 cron job per account. Avevamo 5 cron (2 per
+// tester + report) → Vercel ne registrava solo 2 e ignorava gli altri in
+// silenzio (per questo il report e le notifiche di Luca non partivano).
+// Soluzione: 2 soli cron che fanno broadcast a TUTTI i tester, e il cron
+// serale porta anche il report a Erik. Orari condivisi tra i tester (il
+// per-utente fine richiederebbe più cron → arriverà con la schermata orari
+// in Fase 3). Gli invii manuali singoli (?target=&type=) restano invariati.
+// ─────────────────────────────────────────────────────────────────────────
+
+// Tester attivi che ricevono i reminder ricorrenti. Hardcoded di proposito.
+const TESTERS = ['moira', 'luca'];
+const REPORT_RECIPIENT = 'ceoerik';
+const GATE = new Date('2026-06-21T00:00:00Z');
 
 const MESSAGES = {
   inserimento: {
@@ -38,40 +48,76 @@ const MESSAGES = {
   },
 };
 
+// Invio a un singolo destinatario, con pulizia delle subscription scadute (404/410).
+async function sendTo(target, payload) {
+  const subscription = await kv.get(`sub:${target}`);
+  if (!subscription) {
+    console.log(`[notify] no subscription for ${target}`);
+    return { target, skipped: 'no-subscription' };
+  }
+  try {
+    await webpush.sendNotification(subscription, JSON.stringify(payload));
+    console.log(`[notify] sent ${payload.tag} to ${target}`);
+    return { target, sent: true };
+  } catch (err) {
+    if (err.statusCode === 404 || err.statusCode === 410) {
+      await kv.del(`sub:${target}`);
+      console.log(`[notify] subscription scaduta per ${target}, rimossa`);
+      return { target, skipped: 'expired-removed' };
+    }
+    console.error(`[notify] errore invio a ${target}:`, err.statusCode);
+    return { target, error: err.statusCode || 'unknown' };
+  }
+}
+
+// Report giornaliero dell'andamento tester verso Erik (ex api/gate-report.js,
+// ora innescato dal cron serale via ?report=1). Auto-silenzio oltre il gate.
+async function sendGateReport() {
+  const daysLeft = Math.ceil((GATE - new Date()) / 86400000);
+  if (daysLeft < -1) return { skipped: 'oltre-il-gate' };
+  const read = async (t) => {
+    const days = (await kv.smembers(`usedays:${t}`)) || [];
+    const usage = await kv.get(`usage:${t}`);
+    return { days: days.length, sent: usage?.followUpsSent ?? 0 };
+  };
+  const m = await read('moira');
+  const l = await read('luca');
+  const head = daysLeft <= 0 ? '🗳️ Oggi è il gate M1!' : `${daysLeft}gg al gate M1`;
+  return sendTo(REPORT_RECIPIENT, {
+    title: 'Sliss — andamento tester',
+    body: `${head} · Moira: ${m.days}gg attivi (${m.sent} inviati) · Luca: ${l.days}gg (${l.sent})`,
+    tag: 'sliss-gate',
+    url: '/',
+  });
+}
+
 export default async function handler(req, res) {
   const auth = req.headers['authorization'];
   if (process.env.CRON_SECRET && auth !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).end();
   }
 
-  const { target, type } = req.query;
-  if (!target || !type || !MESSAGES[type]) {
-    return res.status(400).json({ error: 'missing or invalid target/type' });
-  }
-
-  const subscription = await kv.get(`sub:${target}`);
-  if (!subscription) {
-    console.log(`[notify] no subscription for ${target}`);
-    return res.status(200).json({ ok: true, skipped: true, reason: 'no subscription' });
+  const { target, type, report } = req.query;
+  if (!type || !MESSAGES[type]) {
+    return res.status(400).json({ error: 'missing or invalid type' });
   }
 
   const { title, body, url } = MESSAGES[type];
-  try {
-    await webpush.sendNotification(
-      subscription,
-      JSON.stringify({ title, body, tag: `sliss-${type}`, url: url || '/' })
-    );
-  } catch (err) {
-    // 404/410 = subscription scaduta o revocata → rimuovila dal database
-    if (err.statusCode === 404 || err.statusCode === 410) {
-      await kv.del(`sub:${target}`);
-      console.log(`[notify] subscription scaduta per ${target}, rimossa`);
-      return res.status(200).json({ ok: true, skipped: true, reason: 'subscription expired, removed' });
-    }
-    console.error(`[notify] errore invio a ${target}:`, err.statusCode, err.body);
-    return res.status(500).json({ ok: false, error: 'send failed', statusCode: err.statusCode });
+  const payload = { title, body, tag: `sliss-${type}`, url: url || '/' };
+
+  const results = [];
+  if (target) {
+    // Invio singolo: push manuali (aggiornamento/feedback/conferma) o test puntuali.
+    results.push(await sendTo(target, payload));
+  } else {
+    // Broadcast dai cron: tutti i tester attivi ricevono il reminder.
+    for (const t of TESTERS) results.push(await sendTo(t, payload));
   }
 
-  console.log(`[notify] sent ${type} to ${target}`);
-  return res.status(200).json({ ok: true, sent: { target, type } });
+  // Il cron serale porta anche il report a Erik.
+  let reportResult = null;
+  if (report) reportResult = await sendGateReport();
+
+  console.log(`[notify] ${type} · ${target || 'broadcast'} · report=${!!report}`);
+  return res.status(200).json({ ok: true, type, results, report: reportResult });
 }

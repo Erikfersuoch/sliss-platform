@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sliss · Redesign onboarding + Home primo accesso — anteprima prima/dopo</title>
+<style>
+  :root{
+    --bg:#F8F9FA; --bg2:#FFFFFF; --bg3:#F1F3F5; --bg4:#E9ECEF;
+    --border:#DEE2E6; --borderH:#ADB5BD;
+    --text:#111318; --textM:#495057; --textD:#5C636A; --textMu:#6C757D;
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10); --greenG:rgba(22,163,74,.18);
+    --blue:#2563EB; --blueS:rgba(37,99,235,.10);
+    --amber:#D97706; --amberD:#B45309; --amberS:rgba(217,119,6,.10);
+    --red:#DC2626; --redS:rgba(220,38,38,.10);
+    --purple:#7C3AED; --purpleS:rgba(124,58,237,.10);
+    --teal:#0D9488; --tealD:#0F766E; --tealS:rgba(13,148,136,.10);
+    --r-m:10px; --r-l:14px; --r-xl:20px;
+    --wa:#d9fdd3; /* bolla WhatsApp in uscita */
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.6;
+    -webkit-font-smoothing:antialiased;padding:40px 20px 80px;
+  }
+  .wrap{max-width:1080px;margin:0 auto}
+  header.page{margin-bottom:8px}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.03em;color:var(--text)}
+  .logo span{color:var(--green)}
+  h1.title{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:14px 0 8px;text-wrap:balance}
+  .lede{font-size:15.5px;color:var(--textM);max-width:70ch;text-wrap:pretty}
+  .meta{font-size:12.5px;color:var(--textMu);margin-top:10px}
+
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:22px 0 8px;font-size:13px;color:var(--textM)}
+  .legend b{display:inline-flex;align-items:center;gap:7px;font-weight:500}
+  .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+  section.block{margin-top:48px}
+  h2.sec{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:4px}
+  h3.sub{font-size:23px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;text-wrap:balance}
+  .sub-note{font-size:14.5px;color:var(--textM);max-width:74ch;margin-bottom:24px;text-wrap:pretty}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  @media(max-width:760px){.compare{grid-template-columns:1fr}}
+  .col-head{display:flex;align-items:center;gap:9px;margin-bottom:14px;font-size:13px;font-weight:700;letter-spacing:.02em}
+  .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em}
+  .tag.before{background:var(--redS);color:var(--red)}
+  .tag.after{background:var(--greenS);color:var(--greenH)}
+
+  /* telefono */
+  .phones{display:flex;gap:18px;flex-wrap:wrap}
+  .phone{
+    width:248px;flex:0 0 248px;background:var(--bg);border:1px solid var(--border);
+    border-radius:30px;padding:12px 11px;box-shadow:0 12px 30px -14px rgba(17,19,24,.25);
+    position:relative;
+  }
+  .phone .notch{width:78px;height:5px;border-radius:3px;background:var(--bg4);margin:2px auto 12px}
+  .screen{background:var(--bg);border-radius:20px;padding:16px 14px 18px;min-height:420px;display:flex;flex-direction:column}
+  .screen.center{align-items:center;text-align:center;justify-content:flex-start}
+  .slisslogo{font-weight:800;font-size:15px;letter-spacing:-.03em;margin-bottom:16px}
+  .slisslogo span{color:var(--green)}
+  .emoji{font-size:42px;margin-bottom:14px;line-height:1}
+  .h-step{font-size:19px;font-weight:700;letter-spacing:-.02em;margin-bottom:9px;text-wrap:balance}
+  .p-step{font-size:13px;color:var(--textM);line-height:1.6;margin-bottom:16px}
+  .field{width:100%;text-align:left;margin-bottom:14px}
+  .field label{display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--textD);margin-bottom:6px}
+  .field .input{width:100%;border:1px solid var(--border);border-radius:var(--r-m);padding:12px 13px;font-size:14px;color:var(--textMu);background:var(--bg2)}
+  .field .input.center{text-align:center;font-size:16px}
+  .btn{width:100%;text-align:center;background:var(--green);color:#fff;font-weight:600;font-size:14px;padding:13px;border-radius:var(--r-l);border:none}
+  .btn.secondary{background:var(--bg2);color:var(--text);border:1px solid var(--border)}
+  .btn.ghost{background:none;color:var(--textD);border:none;font-weight:500}
+  .dots{display:flex;gap:5px;justify-content:center;margin-top:18px}
+  .dots i{width:6px;height:6px;border-radius:3px;background:var(--border);display:block}
+  .dots i.on{width:18px;background:var(--green)}
+
+  .opt{display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r-l);text-align:left;margin-bottom:9px;width:100%}
+  .opt .oico{font-size:21px}
+  .opt .ol{font-size:13.5px;font-weight:500}
+  .opt .od{font-size:11px;color:var(--textD);margin-top:1px}
+
+  /* pill moduli */
+  .pills{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:18px}
+  .pill{font-size:11.5px;font-weight:600;padding:6px 11px;border-radius:999px}
+  .pill.on{background:var(--greenS);color:var(--greenH);border:1px solid var(--green)}
+  .pill.soon{background:var(--bg3);color:var(--textMu);border:1px dashed var(--border)}
+  .footnote{font-size:11px;color:var(--textMu);margin-top:6px}
+
+  /* step numerati (vecchio) */
+  .nstep{display:flex;align-items:center;gap:11px;padding:11px 13px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-l);margin-bottom:8px;text-align:left;width:100%}
+  .nstep .num{width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .nstep span{font-size:12.5px;color:var(--textM)}
+
+  /* mini-telefono dentro lo screen (l'AHA) */
+  .miniphone{width:100%;background:#EAE6DF;border-radius:16px;padding:9px 8px;border:1px solid var(--border)}
+  .wa-top{display:flex;align-items:center;gap:7px;padding:4px 4px 9px}
+  .wa-av{width:24px;height:24px;border-radius:50%;background:var(--teal);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .wa-name{font-size:12px;font-weight:600;color:#0b3d2e;text-align:left;line-height:1.2}
+  .wa-sub{font-size:9.5px;color:#3a6b58}
+  .daysep{display:flex;justify-content:center;margin:6px 0}
+  .daysep span{font-size:9px;font-weight:600;color:#5b6b63;background:#f4efe7;border-radius:7px;padding:2px 9px}
+  .bubble{background:var(--wa);border-radius:9px 9px 2px 9px;padding:7px 9px 5px;margin:0 4px 4px auto;max-width:88%;text-align:left;box-shadow:0 1px 0 rgba(0,0,0,.04)}
+  .bubble p{font-size:11px;color:#0b1f18;line-height:1.45}
+  .bubble .tick{font-size:8.5px;color:#34a853;text-align:right;margin-top:1px;font-weight:700}
+  .aha-cap{font-size:12px;color:var(--textM);margin:14px 0 4px;line-height:1.5}
+  .aha-cap b{color:var(--green)}
+
+  /* Home */
+  .home-greet-date{font-size:11px;color:var(--textD);text-align:left;width:100%}
+  .home-greet{font-size:20px;font-weight:700;letter-spacing:-.02em;text-align:left;width:100%;line-height:1.2;margin-bottom:14px}
+  .home-greet b{color:var(--green)}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:100%;margin-bottom:14px}
+  .stat{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-l);padding:11px 9px;text-align:left}
+  .stat .sl{font-size:9.5px;color:var(--textD);font-weight:500}
+  .stat .sv{font-size:22px;font-weight:700;line-height:1;margin:3px 0}
+  .stat .ss{font-size:9.5px;color:var(--textMu)}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-l);padding:14px;width:100%;text-align:left;margin-bottom:11px}
+  .card h4{font-size:13.5px;font-weight:700;margin-bottom:10px}
+  .empty-mini{text-align:center;padding:10px 0;color:var(--textD);font-size:12px}
+  .empty-mini .big{font-size:22px;margin-bottom:5px}
+
+  /* activation card (nuova Home) */
+  .activate{width:100%;background:linear-gradient(180deg,var(--greenS),var(--bg2));border:1px solid var(--green);border-radius:var(--r-xl);padding:20px 16px;text-align:center;margin-bottom:12px}
+  .activate .ic{width:46px;height:46px;border-radius:14px;background:var(--green);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+  .activate h4{font-size:16px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+  .activate p{font-size:12.5px;color:var(--textM);line-height:1.55;margin-bottom:14px}
+  .invite-link{font-size:12px;color:var(--textD);margin-top:11px;display:inline-block}
+  .invite-link b{color:var(--blue);font-weight:600}
+  .invite-link .ex{display:block;font-size:10.5px;color:var(--textMu);margin-top:1px}
+
+  /* annotazioni frizione / fix */
+  .anno{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .note{display:flex;gap:9px;font-size:12.5px;line-height:1.5;padding:9px 11px;border-radius:var(--r-m)}
+  .note.bad{background:var(--redS);color:#7f1d1d}
+  .note.good{background:var(--greenS);color:#14532d}
+  .note .k{flex-shrink:0;font-weight:800}
+
+  .takeaway{margin-top:54px;background:var(--bg2);border:1px solid var(--border);border-left:none;border-radius:var(--r-xl);padding:26px 28px}
+  .takeaway h3{font-size:18px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  .takeaway ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .takeaway li{display:flex;gap:11px;font-size:14px;color:var(--textM);line-height:1.55}
+  .takeaway li .n{flex-shrink:0;width:22px;height:22px;border-radius:7px;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .takeaway li b{color:var(--text)}
+  footer{margin-top:40px;font-size:12px;color:var(--textMu);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="page">
+    <div class="logo">Sl<span>i</span>ss</div>
+    <h1 class="title">Onboarding + Home primo accesso — redesign</h1>
+    <p class="lede">Obiettivo: un professionista che non ha mai visto Sliss capisce <b>cosa fare</b> senza leggere muri di testo. Meno schermate da leggere, più cose da <i>vedere</i>. Anteprima prima/dopo con i colori reali dell'app, da approvare prima di toccare il codice.</p>
+    <div class="meta">v6.6 · colori reali del tema · esempi di messaggio presi dai template veri (settore Beauty)</div>
+    <div class="legend">
+      <b><span class="dot" style="background:var(--red)"></span> Frizione attuale</b>
+      <b><span class="dot" style="background:var(--green)"></span> Come la sciogliamo</b>
+    </div>
+  </header>
+
+  <!-- ============ 1 · STEP INIZIALE: NOME ============ -->
+  <section class="block">
+    <h2 class="sec">Onboarding · schermata 1</h2>
+    <h3 class="sub">Una domanda alla volta</h3>
+    <p class="sub-note">Il primo passo oggi chiede il nome attività <i>e</i> il link Google Reviews. Nessun freddo ha quel link a portata di mano al primo avvio, e non sa ancora perché serve: si blocca o si innervosisce.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span> Nome + link recensioni</div>
+        <div class="phones"><div class="phone"><div class="notch"></div><div class="screen center">
+          <div class="slisslogo">Sl<span>i</span>ss</div>
+          <div class="emoji">💼</div>
+          <div class="h-step">Come si chiama la tua attività?</div>
+          <div class="p-step">Apparirà nel saluto della home.</div>
+          <div class="field"><div class="input center">Es. Momo Ink</div></div>
+          <div class="field"><label>Link Google Reviews (opzionale)</label><div class="input">https://g.page/r/…</div></div>
+          <div class="btn">Avanti →</div>
+          <div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div>
+        </div></div></div>
+        <div class="anno"><div class="note bad"><span class="k">⚠</span> Il campo recensioni è rumore: chiesto troppo presto, fuori contesto. Due cose da decidere in una schermata sola.</div></div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span> Solo il nome</div>
+        <div class="phones"><div class="phone"><div class="notch"></div><div class="screen center">
+          <div class="slisslogo">Sl<span>i</span>ss</div>
+          <div class="emoji">💼</div>
+          <div class="h-step">Come si chiama la tua attività?</div>
+          <div class="p-step">Apparirà nel saluto della home. Potrai cambiarlo quando vuoi.</div>
+          <div class="field"><div class="input center">Es. Momo Ink</div></div>
+          <div class="btn">Avanti →</div>
+          <div class="dots"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        </div></div></div>
+        <div class="anno">
+          <div class="note good"><span class="k">✓</span> Un campo, una decisione. Si va avanti in un secondo.</div>
+          <div class="note good"><span class="k">✓</span> Il link recensioni si chiede dopo, in Impostazioni, quando ha senso (è facoltativo e raro al primo avvio).</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2 · L'AHA: due schermate di testo → una che mostra ============ -->
+  <section class="block">
+    <h2 class="sec">Onboarding · il cuore</h2>
+    <h3 class="sub">Mostrare, non spiegare</h3>
+    <p class="sub-note">Oggi ci sono <b>due schermate di sola lettura</b> di fila: una elenca i moduli futuri (cose che il freddo non può usare), l'altra spiega "cos'è un follow-up" con un paragrafo. Proprio il concetto-chiave dell'app è quello meno visivo. Le fondiamo in <b>una schermata che fa vedere</b> cosa farà Sliss: una conversazione vera, nel tempo.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span> Due muri di testo</div>
+        <div class="phones">
+          <div class="phone"><div class="notch"></div><div class="screen center">
+            <div class="slisslogo">Sl<span>i</span>ss</div>
+            <div class="emoji">🧩</div>
+            <div class="h-step">I moduli di Sliss</div>
+            <div class="p-step">Sliss segue il cliente in più fasi del rapporto. Oggi è attivo il primo modulo; gli altri arriveranno.</div>
+            <div class="pills">
+              <span class="pill on">● Follow-Up · attivo</span>
+              <span class="pill soon">Richieste · presto</span>
+              <span class="pill soon">Recensioni · presto</span>
+              <span class="pill soon">Riattivazione · presto</span>
+            </div>
+            <div class="btn">Avanti →</div>
+          </div></div>
+          <div class="phone"><div class="notch"></div><div class="screen center">
+            <div class="slisslogo">Sl<span>i</span>ss</div>
+            <div class="emoji">💬</div>
+            <div class="h-step">Il tuo primo modulo: Follow-Up</div>
+            <div class="p-step">I follow-up sono i messaggi di cortesia che mandi al cliente dopo: il grazie, un controllo, l'invito a una recensione, un promemoria per tornare. Sliss te li ricorda e te li scrive già pronti…</div>
+            <div class="nstep"><span class="num">1</span><span>Aggiungi un cliente</span></div>
+            <div class="nstep"><span class="num">2</span><span>Inserisci un appuntamento</span></div>
+            <div class="nstep"><span class="num">3</span><span>Sliss prepara i messaggi per te</span></div>
+          </div></div>
+        </div>
+        <div class="anno">
+          <div class="note bad"><span class="k">⚠</span> Schermata "moduli": parla della tua roadmap, non di lui. Il freddo legge "presto" e pensa "e adesso io che faccio?".</div>
+          <div class="note bad"><span class="k">⚠</span> Il concetto più importante (cos'è un follow-up) è raccontato in 4 righe. Chi non legge — la maggioranza — lo perde.</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span> Una schermata che fa vedere</div>
+        <div class="phones"><div class="phone"><div class="notch"></div><div class="screen center">
+          <div class="slisslogo">Sl<span>i</span>ss</div>
+          <div class="h-step" style="margin-top:4px">Ecco cosa farà Sliss per te</div>
+          <div class="p-step" style="margin-bottom:12px">Dopo ogni cliente, tiene il filo al posto tuo — al momento giusto.</div>
+          <div class="miniphone">
+            <div class="wa-top">
+              <div class="wa-av">G</div>
+              <div><div class="wa-name">Giulia · cliente</div><div class="wa-sub">WhatsApp</div></div>
+            </div>
+            <div class="daysep"><span>Oggi · subito</span></div>
+            <div class="bubble"><p>Ciao Giulia! Grazie per essere passata oggi ✨ Spero ti sia piaciuto il trattamento. A presto!</p><div class="tick">✓✓ inviato con 1 tap</div></div>
+            <div class="daysep"><span>Tra 7 giorni</span></div>
+            <div class="bubble"><p>Ciao Giulia! Come ti stai trovando dopo il trattamento? Tutto ok? Sono qui 🙏</p><div class="tick">✓✓</div></div>
+            <div class="daysep"><span>Tra 21 giorni</span></div>
+            <div class="bubble"><p>Ciao Giulia! Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo ✨</p><div class="tick">✓✓</div></div>
+          </div>
+          <div class="aha-cap">Lo scrive <b>Sliss</b>, lo invii <b>tu</b> con un tap.<br>In futuro partirà in automatico.</div>
+          <div class="footnote">Presto anche: Richieste · Recensioni · Riattivazione</div>
+          <div class="btn" style="margin-top:14px">Iniziamo →</div>
+          <div class="dots"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div>
+        </div></div></div>
+        <div class="anno">
+          <div class="note good"><span class="k">✓</span> Capisce in un secondo: vede i messaggi veri, vede che arrivano <i>scaglionati nel tempo</i>, vede che basta un tap.</div>
+          <div class="note good"><span class="k">✓</span> Due schermate diventano una: meno lettura, più "ah, ho capito". I moduli futuri scendono a una riga in fondo.</div>
+          <div class="note good"><span class="k">✓</span> I messaggi sono quelli reali del suo settore (qui Beauty): si riconosce.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3 · HOME PRIMO ACCESSO ============ -->
+  <section class="block">
+    <h2 class="sec">Dopo l'onboarding · Home</h2>
+    <h3 class="sub">Niente schermo bianco</h3>
+    <p class="sub-note">Appena finito, l'utente atterra su una Home vuota che però dichiara <b>"Tutto fatto per oggi!"</b> — straniante: non ha fatto niente. E trova due bottoni gemelli ("Aggiungi" / "Invita") senza capire la differenza. È il punto dove il freddo molla. Lo sostituiamo con una sola azione ovvia.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span> Vuota e contraddittoria</div>
+        <div class="phones"><div class="phone"><div class="notch"></div><div class="screen">
+          <div class="home-greet-date">mercoledì 11 giugno</div>
+          <div class="home-greet">Buongiorno,<br><b>Momo Ink</b> 👋</div>
+          <div class="btn" style="margin-bottom:8px">+ Aggiungi cliente</div>
+          <div class="btn secondary" style="margin-bottom:14px">🔗 Invita cliente</div>
+          <div class="stat-row">
+            <div class="stat"><div class="sl">Da inviare</div><div class="sv" style="color:var(--green)">0</div><div class="ss">tutto ok</div></div>
+            <div class="stat"><div class="sl">Inviati</div><div class="sv" style="color:var(--green)">0</div><div class="ss">storico</div></div>
+            <div class="stat"><div class="sl">Attivi</div><div class="sv" style="color:var(--green)">0</div><div class="ss">0 da riatt.</div></div>
+          </div>
+          <div class="card"><h4>Da fare oggi</h4><div class="empty-mini"><div class="big">✅</div>Tutto fatto per oggi!</div></div>
+          <div class="card"><h4>Clienti</h4><div class="empty-mini">Nessun cliente ancora</div></div>
+        </div></div></div>
+        <div class="anno">
+          <div class="note bad"><span class="k">⚠</span> "✅ Tutto fatto per oggi!" su una app vuota: messaggio sbagliato nel momento sbagliato.</div>
+          <div class="note bad"><span class="k">⚠</span> Tre contatori a zero = rumore senza informazione.</div>
+          <div class="note bad"><span class="k">⚠</span> Due bottoni gemelli: quale uso? che differenza c'è?</div>
+        </div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span> Un solo "inizia da qui"</div>
+        <div class="phones"><div class="phone"><div class="notch"></div><div class="screen">
+          <div class="home-greet-date">mercoledì 11 giugno</div>
+          <div class="home-greet">Buongiorno,<br><b>Momo Ink</b> 👋</div>
+          <div class="activate">
+            <div class="ic">🎯</div>
+            <h4>Inizia da qui</h4>
+            <p>Aggiungi il tuo primo cliente: Sliss preparerà subito i messaggi da inviargli, già scritti.</p>
+            <div class="btn">+ Aggiungi il tuo primo cliente</div>
+            <span class="invite-link">oppure <b>invitalo con un link</b><span class="ex">glielo mandi, lo compila lui ed entra da solo</span></span>
+          </div>
+          <div class="card"><h4 style="color:var(--textMu);font-weight:600">Qui vedrai i tuoi clienti</h4><div class="empty-mini" style="padding-top:2px">Appena ne aggiungi uno, compare la sua scheda con lo stato dei follow-up.</div></div>
+        </div></div></div>
+        <div class="anno">
+          <div class="note good"><span class="k">✓</span> Un'azione ovvia e sola: sa esattamente cosa toccare. Niente paralisi.</div>
+          <div class="note good"><span class="k">✓</span> Bottoni gemelli sciolti: "Aggiungi" è il primario, "Invita" diventa un'opzione con una riga che la spiega.</div>
+          <div class="note good"><span class="k">✓</span> Contatori a zero nascosti finché non servono. La Home normale (con stat e "Da fare oggi") torna appena c'è il primo cliente.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SINTESI ============ -->
+  <div class="takeaway">
+    <h3>Cosa cambia, in sintesi</h3>
+    <ul>
+      <li><span class="n">1</span><div><b>Onboarding da 7 a 6 schermate.</b> Le due schermate di sola lettura (moduli + spiegazione follow-up) diventano una sola che <i>mostra</i> una conversazione vera nel tempo. Meno da leggere, più da capire.</div></li>
+      <li><span class="n">2</span><div><b>Link Google Reviews via dal primo step</b> → in Impostazioni, dove ha senso e non blocca.</div></li>
+      <li><span class="n">3</span><div><b>L'esempio usa i messaggi reali del settore scelto</b> (qui Beauty), così il professionista si riconosce subito.</div></li>
+      <li><span class="n">4</span><div><b>Home primo accesso senza schermo bianco:</b> un solo "Inizia da qui" con l'azione ovvia, niente "Tutto fatto" fuorviante, contatori a zero nascosti.</div></li>
+      <li><span class="n">5</span><div><b>Bottoni gemelli sciolti</b> in Home (come già fatto in Agenda): un primario chiaro, "Invita" come opzione spiegata.</div></li>
+    </ul>
+  </div>
+
+  <footer>Sliss · anteprima di design — nessun codice dell'app è stato modificato. Approva o segna le modifiche, poi si passa al codice una schermata alla volta.</footer>
+
+</div>
+</body>
+</html>

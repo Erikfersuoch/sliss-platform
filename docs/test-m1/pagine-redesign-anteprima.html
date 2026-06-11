@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="it" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sliss · Redesign empty state — tutte le pagine — anteprima prima/dopo</title>
+<style>
+  :root{
+    --bg:#F8F9FA; --bg2:#FFFFFF; --bg3:#F1F3F5; --bg4:#E9ECEF;
+    --border:#DEE2E6; --borderH:#ADB5BD;
+    --text:#111318; --textM:#495057; --textD:#5C636A; --textMu:#6C757D;
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10); --greenG:rgba(22,163,74,.18);
+    --blue:#2563EB; --blueS:rgba(37,99,235,.10);
+    --amber:#D97706; --amberD:#B45309; --amberS:rgba(217,119,6,.10);
+    --red:#DC2626; --redS:rgba(220,38,38,.10);
+    --purple:#7C3AED; --purpleS:rgba(124,58,237,.10);
+    --teal:#0D9488; --tealD:#0F766E; --tealS:rgba(13,148,136,.10);
+    --r-s:6px; --r-m:10px; --r-l:14px; --r-xl:20px;
+    --wa:#d9fdd3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;padding:40px 20px 90px}
+  .wrap{max-width:1080px;margin:0 auto}
+  .logo{font-weight:800;font-size:20px;letter-spacing:-.03em}
+  .logo span{color:var(--green)}
+  h1.title{font-size:30px;font-weight:800;letter-spacing:-.03em;margin:14px 0 8px;text-wrap:balance}
+  .lede{font-size:15.5px;color:var(--textM);max-width:72ch;text-wrap:pretty}
+  .meta{font-size:12.5px;color:var(--textMu);margin-top:10px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin:22px 0 0;font-size:13px;color:var(--textM)}
+  .legend b{display:inline-flex;align-items:center;gap:7px;font-weight:500}
+  .dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+  section.block{margin-top:50px}
+  h2.sec{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:4px}
+  h3.sub{font-size:23px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px;text-wrap:balance}
+  .sub-note{font-size:14.5px;color:var(--textM);max-width:76ch;margin-bottom:22px;text-wrap:pretty}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+  @media(max-width:760px){.compare{grid-template-columns:1fr}}
+  .col-head{display:flex;align-items:center;gap:9px;margin-bottom:13px;font-size:13px;font-weight:700}
+  .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;letter-spacing:.03em}
+  .tag.before{background:var(--redS);color:var(--red)}
+  .tag.after{background:var(--greenS);color:var(--greenH)}
+
+  .phone{width:260px;background:var(--bg);border:1px solid var(--border);border-radius:30px;padding:12px 11px;box-shadow:0 12px 30px -14px rgba(17,19,24,.25)}
+  .phone .notch{width:78px;height:5px;border-radius:3px;background:var(--bg4);margin:2px auto 12px}
+  .screen{background:var(--bg);border-radius:20px;padding:14px 13px 18px;min-height:380px}
+  .pagehead{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .pagehead h4{font-size:18px;font-weight:700}
+  .mini-btn{font-size:11px;font-weight:600;padding:6px 11px;border-radius:9px;background:var(--green);color:#fff;border:none}
+  .mini-btn.sec{background:var(--bg2);color:var(--text);border:1px solid var(--border)}
+  .tabs{display:flex;gap:5px;margin-bottom:11px}
+  .tabs .t{flex:1;text-align:center;font-size:11px;font-weight:600;padding:7px 0;border-radius:8px;background:var(--bg3);color:var(--textD)}
+  .tabs .t.on{background:var(--greenS);color:var(--greenH)}
+  .searchbar{width:100%;border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:11.5px;color:var(--textMu);background:var(--bg2);margin-bottom:12px}
+
+  /* EMPTY — vecchio */
+  .old-empty{text-align:center;padding:50px 18px}
+  .old-empty .ic{font-size:42px;margin-bottom:13px;opacity:.35}
+  .old-empty .t{font-size:15px;font-weight:600;color:var(--textM);margin-bottom:7px}
+  .old-empty .d{font-size:13px;color:var(--textD);max-width:230px;margin:0 auto 16px;line-height:1.65}
+  .old-empty .a{display:inline-block;font-size:12px;font-weight:600;padding:9px 16px;border-radius:11px;background:var(--green);color:#fff}
+
+  /* EMPTY — nuovo (teaching) */
+  .new-empty{text-align:center;padding:22px 14px 26px}
+  .ghost-wrap{position:relative;margin-bottom:18px}
+  .ghost-wrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,var(--bg) 95%);pointer-events:none}
+  .ghost-lbl{font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--textMu);margin-bottom:7px}
+  .ghost{opacity:.5}
+  .ghost.tight{opacity:.42}
+  .grow{display:flex;align-items:center;gap:10px;padding:11px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;margin-bottom:7px;text-align:left}
+  .gav{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--textMu);font-size:13px}
+  .gline{flex:1}
+  .gline .a{height:9px;width:60%;background:var(--bg4);border-radius:5px;margin-bottom:6px}
+  .gline .b{height:7px;width:40%;background:var(--bg3);border-radius:5px}
+  .gbadge{width:46px;height:16px;border-radius:8px;background:var(--bg3);flex-shrink:0}
+  .new-empty h4{font-size:16px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+  .new-empty p{font-size:12.5px;color:var(--textM);line-height:1.55;max-width:235px;margin:0 auto 15px}
+  .new-empty .cta{display:inline-block;font-size:13px;font-weight:700;padding:11px 18px;border-radius:12px;background:var(--green);color:#fff;width:100%;max-width:235px}
+  .new-empty .filo{display:block;font-size:11.5px;color:var(--textD);margin-top:11px}
+  .new-empty .filo b{color:var(--blue);font-weight:600}
+
+  /* ghost bolla follow-up */
+  .gbubble{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px;text-align:left;margin-bottom:7px}
+  .gbubble .top{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+  .gbubble .ph{width:18px;height:18px;border-radius:5px;background:var(--blueS)}
+  .gbubble .nm{height:9px;width:70px;background:var(--bg4);border-radius:5px}
+  .gbubble .msg{height:7px;background:var(--bg3);border-radius:5px;margin-bottom:5px}
+  .gbubble .msg.s{width:80%}
+
+  /* trappola box */
+  .trap{margin-top:10px;background:var(--redS);border:1px solid rgba(220,38,38,.25);border-radius:11px;padding:11px 12px;text-align:left}
+  .trap .th{font-size:11.5px;font-weight:700;color:var(--red);margin-bottom:5px}
+  .trap .sel{font-size:11px;color:var(--textMu);background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center}
+  .trap .sel .empty{color:var(--red);font-style:italic}
+
+  .anno{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+  .note{display:flex;gap:9px;font-size:12.5px;line-height:1.5;padding:9px 11px;border-radius:var(--r-m)}
+  .note.bad{background:var(--redS);color:#7f1d1d}
+  .note.good{background:var(--greenS);color:#14532d}
+  .note .k{flex-shrink:0;font-weight:800}
+
+  /* filo diagram */
+  .filo-box{margin-top:14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:24px}
+  .filo-box h3{font-size:17px;font-weight:800;margin-bottom:6px}
+  .filo-box .fd{font-size:13.5px;color:var(--textM);margin-bottom:18px;max-width:70ch}
+  .flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .fnode{background:var(--greenS);border:1px solid var(--green);color:var(--greenH);font-weight:700;font-size:13px;padding:10px 15px;border-radius:12px}
+  .fnode.dim{background:var(--bg3);border:1px dashed var(--border);color:var(--textD);font-weight:600}
+  .farrow{color:var(--borderH);font-size:18px;font-weight:700}
+  .fpages{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  .fpage{font-size:12px;color:var(--textD);background:var(--bg3);border:1px solid var(--border);border-radius:9px;padding:7px 11px}
+  .fpage b{color:var(--green)}
+
+  .takeaway{margin-top:56px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r-xl);padding:26px 28px}
+  .takeaway h3{font-size:18px;font-weight:800;margin-bottom:14px}
+  .takeaway ul{list-style:none;display:flex;flex-direction:column;gap:11px}
+  .takeaway li{display:flex;gap:11px;font-size:14px;color:var(--textM);line-height:1.55}
+  .takeaway li .n{flex-shrink:0;width:22px;height:22px;border-radius:7px;background:var(--green);color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .takeaway li b{color:var(--text)}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+  @media(max-width:680px){.tiers{grid-template-columns:1fr}}
+  .tier{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:15px}
+  .tier .tt{font-size:12px;font-weight:800;color:var(--green);margin-bottom:7px}
+  .tier ul{list-style:none;font-size:12.5px;color:var(--textM);display:flex;flex-direction:column;gap:5px}
+  .tier li::before{content:"• ";color:var(--borderH)}
+  footer{margin-top:42px;font-size:12px;color:var(--textMu);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="logo">Sl<span>i</span>ss</div>
+    <h1 class="title">Empty state — tutte le pagine, lo stesso principio</h1>
+    <p class="lede">Un professionista freddo apre le pagine dal menù in basso in qualsiasi ordine. Ogni "primo momento" (spesso vuoto) deve <b>orientarlo</b>, non lasciarlo davanti al nulla. Qui: il componente condiviso rifatto una volta sola, le pagine pagina per pagina, la trappola di Agenda/Ordini, e il "filo" che riconduce sempre al punto di partenza.</p>
+    <div class="meta">Companion di onboarding-redesign-anteprima.html · colori reali · nessun codice toccato</div>
+    <div class="legend">
+      <b><span class="dot" style="background:var(--red)"></span> Frizione attuale</b>
+      <b><span class="dot" style="background:var(--green)"></span> Come la sciogliamo</b>
+    </div>
+  </header>
+
+  <!-- ===== 0 · IL COMPONENTE CONDIVISO ===== -->
+  <section class="block">
+    <h2 class="sec">La leva strutturale</h2>
+    <h3 class="sub">Un componente <code>&lt;Empty&gt;</code>, tutte le pagine</h3>
+    <p class="sub-note">Tutti gli empty state dell'app passano da un solo componente condiviso. Oggi mostra icona sbiadita + due righe grigie = "qui non c'è niente". Lo trasformiamo in uno che <b>insegna</b>: fa intravedere com'è la pagina piena, dice perché serve, e dà l'azione giusta. Lo sistemiamo una volta → migliorano tutte le schermate insieme.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span> "Qui non c'è niente"</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="old-empty">
+            <div class="ic">📭</div>
+            <div class="t">Nessun follow-up</div>
+            <div class="d">Non ci sono follow-up per questo filtro.</div>
+          </div>
+        </div></div>
+        <div class="anno"><div class="note bad"><span class="k">⚠</span> Icona sbiadita + testo grigio. Non dice cosa comparirà, perché, né cosa fare. Spesso senza nemmeno un tasto.</div></div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span> Uno che insegna</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="new-empty">
+            <div class="ghost-wrap">
+              <div class="ghost-lbl">comparirà così</div>
+              <div class="ghost">
+                <div class="gbubble"><div class="top"><div class="ph"></div><div class="nm"></div></div><div class="msg"></div><div class="msg s"></div></div>
+                <div class="gbubble"><div class="top"><div class="ph"></div><div class="nm"></div></div><div class="msg"></div><div class="msg s"></div></div>
+              </div>
+            </div>
+            <h4>Qui troverai i messaggi pronti</h4>
+            <p>Sliss li scrive e te li ricorda al momento giusto. Tu li mandi con un tap.</p>
+            <div class="cta">+ Aggiungi un cliente</div>
+            <span class="filo">ti serve prima un cliente per partire</span>
+          </div>
+        </div></div>
+        <div class="anno"><div class="note good"><span class="k">✓</span> Anteprima sbiadita di com'è pieno + perché serve + l'azione + il "filo" che rimanda al punto di partenza.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 1 · CLIENTI ===== -->
+  <section class="block">
+    <h2 class="sec">Pagina · Clienti</h2>
+    <h3 class="sub">Il punto di partenza vero</h3>
+    <p class="sub-note">Oggi l'empty di Clienti è già discreto (titolo + tasto), ma è solo testo e non dice <i>perché</i> aggiungere un cliente cambia qualcosa. Lo rendiamo l'inizio chiaro di tutto.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span></div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Clienti</h4><div><span class="mini-btn sec">🔗 Invita</span> <span class="mini-btn">+ Nuovo</span></div></div>
+          <div class="tabs"><div class="t on">Tutti</div><div class="t">Attivi</div><div class="t">Da riatt.</div></div>
+          <div class="searchbar">Cerca nome o email…</div>
+          <div class="old-empty"><div class="ic">👥</div><div class="t">Nessun cliente</div><div class="d">Aggiungi il tuo primo cliente per iniziare.</div><div class="a">+ Aggiungi</div></div>
+        </div></div>
+        <div class="anno"><div class="note bad"><span class="k">⚠</span> Tabs + ricerca su una lista vuota = rumore. "Per iniziare" non spiega cosa ci guadagna.</div></div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span></div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Clienti</h4></div>
+          <div class="new-empty">
+            <div class="ghost-wrap">
+              <div class="ghost-lbl">la tua scheda cliente</div>
+              <div class="ghost">
+                <div class="grow"><div class="gav">G</div><div class="gline"><div class="a"></div><div class="b"></div></div><div class="gbadge"></div></div>
+                <div class="grow"><div class="gav">M</div><div class="gline"><div class="a"></div><div class="b"></div></div><div class="gbadge"></div></div>
+              </div>
+            </div>
+            <h4>I tuoi clienti vivranno qui</h4>
+            <p>Per ognuno, Sliss tiene la scheda e prepara i follow-up. Niente più rubrica a memoria.</p>
+            <div class="cta">+ Aggiungi il primo cliente</div>
+            <span class="filo">oppure <b>invitalo con un link</b></span>
+          </div>
+        </div></div>
+        <div class="anno"><div class="note good"><span class="k">✓</span> Tabs/ricerca nascoste finché la lista è vuota. Anteprima della scheda + il "perché" + le due strade (aggiungi / invita) sciolte.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 2 · FOLLOW-UP (due casi) ===== -->
+  <section class="block">
+    <h2 class="sec">Pagina · Follow-Up</h2>
+    <h3 class="sub">Distinguere "vuoto" da "tutto fatto"</h3>
+    <p class="sub-note">Oggi qualsiasi vuoto dice la stessa cosa: "Nessun follow-up per questo filtro". Ma sono due situazioni diverse: <b>non hai ancora niente</b> (da insegnare + rimandare al cliente) vs <b>oggi non c'è nulla da inviare</b> (da rassicurare). Le separiamo.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span> Sempre uguale, sempre muto</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Follow-Up</h4></div>
+          <div class="tabs"><div class="t on">Da inviare</div><div class="t">Inviati</div><div class="t">Tutti</div></div>
+          <div class="searchbar">Cerca cliente…</div>
+          <div class="old-empty"><div class="ic">📭</div><div class="t">Nessun follow-up</div><div class="d">Non ci sono follow-up per questo filtro.</div></div>
+        </div></div>
+        <div class="anno"><div class="note bad"><span class="k">⚠</span> Nessuna azione, nessuna direzione. Il freddo che apre Follow-Up per primo non sa che deve passare da un cliente.</div></div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span> Due risposte diverse</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Follow-Up</h4></div>
+          <div class="new-empty" style="padding-top:14px">
+            <div class="ghost-lbl" style="margin-bottom:10px">caso A · non hai ancora niente</div>
+            <div class="ghost tight" style="margin-bottom:12px"><div class="gbubble"><div class="top"><div class="ph"></div><div class="nm"></div></div><div class="msg"></div><div class="msg s"></div></div></div>
+            <h4 style="font-size:15px">Qui arriveranno i messaggi pronti</h4>
+            <p>Appena un cliente ha un appuntamento, Sliss li prepara.</p>
+            <div class="cta" style="padding:10px">+ Aggiungi un cliente</div>
+          </div>
+          <div style="border-top:1px dashed var(--border);margin:6px 12px"></div>
+          <div style="text-align:center;padding:14px 14px 18px">
+            <div class="ghost-lbl" style="margin-bottom:8px">caso B · oggi è tutto a posto</div>
+            <div style="font-size:30px;margin-bottom:6px">👍</div>
+            <div style="font-size:14px;font-weight:700">Niente da inviare oggi</div>
+            <div style="font-size:12px;color:var(--textD);margin-top:4px">I prossimi follow-up sono programmati. <b style="color:var(--blue)">Vedi tutti →</b></div>
+          </div>
+        </div></div>
+        <div class="anno"><div class="note good"><span class="k">✓</span> Vuoto-iniziale: insegna e rimanda al cliente. Vuoto-di-oggi: rassicura ("👍 tutto a posto"), non allarma.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 3 · AGENDA + TRAPPOLA ===== -->
+  <section class="block">
+    <h2 class="sec">Pagina · Agenda (e Ordini)</h2>
+    <h3 class="sub">La trappola del cliente-vuoto</h3>
+    <p class="sub-note">Oggi l'empty di Agenda invita "+ Aggiungi appuntamento". Ma il form chiede di <b>selezionare un cliente da un menù</b>: se non ne hai ancora, il menù è vuoto e resti bloccato. Stessa cosa su Ordini. Il fix: quando non ci sono clienti, l'empty non offre l'appuntamento — ti manda <i>prima</i> ad aggiungere il cliente.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span> Vicolo cieco</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Agenda</h4></div>
+          <div class="old-empty" style="padding:34px 18px 14px"><div class="ic">📅</div><div class="t">Nessun appuntamento</div><div class="d">Aggiungi il primo appuntamento per generare i follow-up.</div><div class="a">+ Aggiungi</div></div>
+          <div class="trap">
+            <div class="th">…ma il form chiede:</div>
+            <div class="sel">Seleziona cliente… <span class="empty">(nessuno!)</span></div>
+          </div>
+        </div></div>
+        <div class="anno"><div class="note bad"><span class="k">⚠</span> Il tasto porta a un form inservibile: non c'è nessun cliente da scegliere. Il freddo si blocca e non capisce perché.</div></div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span> Ti manda al posto giusto</div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Agenda</h4></div>
+          <div class="new-empty">
+            <div class="ghost-wrap">
+              <div class="ghost-lbl">qui vedrai gli appuntamenti</div>
+              <div class="ghost">
+                <div class="grow"><div class="gline"><div class="a"></div><div class="b"></div></div><div class="gbadge"></div></div>
+              </div>
+            </div>
+            <h4>L'appuntamento parte da un cliente</h4>
+            <p>Prima aggiungi chi servirai, poi qui fissi l'appuntamento e i follow-up si generano da soli.</p>
+            <div class="cta">+ Aggiungi un cliente</div>
+            <span class="filo">poi torna qui per l'appuntamento</span>
+          </div>
+        </div></div>
+        <div class="anno">
+          <div class="note good"><span class="k">✓</span> Niente vicolo cieco: quando manca il cliente, l'azione è "aggiungi cliente", non "aggiungi appuntamento".</div>
+          <div class="note good"><span class="k">✓</span> Quando i clienti ci sono, l'empty torna normale con "+ Aggiungi appuntamento" funzionante. Stesso fix per Ordini.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 4 · FEEDBACK (tocco leggero) ===== -->
+  <section class="block">
+    <h2 class="sec">Pagina · Feedback</h2>
+    <h3 class="sub">Tocco leggero</h3>
+    <p class="sub-note">Pagina passiva (le recensioni arrivano quando arrivano): basta renderla calda e visiva, senza forzare un'azione che dipende dai clienti.</p>
+    <div class="compare">
+      <div>
+        <div class="col-head"><span class="tag before">PRIMA</span></div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Feedback</h4></div>
+          <div style="font-size:13px;font-weight:700;color:var(--textM);margin-bottom:10px">Ricevuti</div>
+          <div class="old-empty" style="padding:34px 18px"><div class="ic">⭐</div><div class="t">Nessun feedback</div><div class="d">Appariranno qui quando i clienti risponderanno.</div></div>
+        </div></div>
+        <div class="anno"><div class="note bad"><span class="k">~</span> Solo testo grigio. Funziona ma è freddo.</div></div>
+      </div>
+      <div>
+        <div class="col-head"><span class="tag after">DOPO</span></div>
+        <div class="phone"><div class="notch"></div><div class="screen">
+          <div class="pagehead"><h4>Feedback</h4></div>
+          <div class="new-empty" style="padding-top:24px">
+            <div class="ghost-wrap">
+              <div class="ghost-lbl">le recensioni dei clienti</div>
+              <div class="ghost"><div class="gbubble"><div style="font-size:14px;letter-spacing:2px;color:var(--amber);margin-bottom:6px">★★★★★</div><div class="msg"></div><div class="msg s"></div></div></div>
+            </div>
+            <h4>Le recensioni compariranno qui</h4>
+            <p>Chiedi una recensione dalla scheda di un cliente: quando risponde, la trovi qui.</p>
+          </div>
+        </div></div>
+        <div class="anno"><div class="note good"><span class="k">✓</span> Stesso linguaggio visivo (anteprima sbiadita), tono caldo, nessuna azione forzata.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== IL FILO ===== -->
+  <section class="block">
+    <h2 class="sec">Il punto che tiene insieme tutto</h2>
+    <h3 class="sub">Un solo filo: torna sempre al cliente</h3>
+    <div class="filo-box">
+      <h3>Le pagine si parlano</h3>
+      <div class="fd">Il modello di Sliss è una catena. Qualsiasi pagina il freddo apra per prima, se è vuota lo riconduce all'unico vero inizio: <b>aggiungi un cliente</b>. Così non sbatte mai contro un vuoto senza uscita.</div>
+      <div class="flow">
+        <span class="fnode">1 · Cliente</span><span class="farrow">→</span>
+        <span class="fnode">2 · Appuntamento</span><span class="farrow">→</span>
+        <span class="fnode dim">3 · Follow-up (auto)</span><span class="farrow">→</span>
+        <span class="fnode dim">4 · Recensione</span>
+      </div>
+      <div class="fpages">
+        <span class="fpage">Apre <b>Follow-Up</b> vuoto → "Aggiungi un cliente"</span>
+        <span class="fpage">Apre <b>Agenda</b> vuota → "Aggiungi un cliente"</span>
+        <span class="fpage">Apre <b>Ordini</b> vuoti → "Aggiungi un cliente"</span>
+        <span class="fpage">Apre <b>Feedback</b> vuoto → "dalla scheda cliente"</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== SINTESI + TIER ===== -->
+  <div class="takeaway">
+    <h3>Cosa cambia, in sintesi</h3>
+    <ul>
+      <li><span class="n">1</span><div><b>Il componente <code>&lt;Empty&gt;</code> rifatto una volta:</b> da "qui non c'è niente" a uno che mostra l'anteprima della pagina piena + perché + azione. Migliora ogni schermata insieme.</div></li>
+      <li><span class="n">2</span><div><b>Follow-Up distingue due vuoti:</b> "non hai ancora niente" (insegna, rimanda al cliente) vs "oggi tutto a posto" (rassicura).</div></li>
+      <li><span class="n">3</span><div><b>Fix della trappola Agenda/Ordini:</b> senza clienti, l'azione è "aggiungi cliente", non un form bloccato.</div></li>
+      <li><span class="n">4</span><div><b>Il "filo":</b> ogni pagina vuota riconduce all'unico inizio. Le pagine smettono di essere isole.</div></li>
+      <li><span class="n">5</span><div><b>Meno rumore sul vuoto:</b> tabs e ricerca nascoste finché non c'è qualcosa da filtrare.</div></li>
+    </ul>
+    <div class="tiers">
+      <div class="tier"><div class="tt">Livello 1 · attivazione</div><ul><li>Home (anteprima 1)</li><li>componente &lt;Empty&gt;</li><li>Clienti</li><li>Follow-Up</li></ul></div>
+      <div class="tier"><div class="tt">Livello 2 · ingressi laterali</div><ul><li>Agenda + fix trappola</li><li>Ordini + fix trappola</li></ul></div>
+      <div class="tier"><div class="tt">Livello 3 · secondarie</div><ul><li>Feedback (leggero)</li><li>Template / Moduli: ok</li></ul></div>
+    </div>
+  </div>
+
+  <footer>Sliss · anteprima di design — nessun codice dell'app è stato modificato. Si tocca il codice una pagina alla volta, dopo l'ok, partendo dal Livello 1.</footer>
+
+</div>
+</body>
+</html>
