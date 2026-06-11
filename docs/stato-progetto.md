@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.6 · 2026-06-10 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.7 · 2026-06-11 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 10/06/2026
+> Documento vivente · Aggiornato: 11/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 11/06/2026 (v6.7) — redesign per l'utente "freddo" + fix notifiche (DEV+CORE):** Tutto dietro stati vuoti/primo accesso → **invisibile ai tester con dati** (Moira/Luca), zero rischio nella finestra gate. **(1) 🔔 Fix notifiche [rotto → risolto]:** Vercel Hobby registra **max 2 cron**, ne avevamo 5 → giravano solo i 2 di Moira (report serale e notifiche Luca **non partivano**). Consolidati in **2 cron broadcast** (`api/notify.js` itera la lista `TESTERS`): follow-up **12:00**, inserimento + report a Erik **20:00**. Invii manuali invariati; `gate-report.js` → on-demand. **(2) 🎨 Redesign 360° empty state + onboarding** (2 anteprime approvate da Erik in `docs/test-m1/`): componente `<Empty>` che **insegna** (anteprima sbiadita + perché + azione + "filo" → "aggiungi un cliente"); **Home 1° accesso "Inizia da qui"** (via "Tutto fatto" fuorviante); **onboarding 7→6 step** con schermata **"aha"** (mini-telefono WhatsApp coi messaggi reali del settore) al posto delle 2 schermate-lettura, link Reviews tolto dallo step nome; **fix trappola Agenda/Ordini** (cliente-vuoto); Follow-Up distingue "non hai niente" da "oggi a posto"; **Feedback asciugata** (via lista "Ricevuti" morta, attiva solo col link recensioni, solo rimando Google + richiesta). **(3) 🤝 Aiuti ai nuovi:** coachmark "una tantum" + festeggio 1° invio, **gated sui veri nuovi utenti** (nessun invio pregresso). **Verifica:** lint 0, build, **render headless 10/10** del flusso freddo, deploy READY (`bbba394`). Scopo: terreno pronto per un **tester freddo** post-gate. **Residuo:** giro estetico di Erik in incognito (fatto) + conferma Luca notifiche (domani).
 
 **Sessione 10/06/2026 — workflow & pulizia repo (NESSUN codice app toccato):** (1) **Consolidati su `main`** i 3 branch paralleli (workflow, rischi-legali, social) + cancellati tutti i branch vecchi → **repo pulito, solo `main`** (verifica "0 commit fuori da main" prima di ogni cancellazione). (2) **Workflow:** regola **0b** ora verifica il deploy via **MCP Vercel** (non più dashboard, ID in CLAUDE.md); **`docs/check-sync.sh --fix`** auto-propaga lo stamp SYNC in CLAUDE.md (memoria a mano); criteri agenti paralleli Fase 3 scritti (`parking-lot.md`). Voto workflow interno 7.8 → **~8.7/10**. (3) **Deciso:** incoerenza emoji↔icone → **Strada A: tutto icone** (premium, coerente con PRODUCT.md), da fare **post-gate**. (4) Nuovo `docs/rischi-legali.md` (marchio/copyright/GDPR/fiscale) + contenuti social. **Audit UI invariato (29/40)** di proposito (nessun cambio app → si rifà post-gate insieme a icone+error-recovery). **I tester non vedono differenze.** Focus invariato: dati per il **gate 21/06**.
 
