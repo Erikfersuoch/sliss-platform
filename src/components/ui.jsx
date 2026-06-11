@@ -19,12 +19,51 @@ export const Card = ({children,style,onClick,hov}) => {
   return <div onClick={onClick} {...kb} onMouseEnter={()=>setH(true)} onMouseLeave={()=>setH(false)} style={{background:T.bg2,border:`1px solid ${h&&hov?T.borderH:T.border}`,borderRadius:T.r.l,padding:"16px 18px",transition:"border-color .2s",cursor:hov?"pointer":"default",animation:"fadeIn .3s ease",...style}}>{children}</div>;
 };
 
-export const Empty = ({icon,title,desc,action}) => (
-  <div style={{textAlign:"center",padding:"60px 20px"}}>
-    <div style={{fontSize:"44px",marginBottom:"14px",opacity:.35}}>{icon}</div>
-    <div style={{fontSize:"16px",fontWeight:600,color:T.textM,marginBottom:"8px"}}>{title}</div>
-    <div style={{fontSize:"14px",color:T.textD,maxWidth:"300px",margin:"0 auto 20px",lineHeight:1.7}}>{desc}</div>
+// Empty state che INSEGNA invece di dire "qui non c'è niente":
+// - preview (opzionale): un'anteprima sbiadita di com'è la pagina piena (sfuma verso il fondo)
+// - icon: ripiego quando non c'è preview
+// - title/desc: cosa comparirà e perché
+// - action: l'azione giusta · hint: il "filo" che rimanda al prerequisito (es. aggiungi un cliente)
+// Le chiamate vecchie (icon/title/desc/action) restano valide.
+export const Empty = ({icon,title,desc,action,preview,previewLabel,hint}) => (
+  <div style={{textAlign:"center",padding:preview?"26px 18px 34px":"56px 20px"}}>
+    {preview
+      ? <div style={{maxWidth:"300px",margin:"0 auto 20px"}}>
+          <div style={{fontSize:"10px",fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",color:T.textMu,marginBottom:"8px"}}>{previewLabel||"Comparir\u{e0} cos\u{ec}"}</div>
+          <div style={{position:"relative"}}>
+            <div style={{opacity:.5}} aria-hidden="true">{preview}</div>
+            <div style={{position:"absolute",left:0,right:0,bottom:0,height:"60%",background:`linear-gradient(180deg,transparent,${T.bg})`,pointerEvents:"none"}} aria-hidden="true" />
+          </div>
+        </div>
+      : <div style={{fontSize:"44px",marginBottom:"14px",opacity:.35}} aria-hidden="true">{icon}</div>
+    }
+    <div style={{fontSize:"16px",fontWeight:700,color:T.text,marginBottom:"7px",letterSpacing:"-.01em"}}>{title}</div>
+    <div style={{fontSize:"13.5px",color:T.textM,maxWidth:"270px",margin:"0 auto 18px",lineHeight:1.6}}>{desc}</div>
     {action}
+    {hint&&<div style={{fontSize:"12.5px",color:T.textD,marginTop:"12px",lineHeight:1.5}}>{hint}</div>}
+  </div>
+);
+
+// Mattoncini "anteprima sbiadita" riusabili dagli empty state (passati come prop `preview`).
+// GhostRow = riga lista (clienti/appuntamenti) · GhostBubble = card messaggio (follow-up/recensione).
+export const GhostRow = ({avatar=true}) => (
+  <div style={{display:"flex",alignItems:"center",gap:"10px",padding:"11px 13px",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:T.r.l,marginBottom:"7px"}}>
+    {avatar&&<div style={{width:"34px",height:"34px",borderRadius:"50%",background:T.bg3,border:`1px solid ${T.border}`,flexShrink:0}} />}
+    <div style={{flex:1}}>
+      <div style={{height:"9px",width:"60%",background:T.bg4,borderRadius:"5px",marginBottom:"6px"}} />
+      <div style={{height:"7px",width:"40%",background:T.bg3,borderRadius:"5px"}} />
+    </div>
+    <div style={{width:"46px",height:"16px",borderRadius:"8px",background:T.bg3,flexShrink:0}} />
+  </div>
+);
+
+export const GhostBubble = ({stars=false}) => (
+  <div style={{background:T.bg2,border:`1px solid ${T.border}`,borderRadius:T.r.l,padding:"11px",marginBottom:"7px",textAlign:"left"}}>
+    {stars
+      ? <div style={{fontSize:"14px",letterSpacing:"2px",color:T.amber,marginBottom:"6px"}}>{"\u{2605}\u{2605}\u{2605}\u{2605}\u{2605}"}</div>
+      : <div style={{display:"flex",alignItems:"center",gap:"7px",marginBottom:"7px"}}><div style={{width:"18px",height:"18px",borderRadius:"5px",background:T.blueS}} /><div style={{height:"9px",width:"70px",background:T.bg4,borderRadius:"5px"}} /></div>}
+    <div style={{height:"7px",background:T.bg3,borderRadius:"5px",marginBottom:"5px"}} />
+    <div style={{height:"7px",width:"80%",background:T.bg3,borderRadius:"5px"}} />
   </div>
 );
 
