@@ -153,6 +153,21 @@ export const PageHeader = ({title,action}) => (
   </div>
 );
 
+// Festeggia un primo successo (es. primo follow-up inviato). Overlay leggero, una tantum.
+export const Celebration = ({open,onClose,title,text}) => {
+  if(!open) return null;
+  return (
+    <div onClick={onClose} style={{position:"fixed",inset:0,zIndex:1100,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px",background:"rgba(0,0,0,.7)",backdropFilter:"blur(6px)",animation:"fadeIn .25s ease"}}>
+      <div onClick={e=>e.stopPropagation()} role="dialog" aria-modal="true" style={{background:T.bg2,borderRadius:T.r.xl,padding:"28px 24px",maxWidth:"320px",width:"100%",textAlign:"center",boxShadow:"0 12px 50px rgba(0,0,0,.4)"}}>
+        <div style={{fontSize:"48px",marginBottom:"12px"}}>{"\u{1F389}"}</div>
+        <h3 style={{fontSize:"18px",fontWeight:800,marginBottom:"8px",letterSpacing:"-.02em"}}>{title}</h3>
+        <p style={{fontSize:"14px",color:T.textM,lineHeight:1.6,marginBottom:"18px"}}>{text}</p>
+        <Btn onClick={onClose} style={{width:"100%",justifyContent:"center"}}>Continua</Btn>
+      </div>
+    </div>
+  );
+};
+
 // "i" contestuale: tocchi → si apre una scheda con la spiegazione. Riusa il Modal.
 export const Info = ({title,body}) => {
   const [open,setOpen]=useState(false);

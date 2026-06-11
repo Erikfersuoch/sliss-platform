@@ -12,7 +12,6 @@ const Onboarding = ({onComplete}) => {
   const {updateSettings, addRecord} = useSliss();
   const [step, setStep] = useState(0);
   const [bName, setBName] = useState("");
-  const [reviewLink, setReviewLink] = useState("");
   const [bizType, setBizType] = useState("");
   const [cluster, setCluster] = useState("");
   const [customSector, setCustomSector] = useState("");
@@ -23,9 +22,9 @@ const Onboarding = ({onComplete}) => {
   const isSafari = /Safari/.test(navigator.userAgent) && !/CriOS|FxiOS|OPiOS/.test(navigator.userAgent);
   const needsPWAStep = isIOS && !isStandalone;
   const needsSafariSwitch = needsPWAStep && !isSafari;
-  // Salva dati e segna come onboardato — chiamato allo step 4 prima dello step Safari
+  // Salva dati e segna come onboardato — chiamato allo step "aha" prima dell'eventuale step install
   const saveProgress = () => {
-    const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:"",reviewLink:reviewLink.trim()};
+    const updates = {businessName:bName.trim(),bizType,cluster,customSector:isCustomCluster?customSector:""};
     updateSettings(updates);
     if(bizType==="servizi"&&cluster&&CLUSTER_TEMPLATES[cluster]) CLUSTER_TEMPLATES[cluster].forEach(t=>addRecord("templates",{...t,id:uid()}));
     if(bizType==="prodotti") {
@@ -41,6 +40,12 @@ const Onboarding = ({onComplete}) => {
     try { await subscribeToPush(); } catch(e) { console.error(e); }
     onComplete();
   };
+  // Messaggi reali del settore scelto per la schermata "aha" (mostra invece di spiegare)
+  const ahaMessages = () => {
+    const tpls = CLUSTER_TEMPLATES[cluster] || CLUSTER_TEMPLATES[bizType==="prodotti"?"altro_p":"altro_s"] || [];
+    const labels = ["Appena finite", "Qualche giorno dopo", "Più avanti"];
+    return tpls.slice(0,3).map((t,i)=>({label:labels[i]||"Più avanti", text:t.text.replace(/\[Nome\]/g,"Sara").replace(/\[Data\]/g,"").trim()}));
+  };
   const renderStep = () => {
     switch(step) {
       case 0: return <>
@@ -52,12 +57,8 @@ const Onboarding = ({onComplete}) => {
       case 1: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F4BC}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Come si chiama la tua attività?</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparirà nel saluto della home. Potrai cambiarlo nelle impostazioni.</p>
-        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" aria-label="Nome della tua attività" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"16px"}} autoFocus />
-        <div style={{marginBottom:"20px",textAlign:"left"}}>
-          <label style={{fontSize:"12px",color:T.textD,fontWeight:600,textTransform:"uppercase",letterSpacing:".06em",display:"block",marginBottom:"7px"}}>Link Google Reviews <span style={{fontWeight:400,textTransform:"none",letterSpacing:0}}>(opzionale)</span></label>
-          <input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." aria-label="Link Google Reviews (opzionale)" style={{fontSize:"14px"}} />
-        </div>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Apparirà nel saluto della home. Potrai cambiarlo quando vuoi.</p>
+        <input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" aria-label="Nome della tua attività" style={{fontSize:"18px",padding:"14px 16px",textAlign:"center",marginBottom:"20px"}} autoFocus />
         <Btn onClick={()=>setStep(2)} disabled={!bName.trim()} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
       </>;
       case 2: return <>
@@ -76,7 +77,7 @@ const Onboarding = ({onComplete}) => {
       case 3: return <>
         <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F3F7}\u{FE0F}"}</div>
         <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>In quale settore lavori?</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss adatterà i template al tuo settore.</p>
+        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"20px"}}>Sliss adatterà i messaggi al tuo settore.</p>
         <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:isCustomCluster?"16px":"0"}}>
           {Object.entries(clustersForType).map(([key,cl])=>(
             <button key={key} onClick={()=>{setCustomSector("");setCluster(key);if(key!=="altro_s"&&key!=="altro_p")setStep(4);}} style={{display:"flex",alignItems:"center",gap:"14px",padding:"14px 18px",background:cluster===key?T.greenS:T.bg2,border:`1.5px solid ${cluster===key?T.green:T.border}`,borderRadius:T.r.l,cursor:"pointer",fontFamily:"inherit",transition:"all .15s",textAlign:"left",width:"100%"}}>
@@ -90,32 +91,32 @@ const Onboarding = ({onComplete}) => {
           <Btn onClick={()=>setStep(4)} disabled={!customSector.trim()} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
         </>}
       </>;
-      case 4: return <>
-        <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F9E9}"}</div>
-        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>I moduli di Sliss</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"18px"}}>Sliss segue il cliente in più fasi del rapporto. Oggi è attivo il primo modulo; gli altri arriveranno.</p>
-        <div style={{display:"flex",flexWrap:"wrap",gap:"8px",justifyContent:"center",marginBottom:"24px"}}>
-          <span style={{fontSize:"13px",fontWeight:600,padding:"7px 13px",borderRadius:"999px",background:T.greenS,color:T.green,border:`1px solid ${T.green}`}}>{"\u{25CF}"} Follow-Up · attivo</span>
-          {["Richieste","Recensioni","Riattivazione"].map(m=><span key={m} style={{fontSize:"13px",fontWeight:600,padding:"7px 13px",borderRadius:"999px",background:T.bg3,color:T.textMu,border:`1px dashed ${T.border}`}}>{m} · presto</span>)}
-        </div>
-        <Btn onClick={()=>setStep(5)} style={{width:"100%",justifyContent:"center"}}>{"Avanti \u{2192}"}</Btn>
-      </>;
-      case 5: return <>
-        <div style={{fontSize:"52px",marginBottom:"20px"}}>{"\u{1F4AC}"}</div>
-        <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Il tuo primo modulo: Follow-Up</h1>
-        <p style={{fontSize:"15px",color:T.textM,lineHeight:1.7,marginBottom:"16px"}}>I follow-up sono i messaggi di cortesia che mandi al cliente <b>dopo</b>: il grazie, un controllo, l'invito a una recensione, un promemoria per tornare. Sliss te li ricorda e te li scrive già pronti: oggi li invii con un tap, in futuro li manderà in automatico.</p>
-        <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"18px"}}>
-          {(bizType==="prodotti"?["Aggiungi un cliente","Inserisci un ordine","Sliss prepara i messaggi per te"]:["Aggiungi un cliente","Inserisci un appuntamento","Sliss prepara i messaggi per te"]).map((st,i)=>(
-            <div key={i} style={{display:"flex",alignItems:"center",gap:"12px",padding:"12px 16px",background:T.bg2,borderRadius:T.r.l,border:`1px solid ${T.border}`,textAlign:"left"}}>
-              <div style={{width:"26px",height:"26px",borderRadius:"50%",background:T.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"12px",fontWeight:700,color:"#fff",flexShrink:0}}>{i+1}</div>
-              <span style={{fontSize:"14px",color:T.textM}}>{st}</span>
+      case 4: {
+        const msgs = ahaMessages();
+        return <>
+          <h1 style={{fontSize:"23px",fontWeight:700,marginBottom:"8px",letterSpacing:"-.02em",marginTop:"4px"}}>Ecco cosa farà Sliss per te</h1>
+          <p style={{fontSize:"14px",color:T.textM,lineHeight:1.6,marginBottom:"16px"}}>Dopo ogni cliente, tiene il filo al posto tuo, al momento giusto.</p>
+          <div style={{width:"100%",background:"#EAE6DF",borderRadius:"16px",padding:"10px 9px",border:`1px solid ${T.border}`,textAlign:"left"}}>
+            <div style={{display:"flex",alignItems:"center",gap:"8px",padding:"4px 4px 10px"}}>
+              <div style={{width:"26px",height:"26px",borderRadius:"50%",background:T.teal,color:"#fff",fontSize:"12px",fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>S</div>
+              <div><div style={{fontSize:"12.5px",fontWeight:600,color:"#0b3d2e",lineHeight:1.2}}>Sara · cliente</div><div style={{fontSize:"10px",color:"#3a6b58"}}>WhatsApp</div></div>
             </div>
-          ))}
-        </div>
-        <p style={{fontSize:"13px",color:T.textD,marginBottom:"20px",display:"flex",alignItems:"center",gap:"7px",justifyContent:"center"}}><span style={{display:"inline-flex",alignItems:"center",justifyContent:"center",width:"18px",height:"18px",borderRadius:"50%",background:T.blueS,color:T.blue,fontSize:"12px",fontWeight:700,flexShrink:0}}>i</span> Se qualcosa non è chiaro, tocca la "i" nell'app.</p>
-        <Btn onClick={needsPWAStep?()=>{saveProgress();setStep(6);}:doComplete} style={{width:"100%",justifyContent:"center"}}>{needsPWAStep?"Avanti \u{2192}":"Apri Sliss \u{2192}"}</Btn>
-      </>;
-      case 6: return <>
+            {msgs.map((m,i)=>(
+              <div key={i}>
+                <div style={{display:"flex",justifyContent:"center",margin:"6px 0"}}><span style={{fontSize:"9.5px",fontWeight:600,color:"#5b6b63",background:"#f4efe7",borderRadius:"7px",padding:"2px 10px"}}>{m.label}</span></div>
+                <div style={{background:"#d9fdd3",borderRadius:"9px 9px 2px 9px",padding:"7px 10px 5px",margin:"0 2px 5px auto",maxWidth:"90%",boxShadow:"0 1px 0 rgba(0,0,0,.04)"}}>
+                  <p style={{fontSize:"12px",color:"#0b1f18",lineHeight:1.45}}>{m.text}</p>
+                  <div style={{fontSize:"9px",color:"#34a853",textAlign:"right",marginTop:"2px",fontWeight:700}}>{i===0?"\u{2713}\u{2713} inviato con 1 tap":"\u{2713}\u{2713}"}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p style={{fontSize:"13px",color:T.textM,lineHeight:1.5,margin:"14px 0 4px"}}>Lo scrive <b style={{color:T.green}}>Sliss</b>, lo invii <b style={{color:T.green}}>tu</b> con un tap.<br/>In futuro partirà in automatico.</p>
+          <p style={{fontSize:"11px",color:T.textMu,marginBottom:"18px"}}>Presto anche: Richieste · Recensioni · Riattivazione</p>
+          <Btn onClick={needsPWAStep?()=>{saveProgress();setStep(5);}:doComplete} style={{width:"100%",justifyContent:"center"}}>{needsPWAStep?"Iniziamo \u{2192}":"Apri Sliss \u{2192}"}</Btn>
+        </>;
+      }
+      case 5: return <>
         {needsSafariSwitch ? <>
           <div style={{fontSize:"52px",marginBottom:"20px"}}>{"🌐"}</div>
           <h1 style={{fontSize:"24px",fontWeight:700,marginBottom:"12px",letterSpacing:"-.02em"}}>Apri Sliss con Safari</h1>
@@ -157,7 +158,7 @@ const Onboarding = ({onComplete}) => {
         <div style={{marginBottom:"20px"}}><SlissLogo size={32} /></div>
         {renderStep()}
         <div style={{display:"flex",gap:"6px",justifyContent:"center",marginTop:"28px"}}>
-          {Array.from({length:needsPWAStep?7:6},(_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
+          {Array.from({length:needsPWAStep?6:5},(_,i)=><div key={i} style={{width:i===step?20:6,height:"6px",borderRadius:"3px",background:i===step?T.green:T.border,transition:"all .3s"}} />)}
         </div>
       </div>
     </div>

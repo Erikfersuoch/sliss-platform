@@ -4,7 +4,7 @@ import { PHASES, CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
 import { daysAgo, uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Modal, FormField, SendButtons, Info } from "../components/ui.jsx";
+import { Badge, Btn, Card, Modal, FormField, SendButtons, Info, Celebration } from "../components/ui.jsx";
 import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 import InviteClient from "../components/InviteClient.jsx";
@@ -15,6 +15,8 @@ const Home = ({setView}) => {
   const [showInvite,setShowInvite]=useState(false);
   const [qDone,setQDone]=useState(false);
   const [qForm,setQForm]=useState({name:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
+  const [celebrate,setCelebrate]=useState(false);
+  const [coachOff,setCoachOff]=useState(()=>!!localStorage.getItem("sliss-coach-dismissed"));
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
   const bizType=data?.settings?.bizType||"servizi";
@@ -22,6 +24,7 @@ const Home = ({setView}) => {
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
   const sent=(data?.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed");
+  const newbie=sent.length===0; // nuovo utente: nessun follow-up mai inviato (esclude i tester con storico)
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
   const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];
@@ -82,6 +85,11 @@ const Home = ({setView}) => {
               {!pending.length
                 ? <div style={{textAlign:"center",padding:"16px 0"}}><div style={{fontSize:"24px",marginBottom:"6px"}}>{"\u{2705}"}</div><div style={{fontSize:"13px",color:T.textD}}>Tutto fatto per oggi!</div></div>
                 : <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+                    {newbie&&!coachOff&&<div style={{display:"flex",alignItems:"center",gap:"8px",background:T.greenS,border:`1px solid ${T.green}`,borderRadius:T.r.m,padding:"9px 11px"}}>
+                      <span style={{fontSize:"16px"}}>{"\u{1F446}"}</span>
+                      <span style={{flex:1,fontSize:"12.5px",color:T.greenH,lineHeight:1.4}}>Tocca <b>WhatsApp</b> per inviarlo: Sliss l'ha già scritto per te.</span>
+                      <button onClick={()=>{setCoachOff(true);localStorage.setItem("sliss-coach-dismissed","1");}} aria-label="Ho capito" style={{background:"none",border:"none",color:T.greenH,cursor:"pointer",fontSize:"14px",padding:"2px",lineHeight:1,flexShrink:0}}>{"\u{2715}"}</button>
+                    </div>}
                     {pending.slice(0,3).map(fu=>{
                       const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
                       const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};
@@ -94,7 +102,7 @@ const Home = ({setView}) => {
                             <span style={{marginLeft:"auto",fontSize:"11px",fontWeight:700,color:fu.scheduledDate<td?T.red:T.amberD}}>{fu.scheduledDate<td?"Scaduto":"Oggi"}</span>
                           </div>
                           <div style={{fontSize:"13px",color:T.textD,lineHeight:1.5,marginBottom:"10px",overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{fu.message}</div>
-                          <SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} labelOverride={fu.phase==="shipping"?"\u{1F680} Ready to go":undefined} onSend={()=>update("followUps",fu.id,{status:"sent",sentDate:today()})} />
+                          <SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} labelOverride={fu.phase==="shipping"?"\u{1F680} Ready to go":undefined} onSend={()=>{const first=sent.length===0&&!localStorage.getItem("sliss-first-sent");update("followUps",fu.id,{status:"sent",sentDate:today()});if(first){localStorage.setItem("sliss-first-sent","1");setCelebrate(true);}}} />
                         </div>
                       );
                     })}
@@ -143,6 +151,7 @@ const Home = ({setView}) => {
           </>
         }
       </Modal>
+      <Celebration open={celebrate} onClose={()=>setCelebrate(false)} title="Primo follow-up inviato!" text="Il tuo cliente si sentirà seguito. Sliss ti ricorderà il prossimo al momento giusto." />
     </div>
   );
 };
