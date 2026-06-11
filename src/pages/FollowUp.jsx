@@ -4,7 +4,7 @@ import { PHASES, STATUSES } from "../config.js";
 import { fmtDate, daysAgo, daysUntil, today, isPhaseOff } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Empty, GhostBubble, Search, Tabs, Modal, SendButtons, Info } from "../components/ui.jsx";
+import { Badge, Btn, Card, Empty, GhostBubble, Search, Tabs, Modal, SendButtons, Info, SendCoach } from "../components/ui.jsx";
 import { HELP } from "../help.js";
 
 const FollowUp = ({setView,initialFilter,initialFuId}) => {
@@ -34,6 +34,7 @@ const FollowUp = ({setView,initialFilter,initialFuId}) => {
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"8px"}}><Tabs tabs={tabs} active={filter} onChange={setFilter} /><Search value={search} onChange={setSearch} placeholder="Cerca cliente..." /></div>
       {setView&&<div style={{textAlign:"right",marginBottom:"12px"}}><button onClick={()=>setView("templates")} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"4px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"\u{1F4DD}"} Modifica template</button></div>}
+      {filter==="today"&&pendingToday.length>0&&<div style={{marginBottom:"8px"}}><SendCoach /></div>}
       {allFU.length===0
         ? <Empty preview={<><GhostBubble /><GhostBubble /></>} previewLabel="i messaggi pronti" title="Qui troverai i messaggi pronti" desc="Appena un cliente ha un appuntamento, Sliss prepara i follow-up al momento giusto." action={<Btn onClick={()=>setView&&setView("clients")}>+ Aggiungi un cliente</Btn>} />
         : allDone

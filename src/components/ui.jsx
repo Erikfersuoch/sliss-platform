@@ -168,6 +168,21 @@ export const Celebration = ({open,onClose,title,text}) => {
   );
 };
 
+// Coachmark "tocca per inviare": aiuto leggero mostrato sopra i follow-up da inviare.
+// Dismissibile (✕) e la scelta persiste in localStorage. In fase test è mostrato a TUTTI
+// i tester (non solo ai nuovi); post-gate valutare se limitarlo o rimuoverlo.
+export const SendCoach = () => {
+  const [off, setOff] = useState(() => !!localStorage.getItem("sliss-coach-dismissed"));
+  if (off) return null;
+  return (
+    <div style={{display:"flex",alignItems:"center",gap:"8px",background:T.greenS,border:`1px solid ${T.green}`,borderRadius:T.r.m,padding:"9px 11px"}}>
+      <span style={{fontSize:"16px",flexShrink:0}}>{"\u{1F446}"}</span>
+      <span style={{flex:1,fontSize:"12.5px",color:T.greenH,lineHeight:1.4}}>Tocca <b>WhatsApp</b> per inviarlo: Sliss l'ha già scritto per te.</span>
+      <button onClick={()=>{setOff(true);localStorage.setItem("sliss-coach-dismissed","1");}} aria-label="Ho capito, non mostrare più" style={{background:"none",border:"none",color:T.greenH,cursor:"pointer",fontSize:"14px",padding:"2px",lineHeight:1,flexShrink:0}}>{"\u{2715}"}</button>
+    </div>
+  );
+};
+
 // "i" contestuale: tocchi → si apre una scheda con la spiegazione. Riusa il Modal.
 export const Info = ({title,body}) => {
   const [open,setOpen]=useState(false);
