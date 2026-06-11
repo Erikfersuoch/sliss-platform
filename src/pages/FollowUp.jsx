@@ -4,7 +4,7 @@ import { PHASES, STATUSES } from "../config.js";
 import { fmtDate, daysAgo, daysUntil, today, isPhaseOff } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Empty, Search, Tabs, Modal, SendButtons, Info } from "../components/ui.jsx";
+import { Badge, Btn, Card, Empty, GhostBubble, Search, Tabs, Modal, SendButtons, Info } from "../components/ui.jsx";
 import { HELP } from "../help.js";
 
 const FollowUp = ({setView,initialFilter,initialFuId}) => {
@@ -34,10 +34,14 @@ const FollowUp = ({setView,initialFilter,initialFuId}) => {
       </div>
       <div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"8px"}}><Tabs tabs={tabs} active={filter} onChange={setFilter} /><Search value={search} onChange={setSearch} placeholder="Cerca cliente..." /></div>
       {setView&&<div style={{textAlign:"right",marginBottom:"12px"}}><button onClick={()=>setView("templates")} style={{background:"none",border:"none",color:T.blue,fontSize:"13px",cursor:"pointer",padding:"4px 0",fontFamily:"inherit",textDecoration:"underline"}}>{"\u{1F4DD}"} Modifica template</button></div>}
-      {allDone
+      {allFU.length===0
+        ? <Empty preview={<><GhostBubble /><GhostBubble /></>} previewLabel="i messaggi pronti" title="Qui troverai i messaggi pronti" desc="Appena un cliente ha un appuntamento, Sliss prepara i follow-up al momento giusto." action={<Btn onClick={()=>setView&&setView("clients")}>+ Aggiungi un cliente</Btn>} />
+        : allDone
         ? <div style={{textAlign:"center",padding:"60px 20px",animation:"fadeIn .4s ease"}}><div style={{fontSize:"52px",marginBottom:"16px"}}>{"\u{1F389}"}</div><div style={{fontSize:"20px",fontWeight:700,marginBottom:"8px"}}>Ottimo lavoro!</div><div style={{fontSize:"14px",color:T.textM}}>Tutti i follow-up di oggi sono stati inviati.</div><div style={{fontSize:"13px",color:T.textD,marginTop:"6px"}}>I tuoi clienti si sentiranno seguiti.</div></div>
         : !filtered.length
-        ? <Empty icon={"\u{1F4ED}"} title="Nessun follow-up" desc="Non ci sono follow-up per questo filtro." />
+        ? filter==="today"
+          ? <div style={{textAlign:"center",padding:"48px 20px"}}><div style={{fontSize:"34px",marginBottom:"8px"}}>{"\u{1F44D}"}</div><div style={{fontSize:"16px",fontWeight:700,marginBottom:"4px"}}>Niente da inviare oggi</div><div style={{fontSize:"13px",color:T.textD}}>I prossimi follow-up sono programmati. <button onClick={()=>setFilter("all")} style={{background:"none",border:"none",color:T.blue,fontWeight:600,cursor:"pointer",fontFamily:"inherit",fontSize:"13px",padding:0}}>Vedi tutti {"\u{2192}"}</button></div></div>
+          : <Empty icon={"\u{1F50D}"} title="Nessun risultato" desc="Nessun follow-up per questo filtro o ricerca." />
         : <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
             {filtered.map((fu,i)=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};const st=STATUSES[fu.status]||{label:fu.status,color:T.textD,bg:T.bg3};const timing=fu.status==="pending"?daysUntil(fu.scheduledDate):daysAgo(fu.sentDate);const isReplied=fu.status==="replied";const isSent=fu.status==="sent";const isOverdue=fu.status==="pending"&&fu.scheduledDate<td;const phaseOff=fu.status==="pending"&&isPhaseOff(data?.templates,fu.phase);const cardColor=phaseOff?T.border:isReplied?T.blue:isSent?T.green:isOverdue?T.red:fu.status==="pending"?T.amber:T.border;const cardBg=phaseOff?"transparent":isReplied?T.blueS:isSent?T.greenS:isOverdue?T.redS:fu.status==="pending"?T.amberS:"transparent";return (
               <Card key={fu.id} hov onClick={()=>setSel(fu)} style={{border:`1px solid ${cardColor}`,background:cardBg,opacity:phaseOff?0.55:1,animation:`fadeIn .3s ease ${i*.03}s both`}}>

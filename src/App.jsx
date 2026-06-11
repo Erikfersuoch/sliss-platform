@@ -64,7 +64,7 @@ export default function SlissPlatform() {
 
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
-  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go}/>,orders:<Orders/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId}/>,templates:<Templates/>,feedback:<Feedback/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go}/>,orders:<Orders setView={go}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId}/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
