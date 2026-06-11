@@ -183,6 +183,32 @@ export const SendCoach = () => {
   );
 };
 
+// Dritte "Lo sapevi?" dedicate ai tester CALDI (chi già usa l'app): fanno scoprire funzioni
+// che probabilmente non sfruttano. Una alla volta, dismissibile (✕), avanza alla successiva;
+// finite le dritte sparisce. Progresso persistito in localStorage. Scelta di fase test.
+const WARM_TIPS = [
+  { emoji: "\u{270F}\u{FE0F}", text: "Puoi modificare il messaggio di un follow-up prima di inviarlo: aprilo e tocca “Modifica messaggio”." },
+  { emoji: "\u{1F515}", text: "Non usi tutti i follow-up? Disattiva quelli che non ti servono dai Template.", view: "templates", cta: "Apri Template" },
+  { emoji: "\u{1F517}", text: "Puoi far compilare i dati al cliente con un link, col tasto “Invita cliente”." },
+];
+export const WarmTips = ({ setView }) => {
+  const [idx, setIdx] = useState(() => Number(localStorage.getItem("sliss-tips-idx") || 0));
+  if (idx >= WARM_TIPS.length) return null;
+  const t = WARM_TIPS[idx];
+  const advance = () => { const n = idx + 1; localStorage.setItem("sliss-tips-idx", String(n)); setIdx(n); };
+  return (
+    <div style={{display:"flex",alignItems:"flex-start",gap:"11px",background:T.blueS,border:`1px solid ${T.blue}33`,borderRadius:T.r.l,padding:"12px 13px",marginBottom:"14px"}}>
+      <span style={{fontSize:"18px",flexShrink:0,lineHeight:1.2}} aria-hidden="true">{t.emoji}</span>
+      <div style={{flex:1,minWidth:0}}>
+        <div style={{fontSize:"10px",fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",color:T.blue,marginBottom:"3px"}}>Lo sapevi?</div>
+        <div style={{fontSize:"12.5px",color:T.textM,lineHeight:1.5}}>{t.text}</div>
+        {t.view&&<button onClick={()=>{advance();setView&&setView(t.view);}} style={{marginTop:"7px",background:"none",border:"none",color:T.blue,fontWeight:600,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit",padding:0,textDecoration:"underline"}}>{t.cta}</button>}
+      </div>
+      <button onClick={advance} aria-label="Ho capito, prossima" style={{background:"none",border:"none",color:T.textMu,cursor:"pointer",fontSize:"14px",padding:"2px",lineHeight:1,flexShrink:0}}>{"\u{2715}"}</button>
+    </div>
+  );
+};
+
 // "i" contestuale: tocchi → si apre una scheda con la spiegazione. Riusa il Modal.
 export const Info = ({title,body}) => {
   const [open,setOpen]=useState(false);

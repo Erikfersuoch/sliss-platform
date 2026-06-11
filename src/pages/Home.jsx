@@ -4,7 +4,7 @@ import { PHASES, CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
 import { daysAgo, uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Modal, FormField, SendButtons, Info, Celebration, SendCoach } from "../components/ui.jsx";
+import { Badge, Btn, Card, Modal, FormField, SendButtons, Info, Celebration, SendCoach, WarmTips } from "../components/ui.jsx";
 import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 import InviteClient from "../components/InviteClient.jsx";
@@ -23,6 +23,7 @@ const Home = ({setView}) => {
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
   const sent=(data?.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed");
+  const newbie=sent.length===0; // nuovo (mai inviato) → send-coachmark; caldo (sent>0) → dritte "Lo sapevi?"
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
   const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];
@@ -75,6 +76,7 @@ const Home = ({setView}) => {
                 </Card>
               ))}
             </div>
+            {!newbie&&<WarmTips setView={setView} />}
             <Card style={{marginBottom:"14px"}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px"}}>
                 <h2 style={{fontSize:"15px",fontWeight:700}}>Da fare oggi</h2>
@@ -83,7 +85,7 @@ const Home = ({setView}) => {
               {!pending.length
                 ? <div style={{textAlign:"center",padding:"16px 0"}}><div style={{fontSize:"24px",marginBottom:"6px"}}>{"\u{2705}"}</div><div style={{fontSize:"13px",color:T.textD}}>Tutto fatto per oggi!</div></div>
                 : <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                    <SendCoach />
+                    {newbie&&<SendCoach />}
                     {pending.slice(0,3).map(fu=>{
                       const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
                       const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};
