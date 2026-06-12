@@ -19,6 +19,9 @@
 
 ## Idee prodotto
 
+- [12/06/2026] **Fase follow-up 💰 "sollecito pagamento"** — dal sondaggio Tally: "recupero pagamenti" = ambito da semplificare più votato (2/5, artigiani/edilizia). Un sollecito di pagamento È un follow-up: stesso motore M1, solo una fase nuova. Da valutare post-validazione. Vedi `docs/sondaggi.md`.
+- [12/06/2026] **Ponte M1 → social "dal lavoro fatto al post pronto"** — dal sondaggio Tally (tatuatrice, social = dolore n.1 ma n=1 nel campione). Il check guarigione di M1 produce foto e recensioni = materia prima dei post Instagram per tattoo. NON un social manager (mercato affollatissimo, contro Opzione A): solo preparare il contenuto dal flusso che già esiste. Fase 4, solo se il pattern si ripete nei prossimi sondaggi. Vedi `docs/sondaggi.md`.
+
 - [27/05/2026] Orari notifiche push configurabili da impostazioni utente — oggi hardcoded per tester, diventa setting personalizzabile in Fase 3
 - [25/05/2026] Rimuovere conferma invio messaggi — aggiungere feedback visivo post-invio al posto del confirm dialog
 - [25/05/2026] Onboarding: utenti cliccano sui numeri dei passaggi — capire se navigazione intenzionale o confusione, qualcosa manca

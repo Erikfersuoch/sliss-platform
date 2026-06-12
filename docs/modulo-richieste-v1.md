@@ -6,6 +6,12 @@
 
 ---
 
+## 🆕 AGGIORNAMENTO 12/06/2026 — seconda conferma indipendente (sondaggio Tally)
+
+Un rispondente del sondaggio Tally (settore **ricambi moto**, 28/05, lead con telefono — contatto in Tally, possibile coincidenza con "Amico Motorsport" già in parking-lot) descrive il SUO dolore con le stesse parole del fondamento M3: vorrebbe automatizzare *"il primo contatto con il cliente per una scrematura, individuando perditempo da persone realmente interessate a concludere"* (= il deviatore/smistamento) e come UNO strumento vorrebbe *"un sito vetrina ben organizzato per proporre ai clienti tutti i prodotti a catalogo compatibili con la loro moto"* (= la Via 1 catalogo→carrello chiesta da Luca l'08/06). **Due settori diversi, stesso bisogno, stesso linguaggio → M3 è il modulo con più evidenza esterna della roadmap.** Resta bloccato fino a validazione M1; questo rafforza la scelta di farlo per primo se GO. Analisi completa in `docs/sondaggi.md`.
+
+---
+
 ## 🆕 AGGIORNAMENTO 08/06/2026 — risposta di Luca (cosa vuole davvero)
 
 Luca, alla domanda su cosa lo aiuterebbe di più, risponde:
