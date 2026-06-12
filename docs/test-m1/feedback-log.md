@@ -84,6 +84,30 @@
 
 ---
 
+#### Check — 12/06/2026 (brief 30 secondi, riportato da Erik)
+
+**Numeri live al 12/06 (da `api/track`):** app aperta **4 giorni su 4** da quando esiste il tracking (09–12/06) · 1 cliente in app · 4 follow-up inviati · 8 pending. (Luca, stesso giorno: 4/4 giorni · 4 clienti · 9 inviati.)
+
+**Cosa ha detto (domanda diretta "perché non lo usi?"):**
+- 🔴 *"Devo trovare 5 minuti liberi."*
+- ✅ **Interesse confermato esplicitamente:** all'offerta di Erik di passare il test ad altri ha risposto *"no no, mi interessa, devo trovare il tempo"*. Mezzo segnale positivo sul criterio "valore" del gate.
+
+**Contesto (la chiave di lettura):** Moira lavora continuamente ma il **flusso di contatti NUOVI è fermo** — ha tutto già fissato. Il punto d'ingresso naturale di Sliss (link "Invita cliente" alla chiusura della conversazione col cliente nuovo) **non si verifica mai** in questo periodo: l'unico uso possibile sarebbe l'inserimento retroattivo a freddo, puro lavoro amministrativo con beneficio rimandato. (Luca conferma la stessa flessione di lavoro dal suo lato.)
+
+**Lettura:** è lo scenario **"mancanza di dati, non bocciatura"** previsto dal gate rivisto il 10/06. Il dato "1 cliente in app" del tracking NON era perdita dati né disinteresse: era assenza di occasioni.
+
+**Decisione di Erik (12/06):** **aspettare i tempi di Moira, senza caricare.** Un uso spinto dal founder (e marito) inquinerebbe il test: misurerebbe quanto le pesa dire di no, non il prodotto. Il backstop di fine luglio resta l'orologio.
+
+**Opzione sul tavolo (NON proposta a Moira, da giocare se/quando lei riapre il tema):** "patto dei 5 minuti" — inserimento unico dei clienti **già fissati** (3-5 clienti, ~30 sec l'uno); i cicli di follow-up partono poi dagli appuntamenti reali. Uso legittimo (appuntamenti veri, non gonfiati) che testa il cuore del gate (il follow-up produce risposte/recensioni?) bypassando la siccità di contatti nuovi.
+
+**Categoria:**
+- [ ] Bloccante
+- [x] Frizione → **attrito d'ingresso strutturale** (senza clienti nuovi non c'è trigger d'uso), non difetto del prodotto
+- [ ] Richiesta feature
+- [x] Insight → interesse reale + attrito d'inserimento ⇒ evidenza diretta per la **sync Google Calendar in Fase 3** (vedi `parking-lot.md`)
+
+---
+
 <!-- Copia il blocco "#### Check — [DATA]" ogni settimana -->
 
 #### Check — [DATA]

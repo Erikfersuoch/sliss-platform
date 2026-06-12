@@ -57,6 +57,7 @@
 - [25/05/2026] Integrare follow-up con WhatsApp Business: etichettando cliente con "follow up" su WA Business il sistema parte in automatico senza dover usare la piattaforma (da valutare fattibilità)
 - [25/05/2026] Logo Sliss in app non corrisponde all'originale — allineare al file sorgente (Sliss_logo_png.png sul desktop)
 - **Integrazione calendario esterno** (Google Calendar / iCal) — risolta come *ponte leggero*: bottone "Aggiungi a Google Calendar" sull'appuntamento (05/06/2026). Sync bidirezionale vera = Fase 3.
+- [12/06/2026] **Evidenza pro sync Google Calendar (per la priorità di Fase 3):** brief con Moira — interesse confermato ma *"devo trovare 5 minuti"*: l'attrito è l'inserimento manuale, e senza contatti nuovi il punto d'ingresso (Invita cliente) non scatta mai. Una sync che **legge gli appuntamenti da Calendar** farebbe girare i follow-up senza input suo = Opzione A portata a compimento (si aggancia, non ricostruisce). NON costruirla ora: richiede OAuth Google + backend vero (primo pezzo non-€0) e automatizzerebbe un loop non ancora validato. Se il gate è GO, candidata **prima priorità Fase 3**, con questo episodio come motivazione scritta. Dettaglio in `docs/test-m1/feedback-log.md` (check 12/06).
 - **Calendario visuale in-app (ex Step 5)** — ARCHIVIATO 05/06/2026: contraddice Opzione A (il calendario resta Google). Vedi decisioni.md.
 - **Invio automatico messaggi** senza azione del professionista — parcheggiata Maggio 2026
 - **Fix emoji su Vercel** — problema font, fix veloce, bassa priorità — parcheggiata Maggio 2026
