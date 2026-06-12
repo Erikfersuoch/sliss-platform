@@ -5,6 +5,7 @@ const GlobalCSS = () => <style>{`
   html,body,#root{background:${T.bg};color:${T.text};font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${T.border};border-radius:3px}
   input,textarea,select{font-family:inherit;background:${T.bg2};border:1.5px solid ${T.border};color:${T.text};border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%;min-width:0}
+  input[type="date"],input[type="time"]{-webkit-appearance:none;appearance:none}
   input:focus,textarea:focus,select:focus{border-color:${T.green};box-shadow:0 0 0 3px rgba(22,163,74,0.12)}
   textarea{resize:vertical;min-height:80px;line-height:1.6}
   select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23495057' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
