@@ -42,6 +42,31 @@
 
 - [10/06/2026] **[✅ VERIFICATO] Marchio "Sliss"** — nessun marchio identico registrato in classi 9/42 su EUIPO e UIBM (ricerca frase esatta). Esiste solo un'app "SLISS" su Google Play (settore investimenti, diverso). Da ricontrollare solo prima di registrazione formale del marchio. Sistema completo di tracciamento rischi legali/IP in `docs/rischi-legali.md` (struttura pensata anche per agente autonomo, con trigger di rivalutazione per ogni voce).
 
+## Pricing — da finalizzare in Fase 3
+
+> Ragionamento fatto il 16/06/2026 in sessione esterna. Non toccare fino a gate M1 + Fase 3.
+
+**Costi operativi stimati a regime (50 clienti)**
+- Infrastruttura: ~€35/mese
+- API Claude (token AI): ~€70/mese
+- Totale: ~€115/mese → costo per cliente: ~€2,30/mese
+
+**Range scartato: €75-150/mese** — competizione diretta con Treatwell, Booksy, Fresha, Acuity (più feature, più brand, non battibili in early stage).
+
+**Struttura a tier ipotizzata:**
+
+| Fase | Prezzo | Contenuto |
+|---|---|---|
+| Beta / primi clienti | €19/mese | Modulo follow-up (M1) |
+| Regime - base | €29/mese | Follow-up + richieste in entrata (M1+M3) |
+| Regime - completo | €49/mese | Tutti i moduli integrati |
+
+**Posizionamento:** "Costa meno di un caffè al giorno, niente funzioni inutili, risolve esattamente il problema che hai." Vantaggio strutturale: architettura leggera = costi fissi bassi = possibilità di stare sotto €50 dove i grandi non possono scendere.
+
+**Da validare prima di finalizzare:** (a) costo API reale per utente attivo (dipende dall'uso M3 soprattutto); (b) se €19 beta è sostenibile con margini o è sussidiato per acquisizione; (c) confermare che i moduli pianificati (M1→M3→M5/M6) giustificano i 3 tier — oggi M1 da solo vale €19, ma €49 per "tutto" richiede che ci sia davvero un "tutto" maturo.
+
+---
+
 ## Idee commerciali
 
 - **Approccio outreach 1:1** — conversazioni dirette, vocali, messaggi brevi, niente link. Da valutare per Fase 2 inoltrata quando avremo dati veri — parcheggiata 25/05/2026
