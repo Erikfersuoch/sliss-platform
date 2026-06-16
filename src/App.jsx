@@ -20,13 +20,37 @@ import Feedback from "./pages/Feedback.jsx";
 import ModulesMap from "./pages/ModulesMap.jsx";
 import Settings from "./pages/Settings.jsx";
 
+// Migrazione una-tantum (v6.9): nei follow-up in attesa sostituisce il nome completo col solo nome.
+// Gira UNA volta in fase di init dello stato (non dentro un effect → niente setState a cascata).
+// Per chi l'ha già eseguita il flag è impostato e ritorna i dati invariati.
+function migrateFirstName(data) {
+  if (localStorage.getItem('sliss-mig-firstname')) return data;
+  const clients = data?.clients || [];
+  const followUps = data?.followUps || [];
+  let changed = false;
+  const updated = followUps.map(fu => {
+    if (fu.status !== 'pending') return fu;
+    const cl = clients.find(c => c.id === fu.clientId);
+    if (!cl) return fu;
+    const firstName = cl.firstName || cl.name.split(' ')[0];
+    if (cl.name === firstName) return fu;
+    const esc = cl.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const newMsg = (fu.message || '').replace(new RegExp(esc, 'g'), firstName);
+    if (newMsg === fu.message) return fu;
+    changed = true;
+    return { ...fu, message: newMsg };
+  });
+  localStorage.setItem('sliss-mig-firstname', '1');
+  return changed ? { ...data, followUps: updated } : data;
+}
+
 export default function SlissPlatform() {
   const [view,setView]=useState("home");
   const [fuFilter,setFuFilter]=useState(null);
   const [selFuId,setSelFuId]=useState(null);
   const [selClientId,setSelClientId]=useState(null);
   // localStorage è sincrono: inizializziamo i dati subito (niente stato "loading", niente flash all'avvio)
-  const [data,setData]=useState(()=>loadData());
+  const [data,setData]=useState(()=>migrateFirstName(loadData()));
   const [showOnboarding,setShowOnboarding]=useState(()=>!isOnboarded());
   // Notifica "è ora dei feedback" → apre l'app su ?goto=feedback: mostriamo la schermata dedicata
   const [showFeedbackNudge,setShowFeedbackNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='feedback');
@@ -40,27 +64,6 @@ export default function SlissPlatform() {
   // Pulisce ?goto dall'URL dopo averlo letto (così un refresh non riapre la schermata)
   useEffect(()=>{const p=new URLSearchParams(window.location.search);if(p.get('goto')){p.delete('goto');const qs=p.toString();window.history.replaceState({},"",window.location.pathname+(qs?`?${qs}`:""));}},[]);
   useEffect(()=>{saveData(data);},[data]);
-  // Migrazione una-tantum: sostituisce nome completo con solo nome nei follow-up in attesa
-  useEffect(()=>{
-    if(localStorage.getItem('sliss-mig-firstname'))return;
-    const clients=data?.clients||[];
-    const followUps=data?.followUps||[];
-    let changed=false;
-    const updated=followUps.map(fu=>{
-      if(fu.status!=='pending')return fu;
-      const cl=clients.find(c=>c.id===fu.clientId);
-      if(!cl)return fu;
-      const firstName=cl.firstName||cl.name.split(' ')[0];
-      if(cl.name===firstName)return fu;
-      const esc=cl.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-      const newMsg=(fu.message||'').replace(new RegExp(esc,'g'),firstName);
-      if(newMsg===fu.message)return fu;
-      changed=true;
-      return{...fu,message:newMsg};
-    });
-    if(changed)setData(prev=>({...prev,followUps:updated}));
-    localStorage.setItem('sliss-mig-firstname','1');
-  },[]);// eslint-disable-line react-hooks/exhaustive-deps
 
   // Backup cloud best-effort: copia i dati nel cloud poco dopo ogni modifica (solo se c'è un codice tester). Mai bloccante.
   useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const id=setTimeout(()=>{saveBackup(tester,data);},8000);return ()=>clearTimeout(id);},[data]);
