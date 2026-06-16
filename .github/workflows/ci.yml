@@ -1,0 +1,32 @@
+name: CI
+
+# Robot dei controlli: gira da solo ad ogni push e ad ogni pull request.
+# Esegue le tre verifiche (lint, test, build). Non tocca il deploy su Vercel.
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Scarica il codice
+        uses: actions/checkout@v4
+
+      - name: Prepara Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installa le dipendenze
+        run: npm ci
+
+      - name: Lint (caccia errori nel codice)
+        run: npm run lint
+
+      - name: Test (rete di sicurezza)
+        run: npm test
+
+      - name: Build (l'app si compila davvero)
+        run: npm run build
