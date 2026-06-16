@@ -106,3 +106,7 @@ Sono in `api/` — girano sul server, **non** nel browser. Sono accessori, non i
 npm test          # esegue i test una volta
 npm run test:watch # li riesegue ad ogni modifica (durante lo sviluppo)
 ```
+
+**Robot CI (gira da solo).** Non serve ricordarsi di lanciare i controlli a mano: ad ogni `push` e ad ogni pull request, GitHub Actions esegue **lint + test + build** in automatico (`.github/workflows/ci.yml`). Esito verde = tutto ok; rosso = qualcosa è rotto e arriva un'email. È separato e indipendente dal deploy su Vercel. Storico run: scheda **Actions** del repo su GitHub.
+
+> Manca ancora (post-gate): i **test sui flussi utente** veri (es. "crea cliente + appuntamento → genera i follow-up giusti"). Vedi CLAUDE.md › "Flusso agentic" punto C2.

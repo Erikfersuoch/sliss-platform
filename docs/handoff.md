@@ -3,7 +3,7 @@
 > Si sovrascrive a ogni fine sessione. Per lo storico completo: `docs/stato-progetto.md`.
 > Lo stato tecnico del repo lo stampa l'hook SessionStart all'avvio (main/branch/ahead/behind).
 
-**Ultimo aggiornamento:** 16/06/2026 · v6.9 · Fase 1 · M1 Follow-Up in validazione
+**Ultimo aggiornamento:** 16/06/2026 · v6.9 · Fase 1 · M1 Follow-Up in validazione · sessione hardening+CI+metodo agentic
 
 ---
 
@@ -29,6 +29,15 @@ Niente feature nuove, niente pressione sui tester, solo cose a rischio nullo. Ec
 - **Se GO:** (a) hardening error-recovery [P1, tocca safety dati] *prima* del tester freddo; (b) M3 Via-2 per Luca (2 conferme indipendenti, vedi `modulo-richieste-v1.md` + `sondaggi.md`); (c) emoji→icone + upgrade estetico; (d) pricing (Fase 3, abbozzo in `parking-lot.md`).
 - **Se NO-GO su Moira ma Luca forte:** valutare ricentraggio su prodotti/inbound (Luca cliente-tipo, M3 punta di lancia). Già previsto in `decisioni.md`.
 - **Pipeline tester freddi:** 2 Sì + 3 Forse dal sondaggio Tally (contatti SOLO in Tally — repo pubblico, mai PII in docs). Candidato d'oro = rispondente settore moto (dolore M3).
+
+## Sessione 16/06 — hardening + metodo (rischio zero per i tester)
+Lavoro a rischio nullo fatto in finestra-gate (non tocca logica utente):
+- **Rete di sicurezza:** Vitest + **30 test** su `healData` (guardiano dati) e `helpers` (date/invio/greet). `npm test` verde.
+- **Robot CI:** GitHub Actions (`.github/workflows/ci.yml`) → lint+test+build a ogni push/PR, in automatico. Primo run verde.
+- **Mappa:** `docs/architettura.md` (flusso dati, pezzi, 5 regole d'oro). Abbatte il bus-factor.
+- **Fix minori:** `greet()` pomeriggio; migrazione firstname spostata da effect a init (lint pulito).
+- **Metodo agentic codificato** in CLAUDE.md ("Flusso agentic"): A spec-first · B visto-funzionare · C sistema-guardiano (CI fatto, test-sui-flussi post-gate) · D review indipendente. Default + coaching insieme (vanno nominati a Erik per fargli interiorizzare il modo di pensare).
+- **Sicurezza PC/IP** (solo info, nessuna azione ora): repo pubblico ma nessun segreto committato e nessuna PII nei doc; da rivalutare in Fase 3 (repo privato? 2FA su GitHub/Vercel/Upstash). Patto: su azioni CLI rischiose → tripla conferma con parola `CONFERMO`.
 
 ## Note tecniche aperte
 - Linguaggio di pitch per i freddi: **"meno caos coi clienti"**, mai "promemoria" (4/5 non si sente smemorato).
