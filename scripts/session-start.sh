@@ -2,7 +2,7 @@
 # Stato reale del progetto all'avvio di ogni sessione Claude Code.
 # Impedisce affermazioni su deploy/branch/codice senza verifica.
 
-cd /home/user/sliss-platform 2>/dev/null || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$(dirname "$0")/..}" 2>/dev/null || exit 0
 
 git fetch origin main --quiet 2>/dev/null
 

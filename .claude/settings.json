@@ -5,7 +5,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/user/sliss-platform && bash scripts/session-start.sh 2>/dev/null || true"
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && bash scripts/session-start.sh 2>/dev/null || true"
           }
         ]
       }
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd /home/user/sliss-platform && bash scripts/check-agent-map.sh 2>/dev/null || true"
+            "command": "cd \"$CLAUDE_PROJECT_DIR\" && bash scripts/check-agent-map.sh 2>/dev/null || true"
           }
         ]
       }
