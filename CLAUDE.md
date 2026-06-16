@@ -73,7 +73,8 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 
 ## Flusso agentic (default su ogni modifica)
 
-> Obiettivo: ridurre la dipendenza dalla fiducia. Erik è non-dev e non legge il codice — la correttezza la deve poter **verificare dal sistema**, non dalla mia parola. Queste regole sono il default. **Vanno rese esplicite a Erik passo per passo** (nominare il punto A/B/C/D che stiamo applicando + una riga di perché) così interiorizza il modo di pensare agentic — NON applicarle in silenzio. Quando un passo è ormai automatico per lui, darlo per acquisito e alleggerire.
+> Obiettivo: ridurre la dipendenza dalla fiducia. Erik è non-dev e non legge il codice — la correttezza la deve poter **verificare dal sistema**, non dalla mia parola.
+> **Le due cose insieme (non in alternativa):** (1) *applicarle sempre di default* — il passo non salta mai, lo garantisco io anche se Erik è stanco/di fretta (rete di sicurezza); (2) *renderle esplicite a Erik passo per passo* — nominare il punto A/B/C/D + una riga di perché, coinvolgerlo nella decisione, così interiorizza il modo di pensare agentic. NON applicarle in silenzio. Man mano che un passo diventa automatico per lui, lo guida lui e io resto il backstop che non lo lascia cadere; lì alleggerire la spiegazione.
 
 A. **Definire "fatto" PRIMA di costruire (spec-first).** Prima di scrivere codice, concordare in italiano normale una piccola lista *"Fatto quando: a)… b)… e NON deve rompere…"*. È il righello di Erik per accettare il lavoro senza leggere codice. A fine modifica si spuntano le caselle insieme.
 
