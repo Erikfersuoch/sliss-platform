@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v6.8 · 2026-06-12 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v6.9 · 2026-06-16 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 12/06/2026
+> Documento vivente · Aggiornato: 16/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 16/06/2026 (v6.9) — split nome/cognome nel form cliente (DEV):** Richiesta dei tester: nei follow-up WhatsApp il cognome era fastidioso. **Fatto:** (1) Form "Nuovo cliente" e "Modifica cliente" in `Clients.jsx`: campo unico "Nome completo" → **due campi separati Nome + Cognome**. Salvataggio: `firstName`, `lastName`, `name=firstName+' '+lastName` (la visualizzazione in lista/scheda usa ancora il nome completo). (2) Generazione follow-up (`buildFollowUps`, `buildProductFollowUps` via Clients.jsx): usa `sel.firstName || sel.name.split(' ')[0]` — solo il nome nel messaggio WhatsApp. (3) Propagate template (`Templates.jsx`): stessa logica, usa `firstName || prima parola del name`. (4) **Retroattivo automatico:** migrazione una-tantum in `App.jsx` — alla prima apertura dell'app con il nuovo codice, sostituisce il nome completo con solo il nome in **tutti i follow-up in attesa**; flag `sliss-mig-firstname` in localStorage. (5) **Retroattivo profili:** il form modifica cliente auto-popola `firstName`/`lastName` dalla prima/resto parole del `name` esistente — senza che i tester debbano riscrivere niente. Confermato funzionante da Erik. Commit `a204ddf` + `fae89ee`, deploy READY.
 
 **Sessione 12/06/2026 (v6.8) — modal centrato in tutta l'app + fix overflow input data (DEV+CORE):** **Eccezione approvata da Erik alla finestra pre-gate** ("non stravolgono la UX, migliorano l'usabilità"): il `Modal` condiviso (`components/ui.jsx`), usato da **tutti i popup dell'app**, passa da bottom-sheet (ancorato in basso, angoli arrotondati solo in alto) a **centrato** (in mezzo allo schermo, angoli arrotondati su tutti i lati `T.r.xl`, ombra più soft). Verificato prima con anteprima statica (`docs/test-m1/modal-centrato-anteprima.html/png`, committata) poi su produzione live. Commit `c979423` deployato READY. **Bug trovato da Erik subito dopo:** nel modal "Invita un cliente", il campo `<input type="date">` ("Data della consulenza") usciva dal bordo destro su mobile — causa: larghezza minima intrinseca dell'input data su Chrome Android, ora superiore allo spazio disponibile col modal centrato (margini laterali). **Fix 1:** aggiunto `min-width:0` alla regola globale `input,textarea,select` in `GlobalCSS.jsx` (commit `01b3ff3`, deployato READY). **Risultava ancora rotto su iOS Safari (PWA)** — screenshot di Erik dopo chiusura/riapertura app: causa diversa, bug noto di WebKit per cui `<input type="date">`/`time` dipinge oltre la larghezza impostata via CSS (icona calendario nativa fuori box-model). **Fix 2:** aggiunta regola `input[type="date"],input[type="time"]{-webkit-appearance:none;appearance:none}` in `GlobalCSS.jsx`, commit `acce757` deployato READY (`dpl_2kAMgbCQbZubwdNHyHtmEGRwftxd`). Effetto collaterale possibile: icona calendario nativa su iOS meno visibile (il campo resta tappabile). Nessun impatto su logica/dati, solo CSS — zero rischio per i tester nella finestra gate.
 
