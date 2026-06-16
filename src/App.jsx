@@ -80,7 +80,7 @@ export default function SlissPlatform() {
     autoCheckRef.current=true;
     const waiting=(data?.slots||[]).filter(s=>s.status==="waiting");
     if(!waiting.length)return;
-    waiting.forEach(async slot=>{try{const r=await fetch(`/api/onboarding-check?slot=${slot.id}`);const d=await r.json();if(d.found){const clientId=uid();addRecord("clients",{id:clientId,name:d.name,phone:d.phone,email:d.email||"",channel:"WhatsApp",status:"new",tags:[],notes:d.notes||"",firstVisit:today(),lastVisit:today()});update("slots",slot.id,{status:"imported"});}}catch(e){console.error("[auto-check]",e);}});
+    waiting.forEach(async slot=>{try{const r=await fetch(`/api/onboarding-check?slot=${slot.id}`);const d=await r.json();if(d.found){const clientId=uid();const _np=(d.name||'').trim().split(' ');const _fn=_np[0]||'';const _ln=_np.slice(1).join(' ');addRecord("clients",{id:clientId,firstName:_fn,lastName:_ln,name:d.name||'',phone:d.phone,email:d.email||"",channel:"WhatsApp",status:"new",tags:[],notes:d.notes||"",firstVisit:today(),lastVisit:today()});update("slots",slot.id,{status:"imported"});}}catch(e){console.error("[auto-check]",e);}});
   },[data,addRecord,update]);
   const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData,importData}),[data,update,addRecord,deleteRecord,updateSettings,resetData,importData]);
 
