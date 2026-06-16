@@ -40,6 +40,28 @@ export default function SlissPlatform() {
   // Pulisce ?goto dall'URL dopo averlo letto (così un refresh non riapre la schermata)
   useEffect(()=>{const p=new URLSearchParams(window.location.search);if(p.get('goto')){p.delete('goto');const qs=p.toString();window.history.replaceState({},"",window.location.pathname+(qs?`?${qs}`:""));}},[]);
   useEffect(()=>{saveData(data);},[data]);
+  // Migrazione una-tantum: sostituisce nome completo con solo nome nei follow-up in attesa
+  useEffect(()=>{
+    if(localStorage.getItem('sliss-mig-firstname'))return;
+    const clients=data?.clients||[];
+    const followUps=data?.followUps||[];
+    let changed=false;
+    const updated=followUps.map(fu=>{
+      if(fu.status!=='pending')return fu;
+      const cl=clients.find(c=>c.id===fu.clientId);
+      if(!cl)return fu;
+      const firstName=cl.firstName||cl.name.split(' ')[0];
+      if(cl.name===firstName)return fu;
+      const esc=cl.name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+      const newMsg=(fu.message||'').replace(new RegExp(esc,'g'),firstName);
+      if(newMsg===fu.message)return fu;
+      changed=true;
+      return{...fu,message:newMsg};
+    });
+    if(changed)setData(prev=>({...prev,followUps:updated}));
+    localStorage.setItem('sliss-mig-firstname','1');
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+
   // Backup cloud best-effort: copia i dati nel cloud poco dopo ogni modifica (solo se c'è un codice tester). Mai bloccante.
   useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const id=setTimeout(()=>{saveBackup(tester,data);},8000);return ()=>clearTimeout(id);},[data]);
 
