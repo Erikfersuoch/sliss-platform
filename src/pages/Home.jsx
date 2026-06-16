@@ -14,7 +14,7 @@ const Home = ({setView}) => {
   const [showQuickAdd,setShowQuickAdd]=useState(false);
   const [showInvite,setShowInvite]=useState(false);
   const [qDone,setQDone]=useState(false);
-  const [qForm,setQForm]=useState({name:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
+  const [qForm,setQForm]=useState({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
   const [celebrate,setCelebrate]=useState(false);
   const td=today();
   const biz=data.settings?.businessName||"la tua attivit\u{e0}";
@@ -33,12 +33,13 @@ const Home = ({setView}) => {
   const markReady=(order)=>{const cl=(data?.clients||[]).find(c=>c.id===order.clientId);const fu=(data?.followUps||[]).find(f=>f.orderId===order.id&&f.phase==="shipping");update("orders",order.id,{status:"shipped",shippedDate:today()});if(fu){update("followUps",fu.id,{scheduledDate:today(),status:"sent",sentDate:today()});openSend(sendHref(fu.message,cl?.phone,cl?.email,cl?.channel));}};
   const handleQuickAdd=()=>{
     const needEmail=qForm.channel==="Email";
-    if(!qForm.name.trim()||(needEmail?!qForm.email.trim():!qForm.phone.trim()))return;
+    if(!qForm.firstName.trim()||(needEmail?!qForm.email.trim():!qForm.phone.trim()))return;
+    const qName=qForm.firstName.trim()+(qForm.lastName.trim()?' '+qForm.lastName.trim():'');
     let clientId=(data?.clients||[]).find(c=>(qForm.phone.trim()&&c.phone===qForm.phone.trim())||(qForm.email.trim()&&c.email===qForm.email.trim()))?.id;
-    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,name:qForm.name.trim(),phone:qForm.phone.trim(),email:qForm.email.trim(),channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
-    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.name.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
-    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.name.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
-    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({name:"",phone:"",email:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
+    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,firstName:qForm.firstName.trim(),lastName:qForm.lastName.trim(),name:qName,phone:qForm.phone.trim(),email:qForm.email.trim(),channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
+    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.firstName.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
+    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.firstName.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
+    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
   };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
@@ -133,7 +134,7 @@ const Home = ({setView}) => {
         {qDone
           ?<div style={{textAlign:"center",padding:"20px 0"}}><div style={{fontSize:"44px",marginBottom:"12px"}}>{"\u{2705}"}</div><div style={{fontWeight:700,fontSize:"16px",marginBottom:"6px"}}>Salvato!</div><div style={{fontSize:"13px",color:T.textD}}>Follow-up generati automaticamente.</div></div>
           :<>
-            <FormField label="Nome"><input value={qForm.name} onChange={e=>setQForm(p=>({...p,name:e.target.value}))} placeholder="Nome Cognome" /></FormField>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"14px"}}><FormField label="Nome *"><input value={qForm.firstName} onChange={e=>setQForm(p=>({...p,firstName:e.target.value}))} placeholder="Es. Marco" /></FormField><FormField label="Cognome"><input value={qForm.lastName} onChange={e=>setQForm(p=>({...p,lastName:e.target.value}))} placeholder="Es. Rossi" /></FormField></div>
             <FormField label="Metodo di contatto"><select value={qForm.channel} onChange={e=>setQForm(p=>({...p,channel:e.target.value}))}><option>WhatsApp</option><option>SMS</option><option>Email</option></select></FormField>
             {qForm.channel==="Email"
               ? <FormField label="Email"><input value={qForm.email} onChange={e=>setQForm(p=>({...p,email:e.target.value}))} placeholder="email@esempio.com" type="email" /></FormField>
@@ -143,7 +144,7 @@ const Home = ({setView}) => {
               ?<FormField label="Tipo servizio"><select value={qForm.serviceType} onChange={e=>setQForm(p=>({...p,serviceType:e.target.value}))}>{clusterSvcTypes.map(s=><option key={s}>{s}</option>)}</select></FormField>
               :<FormField label="Prodotto"><input value={qForm.product} onChange={e=>setQForm(p=>({...p,product:e.target.value}))} placeholder="Es. Stampa figurina" /></FormField>
             }
-            <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowQuickAdd(false)}>Annulla</Btn><Btn onClick={handleQuickAdd} disabled={!qForm.name.trim()||(qForm.channel==="Email"?!qForm.email.trim():!qForm.phone.trim())}>Salva e genera</Btn></div>
+            <div style={{display:"flex",gap:"10px",justifyContent:"flex-end"}}><Btn v="secondary" onClick={()=>setShowQuickAdd(false)}>Annulla</Btn><Btn onClick={handleQuickAdd} disabled={!qForm.firstName.trim()||(qForm.channel==="Email"?!qForm.email.trim():!qForm.phone.trim())}>Salva e genera</Btn></div>
           </>
         }
       </Modal>
