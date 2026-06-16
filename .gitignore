@@ -12,8 +12,9 @@ dist
 dist-ssr
 *.local
 
-# Claude Code local settings
+# Claude Code local settings — settings.json è progetto (committato), il resto è locale
 .claude/
+!.claude/settings.json
 
 # Editor directories and files
 .vscode/*
