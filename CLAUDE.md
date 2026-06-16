@@ -71,6 +71,20 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 
 ---
 
+## Flusso agentic (default su ogni modifica)
+
+> Obiettivo: ridurre la dipendenza dalla fiducia. Erik è non-dev e non legge il codice — la correttezza la deve poter **verificare dal sistema**, non dalla mia parola. Queste regole sono il default, non vanno ricordate da Erik.
+
+A. **Definire "fatto" PRIMA di costruire (spec-first).** Prima di scrivere codice, concordare in italiano normale una piccola lista *"Fatto quando: a)… b)… e NON deve rompere…"*. È il righello di Erik per accettare il lavoro senza leggere codice. A fine modifica si spuntano le caselle insieme.
+
+B. **"Visto funzionare", non "fidati".** Prima di dichiarare fatto, aprire l'app vera, eseguire il comportamento e mostrarne la **prova visiva** (screenshot/registrazione via `/verify` o `/run`). "Build verde" ≠ "funziona per l'utente" (cfr. bug cron: build ok, notifiche ferme). La prova è il comportamento osservato, non la compilazione.
+
+C. **Il guardiano è il sistema, non la memoria.** (C1) I controlli automatici devono girare **da soli a ogni push** (CI su GitHub Actions) — non dipendere dal lancio manuale di `npm test`. *Montabile ora, rischio zero.* (C2) Aggiungere **test sui flussi utente** veri (es. "crea cliente + appuntamento → genera i follow-up giusti nelle date giuste"), oltre a quelli sul guardiano dati già presenti. *Meglio post-gate: toccano logica viva.*
+
+D. **Secondo paio d'occhi (bonus).** Per modifiche non banali, passare le mie modifiche a una review indipendente (`/code-review`) prima che vadano online — non controllarmi da solo il lavoro.
+
+---
+
 ## Regole tecniche (imparate dai bug — non ripetere)
 
 1. **STORAGE — sempre localStorage.** `window.storage` esiste solo in Claude Artifacts. Su Vercel crasha silenziosamente. Il wrapper è in App.jsx: `const storage = { get, set, remove }`.
