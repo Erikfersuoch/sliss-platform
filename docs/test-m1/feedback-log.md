@@ -110,21 +110,19 @@
 
 <!-- Copia il blocco "#### Check — [DATA]" ogni settimana -->
 
-#### Check — [DATA]
+#### Check — 16/06/2026 (riportato da Erik, a caldo)
 
-**Cosa ha usato:**
+**Numeri live al 16/06 (da `api/track`):** app aperta **7 giorni su 7** (09–16/06, salto solo il 14) · 1 cliente in app · 5 follow-up inviati · 7 pending. Quadro invariato sui clienti, ciclo follow-up che gira sull'unico cliente.
 
-**Cosa ha funzionato:**
+**Cosa ha detto/fatto:** oggi ha **messo Sliss sul PC** (passo concreto di integrazione nel posto di lavoro, non solo telefono) e l'ha fatto davvero. Poi **in negozio sono arrivati clienti e non ha più fatto molto.**
 
-**Cosa ha creato frizione:**
-
-**Richieste esplicite:**
+**Lettura:** stesso attrito strutturale già mappato (07/06 e 12/06), ora osservato dal vivo nel punto preciso: il **flusso di lavoro reale in negozio mangia il momento dell'inserimento**. Il gesto di mettere l'app sul PC è un segnale positivo di volontà di adozione (vuole averla a portata sul banco), ma conferma che l'inserimento manuale non sopravvive all'arrivo dei clienti. Nessuna azione: si resta nella decisione del 12/06 (aspettare i suoi tempi, non caricare). Rafforza ulteriormente l'evidenza pro **sync Calendar/automazione ingresso** (Fase 3).
 
 **Categoria:**
-- [ ] Bloccante → fix immediato
-- [ ] Frizione → backlog prioritario
-- [ ] Richiesta feature → parking-lot
-- [ ] Insight → da tenere sotto osservazione
+- [ ] Bloccante
+- [x] Frizione → attrito d'ingresso confermato sul campo (il lavoro reale interrompe l'inserimento)
+- [ ] Richiesta feature
+- [x] Insight → tentativo di adozione spontaneo (app sul PC) ⇒ interesse vivo; il collo di bottiglia è l'inserimento, non la motivazione
 
 ---
 
@@ -171,5 +169,21 @@
 - [x] Frizione → backlog prioritario (richieste in entrata perse)
 - [x] Richiesta feature → tocca **M3 Gestione Richieste** (oggi bloccato fino a validazione M1)
 - [x] Insight → conferma che il caso d'uso primario di Luca è l'**inbound**, non il follow-up
+
+---
+
+#### Check — 16/06/2026 (riportato da Erik, a caldo)
+
+**Numeri live al 16/06 (da `api/track`):** app aperta **7 giorni su 7** (09–16/06, salto solo il 13) · 6 clienti in app · 13 follow-up inviati · 15 pending. Cresciuto da 9→13 inviati e 4→6 clienti rispetto al 12/06.
+
+**Cosa ha detto:** **approva per adesso.** Niente lamentele, uso costante.
+
+**Lettura:** segnale solido che si rinforza. **13 usi reali ⇒ ben oltre la soglia ~8 del gate** sul criterio "usi reali". Resta da raccogliere a voce la conferma esplicita di "valore" e l'eventuale dolore M3 (richieste perse) come trigger d'esempio.
+
+**Categoria:**
+- [ ] Bloccante
+- [ ] Frizione
+- [ ] Richiesta feature
+- [x] Insight → criterio "usi reali" del gate soddisfatto da Luca; in attesa della conferma "valore" a voce
 
 ---
