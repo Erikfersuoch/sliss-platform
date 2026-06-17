@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/preview.html", "destination": "/preview.html" }
+    { "source": "/preview.html", "destination": "/preview.html" },
+    { "source": "/loghi.html", "destination": "/loghi.html" }
   ],
   "crons": [
     { "path": "/api/notify?type=followup",             "schedule": "0 10 * * *" },
