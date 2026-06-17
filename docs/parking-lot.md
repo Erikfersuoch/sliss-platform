@@ -74,6 +74,10 @@
 
 - [28/05/2026] Tipi servizio personalizzabili in Settings — oggi derivati dal cluster (defaults), in futuro campo editabile in Impostazioni che sovrascrive i default. Implementazione: `data.settings.serviceTypes[]`, fallback a `CLUSTERS_SERVIZI[cluster].serviceTypes`
 
+## Idee UI/UX
+
+- [17/06/2026] **Interfaccia dinamica stile Revolut** — navigazione fluida tra schede (transizioni, swipe), barra in basso con animazioni di selezione. Palette colori: sfondo scuro/petrolio (blu petrolio + verde attuale #16A34A), card con profondità, stile premium. Riferimento: app Revolut per feeling di navigazione e gestione colori. Da valutare post-gate come upgrade estetico completo.
+
 ## Idee tecniche
 
 - [09/06/2026] **[POST-GATE] Pass "verso il top" — backlog da audit /impeccable (29/40, snapshot in `.impeccable/critique/`).** L'app è "Good"; il tetto residuo è: **(P1)** *error recovery* — backup/onboarding/track falliscono in silenzio + nessuna validazione inline (telefono/email): da far emergere con feedback (tocca anche la sicurezza dati, [[feedback-safety-first]]) → `/impeccable harden`; **(P2)** riquadrini-fase da etichettare (testo `HELP.phases` già pronto, solo da piazzare) · emoji grezze → set `<Icon>` — **DECISO 10/06: Strada A, tutto icone** (via le emoji funzionali, direzione "premium" coerente con PRODUCT.md), da fare **post-gate** · skeleton + micro-feedback al caricamento/salvataggio; **(P3)** togliere "codice tester" (Fase 3), densità Home. Più l'**upgrade estetico dedicato** ("molto più figo"). Trend punteggio: 28 (09/06 mattina) → 29 (post v6.4+v6.5). Ri-lanciare `/impeccable critique` dopo gli interventi per misurare.
