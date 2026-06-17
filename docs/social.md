@@ -7,6 +7,7 @@
 ## Post pubblicati
 <!-- data | piattaforma | tipo -->
 - 12/06/2026 | LinkedIn + Facebook | "Perché Sliss" (origin story, rif. libro Simon Squibb) — 3° uscita
+- 16/06/2026 | LinkedIn + Facebook | "L'attesa" (impulso di agire vs disciplina di aspettare) — 4° uscita
 
 ---
 
@@ -51,5 +52,6 @@ Voi come fate a capire se uno strumento sta funzionando davvero, e non solo "ven
 - Contestualizzazione form distribuito (onboarding cliente via link) — priorità alta
 
 ## Prossimi contenuti
-- "La metrica che non c'era" (versione alternativa, sopra) — 4° uscita, con CTA soft già incluso
+- "La metrica che non c'era" (versione alternativa, sopra) — 5° uscita, con CTA soft già incluso
+- Post esito go/no-go M1 (dopo 21/06) — può essere la "prima vittoria concreta dal test" o una lezione onesta
 - Prima vittoria concreta dal test
