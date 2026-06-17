@@ -3,469 +3,432 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Sliss — Anteprima UI Revolut Style</title>
+<title>Sliss — Anteprima UI v2</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0B1120; color: #E8ECF4; overflow-x: hidden; }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#080E1A;color:#E8ECF4;overflow-x:hidden;min-height:100vh}
 
-  /* Palette */
-  :root {
-    --bg-deep: #0B1120;
-    --bg-card: #131B2E;
-    --bg-card-hover: #1A2540;
-    --bg-elevated: #1E2A45;
-    --border: rgba(255,255,255,0.06);
-    --border-glow: rgba(22,163,74,0.25);
-    --green: #16A34A;
-    --green-soft: rgba(22,163,74,0.15);
-    --green-glow: rgba(22,163,74,0.3);
-    --petrol: #0E4D64;
-    --petrol-soft: rgba(14,77,100,0.25);
-    --amber: #F59E0B;
-    --amber-soft: rgba(245,158,11,0.15);
-    --red: #EF4444;
-    --red-soft: rgba(239,68,68,0.12);
-    --blue: #3B82F6;
-    --blue-soft: rgba(59,130,246,0.15);
-    --text: #E8ECF4;
-    --text-m: #94A3B8;
-    --text-d: #64748B;
-    --r: 16px;
-    --r-s: 10px;
+  :root{
+    --bg:#0C1425;
+    --bg2:#111C33;
+    --bg-card:rgba(20,32,56,0.75);
+    --bg-card-h:rgba(26,42,72,0.85);
+    --bg-glass:rgba(16,26,48,0.6);
+    --border:rgba(255,255,255,0.07);
+    --glow:rgba(22,163,74,0.2);
+    --green:#16A34A;
+    --green-s:rgba(22,163,74,0.14);
+    --green-g:rgba(22,163,74,0.35);
+    --petrol:#0C5E7A;
+    --petrol-s:rgba(12,94,122,0.2);
+    --teal:#14B8A6;
+    --amber:#F59E0B;
+    --amber-s:rgba(245,158,11,0.14);
+    --red:#EF4444;
+    --red-s:rgba(239,68,68,0.12);
+    --blue:#3B82F6;
+    --blue-s:rgba(59,130,246,0.14);
+    --txt:#E8ECF4;
+    --txt-m:#94A3B8;
+    --txt-d:#5E7290;
   }
 
-  /* Container mobile */
-  .phone { width: 375px; height: 812px; margin: 20px auto; border-radius: 40px; overflow: hidden; position: relative; background: var(--bg-deep); box-shadow: 0 0 0 3px #1E2A45, 0 25px 80px rgba(0,0,0,0.6); }
-  .screen { height: 100%; display: flex; flex-direction: column; position: relative; overflow: hidden; }
-  .status-bar { height: 50px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--text-m); flex-shrink: 0; }
+  .phone{width:375px;height:812px;margin:20px auto;border-radius:48px;overflow:hidden;position:relative;
+    background:var(--bg);
+    box-shadow:0 0 0 2px rgba(255,255,255,0.06),0 30px 100px rgba(0,0,0,0.7);
+  }
+  .screen{height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;
+    background:var(--bg);
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(12,94,122,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 10%, rgba(22,163,74,0.12) 0%, transparent 50%),
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(12,94,122,0.15) 0%, transparent 50%);
+  }
 
-  /* Views container */
-  .views { flex: 1; overflow: hidden; position: relative; }
-  .view { position: absolute; inset: 0; padding: 0 20px 20px; overflow-y: auto; transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease; will-change: transform, opacity; }
-  .view::-webkit-scrollbar { display: none; }
-  .view.active { transform: translateX(0); opacity: 1; z-index: 2; }
-  .view.left { transform: translateX(-30%); opacity: 0; z-index: 1; }
-  .view.right { transform: translateX(30%); opacity: 0; z-index: 1; }
+  .status-bar{height:54px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:15px;font-weight:600;color:var(--txt-m);flex-shrink:0}
 
-  /* Bottom Nav */
-  .bottom-nav { height: 82px; background: linear-gradient(to top, var(--bg-deep) 60%, transparent); padding: 0 8px; display: flex; align-items: center; justify-content: space-around; position: relative; flex-shrink: 0; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-top: 1px solid var(--border); }
-  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 16px; cursor: pointer; position: relative; transition: all 0.3s ease; border-radius: 14px; }
-  .nav-item.active { background: var(--green-soft); }
-  .nav-item .nav-icon { font-size: 22px; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-  .nav-item.active .nav-icon { transform: scale(1.15) translateY(-1px); }
-  .nav-item .nav-label { font-size: 10px; font-weight: 600; color: var(--text-d); transition: color 0.3s ease; }
-  .nav-item.active .nav-label { color: var(--green); }
-  .nav-badge { position: absolute; top: 4px; right: 10px; background: var(--amber); color: #000; font-size: 9px; font-weight: 800; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .views{flex:1;overflow:hidden;position:relative}
+  .view{position:absolute;inset:0;padding:0 20px 100px;overflow-y:auto;scrollbar-width:none;
+    transition:transform .45s cubic-bezier(.16,1,.3,1),opacity .35s ease;will-change:transform,opacity}
+  .view::-webkit-scrollbar{display:none}
+  .view.active{transform:translateX(0);opacity:1;z-index:2}
+  .view.left{transform:translateX(-25%);opacity:0;z-index:1}
+  .view.right{transform:translateX(25%);opacity:0;z-index:1}
 
-  /* Header */
-  .page-header { margin-bottom: 24px; }
-  .page-header h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
-  .page-header .subtitle { font-size: 13px; color: var(--text-d); margin-top: 4px; }
-  .greeting { font-size: 15px; color: var(--green); font-weight: 600; margin-bottom: 4px; }
+  /* ===== ISLAND NAV ===== */
+  .nav-island{
+    position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:100;
+    display:flex;align-items:center;gap:4px;
+    padding:8px 10px;
+    background:rgba(14,22,42,0.82);
+    backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:28px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.03) inset;
+  }
+  .nav-btn{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    padding:8px 14px;border:none;cursor:pointer;
+    background:transparent;border-radius:20px;
+    transition:all .3s cubic-bezier(.34,1.56,.64,1);
+    position:relative;
+  }
+  .nav-btn svg{transition:transform .3s cubic-bezier(.34,1.56,.64,1)}
+  .nav-btn.active{background:var(--green-s)}
+  .nav-btn.active svg{transform:scale(1.12) translateY(-1px)}
+  .nav-btn .n-label{font-size:9px;font-weight:600;color:var(--txt-d);transition:color .3s}
+  .nav-btn.active .n-label{color:var(--green)}
+  .nav-badge{position:absolute;top:3px;right:8px;background:var(--amber);color:#000;font-size:8px;font-weight:800;width:15px;height:15px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 
-  /* Cards */
-  .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; margin-bottom: 10px; transition: all 0.25s ease; cursor: pointer; position: relative; overflow: hidden; }
-  .card:hover, .card:active { background: var(--bg-card-hover); border-color: var(--border-glow); transform: translateY(-1px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-  .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--green), transparent); opacity: 0; transition: opacity 0.3s ease; }
-  .card:hover::before { opacity: 1; }
+  /* ===== COMMON ===== */
+  .hdr{margin-bottom:22px}
+  .hdr h1{font-size:28px;font-weight:800;letter-spacing:-.5px}
+  .hdr .sub{font-size:13px;color:var(--txt-d);margin-top:4px}
+  .greet{font-size:14px;color:var(--green);font-weight:600;margin-bottom:2px}
 
-  /* Summary cards (Home) */
-  .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-  .summary-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 16px; text-align: center; }
-  .summary-card .number { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, var(--green), #22D3EE); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.2; }
-  .summary-card .label { font-size: 11px; color: var(--text-d); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; font-weight: 600; }
-  .summary-card.alert .number { background: linear-gradient(135deg, var(--amber), #FB923C); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .card{
+    background:var(--bg-card);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:10px;
+    transition:all .25s ease;cursor:pointer;position:relative;overflow:hidden;
+  }
+  .card:active{background:var(--bg-card-h);transform:scale(.985)}
 
-  /* Action banner */
-  .action-banner { background: linear-gradient(135deg, var(--petrol), #0A3D52); border: 1px solid rgba(14,77,100,0.4); border-radius: var(--r); padding: 18px; margin-bottom: 16px; position: relative; overflow: hidden; }
-  .action-banner::after { content: ''; position: absolute; top: -50%; right: -20%; width: 120px; height: 120px; background: radial-gradient(circle, rgba(22,163,74,0.15), transparent 70%); }
-  .action-banner .title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .action-banner .desc { font-size: 12px; color: var(--text-m); }
+  .summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .s-card{
+    background:var(--bg-card);backdrop-filter:blur(12px);
+    border:1px solid var(--border);border-radius:18px;padding:18px 16px;text-align:center;
+    position:relative;overflow:hidden;
+  }
+  .s-card::before{content:'';position:absolute;inset:0;border-radius:18px;opacity:.35;pointer-events:none}
+  .s-card.g::before{background:radial-gradient(circle at 30% 20%,rgba(22,163,74,0.2),transparent 70%)}
+  .s-card.a::before{background:radial-gradient(circle at 70% 20%,rgba(245,158,11,0.2),transparent 70%)}
+  .s-num{font-size:36px;font-weight:800;line-height:1.1;position:relative}
+  .s-num.green{background:linear-gradient(135deg,#16A34A,#14B8A6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .s-num.amber{background:linear-gradient(135deg,#F59E0B,#FB923C);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .s-label{font-size:11px;color:var(--txt-d);text-transform:uppercase;letter-spacing:.06em;margin-top:6px;font-weight:600}
 
-  /* Tabs */
-  .tabs { display: flex; gap: 6px; margin-bottom: 18px; background: var(--bg-card); border-radius: 12px; padding: 4px; border: 1px solid var(--border); }
-  .tab { flex: 1; text-align: center; padding: 10px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: var(--text-d); cursor: pointer; transition: all 0.3s ease; position: relative; }
-  .tab.active { background: var(--green); color: #fff; box-shadow: 0 2px 12px var(--green-glow); }
-  .tab .tab-count { display: inline-block; margin-left: 4px; font-size: 10px; opacity: 0.7; }
+  .banner{
+    background:linear-gradient(135deg,rgba(12,94,122,0.5),rgba(10,61,82,0.4));
+    backdrop-filter:blur(12px);
+    border:1px solid rgba(20,184,166,0.15);border-radius:18px;padding:18px;margin-bottom:16px;
+    position:relative;overflow:hidden;
+  }
+  .banner::after{content:'';position:absolute;top:-40%;right:-15%;width:140px;height:140px;background:radial-gradient(circle,rgba(22,163,74,0.18),transparent 65%);pointer-events:none}
+  .banner .b-title{font-size:15px;font-weight:700;margin-bottom:4px;position:relative}
+  .banner .b-desc{font-size:12px;color:var(--txt-m);position:relative}
 
-  /* Follow-up card */
-  .fu-card { display: flex; align-items: center; gap: 12px; }
-  .fu-avatar { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-  .fu-content { flex: 1; min-width: 0; }
-  .fu-name { font-size: 14px; font-weight: 600; }
-  .fu-msg { font-size: 12px; color: var(--text-d); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
-  .fu-meta { flex-shrink: 0; text-align: right; }
-  .fu-time { font-size: 11px; color: var(--text-d); }
-  .fu-badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px; margin-top: 4px; }
+  .tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--bg-card);border-radius:14px;padding:4px;border:1px solid var(--border);backdrop-filter:blur(12px)}
+  .tab{flex:1;text-align:center;padding:10px 6px;border-radius:12px;font-size:12px;font-weight:600;color:var(--txt-d);cursor:pointer;transition:all .3s}
+  .tab.on{background:var(--green);color:#fff;box-shadow:0 2px 14px var(--green-g)}
 
-  /* Client card */
-  .client-row { display: flex; align-items: center; gap: 12px; }
-  .client-avatar { width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, var(--petrol), var(--green)); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
-  .client-info { flex: 1; }
-  .client-name { font-size: 15px; font-weight: 600; }
-  .client-detail { font-size: 12px; color: var(--text-d); margin-top: 2px; }
-  .client-tag { font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+  .fu-row{display:flex;align-items:center;gap:12px}
+  .fu-av{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .fu-info{flex:1;min-width:0}
+  .fu-name{font-size:14px;font-weight:600}
+  .fu-msg{font-size:12px;color:var(--txt-d);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  .fu-time{font-size:11px;color:var(--txt-d)}
+  .fu-tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;margin-top:4px;display:inline-block}
 
-  /* Order phases */
-  .phases { display: flex; gap: 4px; margin-top: 12px; }
-  .phase { flex: 1; padding: 8px 4px; border-radius: var(--r-s); text-align: center; }
-  .phase .phase-icon { font-size: 14px; }
-  .phase .phase-label { font-size: 8px; font-weight: 700; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.03em; }
+  .wa-btn{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff;padding:8px 14px;border-radius:11px;border:none;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:5px;margin-top:8px}
 
-  /* Button */
-  .btn { padding: 10px 20px; border-radius: 12px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; font-family: inherit; }
-  .btn-primary { background: var(--green); color: #fff; box-shadow: 0 4px 15px var(--green-glow); }
-  .btn-primary:active { transform: scale(0.96); }
-  .btn-send { background: linear-gradient(135deg, #25D366, #128C7E); color: #fff; padding: 8px 16px; border-radius: 10px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+  .cl-row{display:flex;align-items:center;gap:12px}
+  .cl-av{width:44px;height:44px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;flex-shrink:0}
+  .cl-name{font-size:15px;font-weight:600}
+  .cl-det{font-size:12px;color:var(--txt-d);margin-top:2px}
+  .cl-tag{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
 
-  /* Section title */
-  .section-title { font-size: 13px; font-weight: 700; color: var(--text-d); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; margin-top: 8px; }
+  .phases{display:flex;gap:5px;margin-top:12px}
+  .ph{flex:1;padding:8px 4px;border-radius:12px;text-align:center}
+  .ph-icon{display:flex;justify-content:center}
+  .ph-lbl{font-size:8px;font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.03em}
 
-  /* Animations */
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes badgePop { 0% { transform: scale(0); } 100% { transform: scale(1); } }
-  @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
-  .fade-up { animation: fadeUp 0.4s ease both; }
-  .fade-up-1 { animation-delay: 0.05s; }
-  .fade-up-2 { animation-delay: 0.1s; }
-  .fade-up-3 { animation-delay: 0.15s; }
-  .fade-up-4 { animation-delay: 0.2s; }
-  .fade-up-5 { animation-delay: 0.25s; }
+  .btn-p{padding:9px 18px;border-radius:13px;border:none;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;background:var(--green);color:#fff;box-shadow:0 4px 16px var(--green-g)}
 
-  /* Title label */
-  .preview-label { text-align: center; color: var(--text-d); font-size: 12px; margin-top: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
-  .preview-wrapper { display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; padding: 40px 20px; }
+  .sec-t{font-size:12px;font-weight:700;color:var(--txt-d);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;margin-top:6px}
 
-  /* Desktop hint */
-  .desktop-hint { text-align: center; padding: 20px; color: var(--text-d); font-size: 14px; }
-  .desktop-hint strong { color: var(--green); }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .fu{animation:fadeUp .4s ease both}
+  .fu1{animation-delay:.05s}.fu2{animation-delay:.1s}.fu3{animation-delay:.15s}.fu4{animation-delay:.2s}.fu5{animation-delay:.25s}
+
+  .wrap{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;padding:30px 20px 60px}
+  .hint{text-align:center;padding:24px 20px 0;color:var(--txt-d);font-size:13px}
+  .hint strong{color:var(--green)}
+  .hint h2{font-size:22px;font-weight:800;color:var(--txt);margin-bottom:6px}
+  .plabel{text-align:center;color:var(--txt-d);font-size:11px;margin-top:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
 </style>
 </head>
 <body>
 
-<div class="desktop-hint" style="padding-top:30px">
-  <div style="font-size:24px;font-weight:800;color:var(--text);margin-bottom:8px">Sliss — Anteprima UI</div>
-  <div>Palette <strong>verde + blu petrolio</strong> su sfondo scuro, navigazione fluida stile Revolut</div>
-  <div style="margin-top:4px;font-size:12px">Clicca le tab in basso per navigare tra le schermate</div>
+<div class="hint">
+  <h2>Sliss — Anteprima UI v2</h2>
+  <div><strong>Verde + Blu Petrolio</strong> su sfondo vivo con gradienti &middot; Barra isola flottante</div>
+  <div style="margin-top:4px;font-size:11px">Tocca/clicca le icone nella barra in basso per navigare</div>
 </div>
 
-<div class="preview-wrapper">
+<div class="wrap">
+<div>
+<div class="phone">
+<div class="screen">
+  <div class="status-bar">9:41</div>
+  <div class="views">
 
-  <!-- PHONE 1: Home + Follow-Up -->
-  <div>
-    <div class="phone" id="phone1">
-      <div class="screen">
-        <div class="status-bar">9:41</div>
-        <div class="views">
+    <!-- HOME -->
+    <div class="view active" data-v="home">
+      <div class="hdr fu">
+        <div class="greet">Buongiorno, Erik</div>
+        <h1>La tua giornata</h1>
+        <div class="sub">Martedi 17 giugno 2026</div>
+      </div>
 
-          <!-- HOME -->
-          <div class="view active" id="v-home">
-            <div class="page-header fade-up">
-              <div class="greeting">Buongiorno, Erik</div>
-              <h1>La tua giornata</h1>
-              <div class="subtitle">Martedi 17 giugno 2026</div>
-            </div>
+      <div class="summary-grid fu fu1">
+        <div class="s-card a"><div class="s-num amber">3</div><div class="s-label">Da inviare</div></div>
+        <div class="s-card g"><div class="s-num green">12</div><div class="s-label">Clienti attivi</div></div>
+      </div>
 
-            <div class="summary-grid fade-up fade-up-1">
-              <div class="summary-card alert">
-                <div class="number">3</div>
-                <div class="label">Da inviare</div>
-              </div>
-              <div class="summary-card">
-                <div class="number">12</div>
-                <div class="label">Clienti attivi</div>
-              </div>
-            </div>
+      <div class="banner fu fu2">
+        <div class="b-title">3 follow-up pronti</div>
+        <div class="b-desc">Hai messaggi da inviare oggi ai tuoi clienti</div>
+      </div>
 
-            <div class="action-banner fade-up fade-up-2">
-              <div class="title">3 follow-up pronti</div>
-              <div class="desc">Hai messaggi da inviare oggi ai tuoi clienti</div>
-            </div>
+      <div class="sec-t fu fu3">Da fare oggi</div>
 
-            <div class="section-title fade-up fade-up-3">Da fare oggi</div>
-
-            <div class="card fade-up fade-up-3">
-              <div class="fu-card">
-                <div class="fu-avatar" style="background:var(--amber-soft)">&#x1F64F;</div>
-                <div class="fu-content">
-                  <div class="fu-name">Marco B.</div>
-                  <div class="fu-msg">Ciao Marco! Come stai? Volevo sapere...</div>
-                </div>
-                <div class="fu-meta">
-                  <div class="fu-time">Oggi</div>
-                  <div class="fu-badge" style="background:var(--amber-soft);color:var(--amber)">Ringraziamento</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-4">
-              <div class="fu-card">
-                <div class="fu-avatar" style="background:var(--green-soft)">&#x2B50;</div>
-                <div class="fu-content">
-                  <div class="fu-name">Giulia R.</div>
-                  <div class="fu-msg">Ciao Giulia! Se hai un minuto, una tua...</div>
-                </div>
-                <div class="fu-meta">
-                  <div class="fu-time">Oggi</div>
-                  <div class="fu-badge" style="background:var(--green-soft);color:var(--green)">Recensione</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-5">
-              <div class="fu-card">
-                <div class="fu-avatar" style="background:var(--blue-soft)">&#x1F504;</div>
-                <div class="fu-content">
-                  <div class="fu-name">Sara M.</div>
-                  <div class="fu-msg">Ciao Sara! E' un po' che non ci vediamo...</div>
-                </div>
-                <div class="fu-meta">
-                  <div class="fu-time">Ieri</div>
-                  <div class="fu-badge" style="background:var(--red-soft);color:var(--red)">Scaduto</div>
-                </div>
-              </div>
-            </div>
+      <div class="card fu fu3">
+        <div class="fu-row">
+          <div class="fu-av" style="background:var(--amber-s)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
           </div>
-
-          <!-- FOLLOW-UP -->
-          <div class="view right" id="v-followup">
-            <div class="page-header fade-up">
-              <h1>Follow-Up</h1>
-            </div>
-
-            <div class="tabs fade-up fade-up-1">
-              <div class="tab active">Da inviare <span class="tab-count">3</span></div>
-              <div class="tab">Inviati <span class="tab-count">8</span></div>
-              <div class="tab">Programmati <span class="tab-count">5</span></div>
-            </div>
-
-            <div class="card fade-up fade-up-2" style="border-left: 3px solid var(--amber)">
-              <div class="fu-card">
-                <div class="fu-avatar" style="background:var(--amber-soft)">&#x1F64F;</div>
-                <div class="fu-content">
-                  <div class="fu-name">Marco Bianchi</div>
-                  <div class="fu-msg">Ciao Marco! Come stai? Volevo sapere come ti trovi con il taglio...</div>
-                  <div style="margin-top:10px">
-                    <button class="btn-send">&#x1F4AC; Invia su WhatsApp</button>
-                  </div>
-                </div>
-                <div class="fu-meta">
-                  <div class="fu-time">Oggi</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-3" style="border-left: 3px solid var(--amber)">
-              <div class="fu-card">
-                <div class="fu-avatar" style="background:var(--green-soft)">&#x2B50;</div>
-                <div class="fu-content">
-                  <div class="fu-name">Giulia Rossi</div>
-                  <div class="fu-msg">Ciao Giulia! Se hai un minuto, una tua recensione mi aiuterebbe...</div>
-                  <div style="margin-top:10px">
-                    <button class="btn-send">&#x1F4AC; Invia su WhatsApp</button>
-                  </div>
-                </div>
-                <div class="fu-meta">
-                  <div class="fu-time">Oggi</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-4" style="border-left: 3px solid var(--red)">
-              <div class="fu-card">
-                <div class="fu-avatar" style="background:var(--blue-soft)">&#x1F504;</div>
-                <div class="fu-content">
-                  <div class="fu-name">Sara Moretti</div>
-                  <div class="fu-msg">Ciao Sara! E' un po' che non ci vediamo, come va?</div>
-                  <div style="margin-top:10px">
-                    <button class="btn-send">&#x1F4AC; Invia su WhatsApp</button>
-                  </div>
-                </div>
-                <div class="fu-meta">
-                  <div class="fu-time" style="color:var(--red)">1g fa</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- CLIENTI -->
-          <div class="view right" id="v-clients">
-            <div class="page-header fade-up">
-              <h1>Clienti</h1>
-              <div class="subtitle">12 clienti totali</div>
-            </div>
-
-            <div style="margin-bottom:16px" class="fade-up fade-up-1">
-              <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px">
-                <span style="color:var(--text-d)">&#x1F50D;</span>
-                <span style="color:var(--text-d);font-size:13px">Cerca cliente...</span>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-2">
-              <div class="client-row">
-                <div class="client-avatar">MB</div>
-                <div class="client-info">
-                  <div class="client-name">Marco Bianchi</div>
-                  <div class="client-detail">Ultimo appuntamento: 10 giu</div>
-                </div>
-                <span class="client-tag" style="background:var(--green-soft);color:var(--green)">Attivo</span>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-3">
-              <div class="client-row">
-                <div class="client-avatar" style="background:linear-gradient(135deg, var(--amber), #F97316)">GR</div>
-                <div class="client-info">
-                  <div class="client-name">Giulia Rossi</div>
-                  <div class="client-detail">Ultimo appuntamento: 14 giu</div>
-                </div>
-                <span class="client-tag" style="background:var(--amber-soft);color:var(--amber)">VIP</span>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-4">
-              <div class="client-row">
-                <div class="client-avatar" style="background:linear-gradient(135deg, #64748B, #475569)">SM</div>
-                <div class="client-info">
-                  <div class="client-name">Sara Moretti</div>
-                  <div class="client-detail">Ultimo appuntamento: 2 mag</div>
-                </div>
-                <span class="client-tag" style="background:var(--red-soft);color:var(--red)">Da riatt.</span>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-5">
-              <div class="client-row">
-                <div class="client-avatar">LV</div>
-                <div class="client-info">
-                  <div class="client-name">Luca Verdi</div>
-                  <div class="client-detail">Ultimo appuntamento: 15 giu</div>
-                </div>
-                <span class="client-tag" style="background:var(--green-soft);color:var(--green)">Attivo</span>
-              </div>
-            </div>
-
-            <div style="text-align:center;margin-top:20px" class="fade-up fade-up-5">
-              <button class="btn btn-primary">+ Nuovo cliente</button>
-            </div>
-          </div>
-
-          <!-- ORDINI -->
-          <div class="view right" id="v-orders">
-            <div class="page-header fade-up">
-              <h1>Ordini</h1>
-              <div class="subtitle">Ordini in corso e follow-up automatici</div>
-            </div>
-
-            <div class="card fade-up fade-up-1">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-                <div>
-                  <div style="font-weight:700;font-size:15px">Matteo Buffa</div>
-                  <div style="font-size:13px;color:var(--text-m);margin-top:2px">Supporto stampa 3D custom</div>
-                </div>
-                <span style="font-size:11px;font-weight:700;color:var(--amber);background:var(--amber-soft);padding:4px 10px;border-radius:20px">In preparazione</span>
-              </div>
-              <div style="display:flex;gap:12px;font-size:11px;color:var(--text-d);margin:8px 0">
-                <span>Ordine: 12 giu</span><span>Consegna: 19 giu</span>
-              </div>
-              <div class="phases">
-                <div class="phase" style="background:var(--green-soft)"><div class="phase-icon" style="color:var(--green)">&#x2705;</div><div class="phase-label" style="color:var(--green)">Conferma</div></div>
-                <div class="phase" style="background:var(--bg-elevated)"><div class="phase-icon" style="color:var(--text-d)">&#x23F3;</div><div class="phase-label" style="color:var(--text-d)">Spedizione</div></div>
-                <div class="phase" style="background:var(--amber-soft)"><div class="phase-icon" style="color:var(--amber)">&#x1F4E6;</div><div class="phase-label" style="color:var(--amber)">Tra 5g</div></div>
-                <div class="phase" style="background:var(--bg-elevated)"><div class="phase-icon" style="color:var(--text-d)">&#x2B50;</div><div class="phase-label" style="color:var(--text-d)">&mdash;</div></div>
-                <div class="phase" style="background:var(--bg-elevated)"><div class="phase-icon" style="color:var(--text-d)">&#x1F504;</div><div class="phase-label" style="color:var(--text-d)">&mdash;</div></div>
-              </div>
-              <div style="margin-top:12px">
-                <button class="btn btn-primary" style="font-size:12px;padding:8px 16px">&#x1F680; Ready to go</button>
-              </div>
-            </div>
-
-            <div class="card fade-up fade-up-2">
-              <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-                <div>
-                  <div style="font-weight:700;font-size:15px">Cecilia De Maria</div>
-                  <div style="font-size:13px;color:var(--text-m);margin-top:2px">Prototipo meccanico</div>
-                </div>
-                <span style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-soft);padding:4px 10px;border-radius:20px">Spedito</span>
-              </div>
-              <div style="display:flex;gap:12px;font-size:11px;color:var(--text-d);margin:8px 0">
-                <span>Ordine: 8 giu</span><span>Consegna: 15 giu</span>
-              </div>
-              <div class="phases">
-                <div class="phase" style="background:var(--green-soft)"><div class="phase-icon" style="color:var(--green)">&#x2705;</div><div class="phase-label" style="color:var(--green)">Conferma</div></div>
-                <div class="phase" style="background:var(--green-soft)"><div class="phase-icon" style="color:var(--green)">&#x2705;</div><div class="phase-label" style="color:var(--green)">Spedito</div></div>
-                <div class="phase" style="background:var(--green-soft)"><div class="phase-icon" style="color:var(--green)">&#x2705;</div><div class="phase-label" style="color:var(--green)">Consegna</div></div>
-                <div class="phase" style="background:var(--amber-soft)"><div class="phase-icon" style="color:var(--amber)">&#x2B50;</div><div class="phase-label" style="color:var(--amber)">Oggi</div></div>
-                <div class="phase" style="background:var(--bg-elevated)"><div class="phase-icon" style="color:var(--text-d)">&#x1F504;</div><div class="phase-label" style="color:var(--text-d)">Tra 14g</div></div>
-              </div>
-            </div>
-          </div>
-
+          <div class="fu-info"><div class="fu-name">Marco B.</div><div class="fu-msg">Ciao Marco! Come stai? Volevo sapere come...</div></div>
+          <div style="text-align:right"><div class="fu-time">Oggi</div><div class="fu-tag" style="background:var(--amber-s);color:var(--amber)">Ringraziamento</div></div>
         </div>
+      </div>
 
-        <!-- NAV -->
-        <div class="bottom-nav">
-          <div class="nav-item active" onclick="goTo('home')">
-            <span class="nav-icon">&#x1F3E0;</span>
-            <span class="nav-label">Home</span>
+      <div class="card fu fu4">
+        <div class="fu-row">
+          <div class="fu-av" style="background:var(--green-s)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.48 3.5a.56.56 0 0 1 1.04 0l2.13 4.32a.56.56 0 0 0 .42.3l4.77.7a.56.56 0 0 1 .31.95l-3.45 3.36a.56.56 0 0 0-.16.5l.82 4.74a.56.56 0 0 1-.82.59l-4.27-2.24a.56.56 0 0 0-.52 0L7.3 19.96a.56.56 0 0 1-.82-.59l.82-4.74a.56.56 0 0 0-.16-.5L3.69 10.77a.56.56 0 0 1 .31-.95l4.77-.7a.56.56 0 0 0 .42-.3z"/></svg>
           </div>
-          <div class="nav-item" onclick="goTo('followup')">
-            <span class="nav-icon">&#x1F4AC;</span>
-            <span class="nav-label">Follow-Up</span>
-            <span class="nav-badge">3</span>
+          <div class="fu-info"><div class="fu-name">Giulia R.</div><div class="fu-msg">Ciao Giulia! Se hai un minuto, una tua...</div></div>
+          <div style="text-align:right"><div class="fu-time">Oggi</div><div class="fu-tag" style="background:var(--green-s);color:var(--green)">Recensione</div></div>
+        </div>
+      </div>
+
+      <div class="card fu fu5">
+        <div class="fu-row">
+          <div class="fu-av" style="background:var(--blue-s)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
           </div>
-          <div class="nav-item" onclick="goTo('orders')">
-            <span class="nav-icon">&#x1F4E6;</span>
-            <span class="nav-label">Ordini</span>
-          </div>
-          <div class="nav-item" onclick="goTo('clients')">
-            <span class="nav-icon">&#x1F465;</span>
-            <span class="nav-label">Clienti</span>
-          </div>
+          <div class="fu-info"><div class="fu-name">Sara M.</div><div class="fu-msg">Ciao Sara! E' un po' che non ci vediamo...</div></div>
+          <div style="text-align:right"><div class="fu-time" style="color:var(--red)">1g fa</div><div class="fu-tag" style="background:var(--red-s);color:var(--red)">Scaduto</div></div>
         </div>
       </div>
     </div>
-    <div class="preview-label">Navigazione fluida con transizioni</div>
+
+    <!-- FOLLOW-UP -->
+    <div class="view right" data-v="followup">
+      <div class="hdr fu"><h1>Follow-Up</h1></div>
+
+      <div class="tabs fu fu1">
+        <div class="tab on">Da inviare <span style="opacity:.7;font-size:10px">3</span></div>
+        <div class="tab">Inviati <span style="opacity:.7;font-size:10px">8</span></div>
+        <div class="tab">Programmati <span style="opacity:.7;font-size:10px">5</span></div>
+      </div>
+
+      <div class="card fu fu2" style="border-left:3px solid var(--amber)">
+        <div class="fu-row">
+          <div class="fu-av" style="background:var(--amber-s)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+          <div class="fu-info">
+            <div class="fu-name">Marco Bianchi</div>
+            <div class="fu-msg">Ciao Marco! Come stai? Volevo sapere come ti trovi...</div>
+            <button class="wa-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> Invia su WhatsApp</button>
+          </div>
+          <div><div class="fu-time">Oggi</div></div>
+        </div>
+      </div>
+
+      <div class="card fu fu3" style="border-left:3px solid var(--amber)">
+        <div class="fu-row">
+          <div class="fu-av" style="background:var(--green-s)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.48 3.5a.56.56 0 0 1 1.04 0l2.13 4.32a.56.56 0 0 0 .42.3l4.77.7a.56.56 0 0 1 .31.95l-3.45 3.36a.56.56 0 0 0-.16.5l.82 4.74a.56.56 0 0 1-.82.59l-4.27-2.24a.56.56 0 0 0-.52 0L7.3 19.96a.56.56 0 0 1-.82-.59l.82-4.74a.56.56 0 0 0-.16-.5L3.69 10.77a.56.56 0 0 1 .31-.95l4.77-.7a.56.56 0 0 0 .42-.3z"/></svg>
+          </div>
+          <div class="fu-info">
+            <div class="fu-name">Giulia Rossi</div>
+            <div class="fu-msg">Ciao Giulia! Se hai un minuto, una tua recensione...</div>
+            <button class="wa-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> Invia su WhatsApp</button>
+          </div>
+          <div><div class="fu-time">Oggi</div></div>
+        </div>
+      </div>
+
+      <div class="card fu fu4" style="border-left:3px solid var(--red)">
+        <div class="fu-row">
+          <div class="fu-av" style="background:var(--blue-s)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          </div>
+          <div class="fu-info">
+            <div class="fu-name">Sara Moretti</div>
+            <div class="fu-msg">Ciao Sara! E' un po' che non ci vediamo, come va?</div>
+            <button class="wa-btn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> Invia su WhatsApp</button>
+          </div>
+          <div><div class="fu-time" style="color:var(--red)">1g fa</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLIENTI -->
+    <div class="view right" data-v="clients">
+      <div class="hdr fu"><h1>Clienti</h1><div class="sub">12 clienti totali</div></div>
+
+      <div style="margin-bottom:16px" class="fu fu1">
+        <div style="background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:14px;padding:11px 14px;display:flex;align-items:center;gap:8px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span style="color:var(--txt-d);font-size:13px">Cerca cliente...</span>
+        </div>
+      </div>
+
+      <div class="card fu fu2">
+        <div class="cl-row">
+          <div class="cl-av" style="background:linear-gradient(135deg,var(--petrol),var(--green))">MB</div>
+          <div style="flex:1"><div class="cl-name">Marco Bianchi</div><div class="cl-det">Ultimo appt: 10 giu &middot; 2 follow-up</div></div>
+          <span class="cl-tag" style="background:var(--green-s);color:var(--green)">Attivo</span>
+        </div>
+      </div>
+
+      <div class="card fu fu3">
+        <div class="cl-row">
+          <div class="cl-av" style="background:linear-gradient(135deg,var(--amber),#F97316)">GR</div>
+          <div style="flex:1"><div class="cl-name">Giulia Rossi</div><div class="cl-det">Ultimo appt: 14 giu &middot; 1 follow-up</div></div>
+          <span class="cl-tag" style="background:var(--amber-s);color:var(--amber)">VIP</span>
+        </div>
+      </div>
+
+      <div class="card fu fu4">
+        <div class="cl-row">
+          <div class="cl-av" style="background:linear-gradient(135deg,#475569,#64748B)">SM</div>
+          <div style="flex:1"><div class="cl-name">Sara Moretti</div><div class="cl-det">Ultimo appt: 2 mag &middot; 0 follow-up</div></div>
+          <span class="cl-tag" style="background:var(--red-s);color:var(--red)">Da riatt.</span>
+        </div>
+      </div>
+
+      <div class="card fu fu5">
+        <div class="cl-row">
+          <div class="cl-av" style="background:linear-gradient(135deg,var(--petrol),var(--teal))">LV</div>
+          <div style="flex:1"><div class="cl-name">Luca Verdi</div><div class="cl-det">Ultimo appt: 15 giu &middot; 3 follow-up</div></div>
+          <span class="cl-tag" style="background:var(--green-s);color:var(--green)">Attivo</span>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:20px" class="fu fu5"><button class="btn-p">+ Nuovo cliente</button></div>
+    </div>
+
+    <!-- ORDINI -->
+    <div class="view right" data-v="orders">
+      <div class="hdr fu"><h1>Ordini</h1><div class="sub">Ordini in corso e follow-up automatici</div></div>
+
+      <div class="card fu fu1">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div>
+            <div style="font-weight:700;font-size:15px">Matteo Buffa</div>
+            <div style="font-size:13px;color:var(--txt-m);margin-top:2px">Supporto stampa 3D custom</div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:var(--amber);background:var(--amber-s);padding:4px 12px;border-radius:20px">In preparazione</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;color:var(--txt-d);margin:8px 0"><span>Ordine: 12 giu</span><span>Consegna: 19 giu</span></div>
+        <div class="phases">
+          <div class="ph" style="background:var(--green-s)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></div><div class="ph-lbl" style="color:var(--green)">Fatto</div></div>
+          <div class="ph" style="background:rgba(30,42,69,0.7)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></div><div class="ph-lbl" style="color:var(--txt-d)">Attesa</div></div>
+          <div class="ph" style="background:var(--amber-s)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg></div><div class="ph-lbl" style="color:var(--amber)">Tra 5g</div></div>
+          <div class="ph" style="background:rgba(30,42,69,0.7)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.48 3.5a.56.56 0 0 1 1.04 0l2.13 4.32a.56.56 0 0 0 .42.3l4.77.7a.56.56 0 0 1 .31.95l-3.45 3.36a.56.56 0 0 0-.16.5l.82 4.74a.56.56 0 0 1-.82.59l-4.27-2.24a.56.56 0 0 0-.52 0L7.3 19.96a.56.56 0 0 1-.82-.59l.82-4.74a.56.56 0 0 0-.16-.5L3.69 10.77a.56.56 0 0 1 .31-.95l4.77-.7a.56.56 0 0 0 .42-.3z"/></svg></div><div class="ph-lbl" style="color:var(--txt-d)">&mdash;</div></div>
+          <div class="ph" style="background:rgba(30,42,69,0.7)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div><div class="ph-lbl" style="color:var(--txt-d)">&mdash;</div></div>
+        </div>
+        <div style="margin-top:14px"><button class="btn-p" style="font-size:12px;padding:8px 16px">Ready to go</button></div>
+      </div>
+
+      <div class="card fu fu2">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div>
+            <div style="font-weight:700;font-size:15px">Cecilia De Maria</div>
+            <div style="font-size:13px;color:var(--txt-m);margin-top:2px">Prototipo meccanico</div>
+          </div>
+          <span style="font-size:11px;font-weight:700;color:var(--green);background:var(--green-s);padding:4px 12px;border-radius:20px">Spedito</span>
+        </div>
+        <div style="display:flex;gap:12px;font-size:11px;color:var(--txt-d);margin:8px 0"><span>Ordine: 8 giu</span><span>Consegna: 15 giu</span></div>
+        <div class="phases">
+          <div class="ph" style="background:var(--green-s)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div><div class="ph-lbl" style="color:var(--green)">Fatto</div></div>
+          <div class="ph" style="background:var(--green-s)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div><div class="ph-lbl" style="color:var(--green)">Fatto</div></div>
+          <div class="ph" style="background:var(--green-s)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg></div><div class="ph-lbl" style="color:var(--green)">Fatto</div></div>
+          <div class="ph" style="background:var(--amber-s)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.48 3.5a.56.56 0 0 1 1.04 0l2.13 4.32a.56.56 0 0 0 .42.3l4.77.7a.56.56 0 0 1 .31.95l-3.45 3.36a.56.56 0 0 0-.16.5l.82 4.74a.56.56 0 0 1-.82.59l-4.27-2.24a.56.56 0 0 0-.52 0L7.3 19.96a.56.56 0 0 1-.82-.59l.82-4.74a.56.56 0 0 0-.16-.5L3.69 10.77a.56.56 0 0 1 .31-.95l4.77-.7a.56.56 0 0 0 .42-.3z"/></svg></div><div class="ph-lbl" style="color:var(--amber)">Oggi</div></div>
+          <div class="ph" style="background:rgba(30,42,69,0.7)"><div class="ph-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div><div class="ph-lbl" style="color:var(--txt-d)">Tra 14g</div></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ISLAND NAV -->
+  <div class="nav-island">
+    <button class="nav-btn active" data-nav="home">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+      <span class="n-label">Home</span>
+    </button>
+    <button class="nav-btn" data-nav="followup">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+      <span class="n-label">Follow-Up</span>
+      <span class="nav-badge">3</span>
+    </button>
+    <button class="nav-btn" data-nav="orders">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+      <span class="n-label">Ordini</span>
+    </button>
+    <button class="nav-btn" data-nav="clients">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="var(--txt-d)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      <span class="n-label">Clienti</span>
+    </button>
   </div>
 
 </div>
+</div>
+<div class="plabel">Tocca la barra per navigare</div>
+</div>
+</div>
 
 <script>
-const views = ['home','followup','orders','clients'];
-const viewOrder = { home:0, followup:1, orders:2, clients:3 };
-let current = 'home';
+const order=['home','followup','orders','clients'];
+let cur='home';
 
-function goTo(id) {
-  if (id === current) return;
-  const dir = viewOrder[id] > viewOrder[current] ? 1 : -1;
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const id=this.dataset.nav;
+    if(id===cur)return;
+    const dir=order.indexOf(id)>order.indexOf(cur)?1:-1;
 
-  document.querySelectorAll('.nav-item').forEach((el, i) => {
-    el.classList.toggle('active', views[i] === id);
+    document.querySelectorAll('.nav-btn').forEach(b=>{
+      const isActive=b.dataset.nav===id;
+      b.classList.toggle('active',isActive);
+      b.querySelector('svg').setAttribute('stroke',isActive?'var(--green)':'var(--txt-d)');
+    });
+
+    const oldV=document.querySelector('.view[data-v="'+cur+'"]');
+    const newV=document.querySelector('.view[data-v="'+id+'"]');
+
+    newV.style.transition='none';
+    newV.className='view '+(dir>0?'right':'left');
+    newV.offsetHeight;
+    newV.style.transition='';
+
+    oldV.className='view '+(dir>0?'left':'right');
+    newV.className='view active';
+
+    newV.querySelectorAll('.fu').forEach(el=>{
+      el.style.animation='none';
+      el.offsetHeight;
+      el.style.animation='';
+    });
+
+    cur=id;
   });
-
-  const oldView = document.getElementById('v-' + current);
-  const newView = document.getElementById('v-' + id);
-
-  // Reset new view position
-  newView.style.transition = 'none';
-  newView.className = 'view ' + (dir > 0 ? 'right' : 'left');
-  // Force reflow
-  newView.offsetHeight;
-  newView.style.transition = '';
-
-  oldView.className = 'view ' + (dir > 0 ? 'left' : 'right');
-  newView.className = 'view active';
-
-  // Re-trigger fade-up animations
-  newView.querySelectorAll('.fade-up').forEach(el => {
-    el.style.animation = 'none';
-    el.offsetHeight;
-    el.style.animation = '';
-  });
-
-  current = id;
-}
+});
 </script>
 
 </body>
