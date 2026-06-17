@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/preview.html", "destination": "/preview.html" }
+  ],
   "crons": [
     { "path": "/api/notify?type=followup",             "schedule": "0 10 * * *" },
     { "path": "/api/notify?type=inserimento&report=1", "schedule": "0 18 * * *" }
