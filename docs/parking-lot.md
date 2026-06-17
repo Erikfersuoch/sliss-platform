@@ -76,7 +76,7 @@
 
 ## Idee UI/UX
 
-- [17/06/2026] **Interfaccia dinamica stile Revolut** — navigazione fluida tra schede (transizioni, swipe), barra in basso con animazioni di selezione. Palette colori: sfondo scuro/petrolio (blu petrolio + verde attuale #16A34A), card con profondità, stile premium. Riferimento: app Revolut per feeling di navigazione e gestione colori. Da valutare post-gate come upgrade estetico completo.
+- [17/06/2026] **[BASE APPROVATA] Dark mode verde Sliss + navigazione Revolut-style.** Mockup v4 approvato da Erik (`preview-ui-revolut.html`): sfondo gradiente verde foresta (#145A38 → #081E15), card glassmorphism trasparenti, barra isola flottante con glow, icone SVG Lucide, transizioni slide tra viste. **Implementazione prevista a breve.** Il tema attuale (light, sfondo bianco, accent #16A34A) resta come **light mode** selezionabile da Impostazioni. Quindi: `data.settings.theme` = `"light"` (default attuale) | `"dark"` (nuovo). Il file preview resta nel repo come riferimento visivo.
 
 ## Idee tecniche
 
