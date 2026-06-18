@@ -19,7 +19,16 @@
 
 ## Normativa / legale
 
-- [18/06/2026] **Nuove regole sul diritto di recesso** — Erik ha notato aggiornamenti normativi sul diritto di recesso per micro-business di servizi/prodotti. Da verificare: cosa cambia, cosa deve essere evidenziato nell'app o nelle comunicazioni al cliente. Rilevante quando Sliss gestirà ordini/pagamenti (Fase 3+). Verificare con fonte legale aggiornata (non con l'AI).
+- [18/06/2026] **Nuove regole sul diritto di recesso — "pulsante di recesso" obbligatorio dal 19/06/2026**
+  ⚠️ **AZIONE:** quando iniziamo a lavorarci (Fase 3), fare ricerca aggiornata al giorno stesso — le regole potrebbero cambiare nella finestra temporale. Non basarsi su questa nota come fonte definitiva.
+  **Riferimento normativo:** Direttiva UE 2023/2673 → recepita con D.Lgs. 209/2025 (GU 08/01/2026) → nuovo art. 54-bis Codice del Consumo → in vigore dal 19/06/2026.
+  **Cosa cambia:** ogni e-commerce/interfaccia online B2C deve avere una "funzione digitale di recesso" (pulsante dedicato) che consenta al consumatore di recedere dal contratto direttamente online, con doppia conferma e ricevuta automatica (data+ora).
+  **Chi è obbligato:** tutti i professionisti che concludono contratti a distanza con consumatori tramite interfaccia online — incluse micro-imprese, artigiani che vendono online, creator, abbonamenti, servizi digitali. NON i contratti offline o B2B.
+  **Eccezioni note al recesso (preesistenti, art. 59 Codice Consumo):** servizi già eseguiti con consenso espresso del consumatore, prodotti personalizzati/su misura, prodotti sigillati per igiene aperti dopo consegna. Da verificare se i servizi con appuntamento (es. tatuaggio, barbiere) rientrano nelle eccezioni.
+  **Requisiti tecnici:** pulsante ben visibile e accessibile nella stessa interfaccia dove si è comprato; invio diretto della dichiarazione; conferma automatica con data/ora; tracciabilità.
+  **Sanzioni AGCM:** da €5.000 a €10.000.000. Se manca l'informativa completa sul recesso → il termine si estende automaticamente a 12 mesi + 14 giorni.
+  **Rilevanza per Sliss:** se in Fase 3 Sliss gestirà ordini/pagamenti online (flusso prodotti), questa normativa si applica. Per il flusso servizi con appuntamento, verificare se rientra nelle eccezioni o se serve comunque il pulsante.
+  **Fonti da consultare (Fase 3):** art. 54-bis e 59 Codice del Consumo aggiornato; sito AGCM; commercialista/avvocato per applicazione specifica al caso Sliss.
 
 ## Idee prodotto
 
