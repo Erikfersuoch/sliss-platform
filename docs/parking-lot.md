@@ -28,7 +28,8 @@
   **Requisiti tecnici:** pulsante ben visibile e accessibile nella stessa interfaccia dove si è comprato; invio diretto della dichiarazione; conferma automatica con data/ora; tracciabilità.
   **Sanzioni AGCM:** da €5.000 a €10.000.000. Se manca l'informativa completa sul recesso → il termine si estende automaticamente a 12 mesi + 14 giorni.
   **Rilevanza per Sliss:** se in Fase 3 Sliss gestirà ordini/pagamenti online (flusso prodotti), questa normativa si applica. Per il flusso servizi con appuntamento, verificare se rientra nelle eccezioni o se serve comunque il pulsante.
-  **Fonti da consultare (Fase 3):** art. 54-bis e 59 Codice del Consumo aggiornato; sito AGCM; commercialista/avvocato per applicazione specifica al caso Sliss.
+  **Vendita senza sito (eBay/Instagram/WhatsApp):** il diritto di recesso 14gg (art. 52) vale per TUTTI i contratti a distanza professionista→consumatore, indipendentemente dal canale. Il nuovo pulsante (art. 54-bis) si applica a chi controlla l'interfaccia online: su marketplace (eBay, Instagram Shop) l'onere è probabilmente della piattaforma; su trattative informali via DM/WhatsApp è zona grigia per il pulsante, ma l'obbligo di informare sul recesso e accettarlo resta. Vendite tra privati (no P.IVA) → Codice Consumo non si applica.
+  **Fonti da consultare (Fase 3):** art. 52, 54-bis e 59 Codice del Consumo aggiornato; sito AGCM; FAQ MIMIT sul recesso (mimit.gov.it); commercialista/avvocato per applicazione specifica al caso Sliss.
 
 ## Idee prodotto
 
