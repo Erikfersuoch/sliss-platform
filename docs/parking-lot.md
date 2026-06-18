@@ -17,6 +17,10 @@
 
 ---
 
+## Normativa / legale
+
+- [18/06/2026] **Nuove regole sul diritto di recesso** — Erik ha notato aggiornamenti normativi sul diritto di recesso per micro-business di servizi/prodotti. Da verificare: cosa cambia, cosa deve essere evidenziato nell'app o nelle comunicazioni al cliente. Rilevante quando Sliss gestirà ordini/pagamenti (Fase 3+). Verificare con fonte legale aggiornata (non con l'AI).
+
 ## Idee prodotto
 
 - [12/06/2026] **Fase follow-up 💰 "sollecito pagamento"** — dal sondaggio Tally: "recupero pagamenti" = ambito da semplificare più votato (2/5, artigiani/edilizia). Un sollecito di pagamento È un follow-up: stesso motore M1, solo una fase nuova. Da valutare post-validazione. Vedi `docs/sondaggi.md`.
