@@ -44,6 +44,17 @@ function migrateFirstName(data) {
   return changed ? { ...data, followUps: updated } : data;
 }
 
+// Conteggi aggregati per il resoconto del gate M1 (nessun dato personale, solo numeri).
+// Unica fonte della formula "inviati/pending" così mount-ping e post-modifica restano allineati.
+function computeUsageStats(d) {
+  const fus = d?.followUps || [];
+  return {
+    clients: (d?.clients || []).length,
+    followUpsSent: fus.filter(f => f.status === "sent" || f.status === "replied" || f.status === "completed").length,
+    followUpsPending: fus.filter(f => f.status === "pending").length,
+  };
+}
+
 export default function SlissPlatform() {
   const [view,setView]=useState("home");
   const [fuFilter,setFuFilter]=useState(null);
@@ -60,13 +71,13 @@ export default function SlissPlatform() {
   // Cattura il codice tester dall'URL (?tester=) una sola volta, senza toccare lo stato React
   useEffect(()=>{const t=new URLSearchParams(window.location.search).get('tester');if(t)localStorage.setItem('sliss-tester',t);},[]);
   // Tracking minimo d'uso (gate M1): ping silenzioso all'apertura, registra il giorno d'uso + conteggi aggregati
-  useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const d=loadData();pingUsage(tester,{clients:(d.clients||[]).length,followUpsSent:(d.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed").length,followUpsPending:(d.followUps||[]).filter(f=>f.status==="pending").length});},[]);
+  useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;pingUsage(tester,computeUsageStats(loadData()));},[]);
   // Pulisce ?goto dall'URL dopo averlo letto (così un refresh non riapre la schermata)
   useEffect(()=>{const p=new URLSearchParams(window.location.search);if(p.get('goto')){p.delete('goto');const qs=p.toString();window.history.replaceState({},"",window.location.pathname+(qs?`?${qs}`:""));}},[]);
   useEffect(()=>{saveData(data);},[data]);
 
   // Backup cloud best-effort: copia i dati nel cloud poco dopo ogni modifica (solo se c'è un codice tester). Mai bloccante.
-  useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const id=setTimeout(()=>{saveBackup(tester,data);},8000);return ()=>clearTimeout(id);},[data]);
+  useEffect(()=>{const tester=localStorage.getItem('sliss-tester');if(!tester)return;const id=setTimeout(()=>{saveBackup(tester,data);pingUsage(tester,computeUsageStats(data));},8000);return ()=>clearTimeout(id);},[data]);
 
   const update=useCallback((table,id,updates)=>setData(prev=>({...prev,[table]:(prev[table]||[]).map(r=>r.id===id?{...r,...updates}:r)})),[]);
   const addRecord=useCallback((table,record)=>setData(prev=>({...prev,[table]:[...(prev[table]||[]),record]})),[]);
