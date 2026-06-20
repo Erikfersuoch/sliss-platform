@@ -8,6 +8,7 @@
 <!-- data | piattaforma | tipo -->
 - 12/06/2026 | LinkedIn + Facebook | "Perché Sliss" (origin story, rif. libro Simon Squibb) — 3° uscita
 - 16/06/2026 | LinkedIn + Facebook | "L'attesa" (impulso di agire vs disciplina di aspettare) — 4° uscita
+- 16/06/2026 | Pagina Facebook Sliss | Video introduttivo + CTA form Tally (raccolta dati per sviluppo) — 5° uscita, primo post pagina ufficiale
 
 ---
 
