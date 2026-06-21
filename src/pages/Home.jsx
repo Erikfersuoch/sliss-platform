@@ -91,7 +91,7 @@ const Home = ({setView}) => {
                       const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
                       const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};
                       return (
-                        <div key={fu.id} style={{padding:"12px",background:fu.scheduledDate<td?T.redS:T.amberS,borderRadius:T.r.m,border:`1px solid ${fu.scheduledDate<td?T.red:T.amber}44`}}>
+                        <div key={fu.id} style={{padding:"12px",background:fu.scheduledDate<td?T.redS:T.amberS,borderRadius:T.r.m,border:`1px solid color-mix(in srgb, ${fu.scheduledDate<td?T.red:T.amber} 27%, transparent)`}}>
                           <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
                             <Icon name={ph.icon} size={16} color={ph.color} />
                             <span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span>

@@ -7,7 +7,7 @@ export const Badge = ({label,color,bg,s}) => (
 );
 
 export const Btn = ({children,v="primary",s="md",onClick,style,disabled,aria,title}) => {
-  const VS={primary:{bg:T.green,c:T.onGreen,hb:T.greenH,bd:"none"},secondary:{bg:"transparent",c:T.textM,hb:T.bg4,bd:`1px solid ${T.border}`},success:{bg:T.green,c:T.onGreen,hb:T.greenH,bd:"none"},danger:{bg:"transparent",c:T.red,hb:T.redS,bd:`1px solid ${T.red}44`},ghost:{bg:"transparent",c:T.textD,hb:T.bg3,bd:"none"}};
+  const VS={primary:{bg:T.green,c:T.onGreen,hb:T.greenH,bd:"none"},secondary:{bg:"transparent",c:T.textM,hb:T.bg4,bd:`1px solid ${T.border}`},success:{bg:T.green,c:T.onGreen,hb:T.greenH,bd:"none"},danger:{bg:"transparent",c:T.red,hb:T.redS,bd:`1px solid color-mix(in srgb, ${T.red} 27%, transparent)`},ghost:{bg:"transparent",c:T.textD,hb:T.bg3,bd:"none"}};
   const SS={sm:{p:"8px 14px",f:"13px"},md:{p:"11px 20px",f:"14px"},lg:{p:"14px 28px",f:"15px"}};
   const vv=VS[v],ss=SS[s];
   const [h,setH]=useState(false);
@@ -199,7 +199,7 @@ export const WarmTips = ({ setView }) => {
   const t = WARM_TIPS[idx];
   const advance = () => { const n = idx + 1; sessionStorage.setItem("sliss-tips-idx", String(n)); setIdx(n); };
   return (
-    <div style={{display:"flex",alignItems:"flex-start",gap:"11px",background:T.blueS,border:`1px solid ${T.blue}33`,borderRadius:T.r.l,padding:"12px 13px",marginBottom:"14px"}}>
+    <div style={{display:"flex",alignItems:"flex-start",gap:"11px",background:T.blueS,border:`1px solid color-mix(in srgb, ${T.blue} 20%, transparent)`,borderRadius:T.r.l,padding:"12px 13px",marginBottom:"14px"}}>
       <span style={{fontSize:"18px",flexShrink:0,lineHeight:1.2}} aria-hidden="true">{t.emoji}</span>
       <div style={{flex:1,minWidth:0}}>
         <div style={{fontSize:"10px",fontWeight:700,letterSpacing:".05em",textTransform:"uppercase",color:T.blue,marginBottom:"3px"}}>Lo sapevi?</div>

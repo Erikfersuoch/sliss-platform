@@ -29,7 +29,7 @@ export default function UpdateNudge({ onClose }) {
           ))}
         </div>
         {/* Blocco periodo di convalida — RIMUOVERE dopo il gate del 21/06 */}
-        <div style={{marginTop:"18px",background:T.greenS,border:`1px solid ${T.green}33`,borderRadius:T.r.l,padding:"18px"}}>
+        <div style={{marginTop:"18px",background:T.greenS,border:`1px solid color-mix(in srgb, ${T.green} 20%, transparent)`,borderRadius:T.r.l,padding:"18px"}}>
           <div style={{fontSize:"15px",fontWeight:700,color:T.greenH,marginBottom:"7px"}}>{"\u{23F3} Ora tocca a te"}</div>
           <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.65}}>Con questo workflow più chiaro è iniziato il periodo di prova vero. Per capire insieme se Sliss ti serve davvero ho bisogno che lo usi con costanza in questi giorni: aggiungi i clienti, manda i follow-up, fallo entrare nel tuo lavoro di tutti i giorni. Il tuo uso reale è quello che conta di più.</p>
         </div>

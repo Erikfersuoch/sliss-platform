@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v7.4 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v7.5 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 21/06/2026 (v7.5) — /ultrareview: fix bug alpha-hex su CSS var (primo catch della review) (DEV).** Erik ha lanciato `/ultrareview` (`/code-review ultra bfe2e2f`) da una sessione Claude **rootata nel repo** (vedi [[reference-ultrareview-session-root]]; ha dovuto usare `claude.cmd` per aggirare l'ExecutionPolicy di PowerShell). **La review ha trovato un BUG VERO che lint+build NON vedono:** col dark mode (v7.0) i colori sono diventati `var(--c-*)`, ma in vari punti il codice creava la trasparenza concatenando l'alpha-hex (`${T.color}55`, `${mod.color}18`, `${T.red}44`…) → con una variabile `var(--c-amber)55` è **CSS invalido** → sfondi/bordi tinti rotti (badge Ordini, bordo slot Agenda, card Moduli, bordo Btn danger, WarmTips, UpdateNudge). Era **live dalla v7.0**. **Fix (applicati dalla review, verificati da me):** sostituito ovunque con `color-mix(in srgb, COLORE NN%, transparent)` (6 file: ui.jsx, Home, Orders, Appointments, ModulesMap, UpdateNudge). ⚠️ La review aveva **aggiunto `playwright` a package.json** (l'avrà usato il cloud per testare la UI) → **RIMOSSO** prima del commit: binario pesante = rischio build Vercel (lezione `sharp`, [[feedback-bug-lessons]]). Lint 0, build verde. **Nuova lezione tecnica:** mai `${colorVar}NN` per l'alpha → `color-mix`. Commit + deploy v7.5. **L'ultrareview si è ripagata al primo colpo** (punto D del flusso ora abilitato per i pezzi grossi futuri).
 
 **Sessione 21/06/2026 (v7.4) — icone pulsanti Template (chiusura coerenza) + STOP restyling (DEV+CORE).** Quick win: i pulsanti di `Templates.jsx` (✏️ modifica → `pencil` [icona nuova], 🗑️ elimina → `trash`, 📋 copia → `clipboard`) erano l'ultima pagina con pulsanti a emoji mentre il resto era già iconato. Convertiti → iconificazione pulsanti **coerente in tutta l'app**. Lint 0, build verde. **Decisione CORE (priorità delegata da Erik "valuta e segui"): STOP restyling qui.** Siamo a rendimenti decrescenti e abbiamo già spinto **5 versioni oggi** (v7.0→v7.4) tutte visibili ai tester in piena finestra gate. **Restano come pezzi DELIBERATI futuri (non urgenti):** Blocco 3 (icone settori/moduli ~10 nuove + Onboarding first-run), pencil inline sulle date (Agenda/Clienti, simboli tollerabili), 3 glow variante C. **Vera priorità ora = il gate/tester** (notifica Moira quando in negozio + dato Luca alla sua riapertura), su cui non si può forzare nulla.
 

@@ -1,6 +1,6 @@
 # CLAUDE.md — Sliss Platform
 
-<!-- SYNC ▸ v7.4 · 2026-06-21 · fonte: docs/stato-progetto.md
+<!-- SYNC ▸ v7.5 · 2026-06-21 · fonte: docs/stato-progetto.md
      Versione / fase / stato tester NON si scrivono qui: vivono solo in docs/stato-progetto.md.
      Questa riga è solo un checksum: a fine sessione verifica che combaci con la FONTE DI VERITÀ. -->
 
@@ -97,6 +97,8 @@ D. **Secondo paio d'occhi (bonus).** Per modifiche non banali, passare le mie mo
 4. **CSS — una sola regola `*{}`.** Due regole `*{}` separate si sovrascrivono e rompono font-family.
 
 5. **Context fuori Provider.** Componenti che usano `useSliss()` devono stare dentro `<Ctx.Provider>`. Se servono dati fuori dal Provider, passarli come prop.
+
+6. **Trasparenza colori — mai alpha-hex su `var()`.** I token colore (`T.red`, `mod.color`…) sono `var(--c-*,#…)`, NON hex puri. Concatenare l'alpha in coda (`` `${T.red}44` ``, `` `${mod.color}18` ``) produce CSS invalido (`var(--c-red,#DC2626)44`) → il browser **scarta in silenzio** bordo/sfondo, senza errori né build rotta. Usare sempre `` `color-mix(in srgb, ${T.red} 27%, transparent)` ``. (Bug live dalla v7.0, trovato da `/ultrareview`, fix v7.5.)
 
 ---
 
