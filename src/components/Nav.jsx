@@ -87,7 +87,7 @@ const DesktopSidebar = ({view,setView}) => {
         );})}
       </nav>
       <div style={{padding:"12px 18px",borderTop:`1px solid ${T.border}`}}>
-        <div style={{fontSize:"10px",color:T.textMu}}>Sliss v7.1 · liscio come deve essere.</div>
+        <div style={{fontSize:"10px",color:T.textMu}}>Sliss v7.2 · liscio come deve essere.</div>
       </div>
     </div>
   );

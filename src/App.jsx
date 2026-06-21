@@ -8,6 +8,7 @@ import GlobalCSS from "./GlobalCSS.jsx";
 import { TopBar, FloatingNav, MoreMenu, DesktopSidebar } from "./components/Nav.jsx";
 import { Modal, Btn } from "./components/ui.jsx";
 import InviteClient from "./components/InviteClient.jsx";
+import Icon from "./components/Icon.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import FeedbackNudge from "./components/FeedbackNudge.jsx";
 import UpdateNudge from "./components/UpdateNudge.jsx";
@@ -127,7 +128,7 @@ export default function SlissPlatform() {
         <FloatingNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} onAdd={()=>setAddSheet(true)} />
         <Modal open={addSheet} onClose={()=>setAddSheet(false)} title="Cosa vuoi aggiungere?" w="380px">
           <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-            <Btn onClick={()=>{setAddSheet(false);setShowInvite(true);}} style={{width:"100%",justifyContent:"center"}}>{"\u{1F517} Invita cliente"}</Btn>
+            <Btn onClick={()=>{setAddSheet(false);setShowInvite(true);}} style={{width:"100%",justifyContent:"center"}}><Icon name="link" size={16} />Invita cliente</Btn>
             <Btn v="secondary" onClick={()=>{setAddSheet(false);setAddOn("clients");go("clients");}} style={{width:"100%",justifyContent:"center"}}>Nuovo cliente</Btn>
             <Btn v="secondary" onClick={()=>{const v=(data?.settings?.bizType==="prodotti")?"orders":"appointments";setAddSheet(false);setAddOn(v);go(v);}} style={{width:"100%",justifyContent:"center"}}>{(data?.settings?.bizType==="prodotti")?"Nuovo ordine":"Nuovo appuntamento"}</Btn>
           </div>

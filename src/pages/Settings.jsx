@@ -3,6 +3,7 @@ import T from "../theme.js";
 import { CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI } from "../config.js";
 import { useSliss } from "../context.js";
 import { Btn, Card, FormField, PageHeader } from "../components/ui.jsx";
+import Icon from "../components/Icon.jsx";
 import { subscribeToPush } from "../push.js";
 import { loadBackup } from "../backup.js";
 
@@ -63,18 +64,18 @@ const Settings = () => {
       <Card style={{marginBottom:"14px"}}>
         <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Notifiche</h3>
         <FormField label="Codice tester" hint="Identifica il tuo telefono per i reminder. Scrivi: erik, moira o luca."><input value={testerCode} onChange={e=>{const v=e.target.value.trim().toLowerCase();setTesterCode(v);if(v)localStorage.setItem('sliss-tester',v);}} placeholder="es. erik" /></FormField>
-        {notifStatus==='granted' && <><div style={{display:"flex",alignItems:"center",gap:"8px",padding:"12px 14px",background:T.greenS,borderRadius:T.r.l,border:`1px solid ${T.green}`}}><span style={{fontSize:"18px"}}>{"✓"}</span><span style={{fontSize:"14px",color:T.green,fontWeight:600}}>Notifiche attive</span></div><Btn v="secondary" s="sm" disabled={!testerCode} onClick={handleNotif} style={{width:"100%",justifyContent:"center",marginTop:"10px"}}>{"🔄 Aggiorna iscrizione"}</Btn></>}
+        {notifStatus==='granted' && <><div style={{display:"flex",alignItems:"center",gap:"8px",padding:"12px 14px",background:T.greenS,borderRadius:T.r.l,border:`1px solid ${T.green}`}}><span style={{fontSize:"18px"}}>{"✓"}</span><span style={{fontSize:"14px",color:T.green,fontWeight:600}}>Notifiche attive</span></div><Btn v="secondary" s="sm" disabled={!testerCode} onClick={handleNotif} style={{width:"100%",justifyContent:"center",marginTop:"10px"}}><Icon name="rotate" size={16} />Aggiorna iscrizione</Btn></>}
         {notifStatus==='denied' && <><div style={{display:"flex",alignItems:"center",gap:"8px",padding:"12px 14px",background:"#FEF2F2",borderRadius:T.r.l,border:"1px solid #FECACA",marginBottom:"10px"}}><span style={{fontSize:"18px"}}>{"🔕"}</span><span style={{fontSize:"13px",color:"#DC2626"}}>Notifiche bloccate dal browser</span></div><p style={{fontSize:"12px",color:T.textD,lineHeight:1.6}}>{"Vai in Impostazioni iPhone → Safari → Notifiche e riattiva Sliss."}</p></>}
-        {notifStatus==='default' && <><p style={{fontSize:"13px",color:T.textM,lineHeight:1.6,marginBottom:"12px"}}>Ricevi un reminder quando inserire i clienti e quando hai follow-up in scadenza.</p><Btn disabled={!testerCode} onClick={handleNotif} style={{width:"100%",justifyContent:"center"}}>{"🔔 Attiva notifiche"}</Btn></>}
+        {notifStatus==='default' && <><p style={{fontSize:"13px",color:T.textM,lineHeight:1.6,marginBottom:"12px"}}>Ricevi un reminder quando inserire i clienti e quando hai follow-up in scadenza.</p><Btn disabled={!testerCode} onClick={handleNotif} style={{width:"100%",justifyContent:"center"}}><Icon name="bell" size={16} />Attiva notifiche</Btn></>}
         {notifStatus==='unsupported' && <p style={{fontSize:"13px",color:T.textD}}>{"Le notifiche non sono supportate su questo browser. Usa Safari su iPhone."}</p>}
       </Card>
       <Card style={{marginBottom:"20px"}}>
         <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Dati e backup</h3>
         <p style={{fontSize:"13px",color:T.textD,lineHeight:1.7,marginBottom:"12px"}}>I dati vivono su questo telefono. Se hai impostato il <b>codice tester</b>, una copia di sicurezza viene salvata automaticamente nel cloud: se cambi telefono o reinstalli l'app, puoi ripristinarla da qui.</p>
-        <Btn v="secondary" s="sm" disabled={!testerCode||restoring} onClick={handleRestore}>{restoring?"Controllo backup\u{2026}":"\u{2601}\u{FE0F} Ripristina da backup"}</Btn>
+        <Btn v="secondary" s="sm" disabled={!testerCode||restoring} onClick={handleRestore}>{restoring?"Controllo backup\u{2026}":<><Icon name="download" size={15} />Ripristina da backup</>}</Btn>
         {restoreMsg&&<p style={{fontSize:"12px",color:restoreMsg.startsWith("\u{2713}")?T.green:T.textD,marginTop:"10px",lineHeight:1.5}}>{restoreMsg}</p>}
         <div style={{borderTop:`1px solid ${T.border}`,marginTop:"14px",paddingTop:"14px"}}>
-          <Btn v="danger" s="sm" onClick={()=>{if(window.confirm("Reset completo? Tutti i dati verranno eliminati."))resetData();}}>{"\u{1F5D1}\u{FE0F}"} Reset dati</Btn>
+          <Btn v="danger" s="sm" onClick={()=>{if(window.confirm("Reset completo? Tutti i dati verranno eliminati."))resetData();}}><Icon name="trash" size={15} />Reset dati</Btn>
         </div>
       </Card>
       <Btn onClick={handleSave} style={{width:"100%",justifyContent:"center"}}>{saved?"\u{2713} Salvato!":"Salva impostazioni"}</Btn>

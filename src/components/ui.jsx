@@ -1,5 +1,6 @@
 import { useState, useId, useEffect, useRef, cloneElement } from "react";
 import T from "../theme.js";
+import Icon from "./Icon.jsx";
 
 export const Badge = ({label,color,bg,s}) => (
   <span style={{display:"inline-flex",alignItems:"center",padding:s?"3px 10px":"4px 12px",borderRadius:T.r.full,fontSize:s?"11px":"12px",fontWeight:600,color,background:bg,whiteSpace:"nowrap"}}>{label}</span>
@@ -69,7 +70,7 @@ export const GhostBubble = ({stars=false}) => (
 
 export const Search = ({value,onChange,placeholder}) => (
   <div style={{position:"relative"}}>
-    <span style={{position:"absolute",left:"14px",top:"50%",transform:"translateY(-50%)",fontSize:"15px",opacity:.3}}>{"\u{1F50D}"}</span>
+    <Icon name="search" size={15} color={T.textMu} style={{position:"absolute",left:"14px",top:"50%",transform:"translateY(-50%)"}} />
     <input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder||"Cerca..."} style={{paddingLeft:"40px",fontSize:"15px"}} />
   </div>
 );
@@ -134,14 +135,14 @@ export const SendButtons = ({message,clientPhone,clientEmail,channel,onSend,labe
   const subj=encodeURIComponent("Un messaggio per te");
   const ch=channel||"WhatsApp";
   let href,label,bg;
-  if(ch==="Email"&&email){ href=`mailto:${email}?subject=${subj}&body=${body}`; label=`\u{2709}\u{FE0F} Email`; bg="#2563EB"; }
-  else if(ch==="SMS"&&digits){ href=`sms:${phone}?&body=${body}`; label=`\u{1F4AC} SMS`; bg=T.teal; }
-  else if(digits){ href=`whatsapp://send?phone=${phone}&text=${body}`; label=`\u{1F4F1} WhatsApp`; bg="#1DA851"; }
-  else if(email){ href=`mailto:${email}?subject=${subj}&body=${body}`; label=`\u{2709}\u{FE0F} Email`; bg="#2563EB"; }
+  if(ch==="Email"&&email){ href=`mailto:${email}?subject=${subj}&body=${body}`; label=`Email`; bg="#2563EB"; }
+  else if(ch==="SMS"&&digits){ href=`sms:${phone}?&body=${body}`; label=`SMS`; bg=T.teal; }
+  else if(digits){ href=`whatsapp://send?phone=${phone}&text=${body}`; label=`WhatsApp`; bg="#1DA851"; }
+  else if(email){ href=`mailto:${email}?subject=${subj}&body=${body}`; label=`Email`; bg="#2563EB"; }
   else return <span style={{fontSize:"12px",color:T.textMu}}>Nessun contatto disponibile</span>;
   return (
     <div style={{display:"flex",gap:"8px",flexWrap:"wrap"}}>
-      <a href={href} target="_blank" rel="noreferrer" onClick={onSend} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:bg,color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{labelOverride||label}</a>
+      <a href={href} target="_blank" rel="noreferrer" onClick={onSend} style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:bg,color:"#fff",borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}><Icon name="send" size={15} color="#fff" />{labelOverride||label}</a>
     </div>
   );
 };

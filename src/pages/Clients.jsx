@@ -4,6 +4,7 @@ import { CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
 import { fmtDate, daysAgo, addDays, uid, today } from "../helpers.js";
 import { useSliss } from "../context.js";
 import { Badge, Btn, Card, Empty, GhostRow, Search, Tabs, Modal, FormField, PageHeader, Info } from "../components/ui.jsx";
+import Icon from "../components/Icon.jsx";
 import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 import InviteClient from "../components/InviteClient.jsx";
@@ -32,7 +33,7 @@ const Clients = ({initialClientId,openAdd}) => {
   const nextStatus=cur=>{const idx=statusOrder.indexOf(cur);return statusOrder[(idx+1)%statusOrder.length];};
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
-      <PageHeader title="Clienti" action={<div style={{display:"flex",gap:"6px",alignItems:"center"}}><Info {...HELP.invitaCliente} /><Btn v="secondary" s="sm" onClick={()=>setShowInvite(true)}>{"\u{1F517} Invita cliente"}</Btn><Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn></div>} />
+      <PageHeader title="Clienti" action={<div style={{display:"flex",gap:"6px",alignItems:"center"}}><Info {...HELP.invitaCliente} /><Btn v="secondary" s="sm" onClick={()=>setShowInvite(true)}><Icon name="link" size={15} />Invita cliente</Btn><Btn s="sm" onClick={()=>setShowNew(true)}>+ Nuovo</Btn></div>} />
       {showInvite && <InviteClient onClose={()=>setShowInvite(false)} />}
       {clients.length>0&&<div style={{display:"flex",flexDirection:"column",gap:"10px",marginBottom:"16px"}}><Tabs tabs={tabs} active={sf} onChange={setSf} /><Search value={search} onChange={setSearch} placeholder="Cerca nome o email..." /></div>}
       {!filtered.length

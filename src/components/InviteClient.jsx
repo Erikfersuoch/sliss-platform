@@ -3,6 +3,7 @@ import T from "../theme.js";
 import { uid, today, inviteWaLink, openSend, gcalLink } from "../helpers.js";
 import { useSliss } from "../context.js";
 import { Modal, Btn, FormField } from "./ui.jsx";
+import Icon from "./Icon.jsx";
 
 // Modale condiviso "Invita cliente": genera il link da mandare al cliente, che si compila da solo
 // (nome, contatto) ed entra in anagrafica. Stesso flusso e backend di prima — usato sia da Agenda
@@ -30,8 +31,8 @@ const InviteClient = ({ onClose, initialDate }) => {
             <p style={{ fontSize: "13px", color: T.textD, lineHeight: 1.6, marginBottom: "14px" }}>Mandalo al cliente su WhatsApp. Appena compila, lo trovi automaticamente tra i clienti.</p>
             <div style={{ padding: "12px 14px", background: T.bg3, borderRadius: T.r.m, border: `1px solid ${T.border}`, fontSize: "12px", wordBreak: "break-all", marginBottom: "14px", color: T.textM, lineHeight: 1.6 }}>{link}</div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <Btn style={{ width: "100%", justifyContent: "center" }} onClick={() => openSend(inviteWaLink(form.phone, link, form.date))}>{"\u{1F4F2} Invia su WhatsApp"}</Btn>
-              <Btn v="secondary" style={{ width: "100%", justifyContent: "center" }} onClick={() => window.open(gcalLink(form.date, "Consulenza nuovo cliente", form.phone ? `Tel: ${form.phone}` : ""), "_blank")}>{"\u{1F4C5} Aggiungi al calendario"}</Btn>
+              <Btn style={{ width: "100%", justifyContent: "center" }} onClick={() => openSend(inviteWaLink(form.phone, link, form.date))}><Icon name="send" size={16} />Invia su WhatsApp</Btn>
+              <Btn v="secondary" style={{ width: "100%", justifyContent: "center" }} onClick={() => window.open(gcalLink(form.date, "Consulenza nuovo cliente", form.phone ? `Tel: ${form.phone}` : ""), "_blank")}><Icon name="calendar" size={16} />Aggiungi al calendario</Btn>
               <Btn v="ghost" style={{ width: "100%", justifyContent: "center" }} onClick={onClose}>Fatto</Btn>
             </div>
           </div>

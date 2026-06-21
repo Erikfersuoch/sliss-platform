@@ -66,7 +66,7 @@ const Home = ({setView}) => {
           </>
         : <>
             <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
-            <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"\u{1F517} Invita cliente"}</Btn>
+            <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>
             {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
               {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
