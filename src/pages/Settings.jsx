@@ -11,6 +11,8 @@ const Settings = () => {
   const [bName,setBName]=useState(s.businessName||"");const [currentBizType,setCurrentBizType]=useState(s.bizType||"servizi");const [currentCluster,setCurrentCluster]=useState(s.cluster||"altro");const [reviewLink,setReviewLink]=useState(s.reviewLink||"");const [timings,setTimings]=useState(s.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60});const [saved,setSaved]=useState(false);
   const [notifStatus,setNotifStatus]=useState(()=>'Notification' in window?Notification.permission:'unsupported');
   const [testerCode,setTesterCode]=useState(()=>localStorage.getItem('sliss-tester')||"");
+  const [theme,setTheme]=useState(()=>document.documentElement.getAttribute('data-theme')||'light');
+  const applyTheme=(t)=>{setTheme(t);try{localStorage.setItem('sliss-theme',t);}catch(_){}document.documentElement.setAttribute('data-theme',t);const m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute('content',t==='dark'?'#0A2518':'#16A34A');};
   const handleSave=()=>{updateSettings({businessName:bName,reviewLink,bizType:currentBizType,cluster:currentCluster,followUpTimings:timings});setSaved(true);setTimeout(()=>setSaved(false),2000);};
   const handleNotif=async()=>{const ok=await subscribeToPush();setNotifStatus(ok?'granted':'denied');};
   const [restoring,setRestoring]=useState(false);const [restoreMsg,setRestoreMsg]=useState("");
@@ -28,6 +30,15 @@ const Settings = () => {
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Impostazioni" />
+      <Card style={{marginBottom:"14px"}}>
+        <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>Aspetto</h3>
+        <p style={{fontSize:"12px",color:T.textD,marginBottom:"14px"}}>Tema dell'app. Resta salvato su questo dispositivo.</p>
+        <div style={{display:"flex",gap:"8px"}}>
+          {[{k:"light",l:"☀️ Chiaro"},{k:"dark",l:"\u{1F319} Scuro"}].map(o=>(
+            <button key={o.k} type="button" onClick={()=>applyTheme(o.k)} aria-pressed={theme===o.k} style={{flex:1,padding:"13px",borderRadius:T.r.m,border:`1.5px solid ${theme===o.k?T.green:T.border}`,background:theme===o.k?T.greenS:T.bg2,color:theme===o.k?T.greenH:T.textM,fontWeight:700,fontSize:"14px",cursor:"pointer",fontFamily:"inherit",minHeight:"48px"}}>{o.l}</button>
+          ))}
+        </div>
+      </Card>
       <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"16px"}}>{"Attivit\u{e0}"}</h3><FormField label={"Nome attivit\u{e0}"} hint="Appare nel saluto della Home"><input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" /></FormField><FormField label="Tipo attività" hint="Cambia il flusso: appuntamenti o ordini"><select value={currentBizType} onChange={e=>{const t=e.target.value;setCurrentBizType(t);setCurrentCluster(t==="prodotti"?Object.keys(CLUSTERS_PRODOTTI)[0]:Object.keys(CLUSTERS_SERVIZI)[0]);}}><option value="servizi">Servizi — appuntamenti</option><option value="prodotti">Prodotti — ordini</option></select></FormField><FormField label="Settore" hint="Usato per adattare i template"><select value={currentCluster} onChange={e=>setCurrentCluster(e.target.value)}>{Object.entries(currentBizType==="prodotti"?CLUSTERS_PRODOTTI:CLUSTERS_SERVIZI).map(([key,cl])=>(<option key={key} value={key}>{cl.icon} {cl.label}</option>))}</select></FormField><FormField label="Link Google Reviews" hint="Aggiunto ai messaggi di recensione"><input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." /></FormField></Card>
       <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>Timing follow-up</h3><p style={{fontSize:"12px",color:T.textD,marginBottom:"16px"}}>Quando inviare ogni fase dopo l'appuntamento.</p>
         {[

@@ -27,9 +27,9 @@ export default function Icon({ name, size = 22, color = "currentColor", stroke =
   const paths = PATHS[name];
   if (!paths) return null;
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color}
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
       strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round"
-      aria-hidden="true" style={{ flexShrink: 0, display: "block", ...style }}>
+      aria-hidden="true" style={{ stroke: color, flexShrink: 0, display: "block", ...style }}>
       {paths}
     </svg>
   );

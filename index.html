@@ -11,13 +11,57 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
     <meta name="apple-mobile-web-app-title" content="Sliss" />
     <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    <style>
+      /* Token colore tema CHIARO (default) e SCURO. Definiti qui così sono
+         disponibili prima del render React (niente flash all'avvio). */
+      :root{
+        --c-bg:#F8F9FA; --c-bg2:#FFFFFF; --c-bg3:#F1F3F5; --c-bg4:#E9ECEF;
+        --c-border:#DEE2E6; --c-borderH:#ADB5BD;
+        --c-text:#111318; --c-textM:#495057; --c-textD:#5C636A; --c-textMu:#6C757D;
+        --c-green:#16A34A; --c-greenH:#15803D; --c-greenS:rgba(22,163,74,.10); --c-greenG:rgba(22,163,74,.18); --c-onGreen:#FFFFFF;
+        --c-blue:#2563EB; --c-blueH:#1D4ED8; --c-blueS:rgba(37,99,235,.10);
+        --c-amber:#D97706; --c-amberD:#B45309; --c-amberS:rgba(217,119,6,.10);
+        --c-red:#DC2626; --c-redS:rgba(220,38,38,.10);
+        --c-purple:#7C3AED; --c-purpleS:rgba(124,58,237,.10);
+        --c-teal:#0D9488; --c-tealD:#0F766E; --c-tealS:rgba(13,148,136,.10);
+        --c-shell:
+          radial-gradient(ellipse 90% 34% at 28% -6%, rgba(22,163,74,.09) 0%, transparent 60%),
+          radial-gradient(ellipse 70% 28% at 88% 3%, rgba(13,148,136,.05) 0%, transparent 55%),
+          linear-gradient(168deg,#EFF6F0 0%,#F4F8F4 36%,#F8F9FA 72%);
+      }
+      [data-theme="dark"]{
+        --c-bg:#0A2518; --c-bg2:#15291E; --c-bg3:#1E3829; --c-bg4:#274635;
+        --c-border:rgba(130,200,165,.16); --c-borderH:rgba(130,200,165,.32);
+        --c-text:#F0F7F4; --c-textM:#C2D9CD; --c-textD:#8FB6A4; --c-textMu:#8FB6A4;
+        --c-green:#4ADE80; --c-greenH:#86EFAC; --c-greenS:rgba(74,222,128,.15); --c-greenG:rgba(74,222,128,.28); --c-onGreen:#06231A;
+        --c-blue:#7DD3FC; --c-blueH:#BAE6FD; --c-blueS:rgba(125,211,252,.14);
+        --c-amber:#FBBF24; --c-amberD:#FCD34D; --c-amberS:rgba(251,191,36,.16);
+        --c-red:#FB7185; --c-redS:rgba(251,113,133,.15);
+        --c-purple:#C4B5FD; --c-purpleS:rgba(196,181,253,.16);
+        --c-teal:#2DD4BF; --c-tealD:#5EEAD4; --c-tealS:rgba(45,212,191,.14);
+        --c-shell:
+          radial-gradient(ellipse 82% 42% at 24% -5%, rgba(74,222,128,.15) 0%, transparent 56%),
+          radial-gradient(ellipse 60% 36% at 82% 5%, rgba(45,212,191,.09) 0%, transparent 48%),
+          linear-gradient(170deg,#145A38 0%,#0F3D2A 24%,#0C2E20 50%,#0A2518 76%,#081E15 100%);
+      }
+      [data-theme="dark"] select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238FB6A4' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E")}
+    </style>
+    <script>
+      // Applica il tema salvato PRIMA del primo paint (niente lampo di chiaro).
+      try{
+        var _t=localStorage.getItem('sliss-theme')==='dark'?'dark':'light';
+        document.documentElement.setAttribute('data-theme',_t);
+        var _m=document.querySelector('meta[name="theme-color"]');
+        if(_m)_m.setAttribute('content',_t==='dark'?'#0A2518':'#16A34A');
+      }catch(e){}
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div id="root">
-      <div id="splash" style="display:flex;align-items:center;justify-content:center;height:100vh;background:#F8F9FA">
+      <div id="splash" style="display:flex;align-items:center;justify-content:center;height:100vh;background:var(--c-bg,#F8F9FA)">
         <img src="/sliss-logo.png" alt="Sliss" width="160" style="height:auto" />
       </div>
     </div>

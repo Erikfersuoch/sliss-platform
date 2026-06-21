@@ -2,7 +2,9 @@ import T from "./theme.js";
 
 const GlobalCSS = () => <style>{`
   *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans','Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;overflow-wrap:break-word}
-  html,body,#root{background:${T.bg};color:${T.text};font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+  html{background:${T.bg}}
+  html,body,#root{color:${T.text};font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh}
+  body{background:var(--c-shell,#F8F9FA)}
   ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:${T.border};border-radius:3px}
   input,textarea,select{font-family:inherit;background:${T.bg2};border:1.5px solid ${T.border};color:${T.text};border-radius:10px;padding:12px 14px;font-size:15px;outline:none;transition:border-color .2s;width:100%;min-width:0}
   input[type="date"],input[type="time"]{-webkit-appearance:none;appearance:none}

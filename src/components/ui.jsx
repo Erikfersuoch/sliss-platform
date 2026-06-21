@@ -6,7 +6,7 @@ export const Badge = ({label,color,bg,s}) => (
 );
 
 export const Btn = ({children,v="primary",s="md",onClick,style,disabled,aria,title}) => {
-  const VS={primary:{bg:T.green,c:"#fff",hb:T.greenH,bd:"none"},secondary:{bg:"transparent",c:T.textM,hb:T.bg4,bd:`1px solid ${T.border}`},success:{bg:T.green,c:"#fff",hb:"#09a066",bd:"none"},danger:{bg:"transparent",c:T.red,hb:T.redS,bd:`1px solid ${T.red}44`},ghost:{bg:"transparent",c:T.textD,hb:T.bg3,bd:"none"}};
+  const VS={primary:{bg:T.green,c:T.onGreen,hb:T.greenH,bd:"none"},secondary:{bg:"transparent",c:T.textM,hb:T.bg4,bd:`1px solid ${T.border}`},success:{bg:T.green,c:T.onGreen,hb:T.greenH,bd:"none"},danger:{bg:"transparent",c:T.red,hb:T.redS,bd:`1px solid ${T.red}44`},ghost:{bg:"transparent",c:T.textD,hb:T.bg3,bd:"none"}};
   const SS={sm:{p:"8px 14px",f:"13px"},md:{p:"11px 20px",f:"14px"},lg:{p:"14px 28px",f:"15px"}};
   const vv=VS[v],ss=SS[s];
   const [h,setH]=useState(false);
@@ -100,7 +100,7 @@ export const Modal = ({open,onClose,title,children,w}) => {
   return (
     <div style={{position:"fixed",inset:0,zIndex:1000,display:"flex",alignItems:"center",justifyContent:"center",padding:"24px"}} onClick={onClose}>
       <div style={{position:"absolute",inset:0,background:"rgba(0,0,0,.82)",backdropFilter:"blur(8px)"}} />
-      <div ref={panelRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={e=>e.stopPropagation()} style={{position:"relative",background:"#FFFFFF",border:"1px solid #DEE2E6",borderRadius:T.r.xl,width:"100%",maxWidth:w||"580px",maxHeight:"85vh",overflowX:"hidden",overflowY:"auto",animation:"slideUp .25s ease",boxShadow:"0 12px 40px rgba(0,0,0,.35)",outline:"none"}}>
+      <div ref={panelRef} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby={titleId} onClick={e=>e.stopPropagation()} style={{position:"relative",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:T.r.xl,width:"100%",maxWidth:w||"580px",maxHeight:"85vh",overflowX:"hidden",overflowY:"auto",animation:"slideUp .25s ease",boxShadow:"0 12px 40px rgba(0,0,0,.35)",outline:"none"}}>
         <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"18px 22px 14px",borderBottom:`1px solid ${T.border}`}}>
           <h3 id={titleId} style={{fontSize:"16px",fontWeight:700}}>{title}</h3>
           <button onClick={onClose} aria-label="Chiudi" style={{background:T.bg3,border:"none",color:T.textM,fontSize:"16px",cursor:"pointer",width:"40px",height:"40px",borderRadius:"50%",display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>{"\u{2715}"}</button>

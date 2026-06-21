@@ -1,6 +1,6 @@
 # CLAUDE.md — Sliss Platform
 
-<!-- SYNC ▸ v6.9 · 2026-06-16 · fonte: docs/stato-progetto.md
+<!-- SYNC ▸ v7.0 · 2026-06-21 · fonte: docs/stato-progetto.md
      Versione / fase / stato tester NON si scrivono qui: vivono solo in docs/stato-progetto.md.
      Questa riga è solo un checksum: a fine sessione verifica che combaci con la FONTE DI VERITÀ. -->
 
@@ -17,7 +17,7 @@ Piattaforma web modulare per micro-business (tatuatori, barber, estetiste, offic
 **Repo:** github.com/Erikfersuoch/sliss-platform
 **Deploy:** Vercel (attivo) — sliss-platform.vercel.app
 **App:** versione corrente → vedi `docs/stato-progetto.md`. Struttura: `src/App.jsx` = solo root (stato + Provider + routing viste). Pagine in `src/pages/` (Home, FollowUp, Appointments, Orders, Clients, Templates, Feedback, Settings, ModulesMap, Onboarding); `src/components/` (Nav, ErrorBoundary, ui, Icon, SlissLogo, FeedbackNudge); logica condivisa: config.js, storage.js, helpers.js, context.js, theme.js, GlobalCSS.jsx, followups.js, push.js
-**UI:** light mode · accent verde #16A34A · mobile-first (bottom nav) · sidebar desktop
+**UI:** tema chiaro/scuro (opt-in da Impostazioni, default chiaro · token CSS `--c-*` in `index.html`, scelta in `localStorage['sliss-theme']`) · accent verde #16A34A · velature verdi sullo sfondo · mobile-first (bottom nav) · sidebar desktop
 **Storage:** localStorage · chiavi: `sliss-v4`, `sliss-onboarded-v4`
 **Onboarding:** 5 step — nome attività → tipo (servizi/prodotti) → cluster settore
 **Flussi:** Servizi (Appuntamenti + 4 follow-up) · Prodotti (Ordini + 5 follow-up)
