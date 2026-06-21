@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v7.3 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v7.4 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 21/06/2026 (v7.4) — icone pulsanti Template (chiusura coerenza) + STOP restyling (DEV+CORE).** Quick win: i pulsanti di `Templates.jsx` (✏️ modifica → `pencil` [icona nuova], 🗑️ elimina → `trash`, 📋 copia → `clipboard`) erano l'ultima pagina con pulsanti a emoji mentre il resto era già iconato. Convertiti → iconificazione pulsanti **coerente in tutta l'app**. Lint 0, build verde. **Decisione CORE (priorità delegata da Erik "valuta e segui"): STOP restyling qui.** Siamo a rendimenti decrescenti e abbiamo già spinto **5 versioni oggi** (v7.0→v7.4) tutte visibili ai tester in piena finestra gate. **Restano come pezzi DELIBERATI futuri (non urgenti):** Blocco 3 (icone settori/moduli ~10 nuove + Onboarding first-run), pencil inline sulle date (Agenda/Clienti, simboli tollerabili), 3 glow variante C. **Vera priorità ora = il gate/tester** (notifica Moira quando in negozio + dato Luca alla sua riapertura), su cui non si può forzare nulla.
 
 **Sessione 21/06/2026 (v7.3) — emoji → icone, Blocco 2 (stati vuoti + tema + decorativi) (DEV, restyling 4° pezzo).** Continuato il restyling "come pianificato". Convertiti: **stati vuoti** (`<Empty icon=…>`) di Clienti/Agenda/Ordini/Follow-Up/Feedback/Template → icone (search/calendar/package/star/users/file/clipboard); **toggle tema** ☀️/🌙 → icone `sun`/`moon` (aggiunte al set, +`target`); **decorativi Home** (🎯 hero "Inizia da qui"→target, ⭐ "Vedi recensioni"→star, 📦 heading "Ordini da spedire"→package) e **Feedback** (⭐ "Vedi su Google"→star). Centratura icone risolta una volta nel componente `Empty` (icon div → flex center) invece di 8 modifiche. **Lasciate apposta:** 👍 "niente oggi" e 🎉 celebrazione (delight), 👋 saluto, 🚀 Ready-to-go, simboli ✓/✕/✏️, e i pulsanti edit/delete/copy di **Template** (dietro "Altro" → giro di coerenza dopo), emoji **Onboarding** (defer) + 🔕/📝 (edge). Flusso D: `/code-review` mio = pulito. Lint 0, build verde. **Restano:** Blocco 3 (settori/moduli — ~10 icone nuove) + Onboarding + Template-buttons + 3 glow variante C.
 

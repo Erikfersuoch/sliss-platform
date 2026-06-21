@@ -1,6 +1,6 @@
 # CLAUDE.md — Sliss Platform
 
-<!-- SYNC ▸ v7.3 · 2026-06-21 · fonte: docs/stato-progetto.md
+<!-- SYNC ▸ v7.4 · 2026-06-21 · fonte: docs/stato-progetto.md
      Versione / fase / stato tester NON si scrivono qui: vivono solo in docs/stato-progetto.md.
      Questa riga è solo un checksum: a fine sessione verifica che combaci con la FONTE DI VERITÀ. -->
 
