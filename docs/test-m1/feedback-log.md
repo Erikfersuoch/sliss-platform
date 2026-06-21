@@ -187,3 +187,17 @@
 - [x] Insight → criterio "usi reali" del gate soddisfatto da Luca; in attesa della conferma "valore" a voce
 
 ---
+
+#### Check — 21/06/2026 (riportato da Erik)
+
+**Cosa ha detto:** Luca ha avuto **2 riscontri positivi dai clienti sui follow-up di richiesta recensione.** Cioè i messaggi di richiesta recensione generati da Sliss hanno prodotto risposte positive reali dai suoi clienti.
+
+**Lettura (gate):** è la **prima evidenza concreta del criterio "valore"** dal lato Luca — non più solo "approva", ma un risultato osservabile prodotto da M1 (il follow-up recensione funziona sul campo). Sommato a: 13+ usi reali (oltre soglia ~8) + uso costante 7/7. **Luca è molto vicino a un GO personale**; restano da raccogliere a voce la conferma esplicita "mi dà valore / voglio continuare" + il dato **copertura** ("dei clienti avuti, quanti gestiti con Sliss?"). Prossimo passo = giro TEST con Luca, i 2 riscontri positivi sono il gancio naturale.
+
+**Categoria:**
+- [ ] Bloccante
+- [ ] Frizione
+- [ ] Richiesta feature
+- [x] Insight → **segnale "valore" positivo** (recensioni generate da M1 con esito reale); gate lato Luca quasi completo
+
+---
