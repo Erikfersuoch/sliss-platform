@@ -53,7 +53,7 @@ const Home = ({setView}) => {
       {noClients
         ? <>
             <div style={{background:`linear-gradient(180deg,${T.greenS},${T.bg2})`,border:`1px solid ${T.green}`,borderRadius:T.r.xl,padding:"22px 18px",textAlign:"center",marginBottom:"12px"}}>
-              <div style={{width:"46px",height:"46px",borderRadius:"14px",background:T.green,color:"#fff",fontSize:"22px",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}>{"\u{1F3AF}"}</div>
+              <div style={{width:"46px",height:"46px",borderRadius:"14px",background:T.green,color:"#fff",fontSize:"22px",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}><Icon name="target" size={24} color="#fff" /></div>
               <h2 style={{fontSize:"17px",fontWeight:800,letterSpacing:"-.02em",marginBottom:"6px"}}>Inizia da qui</h2>
               <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.55,maxWidth:"280px",margin:"0 auto 16px"}}>Aggiungi il tuo primo cliente: Sliss prepara subito i messaggi da inviargli, già scritti.</p>
               <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center"}}>{"+ Aggiungi il tuo primo cliente"}</Btn>
@@ -67,7 +67,7 @@ const Home = ({setView}) => {
         : <>
             <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
             <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>
-            {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{fontSize:"13px",color:T.textD,textDecoration:"none"}}>{"\u{2B50}"} Vedi recensioni</a></div>}
+            {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"5px",fontSize:"13px",color:T.textD,textDecoration:"none"}}><Icon name="star" size={14} />Vedi recensioni</a></div>}
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
               {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
                 <Card key={i} onClick={()=>setView(s.go,s.gf?{fuFilter:s.gf}:undefined)} hov style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
@@ -108,7 +108,7 @@ const Home = ({setView}) => {
               }
             </Card>
             {toShip.length>0&&<Card style={{marginBottom:"14px"}}>
-              <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>{"\u{1F4E6}"} Ordini da spedire</h2>
+              <h2 style={{display:"flex",alignItems:"center",gap:"7px",fontSize:"15px",fontWeight:700,marginBottom:"12px"}}><Icon name="package" size={16} />Ordini da spedire</h2>
               <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
                 {toShip.map(o=>{const cl=(data?.clients||[]).find(c=>c.id===o.clientId);return (
                   <div key={o.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px",background:T.bg3,borderRadius:T.r.m}}>

@@ -1,6 +1,6 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v7.2 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v7.3 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 21/06/2026 (v7.3) — emoji → icone, Blocco 2 (stati vuoti + tema + decorativi) (DEV, restyling 4° pezzo).** Continuato il restyling "come pianificato". Convertiti: **stati vuoti** (`<Empty icon=…>`) di Clienti/Agenda/Ordini/Follow-Up/Feedback/Template → icone (search/calendar/package/star/users/file/clipboard); **toggle tema** ☀️/🌙 → icone `sun`/`moon` (aggiunte al set, +`target`); **decorativi Home** (🎯 hero "Inizia da qui"→target, ⭐ "Vedi recensioni"→star, 📦 heading "Ordini da spedire"→package) e **Feedback** (⭐ "Vedi su Google"→star). Centratura icone risolta una volta nel componente `Empty` (icon div → flex center) invece di 8 modifiche. **Lasciate apposta:** 👍 "niente oggi" e 🎉 celebrazione (delight), 👋 saluto, 🚀 Ready-to-go, simboli ✓/✕/✏️, e i pulsanti edit/delete/copy di **Template** (dietro "Altro" → giro di coerenza dopo), emoji **Onboarding** (defer) + 🔕/📝 (edge). Flusso D: `/code-review` mio = pulito. Lint 0, build verde. **Restano:** Blocco 3 (settori/moduli — ~10 icone nuove) + Onboarding + Template-buttons + 3 glow variante C.
 
 **Sessione 21/06/2026 (v7.2) — emoji → icone, Blocco 1 (pulsanti/azioni) (DEV, restyling 3° pezzo).** Restyling. Distinzione chiave fatta prima di toccare: (a) le emoji **dentro i messaggi WhatsApp** (followups.js) RESTANO (calore per il cliente, non UI); (b) gli avatar delle fasi follow-up erano **già icone** (`config.js` usa nomi-icona `heart/star/rotate/...` resi con `<Icon>`). Quindi convertiti solo i **pulsanti/azioni di sistema**: 🔗→`link`, invio (📱/✉️/💬)→`send` (aeroplanino unico, canale distinto da testo+colore), 📅→`calendar`, 🔔→`bell`, 🔄→`rotate`, ☁️→`download`, 🗑️→`trash`, 🔍→`search`. Aggiunte 6 icone al set `Icon` (link/bell/trash/search/send/download); le icone nei `Btn` ereditano il colore via `currentColor`. File: ui.jsx (SendButtons+Search), InviteClient, Clients, App (mini-menu +), Home, Settings, Appointments, Orders. **Lasciate apposta** (Blocco 2/delight): 🚀 "Ready to go", 👋 saluto, icone stati vuoti, ☀️/🌙 tema. **Review (flusso D):** `/code-review` leggero fatto da me = pulito (1 bug trovato+corretto: `</Btn>` perso nello scambio del pulsante Ripristina, beccato dalla build). **`/ultrareview` NON eseguibile** da questa sessione: è rootata nella home (non un repo git) → slash-command falliscono ([[reference-ultrareview-session-root]], salvato in memoria); per Blocco 1 (piccolo, meccanico) si è scelto di procedere col solo /code-review. Lint 0, build verde. Commit + deploy.
 

@@ -36,7 +36,7 @@ export const Empty = ({icon,title,desc,action,preview,previewLabel,hint}) => (
             <div style={{position:"absolute",left:0,right:0,bottom:0,height:"60%",background:`linear-gradient(180deg,transparent,${T.bg})`,pointerEvents:"none"}} aria-hidden="true" />
           </div>
         </div>
-      : <div style={{fontSize:"44px",marginBottom:"14px",opacity:.35}} aria-hidden="true">{icon}</div>
+      : <div style={{fontSize:"44px",marginBottom:"14px",opacity:.35,display:"flex",justifyContent:"center"}} aria-hidden="true">{icon}</div>
     }
     <div style={{fontSize:"16px",fontWeight:700,color:T.text,marginBottom:"7px",letterSpacing:"-.01em"}}>{title}</div>
     <div style={{fontSize:"13.5px",color:T.textM,maxWidth:"270px",margin:"0 auto 18px",lineHeight:1.6}}>{desc}</div>

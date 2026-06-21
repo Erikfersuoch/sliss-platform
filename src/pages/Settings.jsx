@@ -35,8 +35,8 @@ const Settings = () => {
         <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>Aspetto</h3>
         <p style={{fontSize:"12px",color:T.textD,marginBottom:"14px"}}>Tema dell'app. Resta salvato su questo dispositivo.</p>
         <div style={{display:"flex",gap:"8px"}}>
-          {[{k:"light",l:"☀️ Chiaro"},{k:"dark",l:"\u{1F319} Scuro"}].map(o=>(
-            <button key={o.k} type="button" onClick={()=>applyTheme(o.k)} aria-pressed={theme===o.k} style={{flex:1,padding:"13px",borderRadius:T.r.m,border:`1.5px solid ${theme===o.k?T.green:T.border}`,background:theme===o.k?T.greenS:T.bg2,color:theme===o.k?T.greenH:T.textM,fontWeight:700,fontSize:"14px",cursor:"pointer",fontFamily:"inherit",minHeight:"48px"}}>{o.l}</button>
+          {[{k:"light",ic:"sun",l:"Chiaro"},{k:"dark",ic:"moon",l:"Scuro"}].map(o=>(
+            <button key={o.k} type="button" onClick={()=>applyTheme(o.k)} aria-pressed={theme===o.k} style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",gap:"7px",padding:"13px",borderRadius:T.r.m,border:`1.5px solid ${theme===o.k?T.green:T.border}`,background:theme===o.k?T.greenS:T.bg2,color:theme===o.k?T.greenH:T.textM,fontWeight:700,fontSize:"14px",cursor:"pointer",fontFamily:"inherit",minHeight:"48px"}}><Icon name={o.ic} size={16} />{o.l}</button>
           ))}
         </div>
       </Card>

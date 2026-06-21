@@ -2,6 +2,7 @@ import T from "../theme.js";
 import { daysAgo } from "../helpers.js";
 import { useSliss } from "../context.js";
 import { Btn, Card, Empty, SendButtons, PageHeader } from "../components/ui.jsx";
+import Icon from "../components/Icon.jsx";
 
 // Le recensioni vivono su Google: Sliss non le duplica (la vecchia lista "Ricevuti" era
 // codice morto, mai popolata). Questa pagina serve solo a CHIEDERLE con un tap e a rimandare
@@ -16,13 +17,13 @@ const Feedback = ({setView}) => {
   if(!reviewLink) return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Feedback" />
-      <Empty icon={"\u{2B50}"} title="Attiva le recensioni" desc="Aggiungi il link delle tue recensioni Google: poi potrai chiederle ai clienti con un tap, dalla loro scheda e da qui." action={<Btn onClick={()=>setView&&setView("settings")}>Aggiungi il link in Impostazioni</Btn>} />
+      <Empty icon={<Icon name="star" size={44} color={T.textD} />} title="Attiva le recensioni" desc="Aggiungi il link delle tue recensioni Google: poi potrai chiederle ai clienti con un tap, dalla loro scheda e da qui." action={<Btn onClick={()=>setView&&setView("settings")}>Aggiungi il link in Impostazioni</Btn>} />
     </div>
   );
 
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
-      <PageHeader title="Feedback" action={<a href={reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:T.bg2,color:T.textM,border:`1px solid ${T.border}`,borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}>{"\u{2B50} Vedi su Google"}</a>} />
+      <PageHeader title="Feedback" action={<a href={reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"6px",padding:"9px 16px",background:T.bg2,color:T.textM,border:`1px solid ${T.border}`,borderRadius:T.r.m,fontSize:"13px",fontWeight:600,textDecoration:"none",minHeight:"44px"}}><Icon name="star" size={15} />Vedi su Google</a>} />
       <p style={{fontSize:"13px",color:T.textD,marginBottom:"16px",lineHeight:1.55}}>Le recensioni vivono su Google. Da qui le chiedi ai tuoi clienti con un tap.</p>
       {askable.length>0
         ? <Card>
@@ -35,7 +36,7 @@ const Feedback = ({setView}) => {
               </div>
             ))}</div>
           </Card>
-        : <Empty icon={"\u{1F465}"} title="Nessun cliente a cui chiedere" desc="Aggiungi un cliente: da qui potrai invitarlo a lasciarti una recensione su Google." action={<Btn onClick={()=>setView&&setView("clients")}>+ Aggiungi un cliente</Btn>} />
+        : <Empty icon={<Icon name="users" size={44} color={T.textD} />} title="Nessun cliente a cui chiedere" desc="Aggiungi un cliente: da qui potrai invitarlo a lasciarti una recensione su Google." action={<Btn onClick={()=>setView&&setView("clients")}>+ Aggiungi un cliente</Btn>} />
       }
     </div>
   );
