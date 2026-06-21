@@ -5,7 +5,9 @@ import { pingUsage } from "./track.js";
 import { uid, today, isPhaseOff } from "./helpers.js";
 import { Ctx } from "./context.js";
 import GlobalCSS from "./GlobalCSS.jsx";
-import { BottomNav, MoreMenu, DesktopSidebar } from "./components/Nav.jsx";
+import { TopBar, FloatingNav, MoreMenu, DesktopSidebar } from "./components/Nav.jsx";
+import { Modal, Btn } from "./components/ui.jsx";
+import InviteClient from "./components/InviteClient.jsx";
 import ErrorBoundary from "./components/ErrorBoundary.jsx";
 import FeedbackNudge from "./components/FeedbackNudge.jsx";
 import UpdateNudge from "./components/UpdateNudge.jsx";
@@ -67,6 +69,10 @@ export default function SlissPlatform() {
   const [showFeedbackNudge,setShowFeedbackNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='feedback');
   const [showUpdateNudge,setShowUpdateNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='novita');
   const autoCheckRef=useRef(false);
+  // Tasto "+" della barra flottante: apre un mini-menu, poi naviga alla pagina e ne apre il form "aggiungi".
+  const [addSheet,setAddSheet]=useState(false);
+  const [addOn,setAddOn]=useState(null);
+  const [showInvite,setShowInvite]=useState(false);
 
   // Cattura il codice tester dall'URL (?tester=) una sola volta, senza toccare lo stato React
   useEffect(()=>{const t=new URLSearchParams(window.location.search).get('tester');if(t)localStorage.setItem('sliss-tester',t);},[]);
@@ -88,6 +94,8 @@ export default function SlissPlatform() {
   const importData=useCallback((d)=>{const healed=healData(d);setData(healed);saveData(healed);},[]);
   // Navigazione: imposta vista e, opzionalmente, il filtro iniziale Follow-Up (resettato per ogni navigazione normale)
   const go=useCallback((v,opts)=>{setFuFilter(opts&&opts.fuFilter?opts.fuFilter:null);setSelFuId(opts&&opts.fuId?opts.fuId:null);setSelClientId(opts&&opts.clientId?opts.clientId:null);setView(v);},[]);
+  // Il segnale "apri il form aggiungi" è transitorio: si spegne dopo che la pagina l'ha consumato.
+  useEffect(()=>{if(!addOn)return;const t=setTimeout(()=>setAddOn(null),150);return ()=>clearTimeout(t);},[addOn]);
   // Auto-import schede onboarding: una sola volta, importa gli slot già compilati dal cliente
   useEffect(()=>{
     if(autoCheckRef.current)return;
@@ -100,7 +108,7 @@ export default function SlissPlatform() {
 
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
-  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go}/>,orders:<Orders setView={go}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId}/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
@@ -109,11 +117,22 @@ export default function SlissPlatform() {
     <ErrorBoundary>
       <Ctx.Provider value={ctx}>
         <GlobalCSS />
-        <div translate="no" lang="it" style={{display:"flex",minHeight:"100vh"}}>
-          <DesktopSidebar view={view} setView={go} />
-          <main className="app-main">{CurrentView}</main>
+        <div translate="no" lang="it">
+          <TopBar view={view} setView={go} />
+          <div style={{display:"flex",minHeight:"100vh"}}>
+            <DesktopSidebar view={view} setView={go} />
+            <main className="app-main">{CurrentView}</main>
+          </div>
         </div>
-        <BottomNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} />
+        <FloatingNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} onAdd={()=>setAddSheet(true)} />
+        <Modal open={addSheet} onClose={()=>setAddSheet(false)} title="Cosa vuoi aggiungere?" w="380px">
+          <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+            <Btn onClick={()=>{setAddSheet(false);setShowInvite(true);}} style={{width:"100%",justifyContent:"center"}}>{"\u{1F517} Invita cliente"}</Btn>
+            <Btn v="secondary" onClick={()=>{setAddSheet(false);setAddOn("clients");go("clients");}} style={{width:"100%",justifyContent:"center"}}>Nuovo cliente</Btn>
+            <Btn v="secondary" onClick={()=>{const v=(data?.settings?.bizType==="prodotti")?"orders":"appointments";setAddSheet(false);setAddOn(v);go(v);}} style={{width:"100%",justifyContent:"center"}}>{(data?.settings?.bizType==="prodotti")?"Nuovo ordine":"Nuovo appuntamento"}</Btn>
+          </div>
+        </Modal>
+        {showInvite && <InviteClient onClose={()=>setShowInvite(false)} />}
         {showFeedbackNudge && <FeedbackNudge onClose={()=>setShowFeedbackNudge(false)} />}
         {showUpdateNudge && <UpdateNudge onClose={()=>setShowUpdateNudge(false)} />}
       </Ctx.Provider>

@@ -7,10 +7,12 @@ import Icon from "../components/Icon.jsx";
 import { Btn, Card, Empty, GhostRow, Modal, FormField, PageHeader } from "../components/ui.jsx";
 import { buildProductFollowUps } from "../followups.js";
 
-const Orders = ({setView}) => {
+const Orders = ({setView,openAdd}) => {
   const {data,addRecord,update,deleteRecord}=useSliss();
-  const [showNew,setShowNew]=useState(false);const [done,setDone]=useState(false);
+  const [showNew,setShowNew]=useState(!!openAdd);const [done,setDone]=useState(false);
   const [form,setForm]=useState({clientId:"",product:"",orderDate:today(),deliveryDays:"7",notes:""});
+  const [prevAdd,setPrevAdd]=useState(openAdd);
+  if(openAdd!==prevAdd){setPrevAdd(openAdd);if(openAdd)setShowNew(true);}
   const sorted=[...(data?.orders||[])].sort((a,b)=>new Date(b.orderDate)-new Date(a.orderDate));
   // Stessa trappola di Agenda: senza clienti il form ordine ha il menù cliente vuoto.
   const noClients=(data?.clients||[]).length===0;

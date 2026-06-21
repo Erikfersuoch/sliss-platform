@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sliss — Barra di navigazione flottante (4 esempi)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'DM Sans',sans-serif}
+
+  [data-theme="light"]{
+    --bg2:#FFFFFF; --bg3:#EEF4EF; --border:#E2E9E3; --text:#111813; --textM:#46514B; --textD:#5B665F;
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10); --amber:#B45309; --amberS:rgba(217,119,6,.11);
+    --shell:radial-gradient(ellipse 90% 34% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);
+    --glow:rgba(22,163,74,.16);
+    --nav-bg:rgba(255,255,255,.78); --nav-hi:rgba(255,255,255,.7); --nav-sh:0 10px 34px rgba(20,60,40,.16),0 2px 8px rgba(20,60,40,.08);
+    --onGreen:#fff;
+  }
+  [data-theme="dark"]{
+    --bg2:#15291E; --bg3:#1E3829; --border:rgba(130,200,165,.16); --text:#F0F7F4; --textM:#C2D9CD; --textD:#8FB6A4;
+    --green:#4ADE80; --greenH:#86EFAC; --greenS:rgba(74,222,128,.16); --amber:#FBBF24; --amberS:rgba(251,191,36,.18);
+    --shell:radial-gradient(ellipse 82% 42% at 24% -5%,rgba(74,222,128,.16) 0,transparent 56%),linear-gradient(170deg,#145A38 0,#0F3D2A 24%,#0C2E20 50%,#0A2518 76%,#081E15 100%);
+    --glow:rgba(74,222,128,.4);
+    --nav-bg:rgba(8,30,21,.62); --nav-hi:rgba(255,255,255,.07); --nav-sh:0 12px 44px rgba(0,0,0,.5);
+    --onGreen:#06231A;
+  }
+
+  body{background:#171b1f;color:#eaf2ee;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+  .top{text-align:center;padding:24px 20px 4px}
+  .top h2{font-size:21px;font-weight:800;color:#fff;margin-bottom:8px}
+  .ctrls{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+  .seg{display:inline-flex;background:#0e1217;border:1px solid #2a3540;border-radius:30px;padding:4px;gap:3px}
+  .seg button{border:none;background:transparent;color:#9fb3c8;font-weight:700;font-size:13px;padding:9px 15px;border-radius:24px;cursor:pointer;font-family:inherit;transition:all .2s}
+  .seg button.on{background:#4ADE80;color:#06231a}
+  .vlabel{max-width:520px;margin:14px auto 0;font-size:13px;color:#aebfcf;line-height:1.55;min-height:38px}
+  .vlabel b{color:#fff}
+
+  .stage{display:flex;justify-content:center;padding:26px 16px 10px}
+  .phone{width:370px;height:760px;border-radius:46px;overflow:hidden;position:relative;box-shadow:0 0 0 1.5px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.55);background:#000}
+  .screen{height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--shell)}
+  .sb{height:48px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px;font-size:14px;font-weight:600;color:var(--textD);position:relative;z-index:2}
+  .bd{flex:1;overflow-y:auto;padding:4px 18px 120px;position:relative;z-index:2;scrollbar-width:none}
+  .bd::-webkit-scrollbar{display:none}
+  .greet{font-size:13px;color:var(--green);font-weight:700}
+  .h1{font-size:26px;font-weight:800;letter-spacing:-.5px;color:var(--text);margin-top:2px}
+  .sub{font-size:12.5px;color:var(--textD);margin-top:3px;margin-bottom:20px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .scard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:18px 14px;text-align:center;box-shadow:0 1px 2px rgba(16,32,20,.05),0 7px 22px var(--glow)}
+  .snum{font-size:34px;font-weight:800;line-height:1}
+  .snum.a{color:var(--amber)} .snum.g{color:var(--green)}
+  .slbl{font-size:11px;color:var(--textD);text-transform:uppercase;letter-spacing:.05em;margin-top:7px;font-weight:700}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 15px;margin-bottom:9px;box-shadow:0 4px 18px rgba(0,0,0,.10)}
+  .row{display:flex;align-items:center;gap:12px}
+  .av{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .nm{font-size:14px;font-weight:600;color:var(--text)}
+  .msg{font-size:12px;color:var(--textM);margin-top:2px}
+
+  /* ===================== NAV BASE ===================== */
+  .navwrap{position:absolute;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;pointer-events:none;padding-bottom:18px}
+  .nav{pointer-events:auto;display:none}
+  .nav.show{display:flex}
+  .ic{width:23px;height:23px;display:block}
+
+  /* === A: ISOLA PIENA (icona + label sempre, pill verde sull'attivo) === */
+  .navA{align-items:center;gap:2px;padding:7px 9px;background:var(--nav-bg);
+    backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+    border:1px solid var(--border);border-radius:26px;box-shadow:var(--nav-sh),inset 0 1px 0 var(--nav-hi)}
+  .navA .it{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 13px;border-radius:18px;cursor:pointer;color:var(--textD);transition:all .25s cubic-bezier(.34,1.4,.64,1)}
+  .navA .it .lb{font-size:9px;font-weight:700}
+  .navA .it.on{background:var(--greenS);color:var(--green)}
+  .navA .it.on .ic{filter:drop-shadow(0 0 6px var(--glow))}
+
+  /* === B: LABEL SOLO SULL'ATTIVO (l'attivo si espande in pill) === */
+  .navB{align-items:center;gap:4px;padding:8px 10px;background:var(--nav-bg);
+    backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+    border:1px solid var(--border);border-radius:30px;box-shadow:var(--nav-sh),inset 0 1px 0 var(--nav-hi)}
+  .navB .it{display:flex;align-items:center;gap:7px;padding:11px;border-radius:22px;cursor:pointer;color:var(--textD);transition:all .3s cubic-bezier(.34,1.4,.64,1)}
+  .navB .it .lb{font-size:13px;font-weight:700;max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .3s ease}
+  .navB .it.on{background:var(--green);color:var(--onGreen);padding:11px 16px}
+  .navB .it.on .lb{max-width:90px}
+
+  /* === C: BARRA + TASTO CENTRALE (4 voci + "+" rialzato) === */
+  .navC{align-items:center;gap:4px;padding:8px 12px;background:var(--nav-bg);
+    backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+    border:1px solid var(--border);border-radius:28px;box-shadow:var(--nav-sh),inset 0 1px 0 var(--nav-hi)}
+  .navC .it{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 12px;border-radius:16px;cursor:pointer;color:var(--textD)}
+  .navC .it .lb{font-size:9px;font-weight:700}
+  .navC .it.on{color:var(--green)}
+  .navC .it.on .ic{filter:drop-shadow(0 0 6px var(--glow))}
+  .navC .fab{width:54px;height:54px;border-radius:50%;background:var(--green);color:var(--onGreen);display:flex;align-items:center;justify-content:center;margin:-22px 6px 0;box-shadow:0 8px 22px var(--glow),0 2px 6px rgba(0,0,0,.2);border:3px solid var(--bg2);cursor:pointer}
+  .navC .fab .ic{width:26px;height:26px}
+
+  /* === D: MINIMAL ICONE (no label, attivo = pill verde) === */
+  .navD{align-items:center;gap:6px;padding:9px 12px;background:var(--nav-bg);
+    backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+    border:1px solid var(--border);border-radius:30px;box-shadow:var(--nav-sh),inset 0 1px 0 var(--nav-hi)}
+  .navD .it{width:46px;height:46px;display:flex;align-items:center;justify-content:center;border-radius:50%;cursor:pointer;color:var(--textD);transition:all .25s}
+  .navD .it.on{background:var(--green);color:var(--onGreen)}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h2>Sliss — Barra flottante: 4 esempi</h2>
+  <div class="ctrls">
+    <div class="seg" id="vseg">
+      <button class="on" data-v="A">A · Isola piena</button>
+      <button data-v="B">B · Label attiva</button>
+      <button data-v="C">C · Tasto +</button>
+      <button data-v="D">D · Minimal</button>
+    </div>
+    <div class="seg" id="tseg">
+      <button data-t="light">☀️ Chiaro</button>
+      <button class="on" data-t="dark">🌙 Scuro</button>
+    </div>
+  </div>
+  <div class="vlabel" id="vlabel"></div>
+</div>
+
+<div class="stage" data-theme="dark" id="stage">
+  <div class="phone"><div class="screen">
+    <div class="sb">9:41</div>
+    <div class="bd">
+      <div class="greet">Buongiorno, Erik</div>
+      <div class="h1">La tua giornata</div>
+      <div class="sub">Domenica 21 giugno 2026</div>
+      <div class="grid">
+        <div class="scard"><div class="snum a">3</div><div class="slbl">Da inviare</div></div>
+        <div class="scard"><div class="snum g">12</div><div class="slbl">Clienti attivi</div></div>
+      </div>
+      <div class="card"><div class="row"><div class="av" style="background:var(--amberS)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div><div><div class="nm">Marco B.</div><div class="msg">Ciao Marco! Grazie per oggi...</div></div></div></div>
+      <div class="card"><div class="row"><div class="av" style="background:var(--greenS)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.48 3.5a.56.56 0 0 1 1.04 0l2.13 4.32a.56.56 0 0 0 .42.3l4.77.7a.56.56 0 0 1 .31.95l-3.45 3.36a.56.56 0 0 0-.16.5l.82 4.74a.56.56 0 0 1-.82.59L12 17.7l-4.27 2.26a.56.56 0 0 1-.82-.59l.82-4.74a.56.56 0 0 0-.16-.5L3.69 10.77a.56.56 0 0 1 .31-.95l4.77-.7a.56.56 0 0 0 .42-.3z"/></svg></div><div><div class="nm">Giulia R.</div><div class="msg">Ciao Giulia! Se hai un minuto...</div></div></div></div>
+    </div>
+
+    <div class="navwrap">
+      <!-- A -->
+      <div class="nav navA show" data-nav="A">
+        <div class="it on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="lb">Home</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span class="lb">Follow-Up</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span class="lb">Agenda</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="lb">Clienti</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg><span class="lb">Altro</span></div>
+      </div>
+      <!-- B -->
+      <div class="nav navB" data-nav="B">
+        <div class="it on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="lb">Home</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span class="lb">Follow-Up</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span class="lb">Agenda</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="lb">Clienti</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg><span class="lb">Altro</span></div>
+      </div>
+      <!-- C -->
+      <div class="nav navC" data-nav="C">
+        <div class="it on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="lb">Home</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span class="lb">Follow-Up</span></div>
+        <div class="fab"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="lb">Clienti</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg><span class="lb">Altro</span></div>
+      </div>
+      <!-- D -->
+      <div class="nav navD" data-nav="D">
+        <div class="it on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></div>
+      </div>
+    </div>
+
+  </div></div>
+</div>
+
+<script>
+  var DESC={
+    A:'<b>A · Isola piena.</b> Tutte le voci con icona + etichetta sempre visibili, l\'attiva in una pill verde. Più chiara per chi non è tech (sai sempre dove sei e dove andare). Un filo più larga.',
+    B:'<b>B · Etichetta solo sull\'attiva.</b> Icone tonde, e la voce attiva si espande mostrando il nome. Elegante e compatta (stile iOS/Revolut). Le altre restano icone: serve riconoscerle.',
+    C:'<b>C · Con tasto centrale "+".</b> 4 voci + un pulsante verde rialzato per l\'azione rapida (es. nuovo cliente/appuntamento). Mette l\'azione al centro, ma sposta una voce nel menu "Altro".',
+    D:'<b>D · Minimal, solo icone.</b> La più pulita e piccola, attiva = pill verde piena. Bella esteticamente, ma senza etichette è la più rischiosa per utenti non-tech ("cos\'è questa icona?").'
+  };
+  function setVariant(v){
+    document.querySelectorAll('.nav').forEach(function(n){n.classList.toggle('show',n.getAttribute('data-nav')===v)});
+    document.querySelectorAll('#vseg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-v')===v)});
+    document.getElementById('vlabel').innerHTML=DESC[v];
+  }
+  function setTheme(t){
+    document.getElementById('stage').setAttribute('data-theme',t);
+    document.querySelectorAll('#tseg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===t)});
+  }
+  document.querySelectorAll('#vseg button').forEach(function(b){b.onclick=function(){setVariant(b.getAttribute('data-v'))}});
+  document.querySelectorAll('#tseg button').forEach(function(b){b.onclick=function(){setTheme(b.getAttribute('data-t'))}});
+  setVariant('A');
+</script>
+
+</body>
+</html>

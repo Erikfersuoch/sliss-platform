@@ -9,25 +9,48 @@ const getNavMain = (bizType) => {
   return [{id:"home",icon:"home",label:"Home"},{id:"clients",icon:"users",label:"Clienti"},agendaItem,{id:"followup",icon:"message",label:"Follow-Up"}];
 };
 
-const BottomNav = ({view,setView,pendingCount,bizType=""}) => (
-  <nav className="mobile-only" style={{position:"fixed",bottom:0,left:0,right:0,zIndex:100,background:T.bg2,borderTop:`1px solid ${T.border}`,boxShadow:"0 -1px 0 rgba(0,0,0,0.06)",display:"flex",alignItems:"center",paddingBottom:"env(safe-area-inset-bottom)"}}>
-    {getNavMain(bizType).map(n=>{
-      const a=view===n.id;
-      const showBadge=n.id==="followup"&&pendingCount>0;
-      return (
-        <button key={n.id} onClick={()=>setView(n.id)} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"10px 0",background:"none",border:"none",cursor:"pointer",color:a?T.green:T.textD,fontFamily:"inherit",transition:"color .15s",position:"relative",minHeight:"56px"}}>
-          {showBadge&&<div style={{position:"absolute",top:"6px",right:"calc(50% - 14px)",width:"16px",height:"16px",borderRadius:"50%",background:T.amber,fontSize:"10px",fontWeight:700,color:"#000",display:"flex",alignItems:"center",justifyContent:"center"}}>{pendingCount>9?"9+":pendingCount}</div>}
-          <Icon name={n.icon} size={22} color={a?T.green:T.textD} />
-          <span style={{fontSize:"11px",fontWeight:a?600:400}}>{n.label}</span>
+// Barra superiore (solo mobile): logo Sliss a sinistra, "Altro" a destra (apre il MoreMenu).
+const TopBar = ({view,setView}) => {
+  const moreActive=["templates","feedback","modules","settings","more"].includes(view);
+  return (
+    <div className="mobile-only" style={{position:"sticky",top:0,zIndex:90,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px",background:"var(--c-nav,rgba(255,255,255,.82))",backdropFilter:"blur(20px) saturate(1.3)",WebkitBackdropFilter:"blur(20px) saturate(1.3)",borderBottom:`1px solid ${T.border}`}}>
+      <SlissLogo size={22} />
+      <button onClick={()=>setView("more")} aria-label="Altro" style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"2px",background:"none",border:"none",cursor:"pointer",color:moreActive?T.green:T.textD,fontFamily:"inherit",padding:"4px 6px",minHeight:"44px"}}>
+        <Icon name="more" size={22} color={moreActive?T.green:T.textD} />
+        <span style={{fontSize:"9px",fontWeight:700}}>Altro</span>
+      </button>
+    </div>
+  );
+};
+
+// Isola flottante (solo mobile): 4 destinazioni + tasto "+" centrale rialzato (azione rapida).
+const FloatingNav = ({view,setView,pendingCount,bizType="",onAdd}) => {
+  const agenda = bizType==="prodotti" ? {id:"orders",icon:"package",label:"Ordini"} : {id:"appointments",icon:"calendar",label:"Agenda"};
+  const left=[{id:"home",icon:"home",label:"Home"},{id:"followup",icon:"message",label:"Follow-Up"}];
+  const right=[agenda,{id:"clients",icon:"users",label:"Clienti"}];
+  const itemBtn=(n)=>{
+    const a=view===n.id;
+    const showBadge=n.id==="followup"&&pendingCount>0;
+    return (
+      <button key={n.id} onClick={()=>setView(n.id)} aria-label={n.label} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"8px 11px",borderRadius:"16px",border:"none",cursor:"pointer",background:a?T.greenS:"transparent",color:a?T.green:T.textD,fontFamily:"inherit",position:"relative",minWidth:"54px",transition:"background .2s,color .2s"}}>
+        {showBadge&&<div style={{position:"absolute",top:"3px",right:"7px",minWidth:"15px",height:"15px",padding:"0 3px",borderRadius:"8px",background:T.amber,fontSize:"9px",fontWeight:800,color:"#000",display:"flex",alignItems:"center",justifyContent:"center"}}>{pendingCount>9?"9+":pendingCount}</div>}
+        <Icon name={n.icon} size={21} color={a?T.green:T.textD} />
+        <span style={{fontSize:"9px",fontWeight:700}}>{n.label}</span>
+      </button>
+    );
+  };
+  return (
+    <div className="mobile-only" style={{position:"fixed",left:0,right:0,bottom:0,zIndex:100,display:"flex",justifyContent:"center",pointerEvents:"none",paddingBottom:"calc(14px + env(safe-area-inset-bottom))"}}>
+      <div style={{pointerEvents:"auto",display:"flex",alignItems:"center",gap:"2px",padding:"7px 9px",background:"var(--c-nav,rgba(255,255,255,.82))",backdropFilter:"blur(24px) saturate(1.5)",WebkitBackdropFilter:"blur(24px) saturate(1.5)",border:`1px solid ${T.border}`,borderRadius:"28px",boxShadow:`0 12px 40px rgba(20,60,40,.20), inset 0 1px 0 var(--c-navHi,rgba(255,255,255,.6))`}}>
+        {left.map(itemBtn)}
+        <button onClick={onAdd} aria-label="Aggiungi" style={{width:"56px",height:"56px",borderRadius:"50%",background:T.green,color:T.onGreen,border:`3px solid ${T.bg2}`,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",margin:"-18px 6px 0",flexShrink:0,boxShadow:`0 10px 24px ${T.greenG}, 0 2px 6px rgba(0,0,0,.2)`}}>
+          <Icon name="plus" size={26} color={T.onGreen} stroke={2.4} />
         </button>
-      );
-    })}
-    <button onClick={()=>setView("more")} style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"10px 0",background:"none",border:"none",cursor:"pointer",color:["templates","feedback","modules","settings"].includes(view)?T.blue:T.textD,fontFamily:"inherit",minHeight:"56px"}}>
-      <Icon name="more" size={22} color={["templates","feedback","modules","settings"].includes(view)?T.blue:T.textD} />
-      <span style={{fontSize:"11px",fontWeight:400}}>Altro</span>
-    </button>
-  </nav>
-);
+        {right.map(itemBtn)}
+      </div>
+    </div>
+  );
+};
 
 const MoreMenu = ({setView}) => {
   const items=[{id:"templates",icon:"file",label:"Template",desc:"Gestisci i messaggi"},{id:"feedback",icon:"star",label:"Feedback",desc:"Recensioni clienti"},{id:"modules",icon:"grid",label:"Moduli",desc:"Funzioni aggiuntive"},{id:"settings",icon:"settings",label:"Impostazioni",desc:"Personalizza Sliss"}];
@@ -64,7 +87,7 @@ const DesktopSidebar = ({view,setView}) => {
         );})}
       </nav>
       <div style={{padding:"12px 18px",borderTop:`1px solid ${T.border}`}}>
-        <div style={{fontSize:"10px",color:T.textMu}}>Sliss v7.0 · liscio come deve essere.</div>
+        <div style={{fontSize:"10px",color:T.textMu}}>Sliss v7.1 · liscio come deve essere.</div>
       </div>
     </div>
   );
@@ -74,4 +97,4 @@ const DesktopSidebar = ({view,setView}) => {
 // VIEWS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export { BottomNav, MoreMenu, DesktopSidebar };
+export { TopBar, FloatingNav, MoreMenu, DesktopSidebar };

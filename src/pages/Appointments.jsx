@@ -9,9 +9,11 @@ import { buildFollowUps } from "../followups.js";
 import MonthCalendar from "../components/MonthCalendar.jsx";
 import InviteClient from "../components/InviteClient.jsx";
 
-const Appointments = ({setView}) => {
+const Appointments = ({setView,openAdd}) => {
   const {data,addRecord,deleteRecord,update}=useSliss();
-  const [showNew,setShowNew]=useState(false);const [form,setForm]=useState({clientId:"",date:today(),serviceType:"Sessione",notes:""});const [done,setDone]=useState(false);
+  const [showNew,setShowNew]=useState(!!openAdd);const [form,setForm]=useState({clientId:"",date:today(),serviceType:"Sessione",notes:""});const [done,setDone]=useState(false);
+  const [prevAdd,setPrevAdd]=useState(openAdd);
+  if(openAdd!==prevAdd){setPrevAdd(openAdd);if(openAdd)setShowNew(true);}
   const [showInvite,setShowInvite]=useState(false);const [inviteDate,setInviteDate]=useState(today());
   const [editApptId,setEditApptId]=useState(null);const [editApptDate,setEditApptDate]=useState("");
   const [editSlotId,setEditSlotId]=useState(null);const [editSlotDate,setEditSlotDate]=useState("");

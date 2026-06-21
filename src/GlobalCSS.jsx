@@ -24,7 +24,7 @@ const GlobalCSS = () => <style>{`
   }
   ::placeholder{color:${T.textMu};opacity:1}
   button:focus-visible,[role="button"]:focus-visible,a:focus-visible{outline:2px solid ${T.green};outline-offset:2px;border-radius:6px}
-  .app-main{flex:1;width:100%;max-width:680px;margin:0 auto;padding:24px 20px;padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+  .app-main{flex:1;width:100%;max-width:680px;margin:0 auto;padding:24px 20px;padding-bottom:calc(110px + env(safe-area-inset-bottom))}
   @media(min-width:769px){.app-main{max-width:1040px;margin:0 0 0 210px;padding:28px 36px}}
   @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
 `}</style>;

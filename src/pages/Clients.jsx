@@ -8,15 +8,19 @@ import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 import InviteClient from "../components/InviteClient.jsx";
 
-const Clients = ({initialClientId}) => {
+const Clients = ({initialClientId,openAdd}) => {
   const {data,addRecord,update,deleteRecord}=useSliss();
   // Apertura diretta della scheda quando si arriva dalla Home (?clientId): init al mount, niente effect
   const _initC=initialClientId?(data?.clients||[]).find(x=>x.id===initialClientId):null;
-  const [search,setSearch]=useState("");const [sf,setSf]=useState("all");const [sel,setSel]=useState(_initC||null);const [showNew,setShowNew]=useState(false);const [editMode,setEditMode]=useState(false);
+  const [search,setSearch]=useState("");const [sf,setSf]=useState("all");const [sel,setSel]=useState(_initC||null);const [showNew,setShowNew]=useState(!!openAdd);const [editMode,setEditMode]=useState(false);
   const [form,setForm]=useState({firstName:"",lastName:"",phone:"",email:"",channel:"WhatsApp",notes:""});const [editForm,setEditForm]=useState(_initC?{firstName:_initC.firstName||_initC.name.split(' ')[0]||"",lastName:_initC.lastName||_initC.name.split(' ').slice(1).join(' ')||"",name:_initC.name,phone:_initC.phone,email:_initC.email,channel:_initC.channel,notes:_initC.notes||"",status:_initC.status}:null);const [showInvite,setShowInvite]=useState(false);
   const bizType=data?.settings?.bizType||"servizi";const clientCluster=data?.settings?.cluster||"altro_s";const clusterSvcTypes=(CLUSTERS_SERVIZI[clientCluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const [newApptMode,setNewApptMode]=useState(false);const [newApptDone,setNewApptDone]=useState(false);const [newApptForm,setNewApptForm]=useState({date:today(),serviceType:"",notes:"",product:""});
   const handleNewAppt=()=>{if(!sel||!newApptForm.date)return;if(bizType==="servizi"){const apptId=uid();const svcType=newApptForm.serviceType||clusterSvcTypes[0]||"Sessione";const timings=data.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId:sel.id,date:newApptForm.date,serviceType:svcType,notes:newApptForm.notes,followUpTriggered:true,created:today()});buildFollowUps(apptId,sel.id,sel.firstName||sel.name.split(' ')[0],newApptForm.date,svcType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}else{const orderId=uid();const deliveryDate=addDays(newApptForm.date,7);addRecord("orders",{id:orderId,clientId:sel.id,product:newApptForm.product||"Ordine",orderDate:newApptForm.date,deliveryDate,notes:newApptForm.notes,status:"pending",created:today()});buildProductFollowUps(orderId,sel.id,sel.firstName||sel.name.split(' ')[0],newApptForm.date,deliveryDate,data?.templates).forEach(fu=>addRecord("followUps",fu));}setNewApptDone(true);setTimeout(()=>{setNewApptMode(false);setNewApptDone(false);setNewApptForm({date:today(),serviceType:"",notes:"",product:""});},1500);};
+  // Apre il form "nuovo" quando il segnale openAdd si attiva (anche se già su questa pagina),
+  // senza effect: pattern React "aggiusta lo stato quando una prop cambia" (in render).
+  const [prevAdd,setPrevAdd]=useState(openAdd);
+  if(openAdd!==prevAdd){setPrevAdd(openAdd);if(openAdd)setShowNew(true);}
   const clients=data?.clients||[];
   const tabs=[{id:"all",label:"Tutti",count:clients.length},{id:"active",label:"Attivi",count:clients.filter(c=>c.status==="active").length},{id:"vip",label:"VIP",count:clients.filter(c=>c.status==="vip").length},{id:"to_reactivate",label:"Da riatt.",count:clients.filter(c=>c.status==="to_reactivate").length}];
   const filtered=clients.filter(c=>{const ms=!search||c.name.toLowerCase().includes(search.toLowerCase())||c.email?.toLowerCase().includes(search.toLowerCase());return ms&&(sf==="all"||c.status===sf);});

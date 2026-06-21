@@ -93,6 +93,8 @@
 
 ## Idee UI/UX
 
+- [21/06/2026] **[PROSSIMI MIGLIORAMENTI] Logo in alto nell'app su mobile.** Sul desktop il logo c'è (sidebar); nella vista app (mobile) in cima manca — sopra/vicino al "Buongiorno, Erik" non c'è il marchio. Aggiungere un header mobile con il logo Sliss (piccolo, sopra il saluto della Home, o in una top-bar leggera). Da fare nel giro restyling, dopo barra flottante + icone.
+
 - [17/06/2026] **[BASE APPROVATA] Dark mode verde Sliss + navigazione Revolut-style.** Mockup v4 approvato da Erik (`preview-ui-revolut.html`): sfondo gradiente verde foresta (#145A38 → #081E15), card glassmorphism trasparenti, barra isola flottante con glow, icone SVG Lucide, transizioni slide tra viste. **Implementazione prevista a breve.** Il tema attuale (light, sfondo bianco, accent #16A34A) resta come **light mode** selezionabile da Impostazioni. Quindi: `data.settings.theme` = `"light"` (default attuale) | `"dark"` (nuovo). Il file preview resta nel repo come riferimento visivo.
 
 ## Idee tecniche

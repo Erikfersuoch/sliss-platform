@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Sliss — Layout app: barra alto (logo) + isola basso (+)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'DM Sans',sans-serif}
+
+  [data-theme="light"]{
+    --bg2:#FFFFFF; --bg3:#EEF4EF; --border:#E2E9E3; --text:#111813; --textM:#46514B; --textD:#5B665F;
+    --green:#16A34A; --greenS:rgba(22,163,74,.10); --amber:#B45309; --amberS:rgba(217,119,6,.11);
+    --shell:radial-gradient(ellipse 90% 32% at 28% -4%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);
+    --glow:rgba(22,163,74,.16);
+    --bar-bg:rgba(246,249,246,.82); --nav-bg:rgba(255,255,255,.80); --nav-hi:rgba(255,255,255,.7);
+    --nav-sh:0 10px 34px rgba(20,60,40,.16),0 2px 8px rgba(20,60,40,.08); --onGreen:#fff;
+  }
+  [data-theme="dark"]{
+    --bg2:#15291E; --bg3:#1E3829; --border:rgba(130,200,165,.16); --text:#F0F7F4; --textM:#C2D9CD; --textD:#8FB6A4;
+    --green:#4ADE80; --greenS:rgba(74,222,128,.16); --amber:#FBBF24; --amberS:rgba(251,191,36,.18);
+    --shell:radial-gradient(ellipse 82% 40% at 24% -4%,rgba(74,222,128,.16) 0,transparent 56%),linear-gradient(170deg,#145A38 0,#0F3D2A 24%,#0C2E20 50%,#0A2518 76%,#081E15 100%);
+    --glow:rgba(74,222,128,.42);
+    --bar-bg:rgba(10,37,24,.6); --nav-bg:rgba(8,30,21,.62); --nav-hi:rgba(255,255,255,.07);
+    --nav-sh:0 12px 44px rgba(0,0,0,.5); --onGreen:#06231A;
+  }
+
+  body{background:#171b1f;color:#eaf2ee;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+  .top{text-align:center;padding:24px 20px 4px}
+  .top h2{font-size:21px;font-weight:800;color:#fff;margin-bottom:6px}
+  .top p{font-size:13px;color:#9fb3c8;max-width:540px;margin:0 auto;line-height:1.55}
+  .seg{display:inline-flex;background:#0e1217;border:1px solid #2a3540;border-radius:30px;padding:4px;gap:3px;margin-top:14px}
+  .seg button{border:none;background:transparent;color:#9fb3c8;font-weight:700;font-size:13px;padding:9px 18px;border-radius:24px;cursor:pointer;font-family:inherit;transition:all .2s}
+  .seg button.on{background:#4ADE80;color:#06231a}
+
+  .stage{display:flex;justify-content:center;padding:26px 16px 10px}
+  .phone{width:372px;height:768px;border-radius:46px;overflow:hidden;position:relative;box-shadow:0 0 0 1.5px rgba(255,255,255,.08),0 30px 80px rgba(0,0,0,.55);background:#000}
+  .screen{height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--shell)}
+  .sb{height:44px;flex-shrink:0;position:relative;z-index:3}
+
+  /* ===== BARRA IN ALTO: logo a sx, "Altro" a dx ===== */
+  .topbar{position:relative;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:6px 18px 12px;
+    background:var(--bar-bg);backdrop-filter:blur(20px) saturate(1.3);-webkit-backdrop-filter:blur(20px) saturate(1.3);
+    border-bottom:1px solid var(--border)}
+  .logo{display:flex;align-items:center;gap:8px}
+  .logo .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--green),#0F766E);display:flex;align-items:center;justify-content:center;color:var(--onGreen);font-weight:800;font-size:15px}
+  .logo .wm{font-size:19px;font-weight:800;letter-spacing:-.5px;color:var(--text)}
+  .altro{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;color:var(--textD);padding:4px 6px}
+  .altro .lb{font-size:9px;font-weight:700}
+
+  .bd{flex:1;overflow-y:auto;padding:16px 18px 130px;position:relative;z-index:2;scrollbar-width:none}
+  .bd::-webkit-scrollbar{display:none}
+  .greet{font-size:13px;color:var(--green);font-weight:700}
+  .h1{font-size:25px;font-weight:800;letter-spacing:-.5px;color:var(--text);margin-top:2px}
+  .sub{font-size:12.5px;color:var(--textD);margin-top:3px;margin-bottom:18px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .scard{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:18px 14px;text-align:center;box-shadow:0 1px 2px rgba(16,32,20,.05),0 7px 22px var(--glow)}
+  .snum{font-size:34px;font-weight:800;line-height:1}
+  .snum.a{color:var(--amber)} .snum.g{color:var(--green)}
+  .slbl{font-size:11px;color:var(--textD);text-transform:uppercase;letter-spacing:.05em;margin-top:7px;font-weight:700}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:14px 15px;margin-bottom:9px;box-shadow:0 4px 18px rgba(0,0,0,.10)}
+  .rowc{display:flex;align-items:center;gap:12px}
+  .av{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .nm{font-size:14px;font-weight:600;color:var(--text)}
+  .msg{font-size:12px;color:var(--textM);margin-top:2px}
+  .ic{width:23px;height:23px;display:block}
+
+  /* ===== ISOLA IN BASSO: 4 destinazioni + tasto + centrale ===== */
+  .navwrap{position:absolute;left:0;right:0;bottom:0;z-index:30;display:flex;justify-content:center;pointer-events:none;padding-bottom:18px}
+  .nav{pointer-events:auto;display:flex;align-items:center;gap:2px;padding:7px 10px;background:var(--nav-bg);
+    backdrop-filter:blur(26px) saturate(1.5);-webkit-backdrop-filter:blur(26px) saturate(1.5);
+    border:1px solid var(--border);border-radius:28px;box-shadow:var(--nav-sh),inset 0 1px 0 var(--nav-hi)}
+  .it{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 13px;border-radius:18px;cursor:pointer;color:var(--textD);transition:all .25s cubic-bezier(.34,1.4,.64,1)}
+  .it .lb{font-size:9px;font-weight:700}
+  .it.on{background:var(--greenS);color:var(--green)}
+  .it.on .ic{filter:drop-shadow(0 0 6px var(--glow))}
+  .fab{width:56px;height:56px;border-radius:50%;background:var(--green);color:var(--onGreen);display:flex;align-items:center;justify-content:center;margin:-20px 8px 0;
+    box-shadow:0 10px 24px var(--glow),0 2px 6px rgba(0,0,0,.25);border:3px solid var(--bg2);cursor:pointer}
+  .fab .ic{width:27px;height:27px}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h2>Sliss — Layout app completo</h2>
+  <p>Barra in alto (logo a sinistra, "Altro" a destra) + isola flottante in basso con le 4 destinazioni e il tasto <b style="color:#fff">+</b> centrale. Prova chiaro/scuro.</p>
+  <div class="seg" id="tseg">
+    <button data-t="light">☀️ Chiaro</button>
+    <button class="on" data-t="dark">🌙 Scuro</button>
+  </div>
+</div>
+
+<div class="stage" data-theme="dark" id="stage">
+  <div class="phone"><div class="screen">
+    <div class="sb"></div>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+      <div class="logo"><div class="mark">S</div><div class="wm">Sliss</div></div>
+      <button class="altro">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+        <span class="lb">Altro</span>
+      </button>
+    </div>
+
+    <div class="bd">
+      <div class="greet">Buongiorno, Erik</div>
+      <div class="h1">La tua giornata</div>
+      <div class="sub">Domenica 21 giugno 2026</div>
+      <div class="grid">
+        <div class="scard"><div class="snum a">3</div><div class="slbl">Da inviare</div></div>
+        <div class="scard"><div class="snum g">12</div><div class="slbl">Clienti attivi</div></div>
+      </div>
+      <div class="card"><div class="rowc"><div class="av" style="background:var(--amberS)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg></div><div><div class="nm">Marco B.</div><div class="msg">Ciao Marco! Grazie per oggi...</div></div></div></div>
+      <div class="card"><div class="rowc"><div class="av" style="background:var(--greenS)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11.48 3.5a.56.56 0 0 1 1.04 0l2.13 4.32a.56.56 0 0 0 .42.3l4.77.7a.56.56 0 0 1 .31.95l-3.45 3.36a.56.56 0 0 0-.16.5l.82 4.74a.56.56 0 0 1-.82.59L12 17.7l-4.27 2.26a.56.56 0 0 1-.82-.59l.82-4.74a.56.56 0 0 0-.16-.5L3.69 10.77a.56.56 0 0 1 .31-.95l4.77-.7a.56.56 0 0 0 .42-.3z"/></svg></div><div><div class="nm">Giulia R.</div><div class="msg">Ciao Giulia! Se hai un minuto...</div></div></div></div>
+      <div class="card"><div class="rowc"><div class="av" style="background:var(--greenS)"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></div><div><div class="nm">Sara M.</div><div class="msg">Appuntamento domani, 15:30</div></div></div></div>
+    </div>
+
+    <!-- ISOLA BASSO: 4 dest + FAB -->
+    <div class="navwrap">
+      <div class="nav">
+        <div class="it on"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span class="lb">Home</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span class="lb">Follow-Up</span></div>
+        <div class="fab"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span class="lb">Agenda</span></div>
+        <div class="it"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg><span class="lb">Clienti</span></div>
+      </div>
+    </div>
+
+  </div></div>
+</div>
+
+<script>
+  function setTheme(t){
+    document.getElementById('stage').setAttribute('data-theme',t);
+    document.querySelectorAll('#tseg button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-t')===t)});
+  }
+  document.querySelectorAll('#tseg button').forEach(function(b){b.onclick=function(){setTheme(b.getAttribute('data-t'))}});
+</script>
+
+</body>
+</html>
