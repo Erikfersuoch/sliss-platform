@@ -26,3 +26,13 @@ if [ "$BEHIND" -gt "0" ] 2>/dev/null; then
 fi
 echo "└─────────────────────────────────────────────────────┘"
 echo ""
+
+# ▶ Riprendi da qui: punto di ripresa scritto all'ultima chiusura ("chiudi per oggi").
+if [ -f docs/RIPRENDI.md ]; then
+  echo "════════════ ▶ RIPRENDI DA QUI ════════════"
+  # mostra dal titolo "Prossimo passo" in giù (la parte azionabile)
+  awk '/^## ▶ Prossimo passo/{p=1} p' docs/RIPRENDI.md
+  echo "  (contesto completo: docs/RIPRENDI.md + docs/stato-progetto.md)"
+  echo "═══════════════════════════════════════════"
+  echo ""
+fi
