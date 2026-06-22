@@ -44,6 +44,7 @@ Il **motore** (comune, codice) renderizza i 4 mattoni; lo **script** (cucito per
 - *Percorso eBay:* **rimbalzo WhatsApp** — bottone "Sì, avvisami" apre WhatsApp con messaggio già scritto (contesto incluso) → Luca riceve numero + contesto in modo nativo. Zero form, un tap. L'opt-in "sì" **è** il consenso (niente checkbox).
 - *Percorso su misura:* **mini-card sulla pagina** (cosa serve + foto opzionale), contesto pre-riempito, conferma calda ("Fatto 😌 ci penso io").
 - Principi trasversali: **mai bloccare l'uscita** (eBay sempre raggiungibile, saltare è gratis); **frase-regalo, non richiesta**; **"già sa, non ti fa ripetere"** (le risposte della chat viaggiano nel contatto). Quando si costruirà, passaggio obbligato da `/impeccable`.
+- ⚠️ **Nessuna automazione oltre al benvenuto nativo.** L'unico messaggio automatico è il **benvenuto di WhatsApp Business** (al primo contatto, gratis, nativo — non nostro). I "ricevuto / ti rispondo a breve" **li scrive il professionista a mano**: non vanno mai mostrati come automatici. Anzi, l'assenza di ack automatico è il **buco che il promemoria di Sliss copre** (se il professionista tarda, Sliss glielo ricorda) — mostrarlo come automatico indebolirebbe il senso del modulo.
 
 ## Tassonomia di instradamento (il ramo "prodotto pronto")
 Luca vende su **due assi di compatibilità diversi** — la domanda strategica cambia in base a cosa cerca il cliente:
