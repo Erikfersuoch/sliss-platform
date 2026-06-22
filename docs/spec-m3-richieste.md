@@ -24,6 +24,27 @@ Una **chat guidata che ramifica**: poche domande, ogni risposta sblocca il passo
    - **C) "Altro / un'informazione"** → risposte rapide alle domande frequenti; se non basta → confluisce in B (richiesta tracciata).
 3. **Lato Luca:** lista **"Richieste"** con stati = **le stesse etichette che Luca già usa su WhatsApp** (ponte naturale, niente doppia lista). Stato base: nuova → presa in carico → chiusa.
 
+## Struttura del modulo (ragionata 22/06)
+
+**Grammatica — i mattoni.** Un flusso = 1 tipo di snodo + 3 finali:
+- 🔹 **Blocco-domanda:** domanda con 2-4 risposte toccabili; ogni risposta → blocco successivo o finale.
+- 🔚 **Finale-instrada:** messaggio + bottone-link (eBay/catalogo). Cliente esce, zero lavoro Luca.
+- 🔚 **Finale-cattura:** mini-card → salva una Richiesta + promemoria a Luca + conferma al cliente.
+- 🔚 **Finale-risposta:** risposta a una FAQ, con eventuale *"ti è bastato? no → cattura"*.
+
+Il **motore** (comune, codice) renderizza i 4 mattoni; lo **script** (cucito per categoria, dati) li riempie e collega. Principio: **poco profondo — 1-3 tap a un finale.** Alberi profondi = abbandono (rif. YOUVERSE = 1 tap).
+
+**Entità — Richiesta = lead separato "promovibile" (Opzione A).** Lead leggero in lista propria, stati = etichette WhatsApp di Luca (nuova → presa in carico → chiusa). NON sporca la lista Clienti finché non si concretizza.
+
+**Sinergia coi moduli** *(bussola di Erik: ogni modulo funziona da solo MA si amplifica in sinergia con gli altri).* Il follow-up di M1 è appeso all'**Ordine**, non al cliente → quindi: **Richiesta → promozione → Ordine → follow-up automatici.**
+- *Percorso su misura* (Sliss controlla la transazione): l'accettazione di Luca **crea l'Ordine** → i follow-up partono. ~Zero-tocco.
+- *Percorso eBay* (Sliss è cieco sulla vendita, niente checkout in casa): **un tap di Luca** ("andata a buon fine → crea ordine"). **Accettato da Erik come prezzo della sinergia.** Lo zero-tocco vero su eBay = integrazione eBay = **dipendenza pesante, NON v1.**
+
+**Cattura contatto = Ibrido (il più "liscio") — scelto 22/06.**
+- *Percorso eBay:* **rimbalzo WhatsApp** — bottone "Sì, avvisami" apre WhatsApp con messaggio già scritto (contesto incluso) → Luca riceve numero + contesto in modo nativo. Zero form, un tap. L'opt-in "sì" **è** il consenso (niente checkbox).
+- *Percorso su misura:* **mini-card sulla pagina** (cosa serve + foto opzionale), contesto pre-riempito, conferma calda ("Fatto 😌 ci penso io").
+- Principi trasversali: **mai bloccare l'uscita** (eBay sempre raggiungibile, saltare è gratis); **frase-regalo, non richiesta**; **"già sa, non ti fa ripetere"** (le risposte della chat viaggiano nel contatto). Quando si costruirà, passaggio obbligato da `/impeccable`.
+
 ## Tassonomia di instradamento (il ramo "prodotto pronto")
 Luca vende su **due assi di compatibilità diversi** — la domanda strategica cambia in base a cosa cerca il cliente:
 - **Famiglia A — cover per cronometri/strumenti** (Starlane ST500/Stealth, Alfano, ecc.): la domanda chiave è *quale strumento hai?*, non quale moto.
