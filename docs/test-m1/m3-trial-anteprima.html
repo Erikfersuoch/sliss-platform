@@ -121,7 +121,7 @@
     <span class="badge">Modulo Richieste · M3 · trial simulato</span>
     <h1>Come funzionerebbe, dal vivo</h1>
     <p>Un cliente scrive su WhatsApp. Da lì, in pochi tap, arriva alla soluzione <b>da solo</b> — e Luca riceve solo ciò che serve davvero, già pronto. Due scenari finti, passo per passo.</p>
-    <div class="note">⚠️ <b>È una simulazione, non l'app vera.</b> Serve per ragionare sul flusso e raccoglierne un parere prima di costruire. Niente è ancora stato sviluppato — il modulo parte solo dopo la validazione di M1.</div>
+    <div class="note">⚠️ <b>È una simulazione, non l'app vera.</b> Serve per ragionare sul flusso e raccoglierne un parere prima di costruire. Niente è ancora stato sviluppato — il modulo parte solo dopo la validazione di M1.<br>🔧 Le selezioni qui sono <b>cucite su Kayek3D per la prova</b>. Nella versione vera ogni professionista le configura da sé (o importando il suo inventario, con modifica successiva).</div>
   </div>
 
   <!-- SCENARIO 1 -->
@@ -227,30 +227,13 @@
 
       <!-- 2.2 whatsapp handoff (single photo moment) -->
       <div class="scene">
-        <div class="cap"><span class="who cli">Lato cliente</span><b>L'invio apre WhatsApp</b> col messaggio già scritto (nome + richiesta). <b>Qui — e solo qui — allega la foto.</b> Il numero lo dà WhatsApp. (Doppia richiesta foto risolta.)</div>
+        <div class="cap"><span class="who cli">Lato cliente</span><b>L'invio apre WhatsApp</b> col messaggio già scritto (nome + richiesta). <b>Qui allega la foto</b> e riceve la conferma. Il cliente <b>finisce qui</b>: nessun ritorno su Sliss (sarebbe un passo inutile).</div>
         <div class="phone"><div class="screen wa">
           <div class="wahead"><div class="b">K</div><div>Kayek3D<small>online</small></div></div>
           <div class="bd">
             <div class="wb out">Ciao Kayek3D, sono <b>Marco Rossi</b>! 🏁 Mi servirebbe: supporto stampato 3D per GoPro sul cupolino della mia KTM<span class="t">19:02</span></div>
             <div class="wb out" style="padding:5px"><div style="width:158px;height:108px;border-radius:7px;background:linear-gradient(135deg,#cdd8d0,#9fb0a4);display:flex;align-items:center;justify-content:center;font-size:30px">🏍️</div><span class="t">19:02 ✓✓</span></div>
-          </div>
-        </div></div>
-      </div>
-
-      <div class="arrow">→</div>
-
-      <!-- 2.3 Fatto (returning state) -->
-      <div class="scene">
-        <div class="cap"><span class="who cli">Lato cliente</span><b>Tornando su Sliss, la conferma.</b> La richiesta è già <b>tracciata</b>: se Luca tarda, glielo ricorda Sliss. (Questa schermata ti piaceva — l'ho tenuta.)</div>
-        <div class="phone"><div class="screen sliss">
-          <div class="sb">19:03</div>
-          <div class="bd">
-            <div class="sl-head"><div class="sl-logo">S</div><div class="nm">Sliss<small>per Kayek3D</small></div></div>
-            <div class="conf">
-              <div class="em">😌</div>
-              <div class="c-t">Fatto! Ci pensiamo noi.</div>
-              <div class="c-s">La tua richiesta è partita su WhatsApp.<br>Ti scriviamo appena possibile — e se serve,<br>te lo ricordiamo noi. Non finisci nel mucchio.</div>
-            </div>
+            <div class="wb in">Ricevuto Marco, grazie! 🏁 Ti rispondo a breve con un preventivo.<span class="t">19:02</span></div>
           </div>
         </div></div>
       </div>

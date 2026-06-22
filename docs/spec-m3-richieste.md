@@ -119,6 +119,14 @@ Così ogni categoria *sembra* cucita (perché le domande SONO le sue) senza risc
 
 ⚠️ La mezzeria giusta **non si indovina a tavolino** (lì sta il rischio astrazione-inutile): si **scopre dal 2° caso reale**. Quindi M3 si fa **cucito-concreto su Luca prima**, e il motore comune si estrae quando arriva un tester servizi vero. Costruisci concreto → generalizza dopo l'evidenza, non prima.
 
+## Authoring delle selezioni — chi costruisce lo "script" (a fasi)
+Le selezioni/albero sono **dati**, non codice (vedi struttura sopra). Chi li compila evolve:
+- **v1 / test (ora):** selezioni **cucite su Luca** a mano da noi. Va bene per provare il flusso.
+- **Generalizzazione (productization, post-gate):** ogni professionista **configura le proprie selezioni da sé** — editor self-service. È la messa a terra del principio "motore comune + script cucito": il motore è nostro, lo script lo fa il professionista.
+- **Avanzato:** chi ha un **inventario** lo **importa**, Sliss lo **elabora** (categorie/attributi → struttura) e lo lascia **modificabile dopo il caricamento**. Possibile assist AI per la categorizzazione = Haiku, costo trascurabile in test (cfr. `docs/decisioni.md` 21/06).
+
+⚠️ Disciplina: **non costruire ora** editor/import. Emergono quando si esce dal cerchio tester (primo "freddo") post-gate. Erik stesso li colloca "dopo aver provato su Luca" — concreto prima, autonomia poi.
+
 ## ⏳ Da validare con Luca prima di costruire (non sollecitare ora — attesa attiva)
 Info già richieste e in attesa (vedi log): 1) screenshot **etichette** WA; 2) **3-4 messaggi reali** (facile / personalizzato / su misura) per tarare le voci del menu; 3) **volume settimanale** per dimensionare il promemoria.
 Due conferme aperte a Erik: i) ok alla **v1 senza catalogo** (routing + cattura), col "5 prodotti" come step 2? ii) ok al **link** oggi, accettando che l'intercettazione automatica sia Fase 3?
