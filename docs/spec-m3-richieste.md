@@ -51,6 +51,19 @@ Luca vende su **due assi di compatibilità diversi** — la domanda strategica c
 - **Famiglia B — ricambi/accessori moto** (kit manutenzione CRF250, accessori KTM, ecc.): la domanda chiave è *che moto hai?*.
 Quindi il primo bivio del ramo prodotti è *"cosa cerchi: cover per cronometro / ricambio-accessorio moto / altro"*, poi la domanda di compatibilità giusta per la famiglia. (Conferma dallo storico ordini reale di Luca.)
 
+### Menu di primo livello + catalogo reale (da eBay `kayek_3d`, 22/06)
+Prima selezione (categorie reali, non inventate): **Cover cronometro/GPS · Cover pulsanti · Recupero fluidi · Protezioni & tamponi · Lavaggio moto · Su misura/altro**. Nome e cognome del cliente → **due campi separati** (igiene dato: niente valori invertiti nei follow-up).
+
+Catalogo (semina della mappa di instradamento):
+- **Cover cronometro/GPS** (~29,90 €): Aim Solo 1/2, Aim Mychron 5/6 *(personalizzabili)*, Starlane Stealth / Stealth 5 / Athon / Corsaro, PzRacing Start / ST500, Alfano 7.
+- **Cover pulsanti** (25 €): Honda/Kawasaki, CRF250.
+- **Recupero fluidi** (15-25 €): imbuto filettato Kawasaki/CRF, apri tappo radiatore KTM.
+- **Protezioni & tamponi/slider** (6-39 €): tamponi universali/forcellone, kit tamponi supermoto, slider/puntale pedana, cover dischi freno.
+- **Lavaggio**: tappo lavaggio airbox CRF.
+- **Supporti**: ForkTag localizzatore, supporto tachimetro Honda, copri viti GoldWing.
+
+**Personalizzazione = supplemento configurabile dal professionista.** Alcune cover sono "personalizzabili" (es. Mychron 5/6, PzRacing ST500). Luca imposta una volta un **supplemento** (es. +5 €), mostrato al cliente **prima** (Base + personalizzazione = Totale). La cover personalizzata **non va su eBay** → diventa un **ordine catturato** (base + supplemento), stesso formato del su-misura. (Visualizzato nel trial, sezione 3.)
+
 ## Come si costruisce la mappa di instradamento (sorgente dati — niente carico su Luca ora)
 Tre livelli di "intelligenza" del ramo prodotti:
 - **Livello 0:** nessuna lista, instrada al catalogo eBay e basta. Zero dati, zero manutenzione.
