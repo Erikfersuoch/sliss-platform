@@ -57,7 +57,7 @@ const Home = ({setView}) => {
               <h2 style={{fontSize:"17px",fontWeight:800,letterSpacing:"-.02em",marginBottom:"6px"}}>Inizia da qui</h2>
               <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.55,maxWidth:"280px",margin:"0 auto 16px"}}>Aggiungi il tuo primo cliente: Sliss prepara subito i messaggi da inviargli, già scritti.</p>
               <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center"}}>{"+ Aggiungi il tuo primo cliente"}</Btn>
-              <button onClick={()=>setShowInvite(true)} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:T.textD,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit"}}>oppure <span style={{color:T.blue,fontWeight:600}}>invitalo con un link</span></button>
+              {bizType!=="prodotti"&&<button onClick={()=>setShowInvite(true)} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:T.textD,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit"}}>oppure <span style={{color:T.blue,fontWeight:600}}>invitalo con un link</span></button>}
             </div>
             <Card style={{marginBottom:"14px"}}>
               <h2 style={{fontSize:"14px",fontWeight:600,color:T.textMu,marginBottom:"6px"}}>Qui vedrai i tuoi clienti</h2>
@@ -66,7 +66,7 @@ const Home = ({setView}) => {
           </>
         : <>
             <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
-            <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>
+            {bizType!=="prodotti"&&<Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>}
             {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"5px",fontSize:"13px",color:T.textD,textDecoration:"none"}}><Icon name="star" size={14} />Vedi recensioni</a></div>}
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
               {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(

@@ -128,8 +128,9 @@ export default function SlissPlatform() {
         <FloatingNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} onAdd={()=>setAddSheet(true)} />
         <Modal open={addSheet} onClose={()=>setAddSheet(false)} title="Cosa vuoi aggiungere?" w="380px">
           <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-            <Btn onClick={()=>{setAddSheet(false);setShowInvite(true);}} style={{width:"100%",justifyContent:"center"}}><Icon name="link" size={16} />Invita cliente</Btn>
-            <Btn v="secondary" onClick={()=>{setAddSheet(false);setAddOn("clients");go("clients");}} style={{width:"100%",justifyContent:"center"}}>Nuovo cliente</Btn>
+            {/* "Invita cliente" genera un link onboarding legato a un appuntamento → ha senso solo nel flusso servizi. Nascosto per i prodotti (il cliente arriva da WhatsApp/eBay/Instagram, non si invita). */}
+            {data?.settings?.bizType!=="prodotti" && <Btn onClick={()=>{setAddSheet(false);setShowInvite(true);}} style={{width:"100%",justifyContent:"center"}}><Icon name="link" size={16} />Invita cliente</Btn>}
+            <Btn v={data?.settings?.bizType==="prodotti"?"primary":"secondary"} onClick={()=>{setAddSheet(false);setAddOn("clients");go("clients");}} style={{width:"100%",justifyContent:"center"}}>Nuovo cliente</Btn>
             <Btn v="secondary" onClick={()=>{const v=(data?.settings?.bizType==="prodotti")?"orders":"appointments";setAddSheet(false);setAddOn(v);go(v);}} style={{width:"100%",justifyContent:"center"}}>{(data?.settings?.bizType==="prodotti")?"Nuovo ordine":"Nuovo appuntamento"}</Btn>
           </div>
         </Modal>
