@@ -8,6 +8,22 @@ export default async function handler(req, res) {
     const { tester, stats } = req.body || {};
     if (!tester) return res.status(400).json({ error: 'missing tester' });
     const date = new Date().toISOString().slice(0, 10);
+
+    // Guard anti-cancellazione (stesso principio di api/backup.js): uno snapshot
+    // VUOTO non sovrascrive mai uno PIENO, e non aggiunge un giorno d'uso falso.
+    // Scenario reale (20/06): aperto per sbaglio il link di un tester da un altro
+    // device → contesto vuoto che azzerava giorni + conteggi (e falsava il report
+    // del gate). Il guard era solo in backup.js; qui mancava. Il dato si ripara
+    // da solo alla prossima apertura del tester vero (dati pieni → passano).
+    const isEmpty = (s) => !((s?.clients) || (s?.followUpsSent) || (s?.followUpsPending));
+    if (isEmpty(stats)) {
+      const existing = await kv.get(`usage:${tester}`);
+      if (existing && !isEmpty(existing)) {
+        console.log(`[track] SKIP overwrite-with-empty per ${tester} (snapshot pieno protetto)`);
+        return res.status(200).json({ ok: true, skipped: 'empty-would-overwrite-nonempty' });
+      }
+    }
+
     await kv.sadd(`usedays:${tester}`, date);
     await kv.set(`usage:${tester}`, { lastSeen: date, ...(stats || {}) });
     return res.status(200).json({ ok: true, date });
