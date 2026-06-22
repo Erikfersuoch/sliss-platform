@@ -126,6 +126,24 @@
 
 ---
 
+#### Check — 22/06/2026 (aggiornamento Erik + verifica dati live)
+
+**Novità:** Moira ha **installato Sliss su desktop** e le **notifiche funzionano**. Aperta oggi 22/06.
+
+**Numeri live (da tracking + backup):** 11 giorni attivi · 2 clienti (ulrike, marilena — entrambe inserite il 18/06) · 2 follow-up inviati · 6 pending. Backup sano, aggiornato 22/06 07:50. Templates personalizzati per tattoo (testo sulla cicatrizzazione, pellicola, ripasso gratuito 30gg).
+
+**Nota:** il passaggio telefono→desktop ha creato un **secondo localStorage**. I 2 clienti del 18/06 sono diversi dal "1 cliente" del 16/06 (inserito da telefono). Non è perdita dati ma split: il server vede solo l'ultimo device che pinga. In futuro la sync (Fase 3/Supabase) risolve; per ora è solo un'imprecisione nelle metriche server, non un problema per Moira.
+
+**Lettura:** l'adozione spontanea su desktop conferma interesse reale (già segnalato il 16/06). Moira continua a usare Sliss e a inserire clienti veri. Il collo di bottiglia resta l'inserimento manuale, ma il ritmo è migliorato (da 1→2 clienti in pochi giorni quando il lavoro c'è).
+
+**Categoria:**
+- [ ] Bloccante
+- [ ] Frizione
+- [ ] Richiesta feature
+- [x] Insight → adozione desktop + notifiche = un passo in più nell'integrazione quotidiana; split localStorage = nota tecnica per Fase 3
+
+---
+
 ## Tester uno — Luca (Kayek3D, stampa 3D)
 
 **Kickoff:** in uso reale (kickoff formale da concordare)
@@ -199,5 +217,31 @@
 - [ ] Frizione
 - [ ] Richiesta feature
 - [x] Insight → **segnale "valore" positivo** (recensioni generate da M1 con esito reale); gate lato Luca quasi completo
+
+---
+
+#### Check — 22/06/2026 (verifica dati live + aggiornamento Erik)
+
+**Novità:**
+- ✅ **Moira ha installato Sliss su desktop (PC)** — notifiche funzionanti anche da lì. Aperta **oggi 22/06** (confermato da tracking).
+- ✅ **Notifiche broadcast arrivano a entrambi i tester** — il bug 5-cron (decisione 11/06) è superato. Report giornaliero include correttamente Luca.
+
+**Numeri live al 22/06 (da `api/track` + `api/backup`):**
+- **Moira:** 11 giorni attivi (ultimo: 22/06) · 2 clienti (ulrike, marilena — inseriti 18/06) · 2 follow-up inviati · 6 pending. Backup sano e aggiornato (22/06 07:50). ⚠️ I 2 clienti sono diversi dal precedente "1 cliente" del 16/06: probabile split telefono/desktop (due localStorage separate). Non è perdita, ma i numeri server dipendono da quale device pinga per ultimo.
+- **Luca:** 10 giorni attivi (ultimo: 20/06) · tracking mostra **0 clienti, 0 inviati** — MA è un **falso zero** causato da incidente del 20/06 (vedi sotto). Dati reali **ancora sul suo telefono** (verificato da Erik).
+
+**Incidente dati Luca (20/06):** Erik ha aperto il link di ingresso di Luca dal suo PC pensando di usare quello senza codice tester. Questo ha creato un contesto vuoto "Nathan/officine" sotto il codice `luca`, sovrascrivendo sia `usage:luca` (tracking) sia `backup:luca`. Il guard anti-cancellazione in `backup.js` è stato aggiunto **dopo** l'incidente. `track.js` non ha ancora lo stesso guard → **bug aperto**. I dati server si riparano da soli alla prossima apertura di Luca dal suo telefono (il ping sovrascriverà i dati "Nathan" con quelli reali).
+
+**Lettura (gate):** i numeri server di Luca **non sono affidabili al 22/06** per via dell'incidente. Il dato reale del 21/06 (2 riscontri recensione + 13 usi) resta valido perché osservato prima della sovrascrittura e confermato da Erik a voce. Per il prossimo check, aspettare che Luca riapra → tracking si riallinea.
+
+**Azioni:**
+1. ~~Aggiungere guard anti-overwrite-empty anche a `track.js`~~ → fix DEV
+2. Prossima apertura di Luca dal telefono ripristina i dati server
+
+**Categoria:**
+- [ ] Bloccante
+- [x] Frizione → dati server di Luca contaminati (auto-risolvibile, ma track.js va protetto)
+- [ ] Richiesta feature
+- [x] Insight → il link tester aperto dal device sbagliato è un vettore di corruzione dati; serve protezione su tutti gli endpoint, non solo backup
 
 ---
