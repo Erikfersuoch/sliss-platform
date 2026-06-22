@@ -65,6 +65,13 @@ Catalogo (semina della mappa di instradamento):
 
 **Personalizzazione = supplemento configurabile dal professionista.** Alcune cover sono "personalizzabili" (es. Mychron 5/6, PzRacing ST500). Luca imposta una volta un **supplemento** (es. +5 €), mostrato al cliente **prima** (Base + personalizzazione = Totale). La cover personalizzata **non va su eBay** → diventa un **ordine catturato** (base + supplemento), stesso formato del su-misura. (Visualizzato nel trial, sezione 3.)
 
+### Destinazione del prodotto standard: eBay o diretto — è una SCELTA (deciso 22/06)
+Individuato il prodotto, il cliente sceglie tra **due strade** (default configurabile da Luca — authoring):
+- **Compra subito su eBay** — deep-link alla **scheda esatta** (non al negozio: serve una mappa prodotto→link). Per i clienti **freddi** la protezione acquisti eBay converte la fiducia; zero lavoro, eBay dà a Luca acquirente+pagamento. Contro: commissioni, cliente non "tuo".
+- **Scrivi a Kayek3D (diretto)** — rimbalzo WhatsApp "vorrei il prodotto X". Per i **caldi/di ritorno**: niente commissioni, relazione tua, paghi come vuoi (es. PayPal a mano). **Compatibile con "Sliss non fa checkout"** (paga il professionista, Sliss instrada). Contro: lavoro manuale, meno fiducia per gli sconosciuti.
+
+Affina **Opzione A**: la vendita resta fuori da Sliss, ma la "porta" non è solo eBay — può essere il diretto. Non è "o/o": è una **scelta** col default impostato dal professionista. (Origine: dubbio di Erik 22/06 — "perché aprire eBay se ho già detto cosa voglio e posso chiudere diretto?".)
+
 ## Come si costruisce la mappa di instradamento (sorgente dati — niente carico su Luca ora)
 Tre livelli di "intelligenza" del ramo prodotti:
 - **Livello 0:** nessuna lista, instrada al catalogo eBay e basta. Zero dati, zero manutenzione.

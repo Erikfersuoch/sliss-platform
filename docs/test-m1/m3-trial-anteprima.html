@@ -127,7 +127,7 @@
   <!-- SCENARIO 1 -->
   <div class="sec">
     <div class="sec-h"><div class="n">1</div><h2>Prodotto pronto → si chiude su eBay, contatto al volo</h2></div>
-    <p class="sec-sub">Cliente che cerca una <b>cover per cronometro già pronta</b>. Sliss lo instrada a eBay e gli offre, senza moduli, di farsi avvisare — <b>rimbalzando dentro WhatsApp</b>.</p>
+    <p class="sec-sub">Cliente che cerca una <b>cover già pronta</b>. La chat individua il prodotto, poi gli dà la <b>scelta</b>: comprarlo subito su eBay (scheda esatta) o gestirlo <b>diretto</b> con Kayek3D. Luca configura il default.</p>
 
     <div class="flow">
       <!-- 1.1 WhatsApp welcome -->
@@ -164,21 +164,16 @@
 
       <!-- 1.3 finale instrada + gift -->
       <div class="scene">
-        <div class="cap"><span class="who cli">Lato cliente</span><b>Finale riordinato:</b> opt-in <b>prima</b>, link eBay <b>dopo</b> (in entrambi i casi). Il <b>nome+cognome lo scrive qui</b> (WhatsApp non lo conosce); il <b>numero</b> arriva dal rimbalzo.</div>
+        <div class="cap"><span class="who cli">Lato cliente</span><b>Il bivio:</b> compra subito su eBay (scheda esatta, fiducia) <b>oppure</b> diretto con Kayek3D (relazione, niente commissioni, paghi come vuoi). Luca configura il default; ogni strada cattura il contatto a modo suo.</div>
         <div class="phone"><div class="screen sliss">
           <div class="sb">18:55</div>
           <div class="bd">
             <div class="sl-head"><div class="sl-logo">S</div><div class="nm">Sliss<small>per Kayek3D</small></div></div>
-            <div class="sbub">Trovata 🏁 È la cover per <b>Starlane Stealth</b>. Una cosa al volo prima:</div>
-            <div class="gift">
-              <div class="g-t">🔔 Vuoi che Kayek3D ti avvisi appena è pronta da spedire?</div>
-              <div class="field" style="background:#fff;margin:10px 0 6px">Nome — <b style="color:var(--text)">Marco</b></div>
-              <div class="field" style="background:#fff;margin:0 0 6px">Cognome — <b style="color:var(--text)">Rossi</b></div>
-              <a class="g-cta">💬 Sì, avvisami su WhatsApp</a>
-              <span class="skip">No grazie, dammi solo il link →</span>
-            </div>
-            <div class="sbub" style="font-size:11px;color:var(--textD);background:transparent;border:none;box-shadow:none;padding:2px 0;margin:6px 0 2px">↓ poi, in ogni caso, compare il link:</div>
-            <a class="lnk">🛒 Vedi su eBay<small>spedizione e pagamento sicuri</small></a>
+            <div class="sbub">Trovata 🏁 È la <b>Cover Starlane Stealth 5</b> (29,90 €). Come preferisci?</div>
+            <a class="lnk" style="margin-bottom:6px">🛒 Compra subito su eBay<small>scheda esatta · protezione acquisti</small></a>
+            <div style="text-align:center;font-size:11px;color:var(--textD);font-weight:700;margin:2px 0 6px">oppure</div>
+            <a class="lnk" style="border-color:rgba(22,163,74,.55)">💬 Scrivi a Kayek3D<small>lo gestiamo diretto, anche fuori eBay</small></a>
+            <div class="sbub" style="font-size:11px;color:var(--textD);background:transparent;border:none;box-shadow:none;padding:8px 0 0;margin:4px 0 0">🔧 Luca decide quale mettere per primo.</div>
           </div>
         </div></div>
       </div>
@@ -187,12 +182,17 @@
 
       <!-- 1.4 Luca side -->
       <div class="scene">
-        <div class="cap"><span class="who luca">Lato Luca</span>Il "Sì" <b>riapre WhatsApp col messaggio già scritto</b>. Il <b>numero</b> lo dà WhatsApp; il <b>nome+cognome</b> è quello scritto prima. Luca ha tutto senza digitare.</div>
-        <div class="phone"><div class="screen wa">
-          <div class="wahead"><div class="b">M</div><div>Marco Rossi<small>+39 333 ••• ••••</small></div></div>
+        <div class="cap"><span class="who cli">Lato cliente</span><b>Se sceglie eBay:</b> atterra sulla <b>scheda esatta</b> del prodotto, non sul negozio (il difetto che avevi notato). eBay gestisce pagamento e dati acquirente; poi Luca entra l'ordine in Sliss per i follow-up. <i>La strada "diretto" cattura come nello scenario 2.</i></div>
+        <div class="phone"><div class="screen" style="background:#fff">
+          <div class="sb" style="color:#555">eBay</div>
           <div class="bd">
-            <div class="wb in">Ciao Kayek3D, sono <b>Marco Rossi</b>! Mi interessa la <b>cover Starlane Stealth</b> — avvisatemi quando è pronta 🙌<span class="t">18:56</span></div>
-            <div class="wb out">Certo Marco, te la metto da parte e ti aggiorno! 🏁<span class="t">18:58 ✓✓</span></div>
+            <div style="width:100%;height:178px;border-radius:12px;background:linear-gradient(135deg,#e8edf0,#cdd6dc);display:flex;align-items:center;justify-content:center;font-size:46px">⏱️</div>
+            <div style="font-size:15px;font-weight:700;color:#111;margin-top:14px;line-height:1.35">Cover Crono Gps Starlane Stealth 5</div>
+            <div style="font-size:22px;font-weight:800;color:#111;margin-top:8px">EUR 29,90</div>
+            <div style="font-size:11.5px;color:#1a7e3c;margin-top:5px;font-weight:700">kayek_3d · 100% positivi (157)</div>
+            <div style="font-size:11.5px;color:#666;margin-top:2px">+ EUR 7,00 spedizione · Nuovo</div>
+            <a style="display:block;text-align:center;background:#3665f3;color:#fff;font-weight:700;font-size:14px;padding:13px;border-radius:24px;margin-top:18px;text-decoration:none">Compra subito</a>
+            <a style="display:block;text-align:center;background:#fff;color:#3665f3;border:1.5px solid #3665f3;font-weight:700;font-size:14px;padding:12px;border-radius:24px;margin-top:9px;text-decoration:none">Aggiungi al carrello</a>
           </div>
         </div></div>
       </div>
