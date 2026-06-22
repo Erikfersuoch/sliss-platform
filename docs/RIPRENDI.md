@@ -20,4 +20,6 @@
 ## ▶ Prossimo passo (quando riprendi)
 **Attesa attiva** (ruolo TEST, non codice): lasciar usare Luca e Moira **senza sollecitare**. Erik ha deciso (22/06) di non fare pressing — coi tester le info si raccolgono su occasione naturale, non a calendario. Riprendere il giro TEST (conferma "valore" + dato **copertura** "dei clienti avuti, quanti gestiti con Sliss?") **solo su aggancio naturale** (è il tester a scrivere, arriva un'altra recensione) o se cambia qualcosa lato tester. Messaggio già pronto in archivio — gancio = i 2 riscontri recensione positivi. È la mossa a €0 che avvicina di più la beta-a-pagamento, ma va giocata al momento giusto, non forzata.
 
+**In frigo (anticipazione spec-first, NON da costruire ora):** spec M3 "Richieste" pronta in `docs/spec-m3-richieste.md` — chat guidata stile YOUVERSE su pagina Sliss (no API WhatsApp, €0), tassonomia cronometri+moto, motore comune + script cucito per categoria, scalabilità servizi raffinata. Si costruisce solo a GATE M1. Unico input da raccogliere a tempo debito: screenshot sezioni shop eBay di Luca.
+
 Dettaglio completo: `docs/stato-progetto.md`.

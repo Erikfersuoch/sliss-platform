@@ -1,5 +1,6 @@
 # Modulo "Richieste" — definizione in corso (per Luca / prodotti)
 
+> 📄 **Spec pronta:** `docs/spec-m3-richieste.md` (chat guidata che instrada, stile YOUVERSE). Questo file = cronologia/dolore validato; la spec = il "cosa" da costruire a GO.
 > Stato: **in DEFINIZIONE — in attesa info da Luca** (non ancora iniziato).
 > Aperto il 06/06/2026. Nato dal feedback di Luca (vedi `docs/test-m1/feedback-log.md`).
 > Aggiornato l'08/06/2026.
