@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sliss — Modulo Richieste · trial simulato (M3)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;font-family:'DM Sans',sans-serif}
+  :root{
+    --bg2:#FFFFFF; --bg3:#EEF4EF; --border:#E2E9E3; --text:#111813; --textM:#46514B; --textD:#5B665F;
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10); --amber:#B45309; --amberS:rgba(217,119,6,.11);
+    --shell:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);
+    --glow:rgba(22,163,74,.16);
+    --wa-bg:#E7DED4; --wa-in:#FFFFFF; --wa-out:#DCF8C6;
+  }
+  body{background:#171b1f;color:#eaf2ee;min-height:100vh;-webkit-font-smoothing:antialiased;padding-bottom:80px}
+
+  .top{text-align:center;padding:32px 20px 6px;max-width:760px;margin:0 auto}
+  .badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 12px;border-radius:20px}
+  .top h1{font-size:25px;font-weight:800;color:#fff;margin:14px 0 8px}
+  .top p{font-size:14px;color:#aebfcf;line-height:1.6}
+  .top .note{margin-top:14px;font-size:12.5px;color:#8aa0b3;background:#10151a;border:1px solid #243039;border-radius:14px;padding:12px 15px;line-height:1.55;text-align:left}
+  .top .note b{color:#cfe0d6}
+
+  .sec{max-width:1180px;margin:46px auto 0;padding:0 18px}
+  .sec-h{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .sec-h .n{width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+  .sec-h h2{font-size:19px;font-weight:800;color:#fff}
+  .sec-sub{font-size:13px;color:#9fb3c8;margin:0 0 6px 42px;line-height:1.55}
+  .sec-sub b{color:#d7e6dd}
+
+  .flow{display:flex;flex-wrap:wrap;gap:26px 22px;justify-content:center;padding:26px 0 4px}
+  .scene{width:300px;display:flex;flex-direction:column;align-items:center}
+  .cap{font-size:12.5px;color:#aebfcf;line-height:1.5;margin-bottom:12px;min-height:54px;text-align:center}
+  .cap .who{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:12px;margin-bottom:7px}
+  .who.cli{background:rgba(120,170,255,.16);color:#9cc0ff}
+  .who.luca{background:var(--greenS);color:#7ee0a3}
+  .cap b{color:#fff}
+
+  .phone{width:296px;height:600px;border-radius:40px;overflow:hidden;position:relative;box-shadow:0 0 0 1.4px rgba(255,255,255,.08),0 24px 60px rgba(0,0,0,.5);background:#000;flex-shrink:0}
+  .screen{height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .screen.sliss{background:var(--shell)}
+  .screen.wa{background:var(--wa-bg)}
+  .sb{height:40px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:7px;font-size:13px;font-weight:600;color:var(--textD);position:relative;z-index:2}
+  .bd{flex:1;overflow-y:auto;padding:6px 16px 22px;position:relative;z-index:2;scrollbar-width:none}
+  .bd::-webkit-scrollbar{display:none}
+  .arrow{font-size:30px;color:var(--green);align-self:center;margin:0 -6px;opacity:.8}
+
+  /* WhatsApp */
+  .wahead{background:#075E54;color:#fff;display:flex;align-items:center;gap:10px;padding:9px 14px;font-weight:700;font-size:14px}
+  .wahead .b{width:30px;height:30px;border-radius:50%;background:#fff;color:#075E54;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}
+  .wahead small{display:block;font-weight:500;font-size:10.5px;opacity:.8}
+  .wb{max-width:80%;padding:8px 11px;border-radius:10px;font-size:12.5px;line-height:1.45;color:#0b1f17;margin:7px 0;box-shadow:0 1px 1px rgba(0,0,0,.12);position:relative}
+  .wb.in{background:var(--wa-in);border-top-left-radius:2px;margin-right:auto}
+  .wb.out{background:var(--wa-out);border-top-right-radius:2px;margin-left:auto}
+  .wb .t{display:block;text-align:right;font-size:9.5px;color:#7c8b80;margin-top:3px}
+  .wabtn{display:block;text-align:center;background:var(--wa-in);color:#15803D;font-weight:700;font-size:12.5px;padding:9px;border-radius:10px;margin:7px 0;box-shadow:0 1px 1px rgba(0,0,0,.12)}
+
+  /* Sliss chat */
+  .sl-head{display:flex;align-items:center;gap:9px;padding:4px 2px 14px}
+  .sl-logo{width:30px;height:30px;border-radius:9px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;box-shadow:0 4px 14px var(--glow)}
+  .sl-head .nm{font-size:14px;font-weight:800;color:var(--text)}
+  .sl-head .nm small{display:block;font-size:10.5px;font-weight:600;color:var(--green)}
+  .sbub{background:var(--bg2);border:1px solid var(--border);border-radius:15px;border-top-left-radius:4px;padding:11px 13px;font-size:12.5px;line-height:1.5;color:var(--text);max-width:88%;margin:9px 0;box-shadow:0 4px 16px rgba(16,40,24,.07)}
+  .pick{display:flex;flex-direction:column;gap:7px;margin:4px 0 6px;align-items:flex-end}
+  .opt{background:var(--bg2);border:1.5px solid var(--border);color:var(--text);font-size:12px;font-weight:700;padding:9px 13px;border-radius:20px;box-shadow:0 2px 8px rgba(16,40,24,.06)}
+  .opt.sel{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 5px 16px var(--glow)}
+  .lnk{display:block;text-align:center;background:#fff;border:1.5px solid var(--green);color:var(--greenH);font-weight:800;font-size:13px;padding:12px;border-radius:14px;margin:10px 0 6px;box-shadow:0 6px 18px var(--glow)}
+  .lnk small{display:block;font-weight:600;font-size:10px;color:var(--textD);margin-top:2px}
+  .gift{background:linear-gradient(165deg,#F0FAF2,#FFFFFF);border:1.5px solid rgba(22,163,74,.3);border-radius:16px;padding:13px;margin:8px 0;box-shadow:0 6px 20px var(--glow)}
+  .gift .g-t{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.45}
+  .gift .g-cta{display:block;text-align:center;background:var(--green);color:#fff;font-weight:800;font-size:13px;padding:11px;border-radius:12px;margin-top:10px;box-shadow:0 5px 14px var(--glow)}
+  .gift .skip{display:block;text-align:center;font-size:11px;color:var(--textD);font-weight:600;margin-top:8px}
+  .field{background:#fff;border:1.4px solid var(--border);border-radius:11px;padding:10px 12px;font-size:12px;color:var(--textD);margin:7px 0}
+  .field.ph{display:flex;align-items:center;gap:8px;color:var(--green);font-weight:700;border-style:dashed;border-color:rgba(22,163,74,.4)}
+  .conf{text-align:center;padding:24px 10px}
+  .conf .em{font-size:40px}
+  .conf .c-t{font-size:16px;font-weight:800;color:var(--text);margin-top:8px}
+  .conf .c-s{font-size:12px;color:var(--textD);margin-top:6px;line-height:1.5}
+
+  /* Luca app side */
+  .lhead{font-size:18px;font-weight:800;color:var(--text);padding:6px 2px 2px}
+  .lhead small{display:block;font-size:11.5px;font-weight:600;color:var(--textD);margin-top:2px}
+  .rcard{background:var(--bg2);border:1px solid var(--border);border-radius:15px;padding:13px 14px;margin:11px 0;box-shadow:0 4px 16px rgba(16,40,24,.08)}
+  .rcard.new{border-color:rgba(22,163,74,.45);box-shadow:0 6px 20px var(--glow)}
+  .rtop{display:flex;align-items:center;gap:9px}
+  .rav{width:38px;height:38px;border-radius:11px;background:var(--greenS);color:var(--green);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0}
+  .rnm{font-size:13.5px;font-weight:700;color:var(--text)}
+  .rmsg{font-size:11.5px;color:var(--textM);margin-top:2px;line-height:1.4}
+  .pill{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:10px;margin-top:8px}
+  .pill.nw{background:var(--greenS);color:var(--green)}
+  .pill.am{background:var(--amberS);color:var(--amber)}
+  .promo{display:block;text-align:center;background:var(--green);color:#fff;font-weight:800;font-size:12.5px;padding:11px;border-radius:12px;margin-top:11px;box-shadow:0 5px 14px var(--glow)}
+  .promo small{display:block;font-weight:600;font-size:10px;opacity:.9;margin-top:2px}
+  .syn{background:#F0FAF2;border:1px dashed rgba(22,163,74,.45);border-radius:13px;padding:11px 13px;margin-top:11px}
+  .syn .s-t{font-size:11.5px;font-weight:800;color:var(--greenH);text-transform:uppercase;letter-spacing:.04em}
+  .syn .s-b{font-size:11.5px;color:var(--textM);margin-top:5px;line-height:1.45}
+
+  /* end panels */
+  .qwrap{max-width:1000px;margin:60px auto 0;padding:0 18px;display:flex;flex-wrap:wrap;gap:20px}
+  .qcard{flex:1;min-width:300px;border-radius:18px;padding:22px 22px 20px}
+  .qcard.m3{background:#0f1f17;border:1.5px solid rgba(22,163,74,.4)}
+  .qcard.m1{background:#1c1710;border:1.5px solid rgba(180,120,40,.45)}
+  .qcard .q-tag{font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:14px;display:inline-block}
+  .m3 .q-tag{background:var(--green);color:#fff}
+  .m1 .q-tag{background:#B45309;color:#fff}
+  .qcard h3{font-size:16px;font-weight:800;color:#fff;margin:12px 0 4px}
+  .qcard .q-when{font-size:12px;color:#9fb3c8;line-height:1.5;margin-bottom:14px}
+  .qcard ol{margin:0;padding-left:20px}
+  .qcard li{font-size:13.5px;color:#dfeae3;line-height:1.5;margin-bottom:11px}
+  .m1 li{color:#ecdfca}
+  .warn{margin-top:14px;font-size:11.5px;color:#e7c98a;background:rgba(180,120,40,.12);border-radius:11px;padding:10px 12px;line-height:1.5}
+  .warn b{color:#fff}
+  .legend{max-width:760px;margin:34px auto 0;padding:0 18px;font-size:11.5px;color:#7e93a4;text-align:center;line-height:1.6}
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <span class="badge">Modulo Richieste · M3 · trial simulato</span>
+    <h1>Come funzionerebbe, dal vivo</h1>
+    <p>Un cliente scrive su WhatsApp. Da lì, in pochi tap, arriva alla soluzione <b>da solo</b> — e Luca riceve solo ciò che serve davvero, già pronto. Due scenari finti, passo per passo.</p>
+    <div class="note">⚠️ <b>È una simulazione, non l'app vera.</b> Serve per ragionare sul flusso e raccoglierne un parere prima di costruire. Niente è ancora stato sviluppato — il modulo parte solo dopo la validazione di M1.</div>
+  </div>
+
+  <!-- SCENARIO 1 -->
+  <div class="sec">
+    <div class="sec-h"><div class="n">1</div><h2>Prodotto pronto → si chiude su eBay, contatto al volo</h2></div>
+    <p class="sec-sub">Cliente che cerca una <b>cover per cronometro già pronta</b>. Sliss lo instrada a eBay e gli offre, senza moduli, di farsi avvisare — <b>rimbalzando dentro WhatsApp</b>.</p>
+
+    <div class="flow">
+      <!-- 1.1 WhatsApp welcome -->
+      <div class="scene">
+        <div class="cap"><span class="who cli">Lato cliente</span>Scrive a Luca su WhatsApp. Parte il <b>benvenuto automatico</b> (gratis, è WhatsApp Business) con un link.</div>
+        <div class="phone"><div class="screen wa">
+          <div class="wahead"><div class="b">K</div><div>Kayek3D<small>online</small></div></div>
+          <div class="bd">
+            <div class="wb out">Ciao! Avete cover per cronometri?<span class="t">18:54</span></div>
+            <div class="wb in">Ciao e benvenuto in Kayek3D! 👋 Per aiutarti subito, dimmi cosa ti serve qui 👇<span class="t">18:54</span></div>
+            <a class="wabtn">🔗 Trova il prodotto giusto in 10 sec</a>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- 1.2 Sliss guided chat -->
+      <div class="scene">
+        <div class="cap"><span class="who cli">Lato cliente</span>Tocca il link → si apre la <b>chat guidata Sliss</b>. Poche domande, un tap ciascuna.</div>
+        <div class="phone"><div class="screen sliss">
+          <div class="sb">18:55</div>
+          <div class="bd">
+            <div class="sl-head"><div class="sl-logo">S</div><div class="nm">Sliss<small>per Kayek3D</small></div></div>
+            <div class="sbub">Ciao! Ti aiuto a trovare quello che cerchi 👌 Cosa ti serve?</div>
+            <div class="pick"><span class="opt sel">Cover per cronometro</span><span class="opt">Ricambio / accessorio moto</span><span class="opt">Altro</span></div>
+            <div class="sbub">Perfetto! Quale strumento hai?</div>
+            <div class="pick"><span class="opt">Alfano</span><span class="opt sel">Starlane Stealth</span><span class="opt">Starlane ST500</span></div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- 1.3 finale instrada + gift -->
+      <div class="scene">
+        <div class="cap"><span class="who cli">Lato cliente</span><b>Finale-instrada:</b> link al prodotto su eBay (la vendita si chiude lì). Poi il <b>regalo</b>: "vuoi che ti avvisi?".</div>
+        <div class="phone"><div class="screen sliss">
+          <div class="sb">18:55</div>
+          <div class="bd">
+            <div class="sl-head"><div class="sl-logo">S</div><div class="nm">Sliss<small>per Kayek3D</small></div></div>
+            <div class="sbub">Trovata 🎯 La cover per <b>Starlane Stealth</b> è pronta qui:</div>
+            <a class="lnk">🛒 Vedi su eBay<small>spedizione e pagamento sicuri</small></a>
+            <div class="gift">
+              <div class="g-t">🔔 Vuoi che Luca ti avvisi appena spedisce?</div>
+              <a class="g-cta">💬 Sì, avvisami su WhatsApp</a>
+              <span class="skip">No grazie, faccio da solo</span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- 1.4 Luca side -->
+      <div class="scene">
+        <div class="cap"><span class="who luca">Lato Luca</span>Il "Sì" <b>riapre WhatsApp col messaggio già scritto</b>. Luca riceve <b>numero + contesto</b> nel suo WhatsApp, dove tiene le etichette. Zero moduli compilati.</div>
+        <div class="phone"><div class="screen wa">
+          <div class="wahead"><div class="b">M</div><div>Marco R.<small>+39 333 ••• ••••</small></div></div>
+          <div class="bd">
+            <div class="wb out">Ciao Luca! Mi interessa la <b>cover Starlane Stealth</b> — mi avvisi quando spedisci? 🙌<span class="t">18:56 ✓✓</span></div>
+            <div class="wb in">Certo Marco, te la metto da parte e ti aggiorno! 🏁<span class="t">18:58</span></div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCENARIO 2 -->
+  <div class="sec">
+    <div class="sec-h"><div class="n">2</div><h2>Su misura → richiesta tracciata, poi entra nei follow-up</h2></div>
+    <p class="sec-sub">Cliente che vuole <b>qualcosa di personalizzato</b>. Sliss lo cattura, avvisa Luca, e quando l'ordine si concretizza <b>un tap</b> lo fa entrare nel ciclo follow-up di M1 (la sinergia).</p>
+
+    <div class="flow">
+      <!-- 2.1 chat -> su misura -->
+      <div class="scene">
+        <div class="cap"><span class="who cli">Lato cliente</span>Stessa chat, ma sceglie <b>"su misura"</b>. Si apre una <b>mini-card</b>: cosa serve + foto opzionale.</div>
+        <div class="phone"><div class="screen sliss">
+          <div class="sb">19:02</div>
+          <div class="bd">
+            <div class="sl-head"><div class="sl-logo">S</div><div class="nm">Sliss<small>per Kayek3D</small></div></div>
+            <div class="sbub">Cosa ti serve?</div>
+            <div class="pick"><span class="opt">Cover per cronometro</span><span class="opt sel">Qualcosa su misura</span></div>
+            <div class="sbub">Raccontami in due righe e Luca ti risponde lui 👇</div>
+            <div class="field">Supporto stampato 3D per GoPro sul cupolino della mia KTM…</div>
+            <div class="field ph">📷 Aggiungi una foto (opzionale)</div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- 2.2 conferma -->
+      <div class="scene">
+        <div class="cap"><span class="who cli">Lato cliente</span><b>Conferma calda.</b> Il valore di Sliss è qui: "ci penso io a ricordarlo a Luca, non ti perdi nel mucchio".</div>
+        <div class="phone"><div class="screen sliss">
+          <div class="sb">19:02</div>
+          <div class="bd">
+            <div class="sl-head"><div class="sl-logo">S</div><div class="nm">Sliss<small>per Kayek3D</small></div></div>
+            <div class="conf">
+              <div class="em">😌</div>
+              <div class="c-t">Fatto! Ci penso io.</div>
+              <div class="c-s">La tua richiesta è arrivata a Luca.<br>Ti scrive lui appena può — e se tarda,<br>glielo ricordo io. Non finisci nel mucchio.</div>
+            </div>
+            <div class="sbub">Intanto, se vuoi dare un'occhiata: <b>il catalogo eBay</b> è qui 👇</div>
+            <a class="lnk">🛒 Sfoglia il catalogo</a>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- 2.3 Luca list -->
+      <div class="scene">
+        <div class="cap"><span class="who luca">Lato Luca</span>Nella sua <b>lista Richieste</b> compare quella nuova. Gli stati = <b>le etichette che già usa</b> su WhatsApp.</div>
+        <div class="phone"><div class="screen sliss">
+          <div class="sb">19:03</div>
+          <div class="bd">
+            <div class="lhead">Richieste<small>1 nuova · 2 in lavorazione</small></div>
+            <div class="rcard new">
+              <div class="rtop"><div class="rav">M</div><div><div class="rnm">Marco R.</div><div class="rmsg">Supporto 3D GoPro su cupolino KTM</div></div></div>
+              <span class="pill nw">● Nuova</span>
+            </div>
+            <div class="rcard">
+              <div class="rtop"><div class="rav">G</div><div><div class="rnm">Giulia P.</div><div class="rmsg">Cover Alfano personalizzata col logo</div></div></div>
+              <span class="pill am">In lavorazione</span>
+            </div>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="arrow">→</div>
+
+      <!-- 2.4 promote + synergy -->
+      <div class="scene">
+        <div class="cap"><span class="who luca">Lato Luca</span>Quando l'ordine si concretizza, <b>un tap</b> "promuovi a ordine" → e <b>il follow-up di M1 parte da solo</b>. È la sinergia tra i moduli.</div>
+        <div class="phone"><div class="screen sliss">
+          <div class="sb">19:05</div>
+          <div class="bd">
+            <div class="lhead">Marco R.<small>Richiesta · presa in carico</small></div>
+            <div class="rcard new">
+              <div class="rtop"><div class="rav">M</div><div><div class="rnm">Supporto 3D GoPro — KTM</div><div class="rmsg">D'accordo col cliente: 35€, pronto in 5 gg</div></div></div>
+            </div>
+            <a class="promo">✓ Promuovi a ordine<small>crea l'ordine e avvia i follow-up</small></a>
+            <div class="syn">
+              <div class="s-t">↳ Sinergia M1</div>
+              <div class="s-b">Da ora partono in automatico: <b>conferma ordine</b> → <b>in spedizione</b> → <b>controllo consegna</b> → <b>recensione</b>. Marco entra nel ciclo senza reinserirlo.</div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- END QUESTIONS -->
+  <div class="qwrap">
+    <div class="qcard m3">
+      <span class="q-tag">Da chiedere a fine trial</span>
+      <h3>Il tuo parere sul flusso (M3)</h3>
+      <div class="q-when">Domande sul prototipo che hai appena visto. Naturali da fare subito dopo averglielo mostrato.</div>
+      <ol>
+        <li>Questo flusso ti torna? Lo vedi addosso al tuo lavoro di tutti i giorni?</li>
+        <li>I tuoi clienti lo userebbero, o preferiscono scriverti e basta?</li>
+        <li>Le domande della chat sono come ti chiedono <i>davvero</i>? Cosa cambieresti nelle voci?</li>
+        <li>Il "rimbalzo su WhatsApp" per farsi avvisare ti sembra comodo o macchinoso?</li>
+      </ol>
+    </div>
+    <div class="qcard m1">
+      <span class="q-tag">Tenere SEPARATE</span>
+      <h3>Le due domande del gate (M1)</h3>
+      <div class="q-when">Riguardano ciò che Luca usa <i>oggi</i>, non questo prototipo.</div>
+      <ol>
+        <li><b>Valore:</b> Sliss (i follow-up) ti sta dando una mano concreta? Il bello e il brutto.</li>
+        <li><b>Copertura:</b> dei clienti/ordini di questi giorni, quanti gestiti dentro Sliss e quanti a mano? (es. "su 10, 7")</li>
+      </ol>
+      <div class="warn">⚠️ <b>Non incollarle in coda al trial.</b> Subito dopo un prototipo nuovo e luccicante, la risposta "sì, mi dà valore" si gonfia per entusiasmo del futuro e falsa il segnale del gate. Falle in un <b>momento neutro</b> — o <b>prima</b> di mostrargli M3.</div>
+    </div>
+  </div>
+
+  <div class="legend">Sliss · liscio come deve essere — trial M3 “Richieste”. Mockup statico per discussione, non l'app reale. Dettaglio tecnico in <i>docs/spec-m3-richieste.md</i>.</div>
+
+</body>
+</html>
