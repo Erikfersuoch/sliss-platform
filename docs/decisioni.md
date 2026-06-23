@@ -7,6 +7,7 @@
 
 | Data | Decisione | Motivazione |
 |---|---|---|
+| 23/06/2026 | **Dominio registrato: `sliss.it`** (corregge la voce "sliss-operations.it" sotto) | Al momento della registrazione su SupportHost `sliss.it` è risultato **disponibile** (€9,84/anno) — la precedente indisponibilità era superata. Preso **senza trattino** (l'opzione preferita). DNS: record A `@` → `216.198.79.1` (IP Vercel nuovo) nel cPanel Zone Editor; nameserver SupportHost invariati; dominio aggiunto al progetto Vercel `sliss-platform`. In propagazione (nuovo `.it` → qualche ora per uscire da `dnsHold`). |
 | 23/06/2026 | **M3 Richieste sbloccato per costruzione** | Gate M1 superato lato Luca. Erik: "sblocchiamo M3". Spec già pronta e validata col tester (trial approvato). Si entra in Fase 2 per M3. |
 | 23/06/2026 | **Gate M1 — Luca = GO (tutti i criteri soddisfatti)** | Copertura 100% (tutti i nuovi clienti inseriti), 15+ usi reali (oltre soglia ~8), valore confermato esplicito ("è valido"), bilancio positivo (uso costante, nessuna lamentela). Nota: "attende rifiniture" = aspettativa legittima, non blocco. Spec M3 approvata nello stesso giorno. **Primo tester a completare la validazione.** Resta aperto il gate lato Moira. |
 | 23/06/2026 | **Dominio: `sliss-operations.it` scelto, da registrare su SupportHost** | `sliss.it` e `sliss.com` non disponibili. Scelto `sliss-operations.it` (~€9+IVA/anno, SupportHost). Il trattino è un compromesso accettato (attrito a voce) — se `sliss.it` si libera in futuro, si migra. Da registrare a casa. |
