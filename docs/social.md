@@ -6,44 +6,14 @@
 
 ## Post pubblicati
 <!-- data | piattaforma | tipo -->
+- ~giugno 2026 | LinkedIn + Facebook | "La metrica che non c'era" (building in public, metriche vuote dopo 19gg di test) — 4° uscita
 - 12/06/2026 | LinkedIn + Facebook | "Perché Sliss" (origin story, rif. libro Simon Squibb) — 3° uscita
 
 ---
 
 ## Pronti da pubblicare
 
-### "La metrica che non c'era" — versione alternativa — 09/06/2026
-*Concetto: building in public, metriche vuote dopo 19gg di test.*
-
-**LinkedIn:**
-Tre settimane fa ho messo in mano a due persone vere il primo modulo di Sliss — la piattaforma che sto costruendo per i micro-business (tatuatori, barber, stampa 3D...).
-
-Questa settimana ho controllato i numeri di validazione. Erano vuoti.
-
-Non perché il modulo non funzionasse — ma perché avevo costruito tutto per misurare *l'uso*, e mi ero dimenticato di costruire qualcosa che misurasse *se* lo stessero usando, e come.
-
-Lezione presa: ho mandato un questionario di 6 domande ai tester e fissato una data precisa (21 giugno) per la decisione go/no-go. Meglio una verità scomoda con una scadenza che un dato confortante senza.
-
-Si costruisce così, un blocco alla volta. 🧱
-
-A voi è mai capitato di scoprire di aver misurato la cosa sbagliata?
-
-#buildinpublic #microbusiness #startup
-
----
-
-**Facebook:**
-Tre settimane fa ho dato in mano a due persone vere — Moira (tatuaggi, Momo Ink) e Luca (stampa 3D, Kayek3D) — il primo modulo di Sliss, la piattaforma che sto costruendo per piccole attività (tatuatori, barber, stampa 3D...). L'idea era semplice: lasciarli usare per un po' e poi guardare i numeri per capire se funziona davvero.
-
-Questa settimana ho aperto i numeri. Erano vuoti.
-
-Non perché non lo stessero usando — ma perché avevo costruito tutto per *misurare l'uso*, dimenticandomi di costruire qualcosa che mi dicesse *se* e *come* lo stavano usando. 😅
-
-Quindi niente vittoria da raccontare oggi, ma una correzione di rotta presa sul serio: ho mandato un questionario di 6 domande ai tester e fissato una data precisa — il 21 giugno — per decidere se questo modulo regge o no.
-
-Si costruisce così: un blocco alla volta, anche quando il blocco è ammettere che ti sei perso un pezzo.
-
-Voi come fate a capire se uno strumento sta funzionando davvero, e non solo "venendo usato"?
+*(nessuno al momento)*
 
 ---
 
@@ -51,5 +21,6 @@ Voi come fate a capire se uno strumento sta funzionando davvero, e non solo "ven
 - Contestualizzazione form distribuito (onboarding cliente via link) — priorità alta
 
 ## Prossimi contenuti
-- "La metrica che non c'era" (versione alternativa, sopra) — 4° uscita, con CTA soft già incluso
-- Prima vittoria concreta dal test
+- Prima vittoria concreta dal test (es. riscontri recensione di Luca)
+- Post "nuovo logo" (building in public, prima/dopo)
+- Contenuto orientato al problema ("quanto tempo perdi a rincorrere i clienti?")
