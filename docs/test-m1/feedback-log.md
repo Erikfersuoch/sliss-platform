@@ -144,7 +144,25 @@
 
 ---
 
-## Tester uno — Luca (Kayek3D, stampa 3D)
+#### Check — 23/06/2026 (impressioni a voce raccolte da Erik, entrambi i tester)
+
+**Cosa hanno detto (entrambi):**
+- ✅ **Nuova interfaccia piace** — le migliorie apportate apprezzate da tutti e due.
+- 🟡 **Richiesta potenziamento notifiche:** vogliono essere triggerati nei momenti giusti — es. i "da fare oggi" dovrebbero arrivare come notifica al mattino (~10:00), non solo comparire nell'app. Valevole per **tutti i moduli presenti e futuri**. Erik ha spiegato che per ora le notifiche sono gestite così (2 cron, orari fissi) per non spendere risorse su strumenti di notifica.
+
+**Moira:** sta **cominciando a instradare il flusso di lavoro** dentro Sliss. Segnale positivo: non è più "devo trovare 5 minuti" ma integrazione attiva nel processo quotidiano.
+
+**Luca:** trial M3 "Richieste" (`public/anteprima-richieste.html`) inviato ieri sera da Erik. **In fase di valutazione** — ci guarda quando ha tempo e voglia. Nessuna pressione.
+
+**Lettura (gate):** il quadro migliora su entrambi i fronti. Moira ha superato la fase "aggiunge tempo" (07/06) e sta entrando nel ritmo. Luca continua solido e si prepara a testare M3. La richiesta notifiche è un segnale sano: non chiedono meno notifiche (= fastidio) ma **più precise** (= vogliono essere aiutati meglio, il valore c'è). Il vincolo è infrastrutturale (Vercel Hobby 2 cron, ±59min), non di design — si sblocca con Vercel Pro o cron esterni in Fase 3.
+
+**Categoria:**
+- [ ] Bloccante
+- [ ] Frizione
+- [x] Richiesta feature → notifiche smart per timing (cross-modulo, Fase 3)
+- [x] Insight → entrambi i tester apprezzano le migliorie UI; Moira in fase di adozione attiva; la richiesta "notifiche migliori" conferma che il valore del reminder è acquisito
+
+--- (Kayek3D, stampa 3D)
 
 **Kickoff:** in uso reale (kickoff formale da concordare)
 **Settore:** Stampa 3D · vendita prodotti
