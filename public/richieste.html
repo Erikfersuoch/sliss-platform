@@ -222,7 +222,7 @@
     // Lascia la richiesta nella cassetta di Luca (lista + promemoria), poi rimbalza su WhatsApp
     logRequest({ nome, cognome, desc, product: ctx.sel || '', kind: isPerso ? 'perso' : 'sumisura' });
     const msg = isPerso
-      ? `Ciao ${BIZ}, sono ${nome} ${cognome}! ✨ Vorrei personalizzare la ${ctx.sel}: ${desc}`
+      ? `Ciao ${BIZ}, sono ${nome} ${cognome}! ✨ Ho scelto la ${ctx.sel} e vorrei personalizzarla così: ${desc}`
       : `Ciao ${BIZ}, sono ${nome} ${cognome}! 🏁 Avrei una richiesta su misura: ${desc}`;
     window.open(waLink(msg), '_blank', 'noopener');
     showSent('Ti scriviamo appena possibile — e se serve, te lo ricordiamo noi.');
