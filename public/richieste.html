@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trova il pezzo giusto</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10);
+    --bg2:#fff; --border:#E2E9E3; --text:#111813; --textD:#5B665F;
+    --shell:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);
+    --glow:rgba(22,163,74,.16);
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--shell);min-height:100vh;color:var(--text);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+  .head{display:flex;align-items:center;gap:10px;padding:18px 18px 12px}
+  .logo{width:34px;height:34px;border-radius:10px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 14px var(--glow)}
+  .head .nm{font-size:15px;font-weight:800}
+  .head .nm small{display:block;font-size:11px;font-weight:600;color:var(--green)}
+  .chat{flex:1;overflow-y:auto;padding:6px 18px 28px;display:flex;flex-direction:column}
+  .bub{background:var(--bg2);border:1px solid var(--border);border-radius:16px;border-top-left-radius:5px;padding:12px 14px;font-size:14px;line-height:1.5;max-width:86%;margin:9px 0;box-shadow:0 4px 16px rgba(16,40,24,.07);align-self:flex-start;animation:rise .3s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .opts{display:flex;flex-direction:column;gap:8px;align-items:flex-end;margin:2px 0 6px}
+  .opt{background:var(--bg2);border:1.5px solid var(--border);color:var(--text);font-size:14px;font-weight:700;padding:11px 16px;border-radius:22px;box-shadow:0 2px 8px rgba(16,40,24,.06);cursor:pointer;transition:all .15s;text-align:right}
+  .opt:hover{border-color:var(--green);color:var(--green)}
+  .opt.sel{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 5px 16px var(--glow)}
+  .opts.locked .opt{pointer-events:none;opacity:.55}
+  .opts.locked .opt.sel{opacity:1}
+  .cta{display:block;text-align:center;background:#fff;border:1.5px solid var(--green);color:var(--greenH);font-weight:800;font-size:15px;padding:14px;border-radius:14px;margin:6px 0;box-shadow:0 6px 18px var(--glow);cursor:pointer;text-decoration:none}
+  .cta small{display:block;font-weight:600;font-size:11px;color:var(--textD);margin-top:2px}
+  .cta.primary{background:var(--green);color:#fff;border-color:var(--green)}
+  .cta.primary small{color:rgba(255,255,255,.85)}
+  .cta.perso{border-style:dashed;border-color:rgba(22,163,74,.55)}
+  .oppure{text-align:center;font-size:12px;color:var(--textD);font-weight:700;margin:4px 0}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin:9px 0;box-shadow:0 6px 20px var(--glow);align-self:stretch;animation:rise .3s ease}
+  .card label{display:block;font-size:11px;font-weight:700;color:var(--textD);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+  .card label:first-child{margin-top:0}
+  .card input,.card textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-family:inherit;color:var(--text);outline:none;transition:border-color .15s}
+  .card input:focus,.card textarea:focus{border-color:var(--green)}
+  .card textarea{min-height:74px;resize:vertical;font-size:15px}
+  .err{font-size:12.5px;color:#DC2626;margin-top:8px;display:none}
+  .conf{text-align:center;padding:14px 6px}
+  .conf .em{font-size:46px}
+  .conf .ct{font-size:18px;font-weight:800;margin-top:6px}
+  .conf .cs{font-size:13px;color:var(--textD);margin-top:8px;line-height:1.55}
+  .foot{text-align:center;font-size:11px;color:var(--textD);padding:6px 18px 18px;opacity:.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="logo">S</div>
+    <div class="nm">Sliss<small id="biz-label">per Kayek3D</small></div>
+  </div>
+  <div class="chat" id="chat"></div>
+  <div class="foot">Sliss · liscio come deve essere</div>
+</div>
+
+<script>
+  // ---- Parametri del link (chi è il professionista) -------------------------
+  const params = new URLSearchParams(window.location.search);
+  const BIZ   = params.get('biz') || 'Kayek3D';
+  const OWNER = params.get('o') || 'luca';
+  const WA    = (params.get('wa') || '').replace(/[^0-9]/g, '');   // WhatsApp del professionista
+  const SHOP  = params.get('shop') || 'https://ebay.us/m/tuyQnq';  // catalogo eBay (fallback)
+  document.getElementById('biz-label').textContent = 'per ' + BIZ;
+
+  // ---- SCRIPT (cucito su Luca, per ora) — domani configurabile dal pro -------
+  // Il motore sotto renderizza questi nodi; lo script è solo dati.
+  // `sel`  = cosa il cliente sta cercando (entra nel messaggio WhatsApp)
+  // `perso`= cover personalizzabile → al passo "compra" comparirà "Personalizzala"
+  // `ebay` = link DIRETTO alla scheda eBay dell'articolo (da riempire coi link reali di Luca)
+  const FLOW = {
+    start: 'root',
+    nodes: {
+      root: {
+        type: 'question',
+        text: 'Ciao! 🏁 Ti aiuto a trovare il pezzo giusto. Cosa cerchi?',
+        options: [
+          { label: 'Cover cronometro / GPS', next: 'crono' },
+          { label: 'Cover pulsanti',         next: 'buy', sel: 'una cover pulsanti' },
+          { label: 'Recupero fluidi',        next: 'buy', sel: 'un recupero fluidi' },
+          { label: 'Protezioni & tamponi',   next: 'buy', sel: 'protezioni / tamponi' },
+          { label: 'Lavaggio moto',          next: 'buy', sel: 'un accessorio per il lavaggio' },
+          { label: 'Su misura / altro',      next: 'capture' },
+        ]
+      },
+      crono: {
+        type: 'question',
+        text: 'Quale cronometro hai?',
+        options: [
+          { label: 'Aim Solo 2',         next: 'buy', sel: 'Cover Aim Solo 2',         perso: true, ebay: '' },
+          { label: 'Aim Mychron 6',      next: 'buy', sel: 'Cover Aim Mychron 6',      perso: true, ebay: '' },
+          { label: 'Starlane Stealth 5', next: 'buy', sel: 'Cover Starlane Stealth 5', perso: true, ebay: '' },
+          { label: 'PzRacing ST500',     next: 'buy', sel: 'Cover PzRacing ST500',     perso: true, ebay: '' },
+          { label: 'Alfano 7',           next: 'buy', sel: 'Cover Alfano 7',           perso: true, ebay: '' },
+        ]
+      },
+      buy:     { type: 'buy' },
+      capture: { type: 'capture' },
+    }
+  };
+
+  // ---- Stato + contesto ------------------------------------------------------
+  const ctx = { sel: null, perso: false, ebay: '' };
+  const chat = document.getElementById('chat');
+  const scrollDown = () => requestAnimationFrame(() => chat.scrollTop = chat.scrollHeight);
+
+  function bubble(html) {
+    const b = document.createElement('div');
+    b.className = 'bub';
+    b.innerHTML = html;
+    chat.appendChild(b);
+    scrollDown();
+  }
+
+  function goTo(nodeId) {
+    const node = FLOW.nodes[nodeId];
+    if (!node) return;
+    if (node.type === 'question') renderQuestion(node);
+    else if (node.type === 'buy') renderBuy();
+    else if (node.type === 'capture') renderCapture();
+  }
+
+  function renderQuestion(node) {
+    bubble(node.text);
+    const wrap = document.createElement('div');
+    wrap.className = 'opts';
+    node.options.forEach(opt => {
+      const el = document.createElement('div');
+      el.className = 'opt';
+      el.textContent = opt.label;
+      el.onclick = () => {
+        wrap.classList.add('locked');
+        el.classList.add('sel');
+        if (opt.sel !== undefined)   ctx.sel = opt.sel;
+        if (opt.perso !== undefined) ctx.perso = !!opt.perso;
+        if (opt.ebay !== undefined)  ctx.ebay = opt.ebay || '';
+        goTo(opt.next);
+      };
+      wrap.appendChild(el);
+    });
+    chat.appendChild(wrap);
+    scrollDown();
+  }
+
+  // ---- Finale: prodotto pronto → eBay / diretto (+ Personalizzala) -----------
+  function renderBuy() {
+    bubble(ctx.sel
+      ? `Trovata 🏁 <b>${ctx.sel}</b>. Come preferisci?`
+      : `Perfetto 🏁 Come preferisci?`);
+
+    const ebay = document.createElement('a');
+    ebay.className = 'cta';
+    ebay.href = ctx.ebay || SHOP;
+    ebay.target = '_blank'; ebay.rel = 'noopener';
+    ebay.innerHTML = `🛒 Compra subito su eBay<small>${ctx.ebay ? 'scheda prodotto · protezione acquisti' : 'sul nostro shop · protezione acquisti'}</small>`;
+    chat.appendChild(ebay);
+
+    const opp = document.createElement('div');
+    opp.className = 'oppure'; opp.textContent = 'oppure';
+    chat.appendChild(opp);
+
+    const direct = document.createElement('div');
+    direct.className = 'cta';
+    direct.style.borderColor = 'rgba(22,163,74,.55)';
+    direct.innerHTML = `💬 Scrivi a ${BIZ}<small>parli direttamente con noi</small>`;
+    direct.onclick = () => { direct.style.display = 'none'; renderDirectForm(); };
+    chat.appendChild(direct);
+
+    if (ctx.perso) {
+      const perso = document.createElement('div');
+      perso.className = 'cta perso';
+      perso.innerHTML = `✏️ Personalizzala<small>colore, logo, scritta…</small>`;
+      perso.onclick = () => { goTo('capture'); };
+      chat.appendChild(perso);
+    }
+    scrollDown();
+  }
+
+  // Form nome+cognome del percorso diretto: il messaggio parte già col prodotto scelto
+  function renderDirectForm() {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <label>Nome</label>
+      <input id="d-nome" type="text" placeholder="Marco" autocomplete="given-name" />
+      <label>Cognome</label>
+      <input id="d-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />
+      <a class="cta primary" id="d-send" style="margin-top:14px">💬 Scrivici su WhatsApp</a>
+      <div class="err" id="d-err">Scrivi nome e cognome.</div>`;
+    chat.appendChild(card);
+    document.getElementById('d-send').onclick = () => {
+      const nome = document.getElementById('d-nome').value.trim();
+      const cognome = document.getElementById('d-cognome').value.trim();
+      const err = document.getElementById('d-err');
+      if (!nome || !cognome) { err.style.display = 'block'; return; }
+      const msg = `Ciao ${BIZ}, sono ${nome} ${cognome}! 🏁 Mi interessa: ${ctx.sel || 'un prodotto del vostro catalogo'}`;
+      window.open(waLink(msg), '_blank', 'noopener');
+      showSent('Ti scriviamo appena possibile.');
+    };
+    scrollDown();
+  }
+
+  // ---- Finale: su misura / personalizzazione → mini-card ---------------------
+  function renderCapture() {
+    const isPerso = ctx.perso && ctx.sel;
+    bubble(isPerso
+      ? `Personalizziamo la <b>${ctx.sel}</b> ✨ Dicci come la vuoi (colore, logo, scritta) e ti ricontattiamo noi di <b>${BIZ}</b>.`
+      : `Raccontaci cosa ti serve e ti ricontattiamo noi di <b>${BIZ}</b> 🏁`);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <label>${isPerso ? 'Come la vuoi' : 'Cosa ti serve'}</label>
+      <textarea id="r-desc" placeholder="${isPerso ? 'Es. verde KTM + scritta “BENVE283”…' : 'Es. supporto stampato 3D per GoPro sul cupolino della mia KTM…'}"></textarea>
+      <label>Nome</label>
+      <input id="r-nome" type="text" placeholder="Marco" autocomplete="given-name" />
+      <label>Cognome</label>
+      <input id="r-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />
+      <a class="cta primary" id="r-send" style="margin-top:14px">💬 Invia su WhatsApp<small>allega eventualmente una foto</small></a>
+      <div class="err" id="r-err">Scrivi cosa ti serve, nome e cognome.</div>`;
+    chat.appendChild(card);
+    document.getElementById('r-send').onclick = () => submitRequest(isPerso);
+    scrollDown();
+  }
+
+  function submitRequest(isPerso) {
+    const desc    = document.getElementById('r-desc').value.trim();
+    const nome    = document.getElementById('r-nome').value.trim();
+    const cognome = document.getElementById('r-cognome').value.trim();
+    const err     = document.getElementById('r-err');
+    if (!desc || !nome || !cognome) { err.style.display = 'block'; return; }
+
+    // TODO (Slice 2): POST a /api/richiesta-submit → registra la richiesta nel
+    //   cruscotto di Luca (lista "Richieste" + promemoria). Per ora rimbalzo su WhatsApp.
+    const msg = isPerso
+      ? `Ciao ${BIZ}, sono ${nome} ${cognome}! ✨ Vorrei personalizzare la ${ctx.sel}: ${desc}`
+      : `Ciao ${BIZ}, sono ${nome} ${cognome}! 🏁 Avrei una richiesta su misura: ${desc}`;
+    window.open(waLink(msg), '_blank', 'noopener');
+    showSent('Ti scriviamo appena possibile — e se serve, te lo ricordiamo noi.');
+  }
+
+  function showSent(line) {
+    chat.innerHTML = `
+      <div class="conf">
+        <div class="em">😌</div>
+        <div class="ct">Fatto! Ci pensiamo noi.</div>
+        <div class="cs">La tua richiesta è partita su WhatsApp.<br/>${line}</div>
+      </div>`;
+    scrollDown();
+  }
+
+  // ---- Util ------------------------------------------------------------------
+  function waLink(text) {
+    const t = encodeURIComponent(text);
+    return WA ? `https://wa.me/${WA}?text=${t}` : `https://wa.me/?text=${t}`;
+  }
+
+  goTo(FLOW.start);
+</script>
+</body>
+</html>
