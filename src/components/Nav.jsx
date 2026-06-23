@@ -24,16 +24,18 @@ const TopBar = ({view,setView}) => {
 };
 
 // Isola flottante (solo mobile): 4 destinazioni + tasto "+" centrale rialzato (azione rapida).
-const FloatingNav = ({view,setView,pendingCount,bizType="",onAdd}) => {
-  const agenda = bizType==="prodotti" ? {id:"orders",icon:"package",label:"Ordini"} : {id:"appointments",icon:"calendar",label:"Agenda"};
-  const left=[{id:"home",icon:"home",label:"Home"},{id:"followup",icon:"message",label:"Follow-Up"}];
-  const right=[agenda,{id:"clients",icon:"users",label:"Clienti"}];
+const FloatingNav = ({view,setView,pendingCount,richiesteCount=0,bizType="",onAdd}) => {
+  const isProd = bizType==="prodotti";
+  // Prodotti (Luca): la barra raggiunge i MODULI — Home · Richieste · Ordini · Follow-Up (Clienti scende in "Altro").
+  const left  = isProd ? [{id:"home",icon:"home",label:"Home"},{id:"richieste",icon:"bell",label:"Richieste"}] : [{id:"home",icon:"home",label:"Home"},{id:"followup",icon:"message",label:"Follow-Up"}];
+  const right = isProd ? [{id:"orders",icon:"package",label:"Ordini"},{id:"followup",icon:"message",label:"Follow-Up"}] : [{id:"appointments",icon:"calendar",label:"Agenda"},{id:"clients",icon:"users",label:"Clienti"}];
   const itemBtn=(n)=>{
     const a=view===n.id;
-    const showBadge=n.id==="followup"&&pendingCount>0;
+    const cnt=n.id==="richieste"?richiesteCount:(n.id==="followup"?pendingCount:0);
+    const showBadge=cnt>0;
     return (
       <button key={n.id} onClick={()=>setView(n.id)} aria-label={n.label} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:"3px",padding:"8px 11px",borderRadius:"16px",border:"none",cursor:"pointer",background:a?T.greenS:"transparent",color:a?T.green:T.textD,fontFamily:"inherit",position:"relative",minWidth:"54px",transition:"background .2s,color .2s"}}>
-        {showBadge&&<div style={{position:"absolute",top:"3px",right:"7px",minWidth:"15px",height:"15px",padding:"0 3px",borderRadius:"8px",background:T.amber,fontSize:"9px",fontWeight:800,color:"#000",display:"flex",alignItems:"center",justifyContent:"center"}}>{pendingCount>9?"9+":pendingCount}</div>}
+        {showBadge&&<div style={{position:"absolute",top:"3px",right:"7px",minWidth:"15px",height:"15px",padding:"0 3px",borderRadius:"8px",background:T.amber,fontSize:"9px",fontWeight:800,color:"#000",display:"flex",alignItems:"center",justifyContent:"center"}}>{cnt>9?"9+":cnt}</div>}
         <Icon name={n.icon} size={21} color={a?T.green:T.textD} />
         <span style={{fontSize:"9px",fontWeight:700}}>{n.label}</span>
       </button>
@@ -52,8 +54,13 @@ const FloatingNav = ({view,setView,pendingCount,bizType="",onAdd}) => {
   );
 };
 
-const MoreMenu = ({setView}) => {
-  const items=[{id:"richieste",icon:"message",label:"Richieste",desc:"Le richieste dal tuo link"},{id:"templates",icon:"file",label:"Template",desc:"Gestisci i messaggi"},{id:"feedback",icon:"star",label:"Feedback",desc:"Recensioni clienti"},{id:"modules",icon:"grid",label:"Moduli",desc:"Funzioni aggiuntive"},{id:"settings",icon:"settings",label:"Impostazioni",desc:"Personalizza Sliss"}];
+const MoreMenu = ({setView,bizType=""}) => {
+  // Prodotti: Richieste è sulla barra → in "Altro" mettiamo Clienti (rubrica/gestione).
+  // Servizi: Richieste resta qui in "Altro".
+  const first = bizType==="prodotti"
+    ? {id:"clients",icon:"users",label:"Clienti",desc:"La tua rubrica clienti"}
+    : {id:"richieste",icon:"bell",label:"Richieste",desc:"Le richieste dal tuo link"};
+  const items=[first,{id:"templates",icon:"file",label:"Template",desc:"Gestisci i messaggi"},{id:"feedback",icon:"star",label:"Feedback",desc:"Recensioni clienti"},{id:"modules",icon:"grid",label:"Moduli",desc:"Funzioni aggiuntive"},{id:"settings",icon:"settings",label:"Impostazioni",desc:"Personalizza Sliss"}];
   return (
     <div style={{animation:"fadeIn .3s ease"}}>
       <h1 style={{fontSize:"22px",fontWeight:700,marginBottom:"22px"}}>Altro</h1>
@@ -72,7 +79,7 @@ const MoreMenu = ({setView}) => {
 
 const DesktopSidebar = ({view,setView}) => {
   const {data:sData}=useSliss();
-  const allNav=[...getNavMain(sData?.settings?.bizType||""),{id:"richieste",icon:"message",label:"Richieste"},{id:"templates",icon:"file",label:"Template"},{id:"feedback",icon:"star",label:"Feedback"},{id:"modules",icon:"grid",label:"Moduli"},{id:"settings",icon:"settings",label:"Impostazioni"}];
+  const allNav=[...getNavMain(sData?.settings?.bizType||""),{id:"richieste",icon:"bell",label:"Richieste"},{id:"templates",icon:"file",label:"Template"},{id:"feedback",icon:"star",label:"Feedback"},{id:"modules",icon:"grid",label:"Moduli"},{id:"settings",icon:"settings",label:"Impostazioni"}];
   return (
     <div className="desktop-only" style={{width:"210px",minHeight:"100vh",background:T.bg2,borderRight:`1px solid ${T.border}`,display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,zIndex:100}}>
       <div style={{padding:"22px 18px 18px",borderBottom:`1px solid ${T.border}`}}>

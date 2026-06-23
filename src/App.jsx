@@ -130,7 +130,8 @@ export default function SlissPlatform() {
 
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
-  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,richieste:<Richieste/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
+  const richNew=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova").length;
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,richieste:<Richieste/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go} bizType={data?.settings?.bizType||""}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
@@ -146,7 +147,7 @@ export default function SlissPlatform() {
             <main className="app-main">{CurrentView}</main>
           </div>
         </div>
-        <FloatingNav view={view} setView={go} pendingCount={pendingCount} bizType={data?.settings?.bizType||""} onAdd={()=>setAddSheet(true)} />
+        <FloatingNav view={view} setView={go} pendingCount={pendingCount} richiesteCount={richNew} bizType={data?.settings?.bizType||""} onAdd={()=>setAddSheet(true)} />
         <Modal open={addSheet} onClose={()=>setAddSheet(false)} title="Cosa vuoi aggiungere?" w="380px">
           <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
             {/* "Invita cliente" genera un link onboarding legato a un appuntamento → ha senso solo nel flusso servizi. Nascosto per i prodotti (il cliente arriva da WhatsApp/eBay/Instagram, non si invita). */}
