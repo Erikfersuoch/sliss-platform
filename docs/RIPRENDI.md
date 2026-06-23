@@ -13,13 +13,14 @@
   - **Slice 2** — cassetta server `api/richiesta-submit.js` + `api/richiesta-list.js` (Upstash, lista per owner, push immediata). **Verificata (POST→GET ok).**
   - **Slice 3** — sezione **Richieste** nell'app (`src/pages/Richieste.jsx`) + raccolta auto all'avvio (`/api/richiesta-list`, dedup per id) + voce nav. Lint/build/45-test verdi.
   - **Slice 4** — **"Crea ordine"**: richiesta → cliente + ordine + 5 follow-up (riuso `buildProductFollowUps` = sinergia M1). "Presa in carico" = stato intermedio.
+  - ✅ **VALIDATO END-TO-END** (collaudo demo 23/06, Erik: "fila tutto bene"): richiesta dal link → cassetta → lista Richieste → Crea ordine → cliente+ordine+5 follow-up. Manca solo il go-live coi clienti veri (Luca non raggiungibile stasera).
 - Gate M1 Luca = GO (sessione precedente). Moira: **attesa attiva** (gate aperto, non sollecitare).
 
 ## ▶ Prossimo passo (quando riprendi)
-1. **Rivedere/approvare l'anteprima `docs/test-m1/home-moduli-anteprima.html`** — Home a moduli (ogni modulo un suo spazio + task, gestire quasi tutto da lì), barra che raggiunge i moduli, "Altro" = gestione Sliss, sinergia visibile col "filo". È un **redesign della scocca → tocca M1 → design-first**, poi costruire. (Scaling a pacchetti Smart/Pro/Enterprise = Fase 3, in parking-lot.)
+1. **Rivedere/approvare l'anteprima `docs/test-m1/home-moduli-anteprima.html`** — Home a moduli (ogni modulo un suo spazio + task, gestire quasi tutto da lì), barra che raggiunge i moduli, "Altro" = gestione Sliss, sinergia visibile col "filo". È un **redesign della scocca → tocca M1 → design-first**, poi costruire. **+ contatori dedicati per modulo dove servono (es. Richieste) [feedback Erik 23/06].** (Scaling a pacchetti Smart/Pro/Enterprise = Fase 3, in parking-lot.)
 2. **Auto-aggiornamento** della lista Richieste (no refresh manuale — poll o refresh al rientro). [feedback Erik]
 3. **Link eBay reali:** export CSV dal Seller Hub di Luca → riempire i campi `ebay` in `richieste.html` (deep-link scheda). Stesso CSV = seme del futuro "importa inventario".
 4. **Go-live M3 coi clienti veri (SOLO ora che è completo):** Luca imposta il **messaggio di benvenuto** WhatsApp Business col link (testo pronto; numero Kayek3D `393458983135`). Far puntare i link a `sliss.it`.
-5. **Verifica end-to-end** dall'app: `https://sliss.it/?tester=demo` → manda richiesta dal link (`…/richieste.html?o=demo&wa=393458983135`) → Richieste → Crea ordine → Ordini+Follow-Up.
+5. ✅ **Verifica end-to-end: GIÀ FATTA** (collaudo demo 23/06, ok). Quindi il vero "prossimo passo concreto" è il **go-live (punto 4)** appena Luca è raggiungibile.
 
 Dettaglio: `docs/spec-m3-richieste.md` · `docs/decisioni.md` · `docs/parking-lot.md`.
