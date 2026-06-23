@@ -109,15 +109,15 @@ Questo è **coerente** con la linea social già in `docs/social.md` (CTA leggera
 
 | Tipo | Descrizione | Azione |
 |---|---|---|
-| ⚠️ RISCHIO | **Dominio non registrato** — `sliss.it`/`sliss.com` potrebbe essere preso | Verificare disponibilità e registrare (pochi €/anno). Basso costo, alto rimpianto se perso |
-| ⚠️ RISCHIO | **Mancanza di one-liner** — senza una frase sintetica (bio LinkedIn, header landing, pitch) la comunicazione è dispersa | Definire una frase tipo: "Sliss aiuta professionisti e piccole attività a curare i clienti senza perdere tempo" |
+| 🟡 IN CORSO | **Dominio** — `sliss.it`/`.com` non disponibili; scelto `sliss-operations.it` (~€9+IVA/anno SupportHost) | Da registrare a casa (23/06) |
+| ✅ CHIUSO | ~~**Mancanza di one-liner**~~ → definita 23/06 | *"Sliss aiuta professionisti e piccole attività a curare i clienti senza perdere tempo."* |
 | ✅ OPPORTUNITÀ | **Logo nuovo = momento di rilancio social** — il rebranding è un contenuto naturale da pubblicare | Post "nuovo look" su LinkedIn/Facebook, mostrando il prima/dopo. Contenuto autentico, building in public |
 
 ### Media priorità
 
 | Tipo | Descrizione | Azione |
 |---|---|---|
-| ⚠️ RISCHIO | **Tagline "Ecosistema Operativo" non validata** — è nel footer dell'app ma non è mai stata discussa come posizionamento | Decidere: tenerla, cambiarla ("Liscio come deve essere"?) o rimuoverla |
+| ✅ CHIUSO | ~~**Tagline "Ecosistema Operativo"**~~ → sostituita 23/06 con **"Liscio come deve essere"** | Payoff ufficiale, live nell'app |
 | ⚠️ RISCHIO | **Nessun canale Instagram** — il target (tatuatori, barbieri, estetiste) vive su Instagram più che su LinkedIn | Valutare apertura profilo Instagram in Fase 2/3 |
 | ✅ OPPORTUNITÀ | **Dark mode come "lancio" di un tema premium** — il mockup Revolut è approvato e molto attraente | Può diventare un differenziatore visivo al momento del lancio pubblico |
 
@@ -145,7 +145,7 @@ Questo è **coerente** con la linea social già in `docs/social.md` (CTA leggera
 
 ### Cosa manca (❌)
 - ~~**One-liner**~~ → ✅ FATTO 23/06: "Sliss aiuta professionisti e piccole attività a curare i clienti senza perdere tempo."
-- **Dominio proprio** (`sliss.it`/`sliss.com`) — da verificare e registrare
+- ~~**Dominio proprio**~~ → 🟡 IN CORSO 23/06: `sliss.it`/`.com` non disponibili. Scelto **`sliss-operations.it`** (~€9+IVA/anno, SupportHost). Da registrare a casa.
 - **Landing page** con raccolta contatti
 - **Pagina aziendale** LinkedIn/Facebook dedicata (ora è il profilo personale di Erik)
 - **Instagram** (il canale naturale del target)
