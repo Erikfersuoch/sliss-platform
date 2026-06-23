@@ -15,6 +15,7 @@ export const emptyData = () => ({
   feedbacks: [],
   orders: [],
   slots: [],
+  richieste: [],
   settings: {
     businessName: "",
     reviewLink: "",
@@ -36,6 +37,7 @@ const healData = (raw) => {
     feedbacks:    Array.isArray(raw.feedbacks)    ? raw.feedbacks : def.feedbacks,
     orders:       Array.isArray(raw.orders)       ? raw.orders : def.orders,
     slots:        Array.isArray(raw.slots)        ? raw.slots  : def.slots,
+    richieste:    Array.isArray(raw.richieste)    ? raw.richieste : def.richieste,
     settings: {
       ...def.settings,
       ...(raw.settings && typeof raw.settings === "object" ? raw.settings : {}),

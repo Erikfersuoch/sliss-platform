@@ -11,7 +11,7 @@ const getNavMain = (bizType) => {
 
 // Barra superiore (solo mobile): logo Sliss a sinistra, "Altro" a destra (apre il MoreMenu).
 const TopBar = ({view,setView}) => {
-  const moreActive=["templates","feedback","modules","settings","more"].includes(view);
+  const moreActive=["richieste","templates","feedback","modules","settings","more"].includes(view);
   return (
     <div className="mobile-only" style={{position:"sticky",top:0,zIndex:90,display:"flex",alignItems:"center",justifyContent:"space-between",padding:"10px 18px",background:"var(--c-nav,rgba(255,255,255,.82))",backdropFilter:"blur(20px) saturate(1.3)",WebkitBackdropFilter:"blur(20px) saturate(1.3)",borderBottom:`1px solid ${T.border}`}}>
       <SlissLogo size={22} />
@@ -53,7 +53,7 @@ const FloatingNav = ({view,setView,pendingCount,bizType="",onAdd}) => {
 };
 
 const MoreMenu = ({setView}) => {
-  const items=[{id:"templates",icon:"file",label:"Template",desc:"Gestisci i messaggi"},{id:"feedback",icon:"star",label:"Feedback",desc:"Recensioni clienti"},{id:"modules",icon:"grid",label:"Moduli",desc:"Funzioni aggiuntive"},{id:"settings",icon:"settings",label:"Impostazioni",desc:"Personalizza Sliss"}];
+  const items=[{id:"richieste",icon:"message",label:"Richieste",desc:"Le richieste dal tuo link"},{id:"templates",icon:"file",label:"Template",desc:"Gestisci i messaggi"},{id:"feedback",icon:"star",label:"Feedback",desc:"Recensioni clienti"},{id:"modules",icon:"grid",label:"Moduli",desc:"Funzioni aggiuntive"},{id:"settings",icon:"settings",label:"Impostazioni",desc:"Personalizza Sliss"}];
   return (
     <div style={{animation:"fadeIn .3s ease"}}>
       <h1 style={{fontSize:"22px",fontWeight:700,marginBottom:"22px"}}>Altro</h1>
@@ -72,7 +72,7 @@ const MoreMenu = ({setView}) => {
 
 const DesktopSidebar = ({view,setView}) => {
   const {data:sData}=useSliss();
-  const allNav=[...getNavMain(sData?.settings?.bizType||""),{id:"templates",icon:"file",label:"Template"},{id:"feedback",icon:"star",label:"Feedback"},{id:"modules",icon:"grid",label:"Moduli"},{id:"settings",icon:"settings",label:"Impostazioni"}];
+  const allNav=[...getNavMain(sData?.settings?.bizType||""),{id:"richieste",icon:"message",label:"Richieste"},{id:"templates",icon:"file",label:"Template"},{id:"feedback",icon:"star",label:"Feedback"},{id:"modules",icon:"grid",label:"Moduli"},{id:"settings",icon:"settings",label:"Impostazioni"}];
   return (
     <div className="desktop-only" style={{width:"210px",minHeight:"100vh",background:T.bg2,borderRight:`1px solid ${T.border}`,display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,zIndex:100}}>
       <div style={{padding:"22px 18px 18px",borderBottom:`1px solid ${T.border}`}}>

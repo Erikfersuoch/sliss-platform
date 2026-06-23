@@ -5,6 +5,12 @@
 
 ---
 
+## Prodotto / packaging (Fase 3)
+
+- [23/06/2026] **Schermata "Moduli" come configuratore a pacchetti.** Visione di Erik: il professionista configura i moduli in base al **pacchetto scelto** — **macro-cartelle per tier** (es. *Smart / Pro / Enterprise*), i moduli attivi dentro la macro-cartella, e **dettagli grafici che mostrano la connessione tra i moduli** (la sinergia resa visibile: Richiesta→Ordine→follow-up). È la productizzazione della pagina **Moduli** + del **principio sinergia**. ⚠️ **Fase 3** — tocca pricing/pacchetti, bloccati fino ad allora. Per ora la pagina Moduli resta semplice (modulo attivo quando c'è una richiesta reale). Risponde anche alla domanda "come navigare tra i moduli a regime".
+
+---
+
 ## Critiche founder — da uso reale (Erik)
 
 > Attriti e domande emersi dall'uso diretto di Erik. Dentro lo scope M1 → da affrontare a breve, NON parcheggiati in Fase 4.

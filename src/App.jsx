@@ -22,6 +22,7 @@ import Templates from "./pages/Templates.jsx";
 import Feedback from "./pages/Feedback.jsx";
 import ModulesMap from "./pages/ModulesMap.jsx";
 import Settings from "./pages/Settings.jsx";
+import Richieste from "./pages/Richieste.jsx";
 
 // Migrazione una-tantum (v6.9): nei follow-up in attesa sostituisce il nome completo col solo nome.
 // Gira UNA volta in fase di init dello stato (non dentro un effect → niente setState a cascata).
@@ -70,6 +71,7 @@ export default function SlissPlatform() {
   const [showFeedbackNudge,setShowFeedbackNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='feedback');
   const [showUpdateNudge,setShowUpdateNudge]=useState(()=>new URLSearchParams(window.location.search).get('goto')==='novita');
   const autoCheckRef=useRef(false);
+  const richiesteCheckRef=useRef(false);
   // Tasto "+" della barra flottante: apre un mini-menu, poi naviga alla pagina e ne apre il form "aggiungi".
   const [addSheet,setAddSheet]=useState(false);
   const [addOn,setAddOn]=useState(null);
@@ -105,11 +107,30 @@ export default function SlissPlatform() {
     if(!waiting.length)return;
     waiting.forEach(async slot=>{try{const r=await fetch(`/api/onboarding-check?slot=${slot.id}`);const d=await r.json();if(d.found){const clientId=uid();const _np=(d.name||'').trim().split(' ');const _fn=_np[0]||'';const _ln=_np.slice(1).join(' ');addRecord("clients",{id:clientId,firstName:_fn,lastName:_ln,name:d.name||'',phone:d.phone,email:d.email||"",channel:"WhatsApp",status:"new",tags:[],notes:d.notes||"",firstVisit:today(),lastVisit:today()});update("slots",slot.id,{status:"imported"});}}catch(e){console.error("[auto-check]",e);}});
   },[data,addRecord,update]);
+  // Raccolta automatica delle Richieste dalla cassetta (M3): una volta all'avvio,
+  // importa quelle nuove (dedup per id) nella lista locale di Luca.
+  useEffect(()=>{
+    if(richiesteCheckRef.current)return;
+    richiesteCheckRef.current=true;
+    const tester=localStorage.getItem('sliss-tester');
+    if(!tester)return;
+    (async()=>{try{
+      const r=await fetch(`/api/richiesta-list?owner=${encodeURIComponent(tester)}`);
+      const d=await r.json();
+      const incoming=d?.items||[];
+      if(!incoming.length)return;
+      setData(prev=>{
+        const have=new Set((prev.richieste||[]).map(x=>x.id));
+        const fresh=incoming.filter(it=>it&&it.id&&!have.has(it.id));
+        return fresh.length?{...prev,richieste:[...fresh,...(prev.richieste||[])]}:prev;
+      });
+    }catch(e){console.error("[richieste-check]",e);}})();
+  },[]);
   const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData,importData}),[data,update,addRecord,deleteRecord,updateSettings,resetData,importData]);
 
   const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length;
-  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,richieste:<Richieste/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
