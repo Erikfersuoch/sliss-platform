@@ -173,11 +173,12 @@
 
     document.getElementById('b-ebay').onclick = () => {
       if (!grab()) return;
-      // TODO (Slice 2): registra il lead (nome+cognome+prodotto) lato server
+      logRequest({ nome: ctx.nome, cognome: ctx.cognome, product: ctx.sel || '', kind: 'ebay' });
       window.open(ctx.ebay || SHOP, '_blank', 'noopener');
     };
     document.getElementById('b-direct').onclick = () => {
       if (!grab()) return;
+      logRequest({ nome: ctx.nome, cognome: ctx.cognome, product: ctx.sel || '', kind: 'diretto' });
       const msg = `Ciao ${BIZ}, sono ${ctx.nome} ${ctx.cognome}! 🏁 Mi interessa: ${ctx.sel || 'un prodotto del vostro catalogo'}`;
       window.open(waLink(msg), '_blank', 'noopener');
       showSent('Ti scriviamo appena possibile.');
@@ -218,8 +219,8 @@
     if (!desc || !nome || !cognome) { err.style.display = 'block'; return; }
     ctx.nome = nome; ctx.cognome = cognome;
 
-    // TODO (Slice 2): POST a /api/richiesta-submit → registra la richiesta nel
-    //   cruscotto di Luca (lista "Richieste" + promemoria). Per ora rimbalzo su WhatsApp.
+    // Lascia la richiesta nella cassetta di Luca (lista + promemoria), poi rimbalza su WhatsApp
+    logRequest({ nome, cognome, desc, product: ctx.sel || '', kind: isPerso ? 'perso' : 'sumisura' });
     const msg = isPerso
       ? `Ciao ${BIZ}, sono ${nome} ${cognome}! ✨ Vorrei personalizzare la ${ctx.sel}: ${desc}`
       : `Ciao ${BIZ}, sono ${nome} ${cognome}! 🏁 Avrei una richiesta su misura: ${desc}`;
@@ -241,6 +242,19 @@
   function waLink(text) {
     const t = encodeURIComponent(text);
     return WA ? `https://wa.me/${WA}?text=${t}` : `https://wa.me/?text=${t}`;
+  }
+
+  // Lascia la richiesta nella cassetta del professionista (non bloccante; keepalive
+  // così l'invio sopravvive anche se la pagina passa a WhatsApp/eBay).
+  function logRequest(payload) {
+    try {
+      fetch('/api/richiesta-submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ owner: OWNER, ...payload }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch (e) {}
   }
 
   goTo(FLOW.start);
