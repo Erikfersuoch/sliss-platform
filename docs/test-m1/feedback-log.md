@@ -277,3 +277,30 @@
 - [x] Insight → **spec M3 validata dal tester reale prima di costruire** — approccio spec-first confermato; Luca è il tester più avanzato verso il GO
 
 ---
+
+#### Check — 23/06/2026 (riportato da Erik, stesso giorno — conferma gate)
+
+**Cosa ha detto (le due risposte mancanti, raccolte su aggancio naturale):**
+- ✅ **Copertura: "ha inserito tutti i nuovi clienti fino adesso"** → copertura = **100%** dei clienti nuovi passati da Sliss. Criterio ≥80% **superato**.
+- ✅ **Valore: "è valido"** al netto delle implementazioni attuali. Attende le rifiniture indicate da Erik per la versione 100% completa, ma **conferma che M1 funziona e lo usa**.
+
+**Lettura (gate M1 — Luca): GO.**
+
+| Criterio | Stato | Dato |
+|---|---|---|
+| Copertura ≥ 80% | ✅ | 100% clienti nuovi inseriti |
+| ~8 usi reali | ✅ | 15+ follow-up inviati |
+| Valore confermato | ✅ | "è valido" (esplicito) |
+| Bilancio positivo | ✅ | uso costante, nessuna lamentela, inserisce tutti i clienti |
+
+**Luca è GO.** Tutti e 4 i criteri soddisfatti. La nota "attende rifiniture" non è un blocco — è aspettativa legittima di un prodotto che si sta completando, non un rifiuto del valore attuale. La roadmap prevista (M3 Richieste → automazione) è esattamente ciò che gli è stato indicato.
+
+**Resta aperto: Moira.** Il gate richiede la conferma di entrambi i tester (Moira = riferimento primario per M1 servizi). Con la regola "2 su 3 → GO condizionato" (decisione 10/06), Luca pieno + Moira parziale potrebbe già bastare — ma la decisione spetta a Erik.
+
+**Categoria:**
+- [ ] Bloccante
+- [ ] Frizione
+- [ ] Richiesta feature
+- [x] Insight → **LUCA = GO su tutti i criteri del gate M1.** Primo tester a completare la validazione.
+
+---
