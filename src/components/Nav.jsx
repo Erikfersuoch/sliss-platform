@@ -77,7 +77,7 @@ const DesktopSidebar = ({view,setView}) => {
     <div className="desktop-only" style={{width:"210px",minHeight:"100vh",background:T.bg2,borderRight:`1px solid ${T.border}`,display:"flex",flexDirection:"column",position:"fixed",left:0,top:0,zIndex:100}}>
       <div style={{padding:"22px 18px 18px",borderBottom:`1px solid ${T.border}`}}>
         <SlissLogo size={24} />
-        <div style={{fontSize:"9px",color:T.textMu,fontWeight:500,letterSpacing:".05em",textTransform:"uppercase",marginTop:"4px"}}>Ecosistema Operativo</div>
+        <div style={{fontSize:"9px",color:T.textMu,fontWeight:500,letterSpacing:".05em",textTransform:"uppercase",marginTop:"4px"}}>Liscio come deve essere</div>
       </div>
       <nav style={{flex:1,padding:"8px 6px",display:"flex",flexDirection:"column",gap:"1px"}}>
         {allNav.map(n=>{const a=view===n.id; return (

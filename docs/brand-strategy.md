@@ -36,7 +36,7 @@
 
 ### Incongruenze trovate
 
-1. **Tagline "Ecosistema Operativo"** nel footer sidebar (`Nav.jsx` riga 57) — non è mai stata discussa/approvata come tagline ufficiale. Va deciso se tenerla, cambiarla o rimuoverla.
+1. ~~**Tagline "Ecosistema Operativo"**~~ → **RISOLTA 23/06:** sostituita con **"Liscio come deve essere"** (decisione di Erik). Tagline ufficiale adottata nell'app e come payoff del brand.
 2. **PRODUCT.md anti-references** vietano glassmorphism, ma il mockup dark-mode approvato (`preview-ui-revolut.html`) usa glassmorphism cards con backdrop-blur. Da riconciliare al momento dell'implementazione.
 3. **`sliss-platform.vercel.app`** è ancora l'unico dominio — con l'attivazione dei canali social il link pubblico diventa più visibile. Il dominio proprio dovrebbe salire di priorità.
 
@@ -96,7 +96,7 @@ Questo è **coerente** con la linea social già in `docs/social.md` (CTA leggera
 |---|---|---|---|
 | 1 | Consolidare identità visiva definitiva | ✅ FATTO | Logo integrato nell'app, varianti chiaro/scuro pronte |
 | 2 | Attivare canali social ufficiali | 🟡 IN CORSO | LinkedIn attivo (3 post), Facebook attivo. Mancano: pagina aziendale dedicata, Instagram |
-| 3 | Definire descrizione sintetica del progetto | 🟡 PARZIALE | `PRODUCT.md` ha il purpose; manca una **one-liner** da bio social/landing |
+| 3 | Definire descrizione sintetica del progetto | ✅ FATTO | **One-liner (23/06):** "Sliss aiuta professionisti e piccole attività a curare i clienti senza perdere tempo." Da usare su bio social, landing, pitch. |
 | 4 | Creare landing page con raccolta contatti | ❌ DA FARE | Fase 3+, ma valutare una pagina minimale prima (dominio necessario) |
 | 5 | Iniziare pubblicazione orientata ai problemi | 🟡 IN CORSO | 3 post pubblicati, altri pronti; allineare al tono "problema, non prodotto" |
 | 6 | Raccogliere feedback dai primi potenziali utenti | 🟡 IN CORSO | 2 tester attivi + sondaggio Tally (5 risposte) |
@@ -144,12 +144,12 @@ Questo è **coerente** con la linea social già in `docs/social.md` (CTA leggera
 - **Anti-pitch validato:** mai "promemoria", sempre "meno caos, più tempo"
 
 ### Cosa manca (❌)
-- **One-liner** sintetica per bio/pitch/landing
-- **Dominio proprio** (`sliss.it`/`sliss.com`)
+- ~~**One-liner**~~ → ✅ FATTO 23/06: "Sliss aiuta professionisti e piccole attività a curare i clienti senza perdere tempo."
+- **Dominio proprio** (`sliss.it`/`sliss.com`) — da verificare e registrare
 - **Landing page** con raccolta contatti
 - **Pagina aziendale** LinkedIn/Facebook dedicata (ora è il profilo personale di Erik)
 - **Instagram** (il canale naturale del target)
-- **Tagline ufficiale** validata (candidata: "Liscio come deve essere")
+- ~~**Tagline ufficiale**~~ → ✅ FATTO 23/06: "Liscio come deve essere" — adottata nell'app e come payoff ufficiale
 
 ### Cosa è in stand-by (⏸️)
 - Registrazione marchio → trigger: primi ricavi/trazione
