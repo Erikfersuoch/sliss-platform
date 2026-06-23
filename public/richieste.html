@@ -32,7 +32,7 @@
   .cta.primary{background:var(--green);color:#fff;border-color:var(--green)}
   .cta.primary small{color:rgba(255,255,255,.85)}
   .cta.perso{border-style:dashed;border-color:rgba(22,163,74,.55)}
-  .oppure{text-align:center;font-size:12px;color:var(--textD);font-weight:700;margin:4px 0}
+  .oppure{text-align:center;font-size:12px;color:var(--textD);font-weight:700;margin:8px 0 4px}
   .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin:9px 0;box-shadow:0 6px 20px var(--glow);align-self:stretch;animation:rise .3s ease}
   .card label{display:block;font-size:11px;font-weight:700;color:var(--textD);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
   .card label:first-child{margin-top:0}
@@ -67,10 +67,9 @@
   document.getElementById('biz-label').textContent = 'per ' + BIZ;
 
   // ---- SCRIPT (cucito su Luca, per ora) — domani configurabile dal pro -------
-  // Il motore sotto renderizza questi nodi; lo script è solo dati.
-  // `sel`  = cosa il cliente sta cercando (entra nel messaggio WhatsApp)
-  // `perso`= cover personalizzabile → al passo "compra" comparirà "Personalizzala"
-  // `ebay` = link DIRETTO alla scheda eBay dell'articolo (da riempire coi link reali di Luca)
+  // `sel`  = cosa cerca il cliente (entra nel messaggio WhatsApp)
+  // `perso`= cover personalizzabile → al passo "compra" compare "Personalizzala"
+  // `ebay` = link DIRETTO alla scheda eBay (da riempire coi link reali di Luca)
   const FLOW = {
     start: 'root',
     nodes: {
@@ -103,7 +102,7 @@
   };
 
   // ---- Stato + contesto ------------------------------------------------------
-  const ctx = { sel: null, perso: false, ebay: '' };
+  const ctx = { sel: null, perso: false, ebay: '', nome: '', cognome: '' };
   const chat = document.getElementById('chat');
   const scrollDown = () => requestAnimationFrame(() => chat.scrollTop = chat.scrollHeight);
 
@@ -145,67 +144,52 @@
     scrollDown();
   }
 
-  // ---- Finale: prodotto pronto → eBay / diretto (+ Personalizzala) -----------
+  // ---- Finale: prodotto pronto → nome+cognome SEMPRE, poi eBay / diretto -----
   function renderBuy() {
     bubble(ctx.sel
-      ? `Trovata 🏁 <b>${ctx.sel}</b>. Come preferisci?`
-      : `Perfetto 🏁 Come preferisci?`);
-
-    const ebay = document.createElement('a');
-    ebay.className = 'cta';
-    ebay.href = ctx.ebay || SHOP;
-    ebay.target = '_blank'; ebay.rel = 'noopener';
-    ebay.innerHTML = `🛒 Compra subito su eBay<small>${ctx.ebay ? 'scheda prodotto · protezione acquisti' : 'sul nostro shop · protezione acquisti'}</small>`;
-    chat.appendChild(ebay);
-
-    const opp = document.createElement('div');
-    opp.className = 'oppure'; opp.textContent = 'oppure';
-    chat.appendChild(opp);
-
-    const direct = document.createElement('div');
-    direct.className = 'cta';
-    direct.style.borderColor = 'rgba(22,163,74,.55)';
-    direct.innerHTML = `💬 Scrivi a ${BIZ}<small>parli direttamente con noi</small>`;
-    direct.onclick = () => { direct.style.display = 'none'; renderDirectForm(); };
-    chat.appendChild(direct);
-
-    if (ctx.perso) {
-      const perso = document.createElement('div');
-      perso.className = 'cta perso';
-      perso.innerHTML = `✏️ Personalizzala<small>colore, logo, scritta…</small>`;
-      perso.onclick = () => { goTo('capture'); };
-      chat.appendChild(perso);
-    }
-    scrollDown();
-  }
-
-  // Form nome+cognome del percorso diretto: il messaggio parte già col prodotto scelto
-  function renderDirectForm() {
+      ? `Trovata 🏁 <b>${ctx.sel}</b>. Lasciaci nome e cognome e scegli come preferisci.`
+      : `Perfetto 🏁 Lasciaci nome e cognome e scegli come preferisci.`);
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
       <label>Nome</label>
-      <input id="d-nome" type="text" placeholder="Marco" autocomplete="given-name" />
+      <input id="b-nome" type="text" placeholder="Marco" autocomplete="given-name" />
       <label>Cognome</label>
-      <input id="d-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />
-      <a class="cta primary" id="d-send" style="margin-top:14px">💬 Scrivici su WhatsApp</a>
-      <div class="err" id="d-err">Scrivi nome e cognome.</div>`;
+      <input id="b-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />
+      <a class="cta" id="b-ebay" style="margin-top:14px">🛒 Compra subito su eBay<small>${ctx.ebay ? 'scheda prodotto · protezione acquisti' : 'sul nostro shop · protezione acquisti'}</small></a>
+      <div class="oppure">oppure</div>
+      <a class="cta perso" id="b-direct">💬 Scrivi a ${BIZ}<small>parli direttamente con noi</small></a>
+      ${ctx.perso ? `<a class="cta perso" id="b-perso" style="margin-top:6px">✏️ Personalizzala<small>colore, logo, scritta…</small></a>` : ''}
+      <div class="err" id="b-err">Prima dicci nome e cognome.</div>`;
     chat.appendChild(card);
-    document.getElementById('d-send').onclick = () => {
-      const nome = document.getElementById('d-nome').value.trim();
-      const cognome = document.getElementById('d-cognome').value.trim();
-      const err = document.getElementById('d-err');
-      if (!nome || !cognome) { err.style.display = 'block'; return; }
-      const msg = `Ciao ${BIZ}, sono ${nome} ${cognome}! 🏁 Mi interessa: ${ctx.sel || 'un prodotto del vostro catalogo'}`;
+
+    const grab = () => {
+      const nome = document.getElementById('b-nome').value.trim();
+      const cognome = document.getElementById('b-cognome').value.trim();
+      if (!nome || !cognome) { document.getElementById('b-err').style.display = 'block'; return false; }
+      ctx.nome = nome; ctx.cognome = cognome;
+      return true;
+    };
+
+    document.getElementById('b-ebay').onclick = () => {
+      if (!grab()) return;
+      // TODO (Slice 2): registra il lead (nome+cognome+prodotto) lato server
+      window.open(ctx.ebay || SHOP, '_blank', 'noopener');
+    };
+    document.getElementById('b-direct').onclick = () => {
+      if (!grab()) return;
+      const msg = `Ciao ${BIZ}, sono ${ctx.nome} ${ctx.cognome}! 🏁 Mi interessa: ${ctx.sel || 'un prodotto del vostro catalogo'}`;
       window.open(waLink(msg), '_blank', 'noopener');
       showSent('Ti scriviamo appena possibile.');
     };
+    if (ctx.perso) document.getElementById('b-perso').onclick = () => { if (!grab()) return; goTo('capture'); };
     scrollDown();
   }
 
   // ---- Finale: su misura / personalizzazione → mini-card ---------------------
   function renderCapture() {
-    const isPerso = ctx.perso && ctx.sel;
+    const isPerso  = ctx.perso && ctx.sel;
+    const haveName = ctx.nome && ctx.cognome;   // arrivato da "Personalizzala" dopo il passo compra
     bubble(isPerso
       ? `Personalizziamo la <b>${ctx.sel}</b> ✨ Dicci come la vuoi (colore, logo, scritta) e ti ricontattiamo noi di <b>${BIZ}</b>.`
       : `Raccontaci cosa ti serve e ti ricontattiamo noi di <b>${BIZ}</b> 🏁`);
@@ -214,23 +198,25 @@
     card.innerHTML = `
       <label>${isPerso ? 'Come la vuoi' : 'Cosa ti serve'}</label>
       <textarea id="r-desc" placeholder="${isPerso ? 'Es. verde KTM + scritta “BENVE283”…' : 'Es. supporto stampato 3D per GoPro sul cupolino della mia KTM…'}"></textarea>
+      ${haveName ? '' : `
       <label>Nome</label>
       <input id="r-nome" type="text" placeholder="Marco" autocomplete="given-name" />
       <label>Cognome</label>
-      <input id="r-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />
+      <input id="r-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />`}
       <a class="cta primary" id="r-send" style="margin-top:14px">💬 Invia su WhatsApp<small>allega eventualmente una foto</small></a>
-      <div class="err" id="r-err">Scrivi cosa ti serve, nome e cognome.</div>`;
+      <div class="err" id="r-err">Scrivi cosa ti serve${haveName ? '' : ', nome e cognome'}.</div>`;
     chat.appendChild(card);
-    document.getElementById('r-send').onclick = () => submitRequest(isPerso);
+    document.getElementById('r-send').onclick = () => submitRequest(isPerso, haveName);
     scrollDown();
   }
 
-  function submitRequest(isPerso) {
+  function submitRequest(isPerso, haveName) {
     const desc    = document.getElementById('r-desc').value.trim();
-    const nome    = document.getElementById('r-nome').value.trim();
-    const cognome = document.getElementById('r-cognome').value.trim();
+    const nome    = haveName ? ctx.nome    : document.getElementById('r-nome').value.trim();
+    const cognome = haveName ? ctx.cognome : document.getElementById('r-cognome').value.trim();
     const err     = document.getElementById('r-err');
     if (!desc || !nome || !cognome) { err.style.display = 'block'; return; }
+    ctx.nome = nome; ctx.cognome = cognome;
 
     // TODO (Slice 2): POST a /api/richiesta-submit → registra la richiesta nel
     //   cruscotto di Luca (lista "Richieste" + promemoria). Per ora rimbalzo su WhatsApp.
