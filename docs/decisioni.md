@@ -7,6 +7,7 @@
 
 | Data | Decisione | Motivazione |
 |---|---|---|
+| 23/06/2026 | **M3 Richieste sbloccato per costruzione** | Gate M1 superato lato Luca. Erik: "sblocchiamo M3". Spec già pronta e validata col tester (trial approvato). Si entra in Fase 2 per M3. |
 | 23/06/2026 | **Gate M1 — Luca = GO (tutti i criteri soddisfatti)** | Copertura 100% (tutti i nuovi clienti inseriti), 15+ usi reali (oltre soglia ~8), valore confermato esplicito ("è valido"), bilancio positivo (uso costante, nessuna lamentela). Nota: "attende rifiniture" = aspettativa legittima, non blocco. Spec M3 approvata nello stesso giorno. **Primo tester a completare la validazione.** Resta aperto il gate lato Moira. |
 | 23/06/2026 | **Dominio: `sliss-operations.it` scelto, da registrare su SupportHost** | `sliss.it` e `sliss.com` non disponibili. Scelto `sliss-operations.it` (~€9+IVA/anno, SupportHost). Il trattino è un compromesso accettato (attrito a voce) — se `sliss.it` si libera in futuro, si migra. Da registrare a casa. |
 | 23/06/2026 | **One-liner ufficiale + tagline "Liscio come deve essere"** | **One-liner** (bio social/landing/pitch): *"Sliss aiuta professionisti e piccole attività a curare i clienti senza perdere tempo."* Scelta tra 3 opzioni (A: meno caos, B: focus mestiere, C: alleggerire) → Erik sceglie A. **Tagline:** "Ecosistema Operativo" nel footer sidebar → sostituita con **"Liscio come deve essere"** (payoff ufficiale del brand). Aggiornati `docs/brand-strategy.md` (incongruenza #1 chiusa, azione #3 completata) e `Nav.jsx`. |

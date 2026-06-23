@@ -60,7 +60,7 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 
 1b. **Stato del progetto — verificare SEMPRE prima di affermare.** Prima di dire cosa è deployato, cosa è su main, cosa contiene un file: verificare con `git log origin/main -1`, `git status`, `git log --oneline origin/main..HEAD`. Mai assumere dalla memoria. Il SessionStart hook mostra il contesto all'avvio — usarlo. Docs e configurazione Claude Code (`docs/`, `CLAUDE.md`, `.claude/settings.json`, `scripts/`) vanno committati **direttamente su main**, mai su branch laterali che possono divergere silenziosamente.
 2. **Spiega sempre dove mettere le cose.** Non assumere che sappia dove si trova un file.
-3. **Non toccare mai:** M2, M3, M5, M6, M9 — bloccati fino a validazione M1.
+3. **Non toccare mai:** M2, M5, M6, M9 — bloccati fino a validazione M1. (M3 sbloccato 23/06/2026 — gate Luca GO.)
 4. **Non toccare mai:** Supabase, pricing, sito vetrina — bloccati fino a Fase 3.
 5. **Quando proponi modifiche UI/UX:** mostra prima cosa cambieresti e perché, poi aspetta ok.
 6. **Se vedi dispersione** (sto chiedendo cose fuori focus): bloccami e riportami all'obiettivo della sessione.

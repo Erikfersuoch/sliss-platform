@@ -1,7 +1,7 @@
 # SPEC — M3 "Richieste" (chat guidata che instrada)
 
-> **Tipo:** spec-first su carta (CORE). NON è un via libera a costruire.
-> **Stato:** M3 **bloccato fino a validazione M1** (gate "occasioni reali"). Questa spec serve solo ad anticipare il *cosa*, così che a GO lo sviluppo voli.
+> **Tipo:** spec-first su carta (CORE) → ora **sbloccato per costruzione** (Fase 2).
+> **Stato:** ✅ Gate M1 superato lato Luca (23/06/2026). Trial approvato dal tester. **Si costruisce.**
 > Creata 22/06/2026. Fonte del dolore e cronologia: `docs/modulo-richieste-v1.md`.
 
 ---
@@ -140,4 +140,4 @@ Info già richieste e in attesa (vedi log): 1) screenshot **etichette** WA; 2) *
 Due conferme aperte a Erik: i) ok alla **v1 senza catalogo** (routing + cattura), col "5 prodotti" come step 2? ii) ok al **link** oggi, accettando che l'intercettazione automatica sia Fase 3?
 
 ---
-*Prossimo passo reale: nessuno finché non scatta il GATE M1. Questa spec resta in frigo, pronta.*
+*✅ GATE M1 superato (Luca GO, 23/06/2026). Trial approvato. Si costruisce.*
