@@ -263,3 +263,17 @@
 - [x] Insight → il link tester aperto dal device sbagliato è un vettore di corruzione dati; serve protezione su tutti gli endpoint, non solo backup
 
 ---
+
+#### Check — 23/06/2026 (riportato da Erik)
+
+**Cosa ha detto:** Luca **approva il trial M3 "Richieste"** (`public/anteprima-richieste.html`, inviato la sera del 22/06). Il design della chat guidata su pagina Sliss è validato dall'utente reale per cui è stato progettato.
+
+**Lettura (gate + roadmap):** questo chiude il cerchio spec-first per M3 — spec scritta (`docs/spec-m3-richieste.md`), prototipo prodotto, validato dal tester. Quando il gate M1 passa, M3 si costruisce senza ri-ragionare il "cosa". Lato gate M1: Luca è sempre più vicino al GO — 15+ usi reali ✅, uso costante ✅, 2 riscontri recensione ✅, trial M3 approvato ✅. Restano solo le due risposte esplicite a voce (conferma "valore" + copertura).
+
+**Categoria:**
+- [ ] Bloccante
+- [ ] Frizione
+- [ ] Richiesta feature
+- [x] Insight → **spec M3 validata dal tester reale prima di costruire** — approccio spec-first confermato; Luca è il tester più avanzato verso il GO
+
+---
