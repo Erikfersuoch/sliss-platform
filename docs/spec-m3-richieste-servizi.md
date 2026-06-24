@@ -203,6 +203,44 @@ Il professionista deve poter **personalizzare** il banco FAQ senza toccare codic
 
 ---
 
+## Materiale proprio del professionista (brochure, PDF, immagini)
+
+> **Principio (feedback Erik 24/06):** Sliss non sostituisce il materiale del professionista — lo distribuisce meglio. Se Moira ha già una brochure aftercare bella e fatta bene, farle riscrivere tutto come FAQ testuale è un passo indietro.
+
+**Approccio ibrido:** la chat fa da smistamento, ma il contenuto può essere un file caricato dal professionista (PDF, immagine, brochure) oppure il testo precompilato come fallback.
+
+**Flusso con materiale proprio:**
+```
+Cliente: "Info prima/dopo il trattamento" → "Dopo il trattamento"
+Chat:    "Ecco la guida alla cura del tuo tatuaggio 👇"
+         ┌──────────────────────────────────┐
+         │  📄  Guida Aftercare             │
+         │  [anteprima / icona file]        │
+         │                                  │
+         │       [ Apri la guida ]          │
+         └──────────────────────────────────┘
+```
+
+**Flusso senza materiale (fallback):**
+```
+Chat: risposte testuali precompilate per cluster (il banco FAQ sopra)
+```
+
+**Dove si carica:** in Impostazioni, sezione "Il tuo materiale":
+- **Info pre-trattamento** → upload file (PDF/immagine) oppure niente (usa testo default)
+- **Info post-trattamento** → upload file (PDF/immagine) oppure niente (usa testo default)
+- Ogni tipo di servizio può avere il suo file diverso (es. aftercare tatuaggio ≠ aftercare PMU)
+
+**Perché è potente:**
+- Chi ha già materiale (Moira con la brochure) → lo carica e funziona subito, zero riscrittura
+- Chi non ha niente → usa le FAQ testuali precompilate (comunque meglio di niente)
+- Il materiale del professionista mantiene il suo **brand** (grafica, tono, stile) — Sliss non lo appiattisce
+- Stesso materiale distribuito a ogni cliente, automaticamente, al momento giusto — oggi Moira lo manda a mano su WhatsApp uno per uno
+
+**Estensione futura:** lo stesso meccanismo vale anche per FAQ (un professionista potrebbe caricare un PDF "listino prezzi" come risposta alla domanda "Quanto costa?") e per il ramo prenotazione (un PDF "cosa portare al primo appuntamento").
+
+---
+
 ## Sinergia con M1 (follow-up)
 
 | Evento | Cosa succede in M1 |
