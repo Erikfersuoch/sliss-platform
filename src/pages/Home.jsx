@@ -9,40 +9,132 @@ import { HELP } from "../help.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 import InviteClient from "../components/InviteClient.jsx";
 
-const Home = ({setView}) => {
-  const {data,update,addRecord}=useSliss();
-  const [showQuickAdd,setShowQuickAdd]=useState(false);
-  const [showInvite,setShowInvite]=useState(false);
-  const [qDone,setQDone]=useState(false);
-  const [qForm,setQForm]=useState({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
-  const [celebrate,setCelebrate]=useState(false);
+// ═══════════════════════════════════════════════════════════════
+//  HOME PRODOTTI — hero dinamico + moduli compatti (v2)
+// ═══════════════════════════════════════════════════════════════
+const HomeProdotti = ({setView,data,update,pending,toShip}) => {
   const td=today();
-  const biz=data.settings?.businessName||"la tua attivit\u{e0}";
-  const bizType=data?.settings?.bizType||"servizi";
-  const cluster=data?.settings?.cluster||"altro_s";
-  const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
-  const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
-  const sent=(data?.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed");
-  const newbie=sent.length===0; // nuovo (mai inviato) → send-coachmark; caldo (sent>0) → dritte "Lo sapevi?"
-  const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
-  const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
-  const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];
-  // Primo accesso: nessun cliente ancora. La Home diventa una sola azione chiara
-  // ("Inizia da qui") invece di contatori a zero + "Tutto fatto" fuorviante.
-  const noClients=(data?.clients||[]).length===0;
+  const biz=data.settings?.businessName||"la tua attività";
+  const richNuove=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova");
+  const orders=(data?.orders||[]);
+  const ordersActive=orders.filter(o=>o.status==="pending"||o.status==="shipped");
+
   const markReady=(order)=>{const cl=(data?.clients||[]).find(c=>c.id===order.clientId);const fu=(data?.followUps||[]).find(f=>f.orderId===order.id&&f.phase==="shipping");update("orders",order.id,{status:"shipped",shippedDate:today()});if(fu){update("followUps",fu.id,{scheduledDate:today(),status:"sent",sentDate:today()});openSend(sendHref(fu.message,cl?.phone,cl?.email,cl?.channel));}};
-  const handleQuickAdd=()=>{
-    const needEmail=qForm.channel==="Email";
-    if(!qForm.firstName.trim()||(needEmail?!qForm.email.trim():!qForm.phone.trim()))return;
-    const qName=qForm.firstName.trim()+(qForm.lastName.trim()?' '+qForm.lastName.trim():'');
-    let clientId=(data?.clients||[]).find(c=>(qForm.phone.trim()&&c.phone===qForm.phone.trim())||(qForm.email.trim()&&c.email===qForm.email.trim()))?.id;
-    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,firstName:qForm.firstName.trim(),lastName:qForm.lastName.trim(),name:qName,phone:qForm.phone.trim(),email:qForm.email.trim(),channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
-    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.firstName.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
-    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.firstName.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
-    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
-  };
+
+  // Hero: la singola azione più urgente
+  // Priorità: 1) richiesta più vecchia in attesa, 2) ordine da spedire, 3) follow-up scaduto/oggi
+  let hero=null;
+  if(richNuove.length>0){
+    const oldest=richNuove[richNuove.length-1];
+    const d=oldest.date||oldest.created;
+    const age=d?Math.round((new Date(td)-new Date(d))/864e5):0;
+    hero={type:"richiesta",item:oldest,label:"Richiesta in attesa",name:`${oldest.nome||""} ${oldest.cognome||""}`.trim()||"Nuovo cliente",desc:oldest.prodotto||oldest.tipo||"Richiesta dal link",age:age>0?`da ${age} giorn${age===1?"o":"i"}`:"oggi",action:"Crea ordine",onAction:()=>setView("richieste"),icon:"bell",color:T.green};
+  } else if(toShip.length>0){
+    const o=toShip[0];const cl=(data?.clients||[]).find(c=>c.id===o.clientId);
+    hero={type:"ordine",item:o,label:"Ordine da spedire",name:cl?.name||"—",desc:o.product||"Ordine",age:null,action:"🚀 Segna come spedito",onAction:()=>markReady(o),icon:"package",color:T.amber};
+  } else if(pending.length>0){
+    const fu=pending[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
+    hero={type:"followup",item:fu,label:`Follow-up: ${ph.label}`,name:cl?.name||"—",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
+  }
+
+  // Conteggi moduli
+  const richCount=richNuove.length;
+  const shipCount=toShip.length;
+  const fuCount=pending.length;
+  const allCalm=richCount===0&&shipCount===0&&fuCount===0;
+
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
+      <div style={{marginBottom:"16px"}}>
+        <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
+        <h1 style={{fontSize:"24px",fontWeight:800,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()}, <span style={{color:T.green}}>{biz}</span></h1>
+        <div style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>{allCalm?"Niente di urgente: sei in pari.":"La cosa più importante prima — poi il resto."}</div>
+      </div>
+
+      {/* HERO o STATO CALMO */}
+      {hero ? (
+        <div style={{background:`linear-gradient(165deg,${T.bg2},${T.bg3})`,border:`1.6px solid color-mix(in srgb, ${hero.color} 38%, transparent)`,borderRadius:T.r.xl,padding:"16px",marginBottom:"16px",position:"relative",overflow:"hidden",boxShadow:`0 12px 30px color-mix(in srgb, ${hero.color} 16%, transparent)`}}>
+          <div style={{position:"absolute",left:0,top:0,bottom:0,width:"4px",background:hero.color}} />
+          <div style={{display:"flex",alignItems:"center",gap:"6px",fontSize:"10.5px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:hero.color,marginBottom:"10px"}}>
+            <div style={{width:"7px",height:"7px",borderRadius:"50%",background:hero.color,animation:"pulse 1.8s infinite"}} />
+            Da fare adesso
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:"11px",marginBottom:"13px"}}>
+            <div style={{width:"42px",height:"42px",borderRadius:"12px",background:`color-mix(in srgb, ${hero.color} 10%, transparent)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <Icon name={hero.icon} size={20} color={hero.color} />
+            </div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontWeight:800,fontSize:"15.5px"}}>{hero.name}</div>
+              <div style={{fontSize:"12.5px",color:T.textM,marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{hero.label}: {hero.desc}{hero.age?` · ${hero.age}`:""}</div>
+            </div>
+          </div>
+          <button onClick={hero.onAction} style={{display:"block",width:"100%",textAlign:"center",background:hero.color,color:"#fff",fontSize:"14px",fontWeight:800,padding:"13px 0",borderRadius:"13px",border:"none",cursor:"pointer",fontFamily:"inherit",boxShadow:`0 8px 18px color-mix(in srgb, ${hero.color} 18%, transparent)`}}>{hero.action}</button>
+          {hero.type==="richiesta"&&richCount>1&&<button onClick={()=>setView("richieste")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutte le richieste ({richCount})</button>}
+        </div>
+      ) : (
+        <div style={{background:`linear-gradient(165deg,${T.bg2},${T.bg3})`,border:`1.4px solid ${T.border}`,borderRadius:T.r.xl,padding:"26px 18px",textAlign:"center",marginBottom:"16px",boxShadow:`0 8px 22px color-mix(in srgb, ${T.green} 6%, transparent)`}}>
+          <div style={{width:"54px",height:"54px",borderRadius:"50%",background:T.greenS,color:T.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"26px",margin:"0 auto 12px"}}>✓</div>
+          <h2 style={{fontSize:"17px",fontWeight:800}}>Tutto sotto controllo</h2>
+          <p style={{fontSize:"12.5px",color:T.textD,marginTop:"5px",lineHeight:1.5}}>Nessuna richiesta in attesa, nessun ordine da spedire.<br/>I follow-up partono quando serve.</p>
+          <div style={{marginTop:"15px",fontSize:"12px",fontWeight:700,color:T.green,background:T.greenS,borderRadius:"12px",padding:"10px 13px",display:"inline-block"}}>💡 Aggiorna gli stati spedizione quando spedisci</div>
+        </div>
+      )}
+
+      {/* SEZIONE MODULI */}
+      <div style={{fontSize:"11px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,margin:"18px 2px 9px"}}>I tuoi moduli</div>
+
+      {/* Richieste */}
+      <button onClick={()=>setView("richieste")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="bell" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Richieste</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>dal tuo link</div></div>
+        {richCount>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{richCount} da gestire</span>
+          : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>›</span>
+      </button>
+      <div style={{display:"flex",alignItems:"center",gap:"7px",margin:"1px 0 9px 24px",fontSize:"10px",color:T.textMu,fontWeight:700}}>
+        <div style={{width:"11px",height:"11px",borderLeft:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottom:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottomLeftRadius:"5px"}} />
+        diventa un ordine
+      </div>
+
+      {/* Ordini */}
+      <button onClick={()=>setView("orders")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="package" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Ordini</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>{ordersActive.length} in corso</div></div>
+        {shipCount>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{shipCount} da spedire</span>
+          : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>›</span>
+      </button>
+      <div style={{display:"flex",alignItems:"center",gap:"7px",margin:"1px 0 9px 24px",fontSize:"10px",color:T.textMu,fontWeight:700}}>
+        <div style={{width:"11px",height:"11px",borderLeft:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottom:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottomLeftRadius:"5px"}} />
+        accende i follow-up
+      </div>
+
+      {/* Follow-Up */}
+      <button onClick={()=>setView("followup")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"14px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="message" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Follow-Up</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>post-vendita</div></div>
+        {fuCount>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{fuCount} da inviare</span>
+          : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>›</span>
+      </button>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  HOME SERVIZI — invariata (Moira)
+// ═══════════════════════════════════════════════════════════════
+const HomeServizi = ({setView,data,update,pending,sent,activeC,toReact,noClients,setShowQuickAdd,setShowInvite,setCelebrate,newbie}) => {
+  const td=today();
+  const biz=data.settings?.businessName||"la tua attività";
+  return (
+    <>
       <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"-4px"}}>
         <span style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:T.textD}}>Come funziona <Info {...HELP.moduleGuide} /></span>
       </div>
@@ -57,7 +149,7 @@ const Home = ({setView}) => {
               <h2 style={{fontSize:"17px",fontWeight:800,letterSpacing:"-.02em",marginBottom:"6px"}}>Inizia da qui</h2>
               <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.55,maxWidth:"280px",margin:"0 auto 16px"}}>Aggiungi il tuo primo cliente: Sliss prepara subito i messaggi da inviargli, già scritti.</p>
               <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center"}}>{"+ Aggiungi il tuo primo cliente"}</Btn>
-              {bizType!=="prodotti"&&<button onClick={()=>setShowInvite(true)} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:T.textD,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit"}}>oppure <span style={{color:T.blue,fontWeight:600}}>invitalo con un link</span></button>}
+              <button onClick={()=>setShowInvite(true)} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:T.textD,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit"}}>oppure <span style={{color:T.blue,fontWeight:600}}>invitalo con un link</span></button>
             </div>
             <Card style={{marginBottom:"14px"}}>
               <h2 style={{fontSize:"14px",fontWeight:600,color:T.textMu,marginBottom:"6px"}}>Qui vedrai i tuoi clienti</h2>
@@ -66,7 +158,7 @@ const Home = ({setView}) => {
           </>
         : <>
             <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
-            {bizType!=="prodotti"&&<Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>}
+            <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>
             {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"5px",fontSize:"13px",color:T.textD,textDecoration:"none"}}><Icon name="star" size={14} />Vedi recensioni</a></div>}
             <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
               {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
@@ -107,17 +199,6 @@ const Home = ({setView}) => {
                   </div>
               }
             </Card>
-            {toShip.length>0&&<Card style={{marginBottom:"14px"}}>
-              <h2 style={{display:"flex",alignItems:"center",gap:"7px",fontSize:"15px",fontWeight:700,marginBottom:"12px"}}><Icon name="package" size={16} />Ordini da spedire</h2>
-              <div style={{display:"flex",flexDirection:"column",gap:"8px"}}>
-                {toShip.map(o=>{const cl=(data?.clients||[]).find(c=>c.id===o.clientId);return (
-                  <div key={o.id} style={{display:"flex",alignItems:"center",gap:"10px",padding:"10px",background:T.bg3,borderRadius:T.r.m}}>
-                    <div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"14px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl?.name||"\u{2014}"}</div><div style={{fontSize:"12px",color:T.textD,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{o.product}</div></div>
-                    <Btn s="sm" onClick={()=>markReady(o)}>{"\u{1F680}"} Ready to go</Btn>
-                  </div>
-                );})}
-              </div>
-            </Card>}
             <Card>
               <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>Clienti</h2>
               <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
@@ -128,6 +209,49 @@ const Home = ({setView}) => {
               </div>
             </Card>
           </>
+      }
+    </>
+  );
+};
+
+// ═══════════════════════════════════════════════════════════════
+//  HOME — router servizi/prodotti + modal condivisi
+// ═══════════════════════════════════════════════════════════════
+const Home = ({setView}) => {
+  const {data,update,addRecord}=useSliss();
+  const [showQuickAdd,setShowQuickAdd]=useState(false);
+  const [showInvite,setShowInvite]=useState(false);
+  const [qDone,setQDone]=useState(false);
+  const [qForm,setQForm]=useState({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
+  const [celebrate,setCelebrate]=useState(false);
+  const td=today();
+  const bizType=data?.settings?.bizType||"servizi";
+  const cluster=data?.settings?.cluster||"altro_s";
+  const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
+  const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
+  const sent=(data?.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed");
+  const newbie=sent.length===0;
+  const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
+  const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
+  const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];
+  const noClients=(data?.clients||[]).length===0;
+
+  const handleQuickAdd=()=>{
+    const needEmail=qForm.channel==="Email";
+    if(!qForm.firstName.trim()||(needEmail?!qForm.email.trim():!qForm.phone.trim()))return;
+    const qName=qForm.firstName.trim()+(qForm.lastName.trim()?' '+qForm.lastName.trim():'');
+    let clientId=(data?.clients||[]).find(c=>(qForm.phone.trim()&&c.phone===qForm.phone.trim())||(qForm.email.trim()&&c.email===qForm.email.trim()))?.id;
+    if(!clientId){clientId=uid();addRecord("clients",{id:clientId,firstName:qForm.firstName.trim(),lastName:qForm.lastName.trim(),name:qName,phone:qForm.phone.trim(),email:qForm.email.trim(),channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
+    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.firstName.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
+    else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.firstName.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
+    setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
+  };
+
+  return (
+    <div style={{animation:"fadeIn .35s ease"}}>
+      {bizType==="prodotti"
+        ? <HomeProdotti setView={setView} data={data} update={update} pending={pending} toShip={toShip} />
+        : <HomeServizi setView={setView} data={data} update={update} pending={pending} sent={sent} activeC={activeC} toReact={toReact} noClients={noClients} setShowQuickAdd={setShowQuickAdd} setShowInvite={setShowInvite} setCelebrate={setCelebrate} newbie={newbie} />
       }
       {showInvite&&<InviteClient onClose={()=>setShowInvite(false)} />}
       <Modal open={showQuickAdd} onClose={()=>{setShowQuickAdd(false);setQDone(false);}} title="Nuovo cliente">
