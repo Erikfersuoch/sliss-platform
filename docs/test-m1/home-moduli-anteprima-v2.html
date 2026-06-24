@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sliss — Home a moduli v2 (fix UX incorporati)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+  :root{
+    --green:#16A34A;--greenH:#15803D;--greenS:rgba(22,163,74,.10);
+    --amber:#B45309;--amberS:rgba(217,119,6,.13);
+    --bg2:#fff;--border:#E2E9E3;--text:#111813;--textM:#46514B;--textD:#5B665F;--textMu:#8A968F;
+    --tile:rgba(22,163,74,.09);                 /* tile modulo: UNICA tinta brand, uguale per tutti */
+    --shell:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);
+    --glow:rgba(22,163,74,.16);--nav:rgba(255,255,255,.82);
+  }
+  body{background:#171b1f;color:#eaf2ee;min-height:100vh;padding-bottom:70px}
+  .top{text-align:center;padding:30px 20px 8px;max-width:880px;margin:0 auto}
+  .badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:5px 12px;border-radius:20px}
+  .top h1{font-size:24px;font-weight:800;color:#fff;margin:14px 0 8px}
+  .top p{font-size:14px;color:#aebfcf;line-height:1.6}
+  .top .note{margin-top:14px;font-size:12.5px;color:#8aa0b3;background:#10151a;border:1px solid #243039;border-radius:14px;padding:12px 15px;line-height:1.55;text-align:left}
+  .top .note b{color:#cfe0d6}
+
+  .stage{display:flex;flex-wrap:wrap;gap:30px;justify-content:center;align-items:flex-start;padding:34px 18px 10px;max-width:1180px;margin:0 auto}
+
+  .phone{width:330px;height:710px;border-radius:42px;overflow:hidden;position:relative;box-shadow:0 0 0 1.5px rgba(255,255,255,.08),0 28px 70px rgba(0,0,0,.5);background:#000;flex-shrink:0}
+  .screen{height:100%;background:var(--shell);display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .plabel{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.55);z-index:5}
+  .pbar{height:40px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 18px 7px;font-size:12px;font-weight:600;color:var(--textD)}
+  .pbar .right{display:flex;gap:5px;align-items:center}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:6px 18px 12px}
+  .logo{font-size:19px;font-weight:800;color:var(--green);letter-spacing:-.03em}
+  .altro{font-size:11px;font-weight:700;color:var(--textD);display:flex;flex-direction:column;align-items:center;gap:2px}
+  .altro .dot{font-size:16px;line-height:.7}
+  .bd{flex:1;overflow-y:auto;padding:2px 16px 90px;scrollbar-width:none}
+  .bd::-webkit-scrollbar{display:none}
+  .greet{font-size:12px;color:var(--green);font-weight:700}
+  .h1{font-size:23px;font-weight:800;letter-spacing:-.4px;color:var(--text);margin-top:1px}
+  .sub{font-size:12.5px;color:var(--textD);margin:3px 0 14px}
+
+  .seclbl{font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--textMu);margin:18px 2px 9px}
+
+  /* ===== HERO: la UNICA azione primaria del giorno ===== */
+  .hero{background:linear-gradient(165deg,#fff 0,#F4FAF5 100%);border:1.6px solid rgba(22,163,74,.38);border-radius:20px;padding:16px 16px 15px;box-shadow:0 12px 30px var(--glow);position:relative;overflow:hidden}
+  .hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--green)}
+  .hero .kick{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:6px}
+  .hero .kick .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(22,163,74,.5);animation:pl 1.8s infinite}
+  @keyframes pl{0%{box-shadow:0 0 0 0 rgba(22,163,74,.45)}70%{box-shadow:0 0 0 7px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+  .hero .who{display:flex;align-items:center;gap:11px;margin:11px 0 13px}
+  .hero .av{width:42px;height:42px;border-radius:12px;background:var(--tile);color:var(--greenH);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+  .hero .nm{font-size:15.5px;font-weight:800;color:var(--text)}
+  .hero .ds{font-size:12.5px;color:var(--textM);margin-top:2px}
+  .hero .cta{display:block;width:100%;text-align:center;background:var(--green);color:#fff;font-size:14px;font-weight:800;padding:13px 0;border-radius:13px;box-shadow:0 8px 18px var(--glow)}
+  .hero .skip{display:block;text-align:center;font-size:11.5px;color:var(--textD);font-weight:700;margin-top:9px}
+
+  /* ===== MODULI: righe compatte, gerarchia bassa ===== */
+  .mrow{display:flex;align-items:center;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:15px;padding:12px 13px;margin-bottom:9px;box-shadow:0 4px 14px rgba(16,40,24,.05)}
+  .mico{width:36px;height:36px;border-radius:11px;background:var(--tile);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;color:var(--greenH)}
+  .minfo{flex:1;min-width:0}
+  .minfo .nm{font-size:14px;font-weight:800;color:var(--text)}
+  .minfo .ct{font-size:11.5px;color:var(--textD);margin-top:1px}
+  /* PILL = solo stato (mai colore-modulo): ambra=da fare · verde=in pari · grigio=info */
+  .pill{font-size:11px;font-weight:800;padding:5px 11px;border-radius:20px;white-space:nowrap;display:flex;align-items:center;gap:5px}
+  .pill.do{background:var(--amberS);color:var(--amber)}
+  .pill.ok{background:var(--greenS);color:var(--greenH)}
+  .pill.info{background:#EEF2EE;color:var(--textD)}
+  .chev{color:var(--textMu);font-size:17px;font-weight:700;margin-left:2px}
+
+  /* filo sinergia — versione DISCRETA (sottile, senza testo dopo i primi giorni) */
+  .thread{display:flex;align-items:center;gap:7px;margin:1px 0 9px 24px;font-size:10px;color:var(--textMu);font-weight:700}
+  .thread .ln{width:11px;height:11px;border-left:1.6px solid rgba(22,163,74,.45);border-bottom:1.6px solid rgba(22,163,74,.45);border-bottom-left-radius:5px}
+
+  /* stato calmo */
+  .calm{background:linear-gradient(165deg,#fff,#F4FAF5);border:1.4px solid var(--border);border-radius:20px;padding:26px 18px;text-align:center;box-shadow:0 8px 22px rgba(16,40,24,.06)}
+  .calm .ck{width:54px;height:54px;border-radius:50%;background:var(--greenS);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 12px}
+  .calm h2{font-size:17px;font-weight:800;color:var(--text)}
+  .calm p{font-size:12.5px;color:var(--textD);margin-top:5px;line-height:1.5}
+  .calm .hint{margin-top:15px;font-size:12px;font-weight:700;color:var(--green);background:var(--greenS);border-radius:12px;padding:10px 13px;display:inline-block}
+
+  /* bottom nav */
+  .nav{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:center;padding-bottom:16px;pointer-events:none}
+  .navin{pointer-events:auto;display:flex;align-items:center;gap:2px;padding:7px 8px;background:var(--nav);backdrop-filter:blur(24px) saturate(1.5);-webkit-backdrop-filter:blur(24px) saturate(1.5);border:1px solid var(--border);border-radius:26px;box-shadow:0 12px 40px rgba(20,60,40,.2)}
+  .ni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 10px;border-radius:15px;color:var(--textD);min-width:48px;position:relative}
+  .ni.on{background:var(--greenS);color:var(--green)}
+  .ni .ic{font-size:18px;line-height:1}
+  .ni .lb{font-size:8.5px;font-weight:700}
+  .ni .bdg{position:absolute;top:2px;right:8px;min-width:14px;height:14px;padding:0 3px;border-radius:7px;background:var(--amber);color:#fff;font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .fab{width:46px;height:46px;border-radius:50%;background:#fff;color:var(--green);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;font-size:24px;margin:-10px 4px 0;box-shadow:0 6px 16px rgba(20,60,40,.14)}
+
+  .annot{width:320px;color:#c4d3ca;font-size:13px;line-height:1.65}
+  .annot h3{color:#fff;font-size:15px;font-weight:800;margin:0 0 4px}
+  .annot .blk{background:#10151a;border:1px solid #243039;border-radius:14px;padding:14px 15px;margin-bottom:11px}
+  .annot .blk b{color:#eaf2ee}
+  .annot .tag{display:inline-block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;padding:3px 9px;border-radius:11px;background:var(--greenS);color:#7ee0a3;margin-bottom:8px}
+  .annot .fix{color:#7ee0a3;font-weight:800}
+  .foot{text-align:center;font-size:11.5px;color:#7e93a4;padding:24px 18px 10px;max-width:760px;margin:0 auto;line-height:1.6}
+</style>
+</head>
+<body>
+  <div class="top">
+    <span class="badge">Home a moduli · v2 — fix UX incorporati</span>
+    <h1>Stessa idea, raffinata</h1>
+    <p>Confermato il concetto, ho applicato i 4 fix da designer: <b>una sola priorità in evidenza</b>, <b>stato calmo disegnato</b>, <b>colore = solo stato</b> (non decorazione), <b>filo discreto</b>. A destra le due giornate-tipo.</p>
+    <div class="top note">⚠️ <b>Mockup statico per ragionarci</b>, non l'app vera. Costruisco a slice solo dopo il tuo ok, coi 45 test verdi a fare da rete.</div>
+  </div>
+
+  <div class="stage">
+
+    <!-- ===== PHONE 1: GIORNATA ATTIVA (gerarchia) ===== -->
+    <div class="phone"><div class="screen">
+      <div class="plabel">giornata attiva</div>
+      <div class="pbar" style="margin-top:14px"><span>9:41</span><span class="right">📶 🔋</span></div>
+      <div class="topbar"><div class="logo">Sliss</div><div class="altro"><span class="dot">•••</span>Altro</div></div>
+      <div class="bd">
+        <div class="greet">Kayek3D · martedì 24</div>
+        <div class="h1">Ciao Luca 🏁</div>
+        <div class="sub">La cosa più importante prima — poi il resto.</div>
+
+        <!-- HERO: una sola azione primaria -->
+        <div class="hero">
+          <div class="kick"><span class="pulse"></span> Da fare adesso</div>
+          <div class="who">
+            <div class="av">M</div>
+            <div style="flex:1">
+              <div class="nm">Marco Rossi</div>
+              <div class="ds">Richiesta: Cover Starlane Stealth 5 · in attesa da 2 giorni</div>
+            </div>
+          </div>
+          <span class="cta">Crea ordine →</span>
+          <span class="skip">Vedi tutte le richieste (2)</span>
+        </div>
+
+        <!-- MODULI compatti -->
+        <div class="seclbl">I tuoi moduli</div>
+
+        <div class="mrow">
+          <div class="mico">📨</div>
+          <div class="minfo"><div class="nm">Richieste</div><div class="ct">dal tuo link</div></div>
+          <span class="pill do">1 da gestire</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="thread"><span class="ln"></span> diventa un ordine</div>
+
+        <div class="mrow">
+          <div class="mico">📦</div>
+          <div class="minfo"><div class="nm">Ordini</div><div class="ct">5 in corso</div></div>
+          <span class="pill do">1 da spedire</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="thread"><span class="ln"></span> accende i follow-up</div>
+
+        <div class="mrow">
+          <div class="mico">💬</div>
+          <div class="minfo"><div class="nm">Follow-Up</div><div class="ct">post-vendita</div></div>
+          <span class="pill do">3 da inviare</span>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <div class="nav"><div class="navin">
+        <div class="ni on"><span class="ic">🏠</span><span class="lb">Home</span></div>
+        <div class="ni"><span class="ic">📨</span><span class="lb">Richieste</span><span class="bdg">1</span></div>
+        <div class="fab">+</div>
+        <div class="ni"><span class="ic">📦</span><span class="lb">Ordini</span></div>
+        <div class="ni"><span class="ic">💬</span><span class="lb">Follow-Up</span></div>
+      </div></div>
+    </div></div>
+
+    <!-- ===== PHONE 2: GIORNATA CALMA (stato vuoto) ===== -->
+    <div class="phone"><div class="screen">
+      <div class="plabel">giornata calma</div>
+      <div class="pbar" style="margin-top:14px"><span>9:41</span><span class="right">📶 🔋</span></div>
+      <div class="topbar"><div class="logo">Sliss</div><div class="altro"><span class="dot">•••</span>Altro</div></div>
+      <div class="bd">
+        <div class="greet">Kayek3D · mercoledì 25</div>
+        <div class="h1">Ciao Luca 🏁</div>
+        <div class="sub">Niente di urgente: sei in pari.</div>
+
+        <!-- stato calmo disegnato -->
+        <div class="calm">
+          <div class="ck">✓</div>
+          <h2>Tutto sotto controllo</h2>
+          <p>Nessuna richiesta in attesa, nessun ordine da spedire.<br>I follow-up partono da soli quando serve.</p>
+          <div class="hint">💡 Aggiorna gli stati spedizione quando spedisci</div>
+        </div>
+
+        <div class="seclbl">I tuoi moduli</div>
+
+        <div class="mrow">
+          <div class="mico">📨</div>
+          <div class="minfo"><div class="nm">Richieste</div><div class="ct">dal tuo link</div></div>
+          <span class="pill ok">in pari</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="mrow">
+          <div class="mico">📦</div>
+          <div class="minfo"><div class="nm">Ordini</div><div class="ct">3 in corso</div></div>
+          <span class="pill info">in viaggio</span>
+          <span class="chev">›</span>
+        </div>
+        <div class="mrow">
+          <div class="mico">💬</div>
+          <div class="minfo"><div class="nm">Follow-Up</div><div class="ct">post-vendita</div></div>
+          <span class="pill ok">in pari</span>
+          <span class="chev">›</span>
+        </div>
+      </div>
+
+      <div class="nav"><div class="navin">
+        <div class="ni on"><span class="ic">🏠</span><span class="lb">Home</span></div>
+        <div class="ni"><span class="ic">📨</span><span class="lb">Richieste</span></div>
+        <div class="fab">+</div>
+        <div class="ni"><span class="ic">📦</span><span class="lb">Ordini</span></div>
+        <div class="ni"><span class="ic">💬</span><span class="lb">Follow-Up</span></div>
+      </div></div>
+    </div></div>
+
+    <!-- ANNOTAZIONI: cosa è cambiato -->
+    <div class="annot">
+      <div class="blk">
+        <span class="tag">Fix 1 · Gerarchia</span>
+        <h3>Una sola cosa "adesso"</h3>
+        In cima, <b>un solo blocco hero</b> = l'azione più urgente del giorno (la richiesta più vecchia in attesa). I moduli scendono sotto come <b>righe compatte</b>. <span class="fix">L'occhio sa dove cadere.</span> Niente più tre card che gridano allo stesso volume.
+      </div>
+      <div class="blk">
+        <span class="tag">Fix 2 · Stato calmo</span>
+        <h3>Il vuoto è disegnato</h3>
+        La mattina senza urgenze (lo stato <b>più comune</b> per un micro-business) non mostra scatole vuote ma <b>"Sei in pari ✓"</b> + un suggerimento utile. <span class="fix">La calma diventa una conferma, non un buco.</span>
+      </div>
+      <div class="blk">
+        <span class="tag">Fix 3 · Colore = stato</span>
+        <h3>Un solo significato per colore</h3>
+        Le icone-modulo ora hanno <b>tutte la stessa tinta brand</b> (identità = forma + nome). Il colore resta <b>solo allo stato</b>: <b style="color:#e7c98a">ambra = da fare</b>, <b style="color:#7ee0a3">verde = in pari</b>, grigio = info. <span class="fix">Niente più ambra che significa due cose.</span>
+      </div>
+      <div class="blk">
+        <span class="tag">Fix 4 · Filo discreto</span>
+        <h3>Insegna, poi si fa da parte</h3>
+        Il filo della sinergia ora è <b>sottile e a 2 parole</b> ("diventa un ordine"). Pieno e didattico nei primi giorni, poi <b>silenzioso</b>. <span class="fix">Aiuto, non arredo fisso.</span>
+      </div>
+      <div class="blk">
+        <span class="tag">Dubbi minori</span>
+        <h3>"+" e Clienti</h3>
+        Il <b>"+"</b> ora è <b>secondario</b> (contorno, non pieno): il lavoro arriva dalle richieste, non dalla creazione manuale. <b>Clienti</b> resta in "Altro" — da validare con l'uso reale se va promosso.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="foot">Sliss · liscio come deve essere — Home a moduli v2, fix UX incorporati. Mockup da iterare, non l'app reale.</div>
+</body>
+</html>
