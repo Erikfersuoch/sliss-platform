@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v7.5 · 2026-06-21 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v7.5 · 2026-06-24 · Fase 1 Fondazione · M1 Follow-Up · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 21/06/2026
+> Documento vivente · Aggiornato: 24/06/2026
 > Fase corrente: **1 — Fondazione**
 
 ---
@@ -29,6 +29,8 @@ Cancellati anche i 2 vecchi branch già mergeati (`blissful-turing`, `status-che
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata, tester attivi. Sessione del 28/05 ha portato un batch di miglioramenti significativi su M1.
+
+**Sessione 24/06/2026 (CORE/DEV) — Home a moduli costruita (prodotti) + M3 servizi spec + aggiornamento Luca.** (1) **Home a moduli Slice 1 LIVE** (`0515555`): split architetturale `HomeProdotti` (nuova, hero dinamico + righe modulo compatte) / `HomeServizi` (estratta, invariata = zero rischio Moira). Hero con priorità richiesta→ordine→follow-up, auto-scale al completamento; stato calmo "Tutto sotto controllo ✓". Colore = stato (amber/green), non modulo. Mockup v2 con fix UX approvato prima di costruire. (2) **M3 "In validazione"** in Mappa Moduli (`03ae5f3`): stato amber con pallino arancione pulsante. (3) **Pagina aggiornamento visiva per Luca** (`04b6fd6`, `public/aggiornamento-luca.html`): mini-telefono mockup Home, flusso Richieste in 3 passi, link con copia, testo welcome WA, 3 domande di calibrazione. **Inviata, in attesa feedback.** (4) **Spec M3 Richieste per SERVIZI** completa (`docs/spec-m3-richieste-servizi.md`): tre rami (FAQ auto, Info pre/post auto, Prenotazione manuale), unifica M3+M6+parte M2; banco FAQ per 5 cluster da ricerca di mercato (~8 domande ciascuno); supporto materiale proprio del professionista (brochure/PDF → card in chat, fallback a FAQ precompilate); roadmap personalizzazione v1→v3; piano build in 5 slice. (5) Fix copy "Info prima/dopo il trattamento" (più chiaro per il cliente vs "Ho un appuntamento").
 
 **Sessione 21/06/2026 (CORE) — audit post-ultrareview + decisione "aspettare" + sequenza espansione.** Dopo il fix v7.5, audit a 360° (richiesto da Erik "fai tutto in ordine"): **(1) codice — nessun altro bug della classe alpha-hex** né delle altre classi note (window.storage, var() in SVG, data.tabella non guardate, doppia `*{}`, PHASES incompleti): tutto pulito. **(2) health code: sano** — ~2.350 righe src, zero TODO/`eslint-disable`, 45 test sul motore; unica lacuna nota = test flussi-utente E2E (= punto C2, post-gate). **(3) perimetro ultrareview:** affidabile per regressioni di codice trasversali sui refactor grossi; NON sostituisce prova runtime (B) né test flussi (C2) né i tester. **(4) readiness gate: NON ancora raggiunto, ma per "mancanza dati su Moira", non bocciatura** (scenario previsto 10/06). **Luca quasi-GO** (13+ usi reali oltre soglia + uso 7/7 + **2 riscontri positivi reali sui follow-up recensione**, vedi feedback-log 21/06); mancano la sua conferma "valore" a voce + il dato copertura. **Moira** ferma per assenza di clienti nuovi (attrito d'inserimento), non difetto prodotto. **Decisione Erik: aspettare** — dare tempo a Moira di iniziare e a Luca di approfondire; nessuna spinta. **Confronto strategico (le 2 idee di Erik per il "dopo"):** (a) automazione follow-up [spendendo] e (b) secondo modulo a budget zero → la roadmap le **sequenzia, non sono alternative**: su GO parte **M3 "Richieste" a €0 per Luca (Fase 2)**, poi **automazione/sync Calendar in Fase 3** (entrambe già parcheggiate, entrambe post-gate). **Il gate è lo sblocco di entrambe.** Stima costi preparatoria salvata in `decisioni.md` (21/06) — driver di spesa unico e condiviso = WhatsApp Business API; tutto il resto (Calendar API, infra Vercel/Upstash, Claude API per triage M3) è €0 o pochi € in fase test. Memoria: [[feedback-ultrareview-value]]. Nessuna modifica al codice in questa sessione.
 
@@ -120,7 +122,8 @@ Miglioramenti dalla v5.0 (sessione 28/05):
 - Prossimi passi roadmap: ponte "Aggiungi a Google Calendar" → poi onboarding cliente via link (Upstash + serverless, free tier).
 
 **Modulo attivo:** M1 Follow-Up
-**Moduli bloccati fino a validazione M1:** M2, M3, M5, M6, M9
+**M3 Richieste:** sbloccato 23/06 (gate Luca GO) — **in validazione** (prodotti costruito e live, servizi in spec)
+**Moduli bloccati fino a validazione M1:** M2, M5, M6, M9
 
 ---
 
