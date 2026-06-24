@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sliss — Aggiornamento per Moira</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+  :root{
+    --green:#16A34A;--greenH:#15803D;--greenS:rgba(22,163,74,.10);
+    --amber:#D97706;--amberS:rgba(217,119,6,.12);
+    --blue:#2563EB;--blueS:rgba(37,99,235,.10);
+    --bg:#F6F9F6;--bg2:#fff;--border:#E2E9E3;--text:#111813;--textM:#46514B;--textD:#5B665F;--textMu:#8A968F;
+    --glow:rgba(22,163,74,.16);
+  }
+  body{background:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,var(--bg) 70%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:520px;margin:0 auto;padding:28px 18px 40px}
+
+  .hdr{text-align:center;margin-bottom:28px}
+  .logo{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:var(--green);color:#fff;font-weight:800;font-size:22px;box-shadow:0 8px 20px var(--glow);margin-bottom:14px}
+  .hdr h1{font-size:22px;font-weight:800;letter-spacing:-.03em}
+  .hdr h1 span{color:var(--green)}
+  .hdr .date{font-size:12px;color:var(--textD);margin-top:4px}
+  .hdr .sub{font-size:14px;color:var(--textM);margin-top:10px;line-height:1.6}
+
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:20px 18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(16,40,24,.06)}
+  .card.accent{border-color:rgba(22,163,74,.35);box-shadow:0 8px 24px var(--glow)}
+  .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:12px;margin-bottom:10px}
+  .tag.green{background:var(--greenS);color:var(--greenH)}
+  .tag.amber{background:var(--amberS);color:var(--amber)}
+  .tag.blue{background:var(--blueS);color:var(--blue)}
+  .card h2{font-size:16px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px}
+  .card p,.card li{font-size:13.5px;color:var(--textM);line-height:1.65}
+  .card ul{padding-left:18px;margin-top:6px}
+  .card li{margin-bottom:4px}
+
+  /* Mini phone */
+  .phone-wrap{display:flex;justify-content:center;margin:18px 0 8px}
+  .phone{width:220px;border-radius:24px;background:#000;padding:8px;box-shadow:0 12px 36px rgba(0,0,0,.15)}
+  .phone-screen{border-radius:18px;background:#F8F9FA;overflow:hidden;padding:10px 10px 14px}
+  .ph-date{font-size:8px;color:#5C636A}
+  .ph-greet{font-size:13px;font-weight:800;letter-spacing:-.02em;margin-bottom:1px}
+  .ph-greet span{color:var(--green)}
+  .ph-sub{font-size:8px;color:#5C636A;margin-bottom:8px}
+
+  .ph-hero{border-radius:10px;padding:8px;margin-bottom:8px;position:relative;overflow:hidden}
+  .ph-hero.blue{background:linear-gradient(165deg,#fff,#F1F3F5);border:1px solid rgba(37,99,235,.3)}
+  .ph-hero.amber{background:linear-gradient(165deg,#fff,#F1F3F5);border:1px solid rgba(217,119,6,.3)}
+  .ph-hero-bar{position:absolute;left:0;top:0;bottom:0;width:3px}
+  .ph-hero-top{font-size:7px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:3px}
+  .ph-hero-dot{width:5px;height:5px;border-radius:50%;animation:pulse 1.8s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .ph-hero-name{font-weight:800;font-size:10px}
+  .ph-hero-desc{font-size:7.5px;color:#495057}
+  .ph-hero-btn{display:block;width:100%;text-align:center;color:#fff;font-size:8px;font-weight:800;padding:6px 0;border-radius:7px;border:none;margin-top:6px}
+
+  .ph-label{font-size:7px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#8A968F;margin:6px 0 4px}
+  .ph-mod{display:flex;align-items:center;gap:6px;background:#fff;border:1px solid #DEE2E6;border-radius:8px;padding:6px 7px;margin-bottom:3px}
+  .ph-mod-icon{width:22px;height:22px;border-radius:6px;background:var(--greenS);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+  .ph-mod-name{font-weight:800;font-size:9px;flex:1}
+  .ph-pill{font-size:7px;font-weight:800;padding:2px 6px;border-radius:10px}
+  .ph-pill.green{background:var(--greenS);color:var(--greenH)}
+  .ph-pill.amber{background:var(--amberS);color:var(--amber)}
+  .ph-pill.blue{background:var(--blueS);color:var(--blue)}
+  .ph-thread{font-size:6.5px;color:#8A968F;margin:0 0 5px 14px;font-weight:700}
+
+  /* Calm phone */
+  .ph-calm{border-radius:10px;background:linear-gradient(165deg,#fff,#F1F3F5);border:1px solid #DEE2E6;padding:12px 8px;text-align:center;margin-bottom:8px}
+  .ph-calm-check{width:28px;height:28px;border-radius:50%;background:var(--greenS);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:14px;margin:0 auto 5px}
+  .ph-calm h3{font-size:10px;font-weight:800}
+  .ph-calm p{font-size:7.5px;color:#5C636A;margin-top:2px}
+
+  /* Steps */
+  .step{display:flex;gap:12px;margin-bottom:14px}
+  .step-n{width:28px;height:28px;border-radius:50%;background:var(--green);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+  .step-body h3{font-size:14px;font-weight:800;margin-bottom:3px}
+  .step-body p{font-size:13px;color:var(--textM);line-height:1.55}
+
+  .note{background:rgba(37,99,235,.06);border:1px solid rgba(37,99,235,.18);border-radius:14px;padding:14px 16px;margin-top:14px}
+  .note-title{font-size:11px;font-weight:800;color:var(--blue);margin-bottom:4px}
+  .note p{font-size:12.5px;color:var(--textM);line-height:1.55}
+
+  .footer{text-align:center;margin-top:28px;font-size:11px;color:var(--textMu)}
+  .footer span{color:var(--green);font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="logo">S</div>
+    <h1>Aggiornamento <span>Sliss</span></h1>
+    <div class="date">24 giugno 2026</div>
+    <div class="sub">Ciao Moira! Abbiamo aggiornato la Home in base al tuo feedback.<br/>Ecco cosa cambia e come funziona.</div>
+  </div>
+
+  <!-- NOVITA 1: NUOVA HOME -->
+  <div class="card accent">
+    <div class="tag green">Novita</div>
+    <h2>La Home ora ti guida</h2>
+    <p>Invece di mostrarti tutto insieme, la Home adesso ti dice <strong>una cosa alla volta</strong>: la piu importante prima.</p>
+    <p style="margin-top:8px">Se hai un appuntamento oggi, te lo mostra. Se c'e un follow-up da inviare, te lo mostra. Se sei in pari, te lo dice.</p>
+
+    <!-- Due mini telefoni affiancati -->
+    <div style="display:flex;gap:12px;justify-content:center;margin:18px 0 6px;flex-wrap:wrap">
+
+      <!-- Telefono 1: giornata attiva -->
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:800;color:var(--textMu);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Giornata attiva</div>
+        <div class="phone" style="width:180px;padding:6px">
+          <div class="phone-screen" style="padding:8px 8px 10px">
+            <div class="ph-date">martedi 24 giugno</div>
+            <div class="ph-greet">Buongiorno, <span>Momo Ink</span></div>
+            <div class="ph-sub">La cosa piu importante prima.</div>
+
+            <div class="ph-hero blue">
+              <div class="ph-hero-bar" style="background:#2563EB"></div>
+              <div class="ph-hero-top" style="color:#2563EB"><div class="ph-hero-dot" style="background:#2563EB"></div>Da fare adesso</div>
+              <div class="ph-hero-name">Sara Verdi</div>
+              <div class="ph-hero-desc">Appuntamento oggi - Consulenza</div>
+              <button class="ph-hero-btn" style="background:#2563EB">Apri Agenda</button>
+            </div>
+
+            <div class="ph-label">I tuoi moduli</div>
+            <div class="ph-mod"><div class="ph-mod-icon">📅</div><div class="ph-mod-name">Agenda</div><span class="ph-pill amber">1 oggi</span></div>
+            <div class="ph-thread">↳ il cliente arriva</div>
+            <div class="ph-mod"><div class="ph-mod-icon">💬</div><div class="ph-mod-name">Follow-Up</div><span class="ph-pill amber">2 da inviare</span></div>
+            <div class="ph-thread">↳ cura il rapporto</div>
+            <div class="ph-mod"><div class="ph-mod-icon">👥</div><div class="ph-mod-name">Clienti</div><span class="ph-pill green">in pari</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telefono 2: giornata calma -->
+      <div style="text-align:center">
+        <div style="font-size:9px;font-weight:800;color:var(--textMu);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px">Giornata calma</div>
+        <div class="phone" style="width:180px;padding:6px">
+          <div class="phone-screen" style="padding:8px 8px 10px">
+            <div class="ph-date">martedi 24 giugno</div>
+            <div class="ph-greet">Buon pomeriggio, <span>Momo Ink</span></div>
+            <div class="ph-sub">Niente di urgente: sei in pari.</div>
+
+            <div class="ph-calm">
+              <div class="ph-calm-check">✓</div>
+              <h3>Tutto sotto controllo</h3>
+              <p>Nessun follow-up in sospeso.<br/>I messaggi partono quando serve.</p>
+            </div>
+
+            <div class="ph-label">I tuoi moduli</div>
+            <div class="ph-mod"><div class="ph-mod-icon">📅</div><div class="ph-mod-name">Agenda</div><span class="ph-pill green">in pari</span></div>
+            <div class="ph-thread">↳ il cliente arriva</div>
+            <div class="ph-mod"><div class="ph-mod-icon">💬</div><div class="ph-mod-name">Follow-Up</div><span class="ph-pill green">in pari</span></div>
+            <div class="ph-thread">↳ cura il rapporto</div>
+            <div class="ph-mod"><div class="ph-mod-icon">👥</div><div class="ph-mod-name">Clienti</div><span class="ph-pill amber">1 da riatt.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COME FUNZIONA -->
+  <div class="card">
+    <div class="tag blue">Come funziona</div>
+    <h2>In pratica</h2>
+
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <h3>Apri l'app</h3>
+        <p>La Home ti mostra subito se c'e qualcosa da fare. Se c'e un appuntamento oggi o un follow-up da inviare, lo vedi come prima cosa.</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <h3>Tocca il modulo</h3>
+        <p>Agenda, Follow-Up, Clienti: ogni riga ti porta nella sezione giusta. Il colore ti dice lo stato (arancio = qualcosa da fare, verde = sei in pari).</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <h3>Quando sei in pari</h3>
+        <p>Se non c'e niente da fare, vedi "Tutto sotto controllo" — niente liste vuote, niente confusione. Sliss ti dice che e tutto a posto.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COSA CAMBIA PER TE -->
+  <div class="card">
+    <div class="tag green">Per te</div>
+    <h2>Cosa cambia in pratica</h2>
+    <ul>
+      <li><strong>Non devi cercare</strong> cosa fare: l'hero in alto te lo dice</li>
+      <li><strong>I follow-up</strong> li invii dalla sezione Follow-Up (tocca la riga)</li>
+      <li><strong>I clienti</strong> li vedi dalla sezione Clienti</li>
+      <li><strong>Tutto il resto</strong> (template, impostazioni) e nel menu "Altro" in alto a destra</li>
+    </ul>
+
+    <div class="note">
+      <div class="note-title">Come aggiornare</div>
+      <p>Su iPhone, <strong>chiudi l'app dal task switcher</strong> (scorri in alto dalla lista delle app aperte), poi riaprila. L'aggiornamento e automatico.</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span>Sliss</span> &middot; liscio come deve essere
+  </div>
+</div>
+</body>
+</html>

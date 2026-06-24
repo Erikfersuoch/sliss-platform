@@ -1,11 +1,10 @@
 import { useState } from "react";
 import T from "../theme.js";
-import { PHASES, CLIENT_ST, CLUSTERS_SERVIZI } from "../config.js";
-import { daysAgo, uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
+import { PHASES, CLUSTERS_SERVIZI } from "../config.js";
+import { uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
-import { Badge, Btn, Card, Modal, FormField, SendButtons, Info, Celebration, SendCoach, WarmTips } from "../components/ui.jsx";
-import { HELP } from "../help.js";
+import { Btn, Modal, FormField, Celebration } from "../components/ui.jsx";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 import InviteClient from "../components/InviteClient.jsx";
 
@@ -128,89 +127,120 @@ const HomeProdotti = ({setView,data,update,pending,toShip}) => {
 };
 
 // ═══════════════════════════════════════════════════════════════
-//  HOME SERVIZI — invariata (Moira)
+//  HOME SERVIZI — hero dinamico + moduli compatti (v2)
 // ═══════════════════════════════════════════════════════════════
-const HomeServizi = ({setView,data,update,pending,sent,activeC,toReact,noClients,setShowQuickAdd,setShowInvite,setCelebrate,newbie}) => {
+const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuickAdd,setShowInvite}) => {
   const td=today();
   const biz=data.settings?.businessName||"la tua attività";
+  const appts=(data?.appointments||[]);
+  const apptToday=appts.filter(a=>a.date===td);
+  const apptUpcoming=appts.filter(a=>a.date>=td);
+  const fuCount=pending.length;
+  const reactCount=toReact.length;
+
+  let hero=null;
+  if(!noClients){
+    if(apptToday.length>0){
+      const a=apptToday[0];const cl=(data?.clients||[]).find(c=>c.id===a.clientId);
+      hero={type:"appuntamento",label:"Appuntamento oggi",name:cl?.name||"\u{2014}",desc:a.serviceType||"Appuntamento",age:null,action:"Apri Agenda",onAction:()=>setView("appointments"),icon:"calendar",color:T.blue};
+    } else if(fuCount>0){
+      const fu=pending[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
+      hero={type:"followup",label:`Follow-up: ${ph.label}`,name:cl?.name||"\u{2014}",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
+    }
+  }
+  const allCalm=!hero&&!noClients;
+
   return (
-    <>
-      <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"-4px"}}>
-        <span style={{display:"inline-flex",alignItems:"center",gap:"6px",fontSize:"12px",color:T.textD}}>Come funziona <Info {...HELP.moduleGuide} /></span>
-      </div>
+    <div style={{animation:"fadeIn .35s ease"}}>
       <div style={{marginBottom:"16px"}}>
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
-        <h1 style={{fontSize:"26px",fontWeight:700,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()},<br/><span style={{color:T.green}}>{biz}</span> {"\u{1F44B}"}</h1>
+        <h1 style={{fontSize:"24px",fontWeight:800,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()}, <span style={{color:T.green}}>{biz}</span></h1>
+        <div style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>{noClients?"Aggiungi il tuo primo cliente per iniziare.":allCalm?"Niente di urgente: sei in pari.":"La cosa più importante prima — poi il resto."}</div>
       </div>
-      {noClients
-        ? <>
-            <div style={{background:`linear-gradient(180deg,${T.greenS},${T.bg2})`,border:`1px solid ${T.green}`,borderRadius:T.r.xl,padding:"22px 18px",textAlign:"center",marginBottom:"12px"}}>
-              <div style={{width:"46px",height:"46px",borderRadius:"14px",background:T.green,color:"#fff",fontSize:"22px",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}><Icon name="target" size={24} color="#fff" /></div>
-              <h2 style={{fontSize:"17px",fontWeight:800,letterSpacing:"-.02em",marginBottom:"6px"}}>Inizia da qui</h2>
-              <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.55,maxWidth:"280px",margin:"0 auto 16px"}}>Aggiungi il tuo primo cliente: Sliss prepara subito i messaggi da inviargli, già scritti.</p>
-              <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center"}}>{"+ Aggiungi il tuo primo cliente"}</Btn>
-              <button onClick={()=>setShowInvite(true)} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:T.textD,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit"}}>oppure <span style={{color:T.blue,fontWeight:600}}>invitalo con un link</span></button>
+
+      {noClients ? (
+        <div style={{background:`linear-gradient(180deg,${T.greenS},${T.bg2})`,border:`1px solid ${T.green}`,borderRadius:T.r.xl,padding:"22px 18px",textAlign:"center",marginBottom:"14px"}}>
+          <div style={{width:"46px",height:"46px",borderRadius:"14px",background:T.green,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}><Icon name="target" size={24} color="#fff" /></div>
+          <h2 style={{fontSize:"17px",fontWeight:800,letterSpacing:"-.02em",marginBottom:"6px"}}>Inizia da qui</h2>
+          <p style={{fontSize:"13.5px",color:T.textM,lineHeight:1.55,maxWidth:"280px",margin:"0 auto 16px"}}>Aggiungi il tuo primo cliente: Sliss prepara subito i messaggi da inviargli, già scritti.</p>
+          <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center"}}>{"+ Aggiungi il tuo primo cliente"}</Btn>
+          <button onClick={()=>setShowInvite(true)} style={{display:"block",margin:"12px auto 0",background:"none",border:"none",color:T.textD,fontSize:"12.5px",cursor:"pointer",fontFamily:"inherit"}}>oppure <span style={{color:T.blue,fontWeight:600}}>invitalo con un link</span></button>
+        </div>
+      ) : hero ? (
+        <div style={{background:`linear-gradient(165deg,${T.bg2},${T.bg3})`,border:`1.6px solid color-mix(in srgb, ${hero.color} 38%, transparent)`,borderRadius:T.r.xl,padding:"16px",marginBottom:"16px",position:"relative",overflow:"hidden",boxShadow:`0 12px 30px color-mix(in srgb, ${hero.color} 16%, transparent)`}}>
+          <div style={{position:"absolute",left:0,top:0,bottom:0,width:"4px",background:hero.color}} />
+          <div style={{display:"flex",alignItems:"center",gap:"6px",fontSize:"10.5px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:hero.color,marginBottom:"10px"}}>
+            <div style={{width:"7px",height:"7px",borderRadius:"50%",background:hero.color,animation:"pulse 1.8s infinite"}} />
+            Da fare adesso
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:"11px",marginBottom:"13px"}}>
+            <div style={{width:"42px",height:"42px",borderRadius:"12px",background:`color-mix(in srgb, ${hero.color} 10%, transparent)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+              <Icon name={hero.icon} size={20} color={hero.color} />
             </div>
-            <Card style={{marginBottom:"14px"}}>
-              <h2 style={{fontSize:"14px",fontWeight:600,color:T.textMu,marginBottom:"6px"}}>Qui vedrai i tuoi clienti</h2>
-              <div style={{fontSize:"12.5px",color:T.textD,lineHeight:1.55}}>Appena ne aggiungi uno, compare la sua scheda con lo stato dei follow-up.</div>
-            </Card>
-          </>
-        : <>
-            <Btn onClick={()=>setShowQuickAdd(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}>{"+ Aggiungi cliente"}</Btn>
-            <Btn v="secondary" onClick={()=>setShowInvite(true)} style={{width:"100%",justifyContent:"center",marginBottom:"10px"}}><Icon name="link" size={16} />Invita cliente</Btn>
-            {data?.settings?.reviewLink&&<div style={{textAlign:"center",marginBottom:"16px"}}><a href={data.settings.reviewLink} target="_blank" rel="noreferrer" style={{display:"inline-flex",alignItems:"center",gap:"5px",fontSize:"13px",color:T.textD,textDecoration:"none"}}><Icon name="star" size={14} />Vedi recensioni</a></div>}
-            <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"10px",marginBottom:"20px"}}>
-              {[{label:"Da inviare",value:pending.length,color:pending.length?T.amber:T.green,sub:pending.length?"oggi":"tutto ok",go:"followup",gf:"today"},{label:"Inviati",value:sent.length,color:T.green,sub:"storico",go:"followup",gf:"awaiting"},{label:"Attivi",value:activeC.length,color:T.green,sub:`${toReact.length} da riatt.`,go:"clients"}].map((s,i)=>(
-                <Card key={i} onClick={()=>setView(s.go,s.gf?{fuFilter:s.gf}:undefined)} hov style={{padding:"14px 12px",display:"flex",flexDirection:"column",gap:"4px"}}>
-                  <span style={{fontSize:"11px",color:T.textD,fontWeight:500}}>{s.label}</span>
-                  <span style={{fontSize:"26px",fontWeight:700,color:s.color,letterSpacing:"-.02em",lineHeight:1}}>{s.value}</span>
-                  <span style={{fontSize:"11px",color:T.textMu}}>{s.sub}</span>
-                </Card>
-              ))}
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontWeight:800,fontSize:"15.5px"}}>{hero.name}</div>
+              <div style={{fontSize:"12.5px",color:T.textM,marginTop:"2px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{hero.label}{hero.desc?`: ${hero.desc}`:""}{hero.age?` \u{00B7} ${hero.age}`:""}</div>
             </div>
-            {!newbie&&<WarmTips setView={setView} />}
-            <Card style={{marginBottom:"14px"}}>
-              <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:"14px"}}>
-                <h2 style={{fontSize:"15px",fontWeight:700}}>Da fare oggi</h2>
-                {pending.length>0&&<Badge label={`${pending.length}`} color={T.amber} bg={T.amberS} s />}
-              </div>
-              {!pending.length
-                ? <div style={{textAlign:"center",padding:"16px 0"}}><div style={{fontSize:"24px",marginBottom:"6px"}}>{"\u{2705}"}</div><div style={{fontSize:"13px",color:T.textD}}>Tutto fatto per oggi!</div></div>
-                : <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
-                    {newbie&&<SendCoach />}
-                    {pending.slice(0,3).map(fu=>{
-                      const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
-                      const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD,bg:T.bg3};
-                      return (
-                        <div key={fu.id} style={{padding:"12px",background:fu.scheduledDate<td?T.redS:T.amberS,borderRadius:T.r.m,border:`1px solid color-mix(in srgb, ${fu.scheduledDate<td?T.red:T.amber} 27%, transparent)`}}>
-                          <div style={{display:"flex",alignItems:"center",gap:"8px",marginBottom:"8px"}}>
-                            <Icon name={ph.icon} size={16} color={ph.color} />
-                            <span style={{fontWeight:600,fontSize:"14px"}}>{cl?.name||"\u{2014}"}</span>
-                            <Badge {...ph} s />
-                            <span style={{marginLeft:"auto",fontSize:"11px",fontWeight:700,color:fu.scheduledDate<td?T.red:T.amberD}}>{fu.scheduledDate<td?"Scaduto":"Oggi"}</span>
-                          </div>
-                          <div style={{fontSize:"13px",color:T.textD,lineHeight:1.5,marginBottom:"10px",overflow:"hidden",display:"-webkit-box",WebkitLineClamp:2,WebkitBoxOrient:"vertical"}}>{fu.message}</div>
-                          <SendButtons message={fu.message} clientPhone={cl?.phone||""} clientEmail={cl?.email} channel={cl?.channel} labelOverride={fu.phase==="shipping"?"\u{1F680} Ready to go":undefined} onSend={()=>{const first=sent.length===0&&!localStorage.getItem("sliss-first-sent");update("followUps",fu.id,{status:"sent",sentDate:today()});if(first){localStorage.setItem("sliss-first-sent","1");setCelebrate(true);}}} />
-                        </div>
-                      );
-                    })}
-                    {pending.length>3&&<button onClick={()=>setView("followup")} style={{width:"100%",padding:"10px",background:"none",border:`1px solid ${T.border}`,borderRadius:T.r.m,color:T.textM,fontSize:"13px",cursor:"pointer",fontFamily:"inherit"}}>{"Vedi tutti i "+pending.length+" follow-up \u{2192}"}</button>}
-                  </div>
-              }
-            </Card>
-            <Card>
-              <h2 style={{fontSize:"15px",fontWeight:700,marginBottom:"12px"}}>Clienti</h2>
-              <div style={{display:"flex",flexDirection:"column",gap:"6px"}}>
-                {(data?.clients||[]).slice(0,5).map(cl=>{
-                  const st=CLIENT_ST[cl.status]||{label:cl.status,color:T.textD,bg:T.bg3};
-                  return (<div key={cl.id} onClick={()=>setView("clients",{clientId:cl.id})} style={{display:"flex",alignItems:"center",gap:"10px",padding:"8px 10px",background:T.bg3,borderRadius:T.r.m,cursor:"pointer"}}><div style={{width:"7px",height:"7px",borderRadius:"50%",background:st.color,flexShrink:0}} /><div style={{flex:1,minWidth:0}}><div style={{fontWeight:600,fontSize:"14px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{cl.name}</div><div style={{fontSize:"11px",color:T.textD}}>{daysAgo(cl.lastVisit)}</div></div><Badge {...st} s /><span style={{color:T.textMu,fontSize:"18px",lineHeight:1,flexShrink:0}}>{"\u{203A}"}</span></div>);
-                })}
-              </div>
-            </Card>
-          </>
-      }
-    </>
+          </div>
+          <button onClick={hero.onAction} style={{display:"block",width:"100%",textAlign:"center",background:hero.color,color:"#fff",fontSize:"14px",fontWeight:800,padding:"13px 0",borderRadius:"13px",border:"none",cursor:"pointer",fontFamily:"inherit",boxShadow:`0 8px 18px color-mix(in srgb, ${hero.color} 18%, transparent)`}}>{hero.action}</button>
+          {hero.type==="followup"&&fuCount>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti i follow-up ({fuCount})</button>}
+          {hero.type==="appuntamento"&&apptToday.length>1&&<button onClick={()=>setView("appointments")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti gli appuntamenti di oggi ({apptToday.length})</button>}
+        </div>
+      ) : (
+        <div style={{background:`linear-gradient(165deg,${T.bg2},${T.bg3})`,border:`1.4px solid ${T.border}`,borderRadius:T.r.xl,padding:"26px 18px",textAlign:"center",marginBottom:"16px",boxShadow:`0 8px 22px color-mix(in srgb, ${T.green} 6%, transparent)`}}>
+          <div style={{width:"54px",height:"54px",borderRadius:"50%",background:T.greenS,color:T.green,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"26px",margin:"0 auto 12px"}}>{"\u{2713}"}</div>
+          <h2 style={{fontSize:"17px",fontWeight:800}}>Tutto sotto controllo</h2>
+          <p style={{fontSize:"12.5px",color:T.textD,marginTop:"5px",lineHeight:1.5}}>Nessun follow-up in sospeso, agenda gestita.<br/>I messaggi partono quando serve.</p>
+          <button onClick={()=>setShowInvite(true)} style={{marginTop:"15px",fontSize:"12px",fontWeight:700,color:T.green,background:T.greenS,borderRadius:"12px",padding:"10px 13px",display:"inline-block",border:"none",cursor:"pointer",fontFamily:"inherit"}}>{"\u{1F4A1}"} Invita un cliente con il link</button>
+        </div>
+      )}
+
+      {/* SEZIONE MODULI */}
+      <div style={{fontSize:"11px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,margin:"18px 2px 9px"}}>I tuoi moduli</div>
+
+      {/* Agenda */}
+      <button onClick={()=>setView("appointments")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="calendar" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Agenda</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>i tuoi appuntamenti</div></div>
+        {apptToday.length>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{apptToday.length} oggi</span>
+          : apptUpcoming.length>0
+            ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.blueS,color:T.blue,whiteSpace:"nowrap"}}>{apptUpcoming.length} prossim{apptUpcoming.length===1?"o":"i"}</span>
+            : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>{"\u{203A}"}</span>
+      </button>
+      <div style={{display:"flex",alignItems:"center",gap:"7px",margin:"1px 0 9px 24px",fontSize:"10px",color:T.textMu,fontWeight:700}}>
+        <div style={{width:"11px",height:"11px",borderLeft:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottom:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottomLeftRadius:"5px"}} />
+        il cliente arriva
+      </div>
+
+      {/* Follow-Up */}
+      <button onClick={()=>setView("followup")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="message" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Follow-Up</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>post-appuntamento</div></div>
+        {fuCount>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{fuCount} da inviare</span>
+          : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>{"\u{203A}"}</span>
+      </button>
+      <div style={{display:"flex",alignItems:"center",gap:"7px",margin:"1px 0 9px 24px",fontSize:"10px",color:T.textMu,fontWeight:700}}>
+        <div style={{width:"11px",height:"11px",borderLeft:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottom:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottomLeftRadius:"5px"}} />
+        cura il rapporto
+      </div>
+
+      {/* Clienti */}
+      <button onClick={()=>setView("clients")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"14px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="users" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Clienti</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>{noClients?"la tua rubrica":`${activeC.length} attiv${activeC.length===1?"o":"i"}`}</div></div>
+        {reactCount>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{reactCount} da riatt.</span>
+          : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>{"\u{203A}"}</span>
+      </button>
+    </div>
   );
 };
 
@@ -229,8 +259,6 @@ const Home = ({setView}) => {
   const cluster=data?.settings?.cluster||"altro_s";
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
   const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
-  const sent=(data?.followUps||[]).filter(f=>f.status==="sent"||f.status==="replied"||f.status==="completed");
-  const newbie=sent.length===0;
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
   const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];
@@ -251,7 +279,7 @@ const Home = ({setView}) => {
     <div style={{animation:"fadeIn .35s ease"}}>
       {bizType==="prodotti"
         ? <HomeProdotti setView={setView} data={data} update={update} pending={pending} toShip={toShip} />
-        : <HomeServizi setView={setView} data={data} update={update} pending={pending} sent={sent} activeC={activeC} toReact={toReact} noClients={noClients} setShowQuickAdd={setShowQuickAdd} setShowInvite={setShowInvite} setCelebrate={setCelebrate} newbie={newbie} />
+        : <HomeServizi setView={setView} data={data} pending={pending} activeC={activeC} toReact={toReact} noClients={noClients} setShowQuickAdd={setShowQuickAdd} setShowInvite={setShowInvite} />
       }
       {showInvite&&<InviteClient onClose={()=>setShowInvite(false)} />}
       <Modal open={showQuickAdd} onClose={()=>{setShowQuickAdd(false);setQDone(false);}} title="Nuovo cliente">
