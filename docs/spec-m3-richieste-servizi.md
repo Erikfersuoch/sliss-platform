@@ -23,7 +23,7 @@ Cliente clicca il link
     │
     ├─ 🔍 "Ho una domanda"     → FAQ automatica (risposta istantanea, zero rumore)
     │
-    ├─ 📋 "Ho un appuntamento" → Info pre/post automatiche (istruzioni per tipo servizio)
+    ├─ 📋 "Info prima/dopo il trattamento" → Istruzioni pre/post automatiche (per tipo servizio)
     │
     └─ 📅 "Voglio prenotare"   → Richiesta → arriva al professionista nell'app
 ```
@@ -38,7 +38,7 @@ I primi due rami **non generano notifica**: il cliente ha la risposta, il profes
 |---|---|
 | M3 Richieste | Il ramo "Voglio prenotare" |
 | M6 FAQ | Il ramo "Ho una domanda" |
-| M2 Onboarding (parte info) | Il ramo "Ho un appuntamento" |
+| M2 Onboarding (parte info) | Il ramo "Info prima/dopo il trattamento" |
 
 Tre moduli → una sola chat guidata con script diverso per cluster. Il motore è quello già costruito per Luca (`public/richieste.html`).
 
@@ -165,11 +165,11 @@ Chat: "Cosa vuoi sapere?"
 ```
 **Zero submit al server. Zero notifica al professionista.**
 
-### Ramo 2: "Ho un appuntamento" (info pre/post)
+### Ramo 2: "Info prima/dopo il trattamento" (info pre/post)
 ```
-Chat: "Il tuo appuntamento è..."
-→ "Devo ancora andarci" → info PRE (come prepararsi, per tipo servizio)
-→ "Ci sono appena stato" → info POST (aftercare, per tipo servizio)
+Chat: "Vuoi sapere cosa fare prima o dopo?"
+→ "Prima del trattamento" → info PRE (come prepararsi, per tipo servizio)
+→ "Dopo il trattamento" → info POST (aftercare, per tipo servizio)
 → Mostra le istruzioni nella bolla chat
 → "Hai bisogno d'altro?" → No (fine) / Sì (→ link WhatsApp)
 ```
