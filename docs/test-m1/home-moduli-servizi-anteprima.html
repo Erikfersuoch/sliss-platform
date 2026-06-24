@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sliss — Home a moduli (Servizi) — Anteprima</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#F1F3F5;min-height:100vh;padding:32px 16px}
+.wrap{max-width:960px;margin:0 auto}
+h1.title{font-size:22px;font-weight:800;text-align:center;margin-bottom:6px;letter-spacing:-.03em}
+.sub{text-align:center;font-size:13px;color:#6C757D;margin-bottom:28px;line-height:1.5}
+
+.phones{display:flex;gap:28px;justify-content:center;flex-wrap:wrap}
+.col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.col-label{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6C757D}
+
+.phone{width:310px;border-radius:36px;background:#000;padding:12px;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.screen{border-radius:26px;background:#F8F9FA;overflow:hidden;min-height:580px;position:relative}
+
+/* header */
+.hdr{padding:14px 16px 10px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#6C757D}
+.hdr .time{font-weight:700;font-size:12px;color:#111}
+
+/* content */
+.content{padding:4px 14px 18px}
+.date{font-size:12px;color:#5C636A;margin-bottom:2px}
+.greeting{font-size:22px;font-weight:800;letter-spacing:-.03em;line-height:1.2;margin-bottom:2px}
+.greeting .name{color:#16A34A}
+.subtitle{font-size:12px;color:#5C636A;margin-bottom:14px}
+
+/* hero */
+.hero{border-radius:16px;padding:14px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero.richiesta{background:linear-gradient(165deg,#fff,#F1F3F5);border:1.6px solid rgba(13,148,136,.38);box-shadow:0 12px 30px rgba(13,148,136,.12)}
+.hero.followup{background:linear-gradient(165deg,#fff,#F1F3F5);border:1.6px solid rgba(217,119,6,.38);box-shadow:0 12px 30px rgba(217,119,6,.12)}
+.hero.appuntamento{background:linear-gradient(165deg,#fff,#F1F3F5);border:1.6px solid rgba(37,99,235,.38);box-shadow:0 12px 30px rgba(37,99,235,.12)}
+
+.hero-bar{position:absolute;left:0;top:0;bottom:0;width:4px}
+.hero-bar.teal{background:#0D9488}
+.hero-bar.amber{background:#D97706}
+.hero-bar.blue{background:#2563EB}
+
+.hero-top{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:9px}
+.dot{width:7px;height:7px;border-radius:50%;animation:pulse 1.8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+.hero-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hero-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hero-name{font-weight:800;font-size:15px}
+.hero-desc{font-size:12px;color:#495057;margin-top:2px}
+
+.hero-btn{display:block;width:100%;text-align:center;color:#fff;font-size:13.5px;font-weight:800;padding:12px 0;border-radius:12px;border:none;font-family:inherit}
+.hero-link{display:block;width:100%;text-align:center;font-size:11px;color:#5C636A;font-weight:700;margin-top:8px;background:none;border:none;font-family:inherit}
+
+/* sezione moduli */
+.sec-label{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#6C757D;margin:15px 2px 8px}
+.mod-row{display:flex;align-items:center;gap:11px;background:#fff;border:1px solid #DEE2E6;border-radius:14px;padding:11px 12px;margin-bottom:5px;box-shadow:0 4px 14px rgba(22,163,74,.04)}
+.mod-icon{width:34px;height:34px;border-radius:10px;background:rgba(22,163,74,.10);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.mod-text{flex:1;min-width:0}
+.mod-name{font-weight:800;font-size:13.5px}
+.mod-sub{font-size:11px;color:#5C636A;margin-top:1px}
+.pill{font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:18px;white-space:nowrap}
+.pill.amber{background:rgba(217,119,6,.10);color:#D97706}
+.pill.green{background:rgba(22,163,74,.10);color:#15803D}
+.pill.teal{background:rgba(13,148,136,.10);color:#0D9488}
+.arrow{color:#6C757D;font-size:16px;font-weight:700;margin-left:2px}
+
+/* filo sinergia */
+.thread{display:flex;align-items:center;gap:6px;margin:1px 0 8px 22px;font-size:9.5px;color:#6C757D;font-weight:700}
+.thread-l{width:10px;height:10px;border-left:1.5px solid rgba(22,163,74,.40);border-bottom:1.5px solid rgba(22,163,74,.40);border-bottom-left-radius:4px}
+
+/* stato calmo */
+.calm{background:linear-gradient(165deg,#fff,#F1F3F5);border:1.4px solid #DEE2E6;border-radius:16px;padding:24px 16px;text-align:center;margin-bottom:14px;box-shadow:0 8px 22px rgba(22,163,74,.05)}
+.calm-check{width:50px;height:50px;border-radius:50%;background:rgba(22,163,74,.10);color:#16A34A;display:flex;align-items:center;justify-content:center;font-size:24px;margin:0 auto 10px}
+.calm h2{font-size:16px;font-weight:800}
+.calm p{font-size:12px;color:#5C636A;margin-top:5px;line-height:1.5}
+.calm-hint{margin-top:13px;font-size:11.5px;font-weight:700;color:#16A34A;background:rgba(22,163,74,.10);border-radius:11px;padding:9px 12px;display:inline-block}
+
+/* note */
+.notes{max-width:960px;margin:28px auto 0;padding:0 8px}
+.note-title{font-size:14px;font-weight:800;margin-bottom:10px}
+.note{display:flex;gap:8px;margin-bottom:8px;font-size:12.5px;line-height:1.55;color:#495057}
+.note-n{width:20px;height:20px;border-radius:50%;background:#16A34A;color:#fff;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+.diff{background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:10px 12px;margin-top:16px;margin-bottom:4px}
+.diff-title{font-size:11px;font-weight:800;color:#2563EB;margin-bottom:5px}
+.diff-item{font-size:12px;color:#495057;margin-bottom:3px;padding-left:12px;position:relative}
+.diff-item::before{content:"";position:absolute;left:0;top:6px;width:5px;height:5px;border-radius:50%;background:#2563EB}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="title">Home a moduli — Servizi / Appuntamenti</h1>
+  <p class="sub">Come la vedrebbe Moira (tattoo) o un barbiere / estetista / officina.<br/>Stessa architettura della Home Prodotti, adattata al flusso servizi.</p>
+
+  <div class="phones">
+    <!-- TELEFONO 1: giornata attiva -->
+    <div class="col">
+      <span class="col-label">Giornata attiva</span>
+      <div class="phone"><div class="screen">
+        <div class="hdr"><span class="time">9:41</span><span>Sliss</span></div>
+        <div class="content">
+          <div class="date">martedi 24 giugno</div>
+          <div class="greeting">Buongiorno, <span class="name">Momo Ink</span></div>
+          <div class="subtitle">La cosa piu importante prima — poi il resto.</div>
+
+          <!-- HERO: appuntamento oggi con follow-up da inviare -->
+          <div class="hero followup">
+            <div class="hero-bar amber"></div>
+            <div class="hero-top" style="color:#D97706">
+              <div class="dot" style="background:#D97706"></div>
+              Da fare adesso
+            </div>
+            <div class="hero-row">
+              <div class="hero-icon" style="background:rgba(217,119,6,.10)">💬</div>
+              <div>
+                <div class="hero-name">Marco Bianchi</div>
+                <div class="hero-desc">Follow-up: Grazie · scaduto</div>
+              </div>
+            </div>
+            <button class="hero-btn" style="background:#D97706;box-shadow:0 8px 18px rgba(217,119,6,.18)">Apri Follow-Up</button>
+            <button class="hero-link">Vedi tutti i follow-up (3)</button>
+          </div>
+
+          <!-- MODULI -->
+          <div class="sec-label">I tuoi moduli</div>
+
+          <!-- Agenda -->
+          <div class="mod-row">
+            <div class="mod-icon">📅</div>
+            <div class="mod-text">
+              <div class="mod-name">Agenda</div>
+              <div class="mod-sub">i tuoi appuntamenti</div>
+            </div>
+            <span class="pill amber">2 prossimi</span>
+            <span class="arrow">›</span>
+          </div>
+          <div class="thread"><div class="thread-l"></div>il cliente arriva</div>
+
+          <!-- Follow-Up -->
+          <div class="mod-row">
+            <div class="mod-icon">💬</div>
+            <div class="mod-text">
+              <div class="mod-name">Follow-Up</div>
+              <div class="mod-sub">post-appuntamento</div>
+            </div>
+            <span class="pill amber">3 da inviare</span>
+            <span class="arrow">›</span>
+          </div>
+          <div class="thread"><div class="thread-l"></div>cura il rapporto</div>
+
+          <!-- Clienti -->
+          <div class="mod-row">
+            <div class="mod-icon">👥</div>
+            <div class="mod-text">
+              <div class="mod-name">Clienti</div>
+              <div class="mod-sub">12 attivi</div>
+            </div>
+            <span class="pill green">in pari</span>
+            <span class="arrow">›</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- TELEFONO 2: giornata calma -->
+    <div class="col">
+      <span class="col-label">Giornata calma</span>
+      <div class="phone"><div class="screen">
+        <div class="hdr"><span class="time">14:22</span><span>Sliss</span></div>
+        <div class="content">
+          <div class="date">martedi 24 giugno</div>
+          <div class="greeting">Buon pomeriggio, <span class="name">Momo Ink</span></div>
+          <div class="subtitle">Niente di urgente: sei in pari.</div>
+
+          <!-- STATO CALMO -->
+          <div class="calm">
+            <div class="calm-check">✓</div>
+            <h2>Tutto sotto controllo</h2>
+            <p>Nessun follow-up in sospeso, agenda gestita.<br/>I messaggi partono quando serve.</p>
+            <div class="calm-hint">💡 Invita un cliente con il link per iniziare</div>
+          </div>
+
+          <!-- MODULI -->
+          <div class="sec-label">I tuoi moduli</div>
+
+          <!-- Agenda -->
+          <div class="mod-row">
+            <div class="mod-icon">📅</div>
+            <div class="mod-text">
+              <div class="mod-name">Agenda</div>
+              <div class="mod-sub">i tuoi appuntamenti</div>
+            </div>
+            <span class="pill green">in pari</span>
+            <span class="arrow">›</span>
+          </div>
+          <div class="thread"><div class="thread-l"></div>il cliente arriva</div>
+
+          <!-- Follow-Up -->
+          <div class="mod-row">
+            <div class="mod-icon">💬</div>
+            <div class="mod-text">
+              <div class="mod-name">Follow-Up</div>
+              <div class="mod-sub">post-appuntamento</div>
+            </div>
+            <span class="pill green">in pari</span>
+            <span class="arrow">›</span>
+          </div>
+          <div class="thread"><div class="thread-l"></div>cura il rapporto</div>
+
+          <!-- Clienti -->
+          <div class="mod-row">
+            <div class="mod-icon">👥</div>
+            <div class="mod-text">
+              <div class="mod-name">Clienti</div>
+              <div class="mod-sub">12 attivi · 2 da riattivare</div>
+            </div>
+            <span class="pill amber">2 da riatt.</span>
+            <span class="arrow">›</span>
+          </div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- VARIANTE HERO: appuntamento imminente -->
+  <div class="notes" style="margin-top:32px">
+    <h1 class="title" style="text-align:left;font-size:16px">Varianti hero per servizi</h1>
+    <p style="font-size:12px;color:#6C757D;margin-bottom:16px">L'hero cambia in base a cosa e piu urgente. Ecco le 3 varianti:</p>
+
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <!-- Hero 1: appuntamento oggi -->
+      <div style="flex:1;min-width:240px">
+        <div class="hero appuntamento" style="margin:0">
+          <div class="hero-bar blue"></div>
+          <div class="hero-top" style="color:#2563EB">
+            <div class="dot" style="background:#2563EB"></div>
+            Da fare adesso
+          </div>
+          <div class="hero-row">
+            <div class="hero-icon" style="background:rgba(37,99,235,.10)">📅</div>
+            <div>
+              <div class="hero-name">Sara Verdi</div>
+              <div class="hero-desc">Appuntamento oggi · Consulenza</div>
+            </div>
+          </div>
+          <button class="hero-btn" style="background:#2563EB;box-shadow:0 8px 18px rgba(37,99,235,.18)">Apri Agenda</button>
+        </div>
+        <div style="font-size:11px;color:#6C757D;margin-top:6px;text-align:center;font-weight:700">Priorita 1 — appuntamento di oggi</div>
+      </div>
+
+      <!-- Hero 2: follow-up scaduto -->
+      <div style="flex:1;min-width:240px">
+        <div class="hero followup" style="margin:0">
+          <div class="hero-bar amber"></div>
+          <div class="hero-top" style="color:#D97706">
+            <div class="dot" style="background:#D97706"></div>
+            Da fare adesso
+          </div>
+          <div class="hero-row">
+            <div class="hero-icon" style="background:rgba(217,119,6,.10)">💬</div>
+            <div>
+              <div class="hero-name">Marco Bianchi</div>
+              <div class="hero-desc">Follow-up: Grazie · scaduto</div>
+            </div>
+          </div>
+          <button class="hero-btn" style="background:#D97706;box-shadow:0 8px 18px rgba(217,119,6,.18)">Apri Follow-Up</button>
+        </div>
+        <div style="font-size:11px;color:#6C757D;margin-top:6px;text-align:center;font-weight:700">Priorita 2 — follow-up da inviare</div>
+      </div>
+
+      <!-- Hero 3: scheda in attesa -->
+      <div style="flex:1;min-width:240px">
+        <div class="hero richiesta" style="margin:0">
+          <div class="hero-bar teal"></div>
+          <div class="hero-top" style="color:#0D9488">
+            <div class="dot" style="background:#0D9488"></div>
+            Da fare adesso
+          </div>
+          <div class="hero-row">
+            <div class="hero-icon" style="background:rgba(13,148,136,.10)">📋</div>
+            <div>
+              <div class="hero-name">Laura Neri</div>
+              <div class="hero-desc">Scheda compilata dal link · da 2 giorni</div>
+            </div>
+          </div>
+          <button class="hero-btn" style="background:#0D9488;box-shadow:0 8px 18px rgba(13,148,136,.18)">Completa e fissa appuntamento</button>
+        </div>
+        <div style="font-size:11px;color:#6C757D;margin-top:6px;text-align:center;font-weight:700">Priorita 3 — scheda dal link onboarding</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTE -->
+  <div class="notes" style="margin-top:28px">
+    <div class="note-title">Come funziona (servizi)</div>
+    <div class="note"><div class="note-n">1</div><div><strong>Hero dinamico:</strong> appuntamento di oggi > follow-up da inviare > scheda in attesa dal link. Completi un'azione, emerge la successiva. Tutto fatto = stato calmo.</div></div>
+    <div class="note"><div class="note-n">2</div><div><strong>3 moduli:</strong> Agenda (appuntamenti), Follow-Up (messaggi post-appuntamento), Clienti (rubrica). Stessa logica della Home Prodotti ma con i blocchi giusti per chi lavora su appuntamento.</div></div>
+    <div class="note"><div class="note-n">3</div><div><strong>Filo di sinergia:</strong> "il cliente arriva" → "cura il rapporto" — mostra che i moduli sono collegati, non isole separate.</div></div>
+    <div class="note"><div class="note-n">4</div><div><strong>Pill colorate = stato:</strong> amber = c'e qualcosa da fare, green = sei in pari. Stessa regola di Prodotti: il colore e lo stato, non il modulo.</div></div>
+    <div class="note"><div class="note-n">5</div><div><strong>Clienti "da riattivare":</strong> nella giornata calma, i clienti da riattivare emergono come pill amber — il sistema non ti lascia dimenticare nessuno.</div></div>
+
+    <div class="diff">
+      <div class="diff-title">Differenze rispetto alla Home Prodotti</div>
+      <div class="diff-item">Agenda al posto di Richieste (il punto d'ingresso e l'appuntamento, non il link)</div>
+      <div class="diff-item">Hero prio 1 = appuntamento di oggi (non richiesta in attesa)</div>
+      <div class="diff-item">Hero prio 3 = scheda dal link onboarding (al posto di "ordine da spedire")</div>
+      <div class="diff-item">Filo: "il cliente arriva → cura il rapporto" (vs "diventa un ordine → accende i follow-up")</div>
+      <div class="diff-item">Nessun modulo "Ordini" (non esiste nel flusso servizi)</div>
+      <div class="diff-item">Clienti mostra "da riattivare" come segnale proattivo</div>
+    </div>
+
+    <div class="diff" style="background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.2)">
+      <div class="diff-title" style="color:#16A34A">Futuro: quando M3 Servizi sara attivo</div>
+      <div class="diff-item">Si aggiungera una riga modulo "Richieste" (FAQ + Info + Prenotazioni) sopra l'Agenda</div>
+      <div class="diff-item">L'hero potra mostrare anche "Nuova prenotazione da gestire" come priorita 0</div>
+      <div class="diff-item">Il filo diventa: richiesta → appuntamento → follow-up → fidelizzazione</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
