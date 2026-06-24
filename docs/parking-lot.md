@@ -131,6 +131,7 @@
 ## Vertical alternativi
 
 - **Amico stampa 3D / Motorsport** — valutare per Fase 4, modulo M3 Richieste Inbound — parcheggiato Maggio 2026
+- [24/06/2026] **Panificio — nuovo cluster + flusso "ordinazioni ricorrenti".** Attività reale (conoscenza di Erik) che oggi prende le **ordinazioni del pane via WhatsApp** a mano. Sarebbe comodo gestirle con Sliss. ⚠️ **Non è solo un nuovo cluster settore:** è un **pattern di flusso diverso** dai due attuali (servizi su appuntamento / prodotti con ordine singolo) → qui l'ordine è **ricorrente/abitudinario** (es. "i soliti 2 filoni per sabato", ordine settimanale, lista della spesa che si ripete). Da adattare: (a) cluster "panificio/alimentari" con i suoi tipi-prodotto; (b) il flusso Richieste/Ordini per catturare ordini ripetuti senza riscrivere tutto ogni volta (template ordine cliente, "ripeti ultimo ordine", giorno di ritiro); (c) eventuale reminder "il tuo ordine per sabato?" = follow-up M1 adattato. **Quando:** Fase 2 inoltrata / Fase 4, **dopo** che M3 prodotti è validato con Luca — è un terzo vertical, non toccarlo finché i due attuali non sono solidi (principio: validare prima di espandere). Buon candidato come "secondo tester prodotti" di tipo diverso da Luca.
 
 ---
 
