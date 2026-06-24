@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prenota il tuo appuntamento</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  :root{
+    --green:#16A34A; --greenH:#15803D; --greenS:rgba(22,163,74,.10);
+    --bg2:#fff; --border:#E2E9E3; --text:#111813; --textD:#5B665F;
+    --shell:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);
+    --glow:rgba(22,163,74,.16);
+  }
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--shell);min-height:100vh;color:var(--text);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+  .head{display:flex;align-items:center;gap:10px;padding:18px 18px 12px}
+  .logo{width:34px;height:34px;border-radius:10px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;box-shadow:0 4px 14px var(--glow)}
+  .head .nm{font-size:15px;font-weight:800}
+  .head .nm small{display:block;font-size:11px;font-weight:600;color:var(--green)}
+  .chat{flex:1;overflow-y:auto;padding:6px 18px 28px;display:flex;flex-direction:column}
+  .bub{background:var(--bg2);border:1px solid var(--border);border-radius:16px;border-top-left-radius:5px;padding:12px 14px;font-size:14px;line-height:1.5;max-width:86%;margin:9px 0;box-shadow:0 4px 16px rgba(16,40,24,.07);align-self:flex-start;animation:rise .3s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .opts{display:flex;flex-direction:column;gap:8px;align-items:flex-end;margin:2px 0 6px}
+  .opt{background:var(--bg2);border:1.5px solid var(--border);color:var(--text);font-size:14px;font-weight:700;padding:11px 16px;border-radius:22px;box-shadow:0 2px 8px rgba(16,40,24,.06);cursor:pointer;transition:all .15s;text-align:right}
+  .opt:hover{border-color:var(--green);color:var(--green)}
+  .opt.sel{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 5px 16px var(--glow)}
+  .opts.locked .opt{pointer-events:none;opacity:.55}
+  .opts.locked .opt.sel{opacity:1}
+  .cta{display:block;text-align:center;background:#fff;border:1.5px solid var(--green);color:var(--greenH);font-weight:800;font-size:15px;padding:14px;border-radius:14px;margin:6px 0;box-shadow:0 6px 18px var(--glow);cursor:pointer;text-decoration:none}
+  .cta small{display:block;font-weight:600;font-size:11px;color:var(--textD);margin-top:2px}
+  .cta.primary{background:var(--green);color:#fff;border-color:var(--green)}
+  .cta.primary small{color:rgba(255,255,255,.85)}
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:16px;margin:9px 0;box-shadow:0 6px 20px var(--glow);align-self:stretch;animation:rise .3s ease}
+  .card label{display:block;font-size:11px;font-weight:700;color:var(--textD);text-transform:uppercase;letter-spacing:.05em;margin:12px 0 5px}
+  .card label:first-child{margin-top:0}
+  .card input,.card textarea{width:100%;padding:12px 13px;border:1.5px solid var(--border);border-radius:10px;font-size:16px;font-family:inherit;color:var(--text);outline:none;transition:border-color .15s}
+  .card input:focus,.card textarea:focus{border-color:var(--green)}
+  .card textarea{min-height:74px;resize:vertical;font-size:15px}
+  .err{font-size:12.5px;color:#DC2626;margin-top:8px;display:none}
+  .conf{text-align:center;padding:14px 6px}
+  .conf .em{font-size:46px}
+  .conf .ct{font-size:18px;font-weight:800;margin-top:6px}
+  .conf .cs{font-size:13px;color:var(--textD);margin-top:8px;line-height:1.55}
+  .foot{text-align:center;font-size:11px;color:var(--textD);padding:6px 18px 18px;opacity:.8}
+  .faq-a{background:var(--bg2);border:1px solid var(--border);border-radius:16px;border-top-left-radius:5px;padding:12px 14px;font-size:13.5px;line-height:1.55;max-width:86%;margin:9px 0;box-shadow:0 4px 16px rgba(16,40,24,.07);align-self:flex-start;animation:rise .3s ease;color:var(--textD)}
+  .faq-a b{color:var(--text)}
+  .back-link{font-size:13px;color:var(--green);font-weight:700;cursor:pointer;margin:12px 0 4px;align-self:flex-start;text-decoration:underline}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <div class="logo">S</div>
+    <div class="nm">Sliss<small id="biz-label">per MomoInk</small></div>
+  </div>
+  <div class="chat" id="chat"></div>
+  <div class="foot">Sliss &middot; liscio come deve essere</div>
+</div>
+
+<script>
+  var params = new URLSearchParams(window.location.search);
+  var BIZ   = params.get("biz") || "MomoInk";
+  var OWNER = params.get("o") || "moira";
+  var WA    = (params.get("wa") || "393337887794").replace(/[^0-9]/g, "");
+  document.getElementById("biz-label").textContent = "per " + BIZ;
+
+  var FAQ = [
+    { q: "Quanto costa un tatuaggio?", a: "Dipende dalla dimensione e complessità. Scrivimi con un’idea e ti faccio un preventivo!" },
+    { q: "Quanto dura la seduta?", a: "Da 1 a 4 ore in base alla complessità. Per lavori grandi si fanno più sedute." },
+    { q: "Quanto fa male?", a: "Dipende dalla zona. Le parti con più osso (costole, piedi) sono più sensibili. La maggior parte delle persone lo sopporta bene!" },
+    { q: "Posso portare un’immagine di riferimento?", a: "Certo! Mandami pure le tue idee, le uso come base per il bozzetto." },
+    { q: "Bisogna essere maggiorenni?", a: "Sì, serve essere maggiorenni. Sotto i 18 serve il consenso di un genitore." },
+    { q: "Chiedete un acconto?", a: "Sì, l’acconto serve per confermare l’appuntamento. Se annulli entro tempo ti viene restituito." },
+    { q: "Si può fare in gravidanza?", a: "No, è sconsigliato in gravidanza e allattamento per precauzione." },
+    { q: "Fate anche tatuaggi a colori?", a: "Certo! Scrivimi e ne parliamo — ti mostro anche dei lavori già fatti." }
+  ];
+
+  var INFO_PRE = [
+    "La pelle deve essere idratata ma NON mettere creme il giorno stesso",
+    "Mangia qualcosa prima della seduta — non venire a digiuno",
+    "Non bere alcolici nelle 24h prima",
+    "Indossa vestiti comodi che lascino scoperta la zona",
+    "Se hai dubbi sulla zona, scrivimi prima così ne parliamo"
+  ];
+
+  var INFO_POST = [
+    "🎥 Second skin / pellicola: toglila dopo 3–5 giorni (o come ti indico)",
+    "🚿 Doccia sì, ma niente mare / piscina / vasca per almeno 2 settimane",
+    "🧴 Applica la crema consigliata 2–3 volte al giorno, strato sottile",
+    "⛔ NON grattare le crosticine — cadono da sole",
+    "☀️ Evita il sole diretto per almeno 3–4 settimane",
+    "🔄 Ritocco: dopo 4–6 settimane, spesso incluso nel prezzo",
+    "Rossore, gonfiore e prurito leggero sono normali i primi giorni",
+    "Il colore “sbiadito” nelle prime settimane è normale — torna dopo la guarigione"
+  ];
+
+  var SERVICES = ["Sessione tatuaggio", "Ritocco", "Flash tattoo", "Consulenza / bozzetto", "Copertura", "PMU / trucco semipermanente"];
+
+  var ctx = { sel: null, nome: "", cognome: "", tel: "" };
+  var chat = document.getElementById("chat");
+  var scrollDown = function() { requestAnimationFrame(function() { chat.scrollTop = chat.scrollHeight; }); };
+
+  function bubble(html) {
+    var b = document.createElement("div");
+    b.className = "bub";
+    b.innerHTML = html;
+    chat.appendChild(b);
+    scrollDown();
+  }
+
+  function mkOptions(items, onSelect) {
+    var wrap = document.createElement("div");
+    wrap.className = "opts";
+    items.forEach(function(item) {
+      var el = document.createElement("div");
+      el.className = "opt";
+      el.textContent = typeof item === "string" ? item : item.label;
+      el.onclick = function() {
+        wrap.classList.add("locked");
+        el.classList.add("sel");
+        onSelect(item);
+      };
+      wrap.appendChild(el);
+    });
+    chat.appendChild(wrap);
+    scrollDown();
+  }
+
+  function start() {
+    chat.innerHTML = "";
+    bubble("Ciao! 🖤 Come posso aiutarti?");
+    mkOptions([
+      { label: "🔍 Ho una domanda", action: "faq" },
+      { label: "📋 Info prima/dopo il trattamento", action: "info" },
+      { label: "📅 Voglio prenotare", action: "book" }
+    ], function(item) {
+      if (item.action === "faq") showFaq();
+      else if (item.action === "info") showInfoChoice();
+      else showBooking();
+    });
+  }
+
+  // ---- Ramo FAQ ---------------------------------------------------------------
+  function showFaq() {
+    bubble("Cosa vuoi sapere? Scegli una domanda 👇");
+    mkOptions(FAQ.map(function(f) { return f.q; }), function(q) {
+      var faq = FAQ.find(function(f) { return f.q === q; });
+      var ans = document.createElement("div");
+      ans.className = "faq-a";
+      ans.innerHTML = "<b>" + faq.q + "</b><br/>" + faq.a;
+      chat.appendChild(ans);
+      scrollDown();
+      setTimeout(function() {
+        bubble("Ti ho aiutato?");
+        mkOptions([
+          { label: "✅ Sì, grazie!", action: "done" },
+          { label: "💬 Altra domanda", action: "more" },
+          { label: "✍️ Scrivimi su WhatsApp", action: "wa" }
+        ], function(item) {
+          if (item.action === "done") showDone("Perfetto! Se ti serve altro, torna quando vuoi.");
+          else if (item.action === "more") showFaq();
+          else openWa("Ciao " + BIZ + ", ho una domanda!");
+        });
+      }, 400);
+    });
+  }
+
+  // ---- Ramo Info pre/post -----------------------------------------------------
+  function showInfoChoice() {
+    bubble("Vuoi sapere cosa fare prima o dopo il trattamento?");
+    mkOptions([
+      { label: "📝 Prima del trattamento", action: "pre" },
+      { label: "🩹 Dopo il trattamento (aftercare)", action: "post" }
+    ], function(item) {
+      var list = item.action === "pre" ? INFO_PRE : INFO_POST;
+      var title = item.action === "pre"
+        ? "Ecco come prepararti 👇"
+        : "Ecco come prenderti cura del tuo tatuaggio 👇";
+      bubble(title);
+      var card = document.createElement("div");
+      card.className = "faq-a";
+      card.style.maxWidth = "100%";
+      card.innerHTML = list.map(function(l) { return "• " + l; }).join("<br/><br/>");
+      chat.appendChild(card);
+      scrollDown();
+      setTimeout(function() {
+        bubble("Hai bisogno d’altro?");
+        mkOptions([
+          { label: "✅ No, tutto chiaro!", action: "done" },
+          { label: "📅 Voglio prenotare", action: "book" },
+          { label: "💬 Scrivimi su WhatsApp", action: "wa" }
+        ], function(it) {
+          if (it.action === "done") showDone("Perfetto! Ci vediamo in studio 🖤");
+          else if (it.action === "book") showBooking();
+          else openWa("Ciao " + BIZ + ", avrei bisogno di un’info!");
+        });
+      }, 400);
+    });
+  }
+
+  // ---- Ramo Prenotazione ------------------------------------------------------
+  function showBooking() {
+    bubble("Che tipo di appuntamento ti interessa?");
+    mkOptions(SERVICES, function(srv) {
+      ctx.sel = srv;
+      bubble("Perfetto — <b>" + srv + "</b>. Lasciaci i tuoi dati e ti ricontattiamo noi!");
+      var card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML =
+        "<label>Nome</label>" +
+        '<input id="b-nome" type="text" placeholder="Marco" autocomplete="given-name" />' +
+        "<label>Cognome</label>" +
+        '<input id="b-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />' +
+        "<label>Telefono</label>" +
+        '<input id="b-tel" type="tel" placeholder="333 1234567" autocomplete="tel" />' +
+        "<label>Note (opzionale)</label>" +
+        '<textarea id="b-note" placeholder="Es. vorrei un fiore sul polso, circa 5cm…"></textarea>' +
+        '<a class="cta primary" id="b-send" style="margin-top:14px">💬 Invia su WhatsApp<small>ti ricontattiamo noi</small></a>' +
+        '<div class="err" id="b-err">Compila nome, cognome e telefono.</div>';
+      chat.appendChild(card);
+      document.getElementById("b-send").onclick = submitBooking;
+      scrollDown();
+    });
+  }
+
+  function submitBooking() {
+    var nome    = document.getElementById("b-nome").value.trim();
+    var cognome = document.getElementById("b-cognome").value.trim();
+    var tel     = document.getElementById("b-tel").value.trim();
+    var note    = document.getElementById("b-note").value.trim();
+    if (!nome || !cognome || !tel) { document.getElementById("b-err").style.display = "block"; return; }
+    ctx.nome = nome; ctx.cognome = cognome; ctx.tel = tel;
+
+    logRequest({ nome: nome, cognome: cognome, tel: tel, service: ctx.sel, note: note, kind: "prenotazione" });
+
+    var msg = "Ciao " + BIZ + ", sono " + nome + " " + cognome + "! 🖤 Vorrei prenotare: " + ctx.sel + (note ? ". " + note : "");
+    openWa(msg);
+    showSent();
+  }
+
+  // ---- Conferma / fine --------------------------------------------------------
+  function showDone(line) {
+    bubble(line);
+    addBack();
+  }
+
+  function showSent() {
+    chat.innerHTML =
+      '<div class="conf">' +
+        '<div class="em">🖤</div>' +
+        '<div class="ct">Richiesta inviata!</div>' +
+        '<div class="cs">Il tuo messaggio è partito su WhatsApp.<br/>Ti ricontattiamo il prima possibile.</div>' +
+      "</div>";
+    addBack();
+    scrollDown();
+  }
+
+  function addBack() {
+    var back = document.createElement("div");
+    back.className = "back-link";
+    back.textContent = "← Torna all’inizio";
+    back.onclick = start;
+    chat.appendChild(back);
+    scrollDown();
+  }
+
+  // ---- Util ------------------------------------------------------------------
+  function openWa(text) {
+    var t = encodeURIComponent(text);
+    var url = WA ? "https://wa.me/" + WA + "?text=" + t : "https://wa.me/?text=" + t;
+    window.open(url, "_blank", "noopener");
+  }
+
+  function logRequest(payload) {
+    try {
+      fetch("/api/richiesta-submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ owner: OWNER, ...payload }),
+        keepalive: true
+      }).catch(function(){});
+    } catch (e) {}
+  }
+
+  start();
+</script>
+</body>
+</html>

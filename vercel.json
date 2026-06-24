@@ -4,6 +4,7 @@
     { "path": "/api/notify?type=inserimento&report=1", "schedule": "0 18 * * *" }
   ],
   "rewrites": [
-    { "source": "/richieste", "destination": "/richieste.html" }
+    { "source": "/richieste", "destination": "/richieste.html" },
+    { "source": "/prenota",   "destination": "/prenota.html" }
   ]
 }
