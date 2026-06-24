@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sliss — Aggiornamento per Luca</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'DM Sans',sans-serif;-webkit-tap-highlight-color:transparent}
+  :root{
+    --green:#16A34A;--greenH:#15803D;--greenS:rgba(22,163,74,.10);
+    --amber:#D97706;--amberS:rgba(217,119,6,.12);
+    --bg:#F6F9F6;--bg2:#fff;--border:#E2E9E3;--text:#111813;--textM:#46514B;--textD:#5B665F;--textMu:#8A968F;
+    --glow:rgba(22,163,74,.16);
+  }
+  body{background:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,var(--bg) 70%);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:520px;margin:0 auto;padding:28px 18px 40px}
+
+  /* Header */
+  .hdr{text-align:center;margin-bottom:28px}
+  .logo{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:14px;background:var(--green);color:#fff;font-weight:800;font-size:22px;box-shadow:0 8px 20px var(--glow);margin-bottom:14px}
+  .hdr h1{font-size:22px;font-weight:800;letter-spacing:-.03em}
+  .hdr h1 span{color:var(--green)}
+  .hdr .date{font-size:12px;color:var(--textD);margin-top:4px}
+  .hdr .sub{font-size:14px;color:var(--textM);margin-top:10px;line-height:1.6}
+
+  /* Card sezione */
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:20px 18px;margin-bottom:14px;box-shadow:0 6px 20px rgba(16,40,24,.06)}
+  .card.accent{border-color:rgba(22,163,74,.35);box-shadow:0 8px 24px var(--glow)}
+  .tag{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:12px;margin-bottom:10px}
+  .tag.new{background:var(--greenS);color:var(--greenH)}
+  .tag.link{background:var(--amberS);color:var(--amber)}
+  .tag.ask{background:rgba(37,99,235,.10);color:#2563EB}
+  .card h2{font-size:16px;font-weight:800;margin-bottom:8px}
+  .card p{font-size:13.5px;color:var(--textM);line-height:1.6}
+  .card ul{list-style:none;margin-top:10px}
+  .card ul li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:13.5px;color:var(--textM);line-height:1.5}
+  .card ul li+li{border-top:1px solid #EEF2EE}
+  .ico{width:30px;height:30px;border-radius:9px;background:var(--greenS);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+
+  /* Screenshot mockup */
+  .preview{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:14px;margin-top:14px}
+  .preview img{width:100%;border-radius:10px}
+  .preview .caption{font-size:11px;color:var(--textMu);text-align:center;margin-top:8px}
+
+  /* Phone mini */
+  .phone-mini{width:100%;max-width:260px;margin:14px auto 0;background:#000;border-radius:28px;padding:8px;box-shadow:0 16px 40px rgba(0,0,0,.15)}
+  .phone-mini .scr{background:radial-gradient(ellipse 90% 30% at 28% -6%,rgba(22,163,74,.10) 0,transparent 60%),linear-gradient(168deg,#EAF5EC 0,#F1F7F1 34%,#F6F9F6 70%);border-radius:22px;padding:16px 14px 20px;min-height:220px}
+  .pm-greet{font-size:10px;color:var(--greenH);font-weight:700}
+  .pm-h1{font-size:15px;font-weight:800;margin:2px 0 10px}
+  .pm-hero{background:linear-gradient(165deg,#fff,#F4FAF5);border:1.4px solid rgba(22,163,74,.35);border-radius:12px;padding:10px;position:relative;overflow:hidden;margin-bottom:8px}
+  .pm-hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--green)}
+  .pm-kick{font-size:8px;font-weight:800;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:4px;margin-bottom:6px}
+  .pm-kick .dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pl 1.8s infinite}
+  @keyframes pl{0%{box-shadow:0 0 0 0 rgba(22,163,74,.45)}70%{box-shadow:0 0 0 5px rgba(22,163,74,0)}100%{box-shadow:0 0 0 0 rgba(22,163,74,0)}}
+  .pm-name{font-size:11px;font-weight:800}
+  .pm-desc{font-size:9px;color:var(--textD);margin-top:1px}
+  .pm-cta{display:block;background:var(--green);color:#fff;text-align:center;font-size:10px;font-weight:800;padding:7px;border-radius:8px;margin-top:8px}
+  .pm-row{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:8px;margin-bottom:5px}
+  .pm-ico{width:24px;height:24px;border-radius:7px;background:var(--greenS);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+  .pm-rnm{font-size:10px;font-weight:800;flex:1}
+  .pm-pill{font-size:8px;font-weight:800;padding:3px 7px;border-radius:10px;white-space:nowrap}
+
+  /* Link box */
+  .link-box{background:var(--bg);border:1.5px dashed var(--green);border-radius:14px;padding:16px;margin-top:14px;text-align:center}
+  .link-box .url{display:block;font-size:14px;font-weight:800;color:var(--green);word-break:break-all;margin:8px 0}
+  .link-box .copy-btn{display:inline-block;background:var(--green);color:#fff;font-size:13px;font-weight:800;padding:10px 22px;border-radius:12px;border:none;cursor:pointer;box-shadow:0 6px 16px var(--glow);margin-top:4px}
+  .link-box .hint{font-size:11px;color:var(--textD);margin-top:10px;line-height:1.5}
+
+  /* CTA WhatsApp */
+  .wa-tpl{background:#F0FFF4;border:1px solid #BBF7D0;border-radius:12px;padding:14px;margin-top:14px;font-size:13px;color:var(--textM);line-height:1.6;white-space:pre-wrap}
+
+  /* Domande */
+  .ask-list{counter-reset:ask}
+  .ask-list li{counter-increment:ask;display:flex;align-items:flex-start;gap:12px;padding:10px 0}
+  .ask-list li+li{border-top:1px solid #EEF2EE}
+  .ask-list li::before{content:counter(ask);display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:rgba(37,99,235,.10);color:#2563EB;font-size:12px;font-weight:800;flex-shrink:0}
+  .ask-list li .q{font-size:13.5px;color:var(--textM);line-height:1.5}
+  .ask-list li .q b{color:var(--text)}
+
+  .foot{text-align:center;font-size:11px;color:var(--textMu);margin-top:24px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="logo">S</div>
+    <h1>Novit<span>à</span> per te, Luca</h1>
+    <div class="date">Aggiornamento del 24 giugno 2026</div>
+    <div class="sub">Ho fatto un po' di lavoro dietro le quinte. Ecco cosa c'è di nuovo e cosa mi serve da te per andare avanti.</div>
+  </div>
+
+  <!-- 1. NUOVA HOME -->
+  <div class="card accent">
+    <span class="tag new">Novità</span>
+    <h2>La Home ti dice cosa fare</h2>
+    <p>Apri l'app e in cima vedi subito <b>la cosa più urgente</b> — una richiesta in attesa, un ordine da spedire, un follow-up da mandare. Sotto, i tuoi moduli con lo stato: ambra = c'è qualcosa da fare, verde = sei in pari.</p>
+    <div class="phone-mini"><div class="scr">
+      <div class="pm-greet">Kayek3D · martedì 24</div>
+      <div class="pm-h1">Ciao Luca</div>
+      <div class="pm-hero">
+        <div class="pm-kick"><span class="dot"></span> Da fare adesso</div>
+        <div class="pm-name">Marco Rossi</div>
+        <div class="pm-desc">Cover Starlane Stealth 5 · da 2 giorni</div>
+        <div class="pm-cta">Crea ordine →</div>
+      </div>
+      <div class="pm-row"><div class="pm-ico">📨</div><div class="pm-rnm">Richieste</div><span class="pm-pill" style="background:var(--amberS);color:var(--amber)">1 nuova</span></div>
+      <div class="pm-row"><div class="pm-ico">📦</div><div class="pm-rnm">Ordini</div><span class="pm-pill" style="background:var(--greenS);color:var(--greenH)">in pari</span></div>
+      <div class="pm-row"><div class="pm-ico">💬</div><div class="pm-rnm">Follow-Up</div><span class="pm-pill" style="background:var(--amberS);color:var(--amber)">3 da inviare</span></div>
+    </div></div>
+  </div>
+
+  <!-- 2. RICHIESTE PRONTE -->
+  <div class="card accent">
+    <span class="tag new">Novità</span>
+    <h2>Le Richieste sono pronte</h2>
+    <p>I tuoi clienti cliccano un link, scelgono il prodotto da soli (o descrivono cosa vogliono su misura), e la richiesta ti arriva direttamente nell'app. Niente più messaggi che si perdono su WhatsApp.</p>
+    <ul>
+      <li><div class="ico">📨</div><div>Il cliente clicca il link → sceglie prodotto o scrive richiesta su misura</div></li>
+      <li><div class="ico">🔔</div><div>Ti arriva la notifica + la richiesta compare nella tua lista</div></li>
+      <li><div class="ico">📦</div><div>Con un tap crei l'ordine → partono i follow-up automatici</div></li>
+    </ul>
+  </div>
+
+  <!-- 3. IL LINK -->
+  <div class="card">
+    <span class="tag link">Da attivare</span>
+    <h2>Il tuo link Richieste</h2>
+    <p>Questo è il link che i tuoi clienti useranno. Mettilo nel <b>messaggio di benvenuto</b> di WhatsApp Business — così chi ti scrive lo riceve in automatico.</p>
+    <div class="link-box">
+      <span style="font-size:12px;color:var(--textD)">Il tuo link personale:</span>
+      <span class="url" id="theLink">https://sliss.it/richieste.html?o=luca</span>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('theLink').textContent).then(()=>{this.textContent='Copiato! ✓';setTimeout(()=>{this.textContent='Copia link'},1500)})">Copia link</button>
+      <div class="hint">Funziona su qualsiasi telefono. Il cliente non deve installare nulla.</div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="font-size:12px;font-weight:800;color:var(--textD);margin-bottom:8px">TESTO PRONTO PER IL MESSAGGIO DI BENVENUTO:</div>
+      <div class="wa-tpl">Ciao! Benvenuto da Kayek3D 🏁
+
+Se stai cercando un pezzo o vuoi qualcosa di personalizzato, usa questo link — ti guida in un minuto:
+👇
+https://sliss.it/richieste.html?o=luca
+
+Altrimenti scrivimi pure qui, sono a disposizione!</div>
+      <div style="font-size:11px;color:var(--textD);margin-top:8px;line-height:1.5">Vai su <b>WhatsApp Business → Strumenti attività → Messaggio di benvenuto</b>, incolla il testo, e attivalo. Da quel momento ogni nuovo contatto lo riceve in automatico.</div>
+    </div>
+  </div>
+
+  <!-- 4. COSA MI SERVE -->
+  <div class="card">
+    <span class="tag ask">Mi serve il tuo aiuto</span>
+    <h2>3 cose per calibrare il tutto</h2>
+    <p>Per adattare bene il modulo e poi renderlo usabile per tutti i tipi di attività, mi servirebbero queste 3 cose. Anche vocale o foto, nessuna fretta!</p>
+    <ul class="ask-list">
+      <li><div class="q"><b>Screenshot delle etichette</b> che usi su WhatsApp per organizzare clienti o richieste (se ne usi)</div></li>
+      <li><div class="q"><b>3-4 messaggi tipici</b> che ti scrivono i clienti quando chiedono un prodotto — così calibro il tono della chat guidata</div></li>
+      <li><div class="q"><b>Quante richieste ricevi a settimana</b> più o meno?</div></li>
+    </ul>
+  </div>
+
+  <div class="foot">Sliss · liscio come deve essere<br/>Quando hai visto tutto, apri l'app e guarda la nuova Home in azione 👀</div>
+
+</div>
+</body>
+</html>
