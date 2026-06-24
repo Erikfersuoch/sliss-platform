@@ -126,7 +126,7 @@ export const MODULES = [
   { id: "followup",   name: "Follow-Up",  icon: "\u{1F4AC}", color: T.blue,   desc: "Follow-up post-appuntamento", status: "active" },
   { id: "onboarding", name: "Onboarding", icon: "\u{1F4CB}", color: T.purple, desc: "Info pre-appuntamento",        status: "planned" },
   { id: "reminders",  name: "Reminder",   icon: "\u{23F0}", color: T.amber,  desc: "Riduci i no-show",             status: "planned" },
-  { id: "inbound",    name: "Richieste",  icon: "\u{1F4E5}", color: T.teal,   desc: "Messaggi in entrata",          status: "planned" },
+  { id: "inbound",    name: "Richieste",  icon: "\u{1F4E5}", color: T.teal,   desc: "Chat guidata + cassetta richieste", status: "validating" },
   { id: "faq",        name: "FAQ",        icon: "\u{1F4DA}", color: "#6366F1",desc: "Risposte automatiche",          status: "future" },
   { id: "referral",   name: "Referral",   icon: "\u{1F91D}", color: T.green,  desc: "Passaparola strutturato",       status: "future" },
 ];
