@@ -116,7 +116,9 @@ Leggi sempre `docs/stato-progetto.md` per lo stato aggiornato.
 
 ```
 docs/
-  stato-progetto.md     → stato attuale, blocchi, prossimi passi (documento vivente)
+  stato-progetto.md     → stato attuale, blocchi, prossimi passi (documento vivente, snello)
+  archivio/             → storia sessioni vecchie (freddo, fuori dal contesto di lavoro)
+  protocollo-contesto.md→ sistema anti-appesantimento (regole pulizia) · check-contesto.sh = righello
   decisioni.md          → log delle decisioni importanti con data e motivazione
   parking-lot.md        → idee da rivalutare in futuro, non adesso
   note-al-volo.md       → inbox cattura rapida di Erik (idee/dubbi al volo, da smistare). Usata anche da remoto.
@@ -124,6 +126,8 @@ docs/
   settimane/            → una nota per settimana (obiettivo + cosa è successo)
   test-m1/              → feedback tester, metriche, log osservazioni
 ```
+
+**Igiene contesto:** tieni leggero ciò che si carica ogni sessione (percorso caldo sottile). Quando un file caldo/tiepido cresce o senti il focus calare, applica `docs/protocollo-contesto.md` (misura con `bash docs/check-contesto.sh`). Alleggerimento funzionale, mai distruttivo; pulizia = commit a sé `chore(contesto):`.
 
 ---
 
