@@ -107,24 +107,34 @@ export default function SlissPlatform() {
     if(!waiting.length)return;
     waiting.forEach(async slot=>{try{const r=await fetch(`/api/onboarding-check?slot=${slot.id}`);const d=await r.json();if(d.found){const clientId=uid();const _np=(d.name||'').trim().split(' ');const _fn=_np[0]||'';const _ln=_np.slice(1).join(' ');addRecord("clients",{id:clientId,firstName:_fn,lastName:_ln,name:d.name||'',phone:d.phone,email:d.email||"",channel:"WhatsApp",status:"new",tags:[],notes:d.notes||"",firstVisit:today(),lastVisit:today()});update("slots",slot.id,{status:"imported"});}}catch(e){console.error("[auto-check]",e);}});
   },[data,addRecord,update]);
-  // Raccolta automatica delle Richieste dalla cassetta (M3): una volta all'avvio,
-  // importa quelle nuove (dedup per id) nella lista locale di Luca.
+  // Raccolta automatica delle Richieste dalla cassetta (M3): all'avvio, ogni 60s
+  // mentre l'app è aperta, e al rientro (tab/PWA tornata in primo piano). Dedup per id.
+  // richiesteCheckRef = guard "fetch in corso", per non sovrapporre chiamate.
   useEffect(()=>{
-    if(richiesteCheckRef.current)return;
-    richiesteCheckRef.current=true;
     const tester=localStorage.getItem('sliss-tester');
     if(!tester)return;
-    (async()=>{try{
-      const r=await fetch(`/api/richiesta-list?owner=${encodeURIComponent(tester)}`);
-      const d=await r.json();
-      const incoming=d?.items||[];
-      if(!incoming.length)return;
-      setData(prev=>{
-        const have=new Set((prev.richieste||[]).map(x=>x.id));
-        const fresh=incoming.filter(it=>it&&it.id&&!have.has(it.id));
-        return fresh.length?{...prev,richieste:[...fresh,...(prev.richieste||[])]}:prev;
-      });
-    }catch(e){console.error("[richieste-check]",e);}})();
+    const pull=async()=>{
+      if(richiesteCheckRef.current)return;
+      richiesteCheckRef.current=true;
+      try{
+        const r=await fetch(`/api/richiesta-list?owner=${encodeURIComponent(tester)}`);
+        const d=await r.json();
+        const incoming=d?.items||[];
+        if(incoming.length){
+          setData(prev=>{
+            const have=new Set((prev.richieste||[]).map(x=>x.id));
+            const fresh=incoming.filter(it=>it&&it.id&&!have.has(it.id));
+            return fresh.length?{...prev,richieste:[...fresh,...(prev.richieste||[])]}:prev;
+          });
+        }
+      }catch(e){console.error("[richieste-check]",e);}
+      finally{richiesteCheckRef.current=false;}
+    };
+    pull();                                                  // all'avvio
+    const id=setInterval(pull,60000);                        // polling ogni 60s
+    const onVis=()=>{if(document.visibilityState==='visible')pull();}; // al rientro
+    document.addEventListener('visibilitychange',onVis);
+    return ()=>{clearInterval(id);document.removeEventListener('visibilitychange',onVis);};
   },[]);
   const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData,importData}),[data,update,addRecord,deleteRecord,updateSettings,resetData,importData]);
 
