@@ -113,6 +113,11 @@ export default function SlissPlatform() {
   useEffect(()=>{
     const tester=localStorage.getItem('sliss-tester');
     if(!tester)return;
+    // Registro "già viste": gli id delle richieste importate restano qui anche dopo che
+    // l'utente le elimina → non vengono ripescate dalla cassetta del server ad ogni poll.
+    const seenKey='sliss-richieste-seen-'+tester;
+    const getSeen=()=>{try{return new Set(JSON.parse(localStorage.getItem(seenKey)||'[]'));}catch(_){return new Set();}};
+    const addSeen=ids=>{try{const s=getSeen();ids.forEach(i=>s.add(i));localStorage.setItem(seenKey,JSON.stringify([...s]));}catch(_){}};
     const pull=async()=>{
       if(richiesteCheckRef.current)return;
       richiesteCheckRef.current=true;
@@ -121,10 +126,13 @@ export default function SlissPlatform() {
         const d=await r.json();
         const incoming=d?.items||[];
         if(incoming.length){
+          const seen=getSeen();
           setData(prev=>{
             const have=new Set((prev.richieste||[]).map(x=>x.id));
-            const fresh=incoming.filter(it=>it&&it.id&&!have.has(it.id));
-            return fresh.length?{...prev,richieste:[...fresh,...(prev.richieste||[])]}:prev;
+            const fresh=incoming.filter(it=>it&&it.id&&!have.has(it.id)&&!seen.has(it.id));
+            if(!fresh.length)return prev;
+            addSeen(fresh.map(f=>f.id));
+            return {...prev,richieste:[...fresh,...(prev.richieste||[])]};
           });
         }
       }catch(e){console.error("[richieste-check]",e);}
