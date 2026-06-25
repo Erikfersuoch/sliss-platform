@@ -59,6 +59,8 @@ Se tocco un tema fuori perimetro, segnalarmelo e dirmi dove portarlo.
 1. **Un passo alla volta.** Proponi, aspetta conferma, esegui.
 
 1b. **Stato del progetto — verificare SEMPRE prima di affermare.** Prima di dire cosa è deployato, cosa è su main, cosa contiene un file: verificare con `git log origin/main -1`, `git status`, `git log --oneline origin/main..HEAD`. Mai assumere dalla memoria. Il SessionStart hook mostra il contesto all'avvio — usarlo. Docs e configurazione Claude Code (`docs/`, `CLAUDE.md`, `.claude/settings.json`, `scripts/`) vanno committati **direttamente su main**, mai su branch laterali che possono divergere silenziosamente.
+
+1c. **Multi-postazione (PC casa + altro PC + telefono) — evitare i disallineamenti.** Erik lavora da più canali → il rischio è iniziare su un PC indietro o lasciare lavoro fermo su un branch `claude/*`. **A inizio sessione:** se il guardiano d'avvio segnala "SEI INDIETRO" → sincronizza prima di toccare codice (`git stash -u && git merge --ff-only origin/main && git stash pop`); se segnala "LAVORO NON FUSO" su un branch → aprilo, verifica (lint+build) e **integra in main** prima di iniziare cose nuove (mai cancellare un branch senza prima mettere in salvo il contenuto). **A fine sessione:** porta sempre il lavoro **su main** e fai push; non lasciare feature su un branch `claude/*`. Apri Claude **dentro `sliss-platform`**, non dalla home (sennò il guardiano e gli slash-command non scattano).
 2. **Spiega sempre dove mettere le cose.** Non assumere che sappia dove si trova un file.
 3. **Non toccare mai:** M2, M5, M6, M9 — bloccati fino a validazione M1. (M3 sbloccato 23/06/2026 — gate Luca GO.)
 4. **Non toccare mai:** Supabase, pricing, sito vetrina — bloccati fino a Fase 3.

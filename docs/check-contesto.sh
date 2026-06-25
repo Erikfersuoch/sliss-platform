@@ -22,9 +22,12 @@ echo "🌡️  TIEPIDO (inizio sessione)"
 echo "  stato-progetto.md  : $(words docs/stato-progetto.md) parole"
 flag "$(words docs/stato-progetto.md)" 3000 "archivia sessioni vecchie in docs/archivio/"
 echo "  memorie > 400 parole:"
+# Eccezione voluta: bug-lessons è una checklist anti-bug che cresce per natura (alto valore).
 for f in "$MEM"/*.md; do
+  b=$(basename "$f")
+  [ "$b" = "feedback_bug-lessons.md" ] && continue
   w=$(words "$f")
-  [ "$w" -gt 400 ] && echo "    ⚠️ $(basename "$f"): $w parole — snellisci al fatto durevole"
+  [ "$w" -gt 400 ] && echo "    ⚠️ $b: $w parole — snellisci al fatto durevole"
 done
 
 echo ""
