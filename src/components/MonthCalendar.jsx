@@ -29,7 +29,7 @@ export default function MonthCalendar({ appointments, clients, onPrepareScheda }
 
   const nameOf = id => (clients || []).find(c => c.id === id)?.name || "—";
   const openGoogleDay = day => { const dt = new Date(day); window.open(`https://calendar.google.com/calendar/r/day/${dt.getFullYear()}/${dt.getMonth() + 1}/${dt.getDate()}`, "_blank"); };
-  const selAppts = selDay ? (byDay[selDay] || []) : [];
+  const selAppts = selDay ? [...(byDay[selDay] || [])].sort((x, y) => (x.time || "").localeCompare(y.time || "")) : [];
 
   return (
     <div style={{ animation: "fadeIn .3s ease" }}>
@@ -73,7 +73,7 @@ export default function MonthCalendar({ appointments, clients, onPrepareScheda }
             : <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>{selAppts.map(a => (
                 <div key={a.id} style={{ display: "flex", alignItems: "center", gap: "8px", padding: "8px 10px", background: T.bg3, borderRadius: T.r.m }}>
                   <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: T.green, flexShrink: 0 }} />
-                  <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: "13px", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{nameOf(a.clientId)}</div><div style={{ fontSize: "11px", color: T.textD }}>{a.serviceType || "Appuntamento"}</div></div>
+                  <div style={{ flex: 1, minWidth: 0 }}><div style={{ fontSize: "13px", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{a.time ? `${a.time} · ` : ""}{nameOf(a.clientId)}</div><div style={{ fontSize: "11px", color: T.textD }}>{a.serviceType || "Appuntamento"}</div></div>
                 </div>
               ))}</div>}
           {onPrepareScheda && <Btn s="sm" onClick={() => onPrepareScheda(selDay)} style={{ width: "100%", justifyContent: "center", marginBottom: "8px" }}>{"\u{1F517} Invita cliente"}</Btn>}

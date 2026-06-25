@@ -133,7 +133,7 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
   const td=today();
   const biz=data.settings?.businessName||"la tua attività";
   const appts=(data?.appointments||[]);
-  const apptToday=appts.filter(a=>a.date===td);
+  const apptToday=appts.filter(a=>a.date===td).sort((x,y)=>(x.time||"").localeCompare(y.time||""));
   const apptUpcoming=appts.filter(a=>a.date>=td);
   const fuCount=pending.length;
   const reactCount=toReact.length;
@@ -149,7 +149,7 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
   } else if(!noClients){
     if(apptToday.length>0){
       const a=apptToday[0];const cl=(data?.clients||[]).find(c=>c.id===a.clientId);
-      hero={type:"appuntamento",label:"Appuntamento oggi",name:cl?.name||"\u{2014}",desc:a.serviceType||"Appuntamento",age:null,action:"Apri Agenda",onAction:()=>setView("appointments"),icon:"calendar",color:T.blue};
+      hero={type:"appuntamento",label:"Appuntamento oggi",name:cl?.name||"\u{2014}",desc:(a.time?`ore ${a.time} \u{00B7} `:"")+(a.serviceType||"Appuntamento"),age:null,action:"Apri Agenda",onAction:()=>setView("appointments"),icon:"calendar",color:T.blue};
     } else if(fuCount>0){
       const fu=pending[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
       hero={type:"followup",label:`Follow-up: ${ph.label}`,name:cl?.name||"\u{2014}",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};

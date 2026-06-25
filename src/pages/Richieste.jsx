@@ -35,7 +35,7 @@ const Richieste = () => {
   const chiuse = items.filter(r => (r.status || "nuova") === "chiusa");
 
   const [promo, setPromo] = useState(null);
-  const [pf, setPf] = useState({ product: "", phone: "", price: "", days: "7", service: "", date: today() });
+  const [pf, setPf] = useState({ product: "", phone: "", price: "", days: "7", service: "", date: today(), time: "" });
   const [done, setDone] = useState(false);
 
   const openPromo = (r) => {
@@ -47,6 +47,7 @@ const Richieste = () => {
       days: "7",
       service: r.service || r.desc || "",
       date: today(),
+      time: "",
     });
     setDone(false);
   };
@@ -65,7 +66,7 @@ const Richieste = () => {
       });
       const apptId = uid();
       addRecord("appointments", {
-        id: apptId, clientId, date: pf.date, serviceType: pf.service.trim(), notes: promo.desc || "",
+        id: apptId, clientId, date: pf.date, time: pf.time, serviceType: pf.service.trim(), notes: promo.desc || "",
       });
       const timings = data?.settings?.followUpTimings || { thankyou: 0, check: 7, review: 21, reactivation: 60 };
       buildFollowUps(apptId, clientId, promo.nome || "", pf.date, pf.service.trim(), timings, data?.templates)
@@ -191,6 +192,7 @@ const Richieste = () => {
               <>
                 <FormField label="Tipo servizio"><input value={pf.service} onChange={e => setPf(p => ({ ...p, service: e.target.value }))} placeholder="Es. Sessione tatuaggio" /></FormField>
                 <FormField label="Data appuntamento"><input type="date" value={pf.date} onChange={e => setPf(p => ({ ...p, date: e.target.value }))} /></FormField>
+                <FormField label="Ora" hint="L'orario concordato col cliente — serve anche per i promemoria e i follow-up"><input type="time" value={pf.time} onChange={e => setPf(p => ({ ...p, time: e.target.value }))} /></FormField>
                 <FormField label="WhatsApp cliente" hint="Il numero lasciato nella prenotazione"><input type="tel" inputMode="tel" value={pf.phone} onChange={e => setPf(p => ({ ...p, phone: e.target.value }))} placeholder="347 123 4567" /></FormField>
               </>
             ) : (
