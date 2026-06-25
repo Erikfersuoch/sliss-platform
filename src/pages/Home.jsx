@@ -137,9 +137,16 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
   const apptUpcoming=appts.filter(a=>a.date>=td);
   const fuCount=pending.length;
   const reactCount=toReact.length;
+  const richNuove=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova");
+  const richCount=richNuove.length;
 
   let hero=null;
-  if(!noClients){
+  if(richCount>0){
+    const oldest=richNuove[richNuove.length-1];
+    const d=oldest.date||oldest.created;
+    const age=d?Math.round((new Date(td)-new Date(d))/864e5):0;
+    hero={type:"richiesta",item:oldest,label:"Prenotazione in attesa",name:`${oldest.nome||""} ${oldest.cognome||""}`.trim()||"Nuovo cliente",desc:oldest.service||oldest.desc||"Prenotazione dal link",age:age>0?`da ${age} giorn${age===1?"o":"i"}`:"oggi",action:"Gestisci",onAction:()=>setView("richieste"),icon:"bell",color:T.green};
+  } else if(!noClients){
     if(apptToday.length>0){
       const a=apptToday[0];const cl=(data?.clients||[]).find(c=>c.id===a.clientId);
       hero={type:"appuntamento",label:"Appuntamento oggi",name:cl?.name||"\u{2014}",desc:a.serviceType||"Appuntamento",age:null,action:"Apri Agenda",onAction:()=>setView("appointments"),icon:"calendar",color:T.blue};
@@ -185,6 +192,7 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
           <button onClick={hero.onAction} style={{display:"block",width:"100%",textAlign:"center",background:hero.color,color:"#fff",fontSize:"14px",fontWeight:800,padding:"13px 0",borderRadius:"13px",border:"none",cursor:"pointer",fontFamily:"inherit",boxShadow:`0 8px 18px color-mix(in srgb, ${hero.color} 18%, transparent)`}}>{hero.action}</button>
           {hero.type==="followup"&&fuCount>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti i follow-up ({fuCount})</button>}
           {hero.type==="appuntamento"&&apptToday.length>1&&<button onClick={()=>setView("appointments")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti gli appuntamenti di oggi ({apptToday.length})</button>}
+          {hero.type==="richiesta"&&richCount>1&&<button onClick={()=>setView("richieste")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutte le prenotazioni ({richCount})</button>}
         </div>
       ) : (
         <div style={{background:`linear-gradient(165deg,${T.bg2},${T.bg3})`,border:`1.4px solid ${T.border}`,borderRadius:T.r.xl,padding:"26px 18px",textAlign:"center",marginBottom:"16px",boxShadow:`0 8px 22px color-mix(in srgb, ${T.green} 6%, transparent)`}}>
@@ -197,6 +205,21 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
 
       {/* SEZIONE MODULI */}
       <div style={{fontSize:"11px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,margin:"18px 2px 9px"}}>I tuoi moduli</div>
+
+      {/* Richieste */}
+      <button onClick={()=>setView("richieste")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
+        <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.greenS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="bell" size={18} color={T.green} /></div>
+        <div style={{flex:1,minWidth:0}}><div style={{fontWeight:800,fontSize:"14px"}}>Richieste</div><div style={{fontSize:"11.5px",color:T.textD,marginTop:"1px"}}>prenotazioni dal link</div></div>
+        {richCount>0
+          ? <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.amberS,color:T.amber,whiteSpace:"nowrap"}}>{richCount} da gestire</span>
+          : <span style={{fontSize:"11px",fontWeight:800,padding:"5px 11px",borderRadius:"20px",background:T.greenS,color:T.greenH,whiteSpace:"nowrap"}}>in pari</span>
+        }
+        <span style={{color:T.textMu,fontSize:"17px",fontWeight:700,marginLeft:"2px"}}>{"\u{203A}"}</span>
+      </button>
+      <div style={{display:"flex",alignItems:"center",gap:"7px",margin:"1px 0 9px 24px",fontSize:"10px",color:T.textMu,fontWeight:700}}>
+        <div style={{width:"11px",height:"11px",borderLeft:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottom:`1.6px solid color-mix(in srgb, ${T.green} 45%, transparent)`,borderBottomLeftRadius:"5px"}} />
+        diventa un appuntamento
+      </div>
 
       {/* Agenda */}
       <button onClick={()=>setView("appointments")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>

@@ -18,7 +18,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { owner, nome, cognome, desc, product, kind } = req.body || {};
+  const { owner, nome, cognome, desc, product, kind, tel, service, note } = req.body || {};
   if (!owner || !nome?.trim() || !cognome?.trim()) {
     return res.status(400).json({ error: 'missing fields' });
   }
@@ -28,9 +28,11 @@ export default async function handler(req, res) {
     id,
     nome: nome.trim(),
     cognome: cognome.trim(),
-    desc: (desc || '').trim(),
+    desc: (desc || note || '').trim(),
     product: (product || '').trim(),
-    kind: kind || 'richiesta',        // sumisura | perso | diretto | ebay
+    service: (service || '').trim(),
+    tel: (tel || '').trim(),
+    kind: kind || 'richiesta',
     status: 'nuova',
     created: new Date().toISOString(),
   };
@@ -44,7 +46,7 @@ export default async function handler(req, res) {
   try {
     const sub = await kv.get(`sub:${owner}`);
     if (sub) {
-      const what = record.product || record.desc || 'una richiesta';
+      const what = record.service || record.product || record.desc || 'una richiesta';
       await webpush.sendNotification(sub, JSON.stringify({
         title: 'Sliss — nuova richiesta 🏁',
         body: `${record.nome} ${record.cognome}: ${what}`.slice(0, 120),
