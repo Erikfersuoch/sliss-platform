@@ -162,10 +162,10 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
       <div style={{marginBottom:"16px"}}>
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         <h1 style={{fontSize:"24px",fontWeight:800,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()}, <span style={{color:T.green}}>{biz}</span></h1>
-        <div style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>{noClients?"Aggiungi il tuo primo cliente per iniziare.":allCalm?"Niente di urgente: sei in pari.":"La cosa più importante prima — poi il resto."}</div>
+        <div style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>{noClients&&!hero?"Aggiungi il tuo primo cliente per iniziare.":allCalm?"Niente di urgente: sei in pari.":"La cosa più importante prima — poi il resto."}</div>
       </div>
 
-      {noClients ? (
+      {noClients&&!hero ? (
         <div style={{background:`linear-gradient(180deg,${T.greenS},${T.bg2})`,border:`1px solid ${T.green}`,borderRadius:T.r.xl,padding:"22px 18px",textAlign:"center",marginBottom:"14px"}}>
           <div style={{width:"46px",height:"46px",borderRadius:"14px",background:T.green,color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 12px"}}><Icon name="target" size={24} color="#fff" /></div>
           <h2 style={{fontSize:"17px",fontWeight:800,letterSpacing:"-.02em",marginBottom:"6px"}}>Inizia da qui</h2>
