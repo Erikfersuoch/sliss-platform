@@ -3,7 +3,7 @@ import T from "../theme.js";
 import { useSliss } from "../context.js";
 import { PageHeader, Card, Badge, Btn, Modal, FormField } from "../components/ui.jsx";
 import Icon from "../components/Icon.jsx";
-import { uid, today, addDays } from "../helpers.js";
+import { uid, today, addDays, gcalLink } from "../helpers.js";
 import { buildFollowUps, buildProductFollowUps } from "../followups.js";
 
 const KIND = {
@@ -171,6 +171,11 @@ const Richieste = () => {
                 : <>Ci pensa Sliss: i follow-up post-vendita partono da soli<br />(conferma {"\u{2192}"} spedizione {"\u{2192}"} consegna {"\u{2192}"} recensione).</>
               }
             </div>
+            {isServizi && (
+              <Btn v="secondary" onClick={() => window.open(gcalLink(pf.date, pf.service, promo?.desc || ""), "_blank")} style={{ width: "100%", justifyContent: "center", marginBottom: "8px" }}>
+                <Icon name="calendar" size={15} />Aggiungi a Google Calendar
+              </Btn>
+            )}
             <Btn onClick={() => setPromo(null)} style={{ width: "100%", justifyContent: "center" }}>Fatto</Btn>
           </div>
         ) : (
