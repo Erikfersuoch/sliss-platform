@@ -1,7 +1,7 @@
 import { useState } from "react";
 import T from "../theme.js";
 import { PHASES, CLUSTERS_SERVIZI } from "../config.js";
-import { uid, today, greet, isPhaseOff, sendHref, openSend } from "../helpers.js";
+import { uid, today, greet, isPhaseOff, sendHref, openSend, isFuReady } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
 import { Btn, Modal, FormField, Celebration } from "../components/ui.jsx";
@@ -140,7 +140,7 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
   const richNuove=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova");
   const richCount=richNuove.length;
 
-  const confirmPending=(data?.followUps||[]).filter(f=>f.phase==="confirm"&&f.status==="pending"&&f.scheduledDate<=td);
+  const confirmPending=(data?.followUps||[]).filter(f=>f.phase==="confirm"&&f.status==="pending"&&isFuReady(f));
   const confirmCount=confirmPending.length;
   const pendingNonConfirm=pending.filter(f=>f.phase!=="confirm");
   const fuCountNoConfirm=pendingNonConfirm.length;
@@ -297,7 +297,7 @@ const Home = ({setView}) => {
   const bizType=data?.settings?.bizType||"servizi";
   const cluster=data?.settings?.cluster||"altro_s";
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;
-  const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
+  const pending=(data?.followUps||[]).filter(f=>f.status==="pending"&&isFuReady(f)&&!isPhaseOff(data?.templates,f.phase));
   const activeC=(data?.clients||[]).filter(c=>c.status==="active"||c.status==="vip");
   const toReact=(data?.clients||[]).filter(c=>c.status==="to_reactivate");
   const toShip=bizType==="prodotti"?(data?.orders||[]).filter(o=>o.status==="pending"):[];

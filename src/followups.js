@@ -28,7 +28,18 @@ const buildFollowUps=(apptId,clientId,clientName,apptDate,serviceType,timings,te
   const msgs={thankyou:serviceType==="Ritocco"?`Ciao ${clientName}! Grazie per il ritocco di oggi \u{1F64F} Scrivimi per qualsiasi cosa.`:`Ciao ${clientName}! Grazie per oggi \u{1F5A4} Ricordati pellicola e sapone neutro. Scrivimi se hai dubbi.`,check:`Ciao ${clientName}! Come sta andando? \u{C8} normale che desquami un po'. Se hai dubbi mandami una foto \u{1F64F}`,review:`Ciao ${clientName}! Sono passate un po' di settimane \u{2728} Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo.`,reactivation:`Ciao ${clientName}! Pensavo a te \u{2014} come stai? Se hai in mente qualcosa di nuovo, sono qui \u{1F5A4}`};
   const extras={service:serviceType||"",time:apptTime||""};
   const confirmFu={id:uid(),appointmentId:apptId,clientId,phase:"confirm",status:"pending",scheduledDate:apptDate,sentDate:null,satisfaction:null,message:tplMessage(templates,"confirm",clientName,confirmMsg,apptDate,extras)};
-  const rest=["thankyou","check","review","reactivation"].filter(phase=>{const t=(templates||[]).find(t=>t.phase===phase);return !t||t.active!==false;}).map(phase=>({id:uid(),appointmentId:apptId,clientId,phase,status:"pending",scheduledDate:addDays(apptDate,tm[phase]),sentDate:null,satisfaction:null,message:tplMessage(templates,phase,clientName,msgs[phase])}));
+  const thankyouSchedule=(()=>{
+    if(apptTime&&tm.thankyou===0){
+      const [h,m]=(apptTime||"").split(":").map(Number);
+      if(!isNaN(h)){const nh=h+3;return nh>=24?{date:addDays(apptDate,1),time:`${String(nh-24).padStart(2,"0")}:${String(m||0).padStart(2,"0")}`}:{date:apptDate,time:`${String(nh).padStart(2,"0")}:${String(m||0).padStart(2,"0")}`};}
+    }
+    return {date:addDays(apptDate,tm.thankyou),time:null};
+  })();
+  const rest=["thankyou","check","review","reactivation"].filter(phase=>{const t=(templates||[]).find(t=>t.phase===phase);return !t||t.active!==false;}).map(phase=>{
+    const fu={id:uid(),appointmentId:apptId,clientId,phase,status:"pending",scheduledDate:addDays(apptDate,tm[phase]),sentDate:null,satisfaction:null,message:tplMessage(templates,phase,clientName,msgs[phase])};
+    if(phase==="thankyou"){fu.scheduledDate=thankyouSchedule.date;fu.scheduledTime=thankyouSchedule.time;}
+    return fu;
+  });
   const confirmActive=(()=>{const t=(templates||[]).find(t=>t.phase==="confirm");return !t||t.active!==false;})();
   return confirmActive?[confirmFu,...rest]:rest;
 };

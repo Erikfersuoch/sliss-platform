@@ -1,7 +1,7 @@
 import { useState } from "react";
 import T from "../theme.js";
 import { PHASES, STATUSES } from "../config.js";
-import { fmtDate, daysAgo, daysUntil, today, isPhaseOff } from "../helpers.js";
+import { fmtDate, daysAgo, daysUntil, today, isPhaseOff, isFuReady } from "../helpers.js";
 import { useSliss } from "../context.js";
 import Icon from "../components/Icon.jsx";
 import { Badge, Btn, Card, Empty, GhostBubble, Search, Tabs, Modal, SendButtons, Info, SendCoach } from "../components/ui.jsx";
@@ -18,11 +18,11 @@ const FollowUp = ({setView,initialFilter,initialFuId}) => {
   const td=today();
   const allFU=data?.followUps||[];
   const isDone=f=>f.status==="sent"||f.status==="replied"||f.status==="completed";
-  const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase)).length},{id:"awaiting",label:"Inviati",count:allFU.filter(isDone).length},{id:"all",label:"Programmati",count:allFU.filter(f=>f.status==="pending").length}];
-  const filtered=allFU.filter(fu=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ms=!search||cl?.name.toLowerCase().includes(search.toLowerCase());const mf=(filter==="all"&&fu.status==="pending")||(filter==="today"&&fu.status==="pending"&&fu.scheduledDate<=td&&!isPhaseOff(data?.templates,fu.phase))||(filter==="awaiting"&&isDone(fu));return ms&&mf;}).sort((a,b)=>new Date(a.scheduledDate)-new Date(b.scheduledDate));
+  const tabs=[{id:"today",label:"Da inviare",count:allFU.filter(f=>f.status==="pending"&&isFuReady(f)&&!isPhaseOff(data?.templates,f.phase)).length},{id:"awaiting",label:"Inviati",count:allFU.filter(isDone).length},{id:"all",label:"Programmati",count:allFU.filter(f=>f.status==="pending").length}];
+  const filtered=allFU.filter(fu=>{const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ms=!search||cl?.name.toLowerCase().includes(search.toLowerCase());const mf=(filter==="all"&&fu.status==="pending")||(filter==="today"&&fu.status==="pending"&&isFuReady(fu)&&!isPhaseOff(data?.templates,fu.phase))||(filter==="awaiting"&&isDone(fu));return ms&&mf;}).sort((a,b)=>new Date(a.scheduledDate)-new Date(b.scheduledDate));
   const markSent=fu=>{update("followUps",fu.id,{status:"sent",sentDate:today()});if(sel?.id===fu.id)setSel({...fu,status:"sent",sentDate:today()});};
   const markUnsend=fu=>{update("followUps",fu.id,{status:"pending",sentDate:null,satisfaction:null});if(sel?.id===fu.id)setSel({...fu,status:"pending",sentDate:null,satisfaction:null});};
-  const pendingToday=allFU.filter(f=>f.status==="pending"&&f.scheduledDate<=td&&!isPhaseOff(data?.templates,f.phase));
+  const pendingToday=allFU.filter(f=>f.status==="pending"&&isFuReady(f)&&!isPhaseOff(data?.templates,f.phase));
   const markAllSent=()=>{if(!pendingToday.length)return;if(!window.confirm(`Segna tutti i ${pendingToday.length} follow-up come inviati?`))return;pendingToday.forEach(fu=>update("followUps",fu.id,{status:"sent",sentDate:today()}));};
   const deleteFU=fu=>{if(!window.confirm("Eliminare questo follow-up?"))return;deleteRecord("followUps",fu.id);if(sel?.id===fu.id)setSel(null);};
   const allDone=filter==="today"&&pendingToday.length===0&&allFU.some(f=>f.sentDate===td);

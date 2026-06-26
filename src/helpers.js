@@ -36,3 +36,11 @@ export const gcalLink = (date, title, notes="") => {
   const details=encodeURIComponent((notes?notes+"\n\n":"")+"Creato con Sliss");
   return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${t}&dates=${start}/${end}&details=${details}`;
 };
+export const isFuReady = (fu) => {
+  const td=today();
+  if(fu.scheduledDate>td) return false;
+  if(fu.scheduledDate<td) return true;
+  if(!fu.scheduledTime) return true;
+  const now=new Date();const [h,m]=(fu.scheduledTime||"").split(":").map(Number);
+  return !isNaN(h)&&(now.getHours()>h||(now.getHours()===h&&now.getMinutes()>=m));
+};
