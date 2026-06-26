@@ -45,6 +45,8 @@
   .conf .ct{font-size:18px;font-weight:800;margin-top:6px}
   .conf .cs{font-size:13px;color:var(--textD);margin-top:8px;line-height:1.55}
   .foot{text-align:center;font-size:11px;color:var(--textD);padding:6px 18px 18px;opacity:.8}
+  .ans{background:#F0FFF4;border:1px solid #BBF7D0;border-radius:12px;padding:11px 14px;font-size:13.5px;line-height:1.55;color:var(--textD);max-width:90%;align-self:flex-start;margin:6px 0;animation:rise .3s ease}
+  .ans b{color:var(--text)}
 </style>
 </head>
 <body>
@@ -83,6 +85,7 @@
           { label: 'Protezioni & tamponi',   next: 'buy', sel: 'protezioni / tamponi' },
           { label: 'Lavaggio moto',          next: 'buy', sel: 'un accessorio per il lavaggio' },
           { label: 'Su misura / altro',      next: 'capture' },
+          { label: '❓ Ho una domanda',   next: 'faq' },
         ]
       },
       crono: {
@@ -98,8 +101,30 @@
       },
       buy:     { type: 'buy' },
       capture: { type: 'capture' },
+      faq:     { type: 'faq' },
     }
   };
+
+  // FAQ del professionista. Default inline (rete di sicurezza); se ne ha salvate
+  // dall'app ("Le tue FAQ"), le scarica all'apertura e sostituiscono i default.
+  // Tiene solo quelle accese. Stesso store di Moira (api/faq), per-owner.
+  var FAQ = [
+    { q: "Quanto costa?", a: "Dipende dal pezzo e dalla personalizzazione. Scrivimi cosa ti serve e ti faccio un preventivo!", on: true },
+    { q: "In quanto tempo è pronto?", a: "Pochi giorni per i pezzi a catalogo; per i su misura te lo dico al momento dell'ordine.", on: true },
+    { q: "Di che materiale sono i pezzi?", a: "Plastiche tecniche resistenti, scelte in base all'uso (più robuste per i pezzi sollecitati).", on: true },
+    { q: "Posso personalizzarlo (colore, logo, scritta)?", a: "Sì! Dimmi come lo vuoi e te lo realizzo su misura.", on: true },
+    { q: "Come si compra?", a: "Scrivimi diretto su WhatsApp, oppure compra dal nostro shop eBay.", on: true },
+    { q: "Fate pezzi su misura, non a catalogo?", a: "Certo, è la nostra specialità: mandami foto e misure e vediamo insieme.", on: true },
+  ];
+  fetch("/api/faq?owner=" + encodeURIComponent(OWNER))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && Array.isArray(d.faq) && d.faq.length) {
+        var custom = d.faq.filter(function(f) { return f && f.q && f.on !== false; });
+        if (custom.length) FAQ = custom;
+      }
+    })
+    .catch(function() {});
 
   // ---- Stato + contesto ------------------------------------------------------
   const ctx = { sel: null, perso: false, nome: '', cognome: '' };
@@ -120,6 +145,46 @@
     if (node.type === 'question') renderQuestion(node);
     else if (node.type === 'buy') renderBuy();
     else if (node.type === 'capture') renderCapture();
+    else if (node.type === 'faq') renderFaq();
+  }
+
+  // ---- Ramo FAQ: domande/risposte del professionista (modificabili dall'app) -
+  function renderFaq() {
+    const visible = FAQ.filter(f => f && f.q && f.on !== false);
+    if (!visible.length) {
+      bubble('Scrivimi pure la tua domanda, ti rispondo io! 🏁');
+      const w = document.createElement('div'); w.className = 'opts';
+      const o = document.createElement('div'); o.className = 'opt'; o.textContent = '💬 Scrivi a ' + BIZ;
+      o.onclick = () => window.open(waLink('Ciao ' + BIZ + ', ho una domanda!'), '_blank', 'noopener');
+      w.appendChild(o); chat.appendChild(w); scrollDown(); return;
+    }
+    bubble('Cosa vuoi sapere? Scegli una domanda 👇');
+    const wrap = document.createElement('div'); wrap.className = 'opts';
+    visible.forEach(f => {
+      const el = document.createElement('div'); el.className = 'opt'; el.textContent = f.q;
+      el.onclick = () => {
+        wrap.classList.add('locked'); el.classList.add('sel');
+        const ans = document.createElement('div'); ans.className = 'ans';
+        ans.innerHTML = '<b>' + f.q + '</b><br/>' + f.a;
+        chat.appendChild(ans); scrollDown();
+        setTimeout(() => {
+          bubble('Ti ho aiutato?');
+          const w2 = document.createElement('div'); w2.className = 'opts';
+          [['✅ Sì, grazie!', 'done'], ['💬 Altra domanda', 'more'], ['✍️ Scrivimi su WhatsApp', 'wa']].forEach(p => {
+            const b = document.createElement('div'); b.className = 'opt'; b.textContent = p[0];
+            b.onclick = () => {
+              if (p[1] === 'done') showSent('Perfetto! Se ti serve altro, torna quando vuoi.');
+              else if (p[1] === 'more') renderFaq();
+              else window.open(waLink('Ciao ' + BIZ + ', ho una domanda!'), '_blank', 'noopener');
+            };
+            w2.appendChild(b);
+          });
+          chat.appendChild(w2); scrollDown();
+        }, 350);
+      };
+      wrap.appendChild(el);
+    });
+    chat.appendChild(wrap); scrollDown();
   }
 
   function renderQuestion(node) {

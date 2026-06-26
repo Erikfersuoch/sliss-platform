@@ -70,7 +70,7 @@ const Settings = () => {
         {notifStatus==='default' && <><p style={{fontSize:"13px",color:T.textM,lineHeight:1.6,marginBottom:"12px"}}>Ricevi un reminder quando inserire i clienti e quando hai follow-up in scadenza.</p><Btn disabled={!testerCode} onClick={handleNotif} style={{width:"100%",justifyContent:"center"}}><Icon name="bell" size={16} />Attiva notifiche</Btn></>}
         {notifStatus==='unsupported' && <p style={{fontSize:"13px",color:T.textD}}>{"Le notifiche non sono supportate su questo browser. Usa Safari su iPhone."}</p>}
       </Card>
-      {currentBizType==="servizi" && <FaqEditor owner={testerCode} bizType="servizi" />}
+      <FaqEditor owner={testerCode} bizType={currentBizType} />
       <Card style={{marginBottom:"20px"}}>
         <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Dati e backup</h3>
         <p style={{fontSize:"13px",color:T.textD,lineHeight:1.7,marginBottom:"12px"}}>I dati vivono su questo telefono. Se hai impostato il <b>codice tester</b>, una copia di sicurezza viene salvata automaticamente nel cloud: se cambi telefono o reinstalli l'app, puoi ripristinarla da qui.</p>

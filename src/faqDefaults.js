@@ -14,6 +14,14 @@ export const FAQ_DEFAULTS = {
     { q: "Si può fare in gravidanza?", a: "No, è sconsigliato in gravidanza e allattamento per precauzione.", on: true },
     { q: "Fate anche tatuaggi a colori?", a: "Certo! Scrivimi e ne parliamo — ti mostro anche dei lavori già fatti.", on: true },
   ],
+  prodotti: [
+    { q: "Quanto costa?", a: "Dipende dal pezzo e dalla personalizzazione. Scrivimi cosa ti serve e ti faccio un preventivo!", on: true },
+    { q: "In quanto tempo è pronto?", a: "Pochi giorni per i pezzi a catalogo; per i su misura te lo dico al momento dell'ordine.", on: true },
+    { q: "Di che materiale sono i pezzi?", a: "Plastiche tecniche resistenti, scelte in base all'uso (più robuste per i pezzi sollecitati).", on: true },
+    { q: "Posso personalizzarlo (colore, logo, scritta)?", a: "Sì! Dimmi come lo vuoi e te lo realizzo su misura.", on: true },
+    { q: "Come si compra?", a: "Scrivimi diretto su WhatsApp, oppure compra dal nostro shop eBay.", on: true },
+    { q: "Fate pezzi su misura, non a catalogo?", a: "Certo, è la nostra specialità: mandami foto e misure e vediamo insieme.", on: true },
+  ],
 };
 
 export default FAQ_DEFAULTS;
