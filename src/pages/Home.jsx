@@ -154,14 +154,9 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
     const d=oldest.date||oldest.created;
     const age=d?Math.round((new Date(td)-new Date(d))/864e5):0;
     hero={type:"richiesta",item:oldest,label:"Prenotazione in attesa",name:`${oldest.nome||""} ${oldest.cognome||""}`.trim()||"Nuovo cliente",desc:oldest.service||oldest.desc||"Prenotazione dal link",age:age>0?`da ${age} giorn${age===1?"o":"i"}`:"oggi",action:"Gestisci",onAction:()=>setView("richieste"),icon:"bell",color:T.green};
-  } else if(!noClients){
-    if(apptToday.length>0){
-      const a=apptToday[0];const cl=(data?.clients||[]).find(c=>c.id===a.clientId);
-      hero={type:"appuntamento",label:"Appuntamento oggi",name:cl?.name||"\u{2014}",desc:(a.time?`ore ${a.time} \u{00B7} `:"")+(a.serviceType||"Appuntamento"),age:null,action:"Apri Agenda",onAction:()=>setView("appointments"),icon:"calendar",color:T.blue};
-    } else if(fuCountNoConfirm>0){
-      const fu=pendingNonConfirm[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
-      hero={type:"followup",label:`Follow-up: ${ph.label}`,name:cl?.name||"\u{2014}",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
-    }
+  } else if(!noClients&&fuCountNoConfirm>0){
+    const fu=pendingNonConfirm[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
+    hero={type:"followup",label:`Follow-up: ${ph.label}`,name:cl?.name||"\u{2014}",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
   }
   const allCalm=!hero&&!noClients;
 
@@ -170,7 +165,7 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
       <div style={{marginBottom:"16px"}}>
         <div style={{fontSize:"13px",color:T.textD,marginBottom:"3px"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         <h1 style={{fontSize:"24px",fontWeight:800,letterSpacing:"-.03em",lineHeight:1.2}}>{greet()}, <span style={{color:T.green}}>{biz}</span></h1>
-        <div style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>{noClients&&!hero?"Aggiungi il tuo primo cliente per iniziare.":allCalm?"Niente di urgente: sei in pari.":"La cosa più importante prima — poi il resto."}</div>
+        <div style={{fontSize:"13px",color:T.textD,marginTop:"3px"}}>{noClients&&!hero?"Aggiungi il tuo primo cliente per iniziare.":allCalm?(apptToday.length>0?"Niente di urgente — guarda chi arriva oggi.":"Niente di urgente: sei in pari."):"La cosa più importante prima — poi il resto."}</div>
       </div>
 
       {noClients&&!hero ? (
@@ -201,7 +196,6 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
           {hero.type==="confirm"&&<button onClick={()=>{update("followUps",hero.fu.id,{status:"sent",sentDate:today()});}} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Segna come inviata</button>}
           {hero.type==="confirm"&&confirmCount>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"5px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Altre conferme da inviare ({confirmCount})</button>}
           {hero.type==="followup"&&fuCountNoConfirm>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti i follow-up ({fuCountNoConfirm})</button>}
-          {hero.type==="appuntamento"&&apptToday.length>1&&<button onClick={()=>setView("appointments")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti gli appuntamenti di oggi ({apptToday.length})</button>}
           {hero.type==="richiesta"&&richCount>1&&<button onClick={()=>setView("richieste")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutte le prenotazioni ({richCount})</button>}
         </div>
       ) : (
@@ -215,6 +209,18 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
 
       {/* SEZIONE MODULI */}
       <div style={{fontSize:"11px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,margin:"18px 2px 9px"}}>I tuoi moduli</div>
+
+      {/* OGGI IN AGENDA — informativo, non azione */}
+      {apptToday.length>0&&(
+        <button onClick={()=>setView("appointments")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"10px",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+          <div style={{width:"36px",height:"36px",borderRadius:"11px",background:T.blueS,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name="calendar" size={18} color={T.blue} /></div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontWeight:700,fontSize:"13px",color:T.blue}}>Oggi in agenda</div>
+            <div style={{fontSize:"12px",color:T.textM,marginTop:"2px"}}>{apptToday.map(a=>{const cl=(data?.clients||[]).find(c=>c.id===a.clientId);return (a.time?`${a.time} `:"")+(cl?.name||"\u{2014}");}).join(" \u{00B7} ")}</div>
+          </div>
+          <span style={{color:T.textMu,fontSize:"17px",fontWeight:700}}>{"\u{203A}"}</span>
+        </button>
+      )}
 
       {/* Richieste */}
       <button onClick={()=>setView("richieste")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
