@@ -293,7 +293,6 @@ const Home = ({setView}) => {
   const [qDone,setQDone]=useState(false);
   const [qForm,setQForm]=useState({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:"Sessione",product:"",channel:"WhatsApp"});
   const [celebrate,setCelebrate]=useState(false);
-  const td=today();
   const bizType=data?.settings?.bizType||"servizi";
   const cluster=data?.settings?.cluster||"altro_s";
   const clusterSvcTypes=(CLUSTERS_SERVIZI[cluster]?.serviceTypes)||CLUSTERS_SERVIZI.altro_s.serviceTypes;

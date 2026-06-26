@@ -1,10 +1,10 @@
 # Sliss — Stato del Progetto
 
-<!-- SYNC ▸ FONTE DI VERITÀ · v7.5 · 2026-06-25 · Fase 1 Fondazione · M1 live + M3 in validazione (servizi: auto-aggiornamento + orario live) · git HEAD = deploy Vercel READY
+<!-- SYNC ▸ FONTE DI VERITÀ · v7.6 · 2026-06-26 · Fase 1 Fondazione · M1 live + M3 in validazione · flusso prenotazione→appuntamento completato (conferma + ringraziamento +3h) · git HEAD = deploy Vercel READY
      Questo file è la fonte UNICA per versione / fase / stato tester. Gli altri file puntano qui, NON duplicano il numero.
      A fine sessione: aggiorna questa riga, poi propaga gli stamp negli altri file (CLAUDE.md, memoria). -->
 
-> Documento vivente · Aggiornato: 25/06/2026
+> Documento vivente · Aggiornato: 26/06/2026
 > Fase corrente: **1 — Fondazione**
 > Storia delle sessioni vecchie (≤20/06): `docs/archivio/sessioni-2026-h1.md` · igiene contesto: `docs/protocollo-contesto.md`
 
@@ -24,6 +24,8 @@
 ## Dove sono adesso
 
 Sistema operativo in piedi, app deployata (v7.5), tester attivi. M1 Follow-Up validato (gate Luca GO il 23/06); M3 Richieste sbloccato e in validazione su **entrambi i flussi**: prodotti (Luca, Richieste) e servizi (Moira, Prenota) costruiti e live.
+
+**Sessione 26/06/2026 (CORE + DEV remoto) — flusso prenotazione→appuntamento COMPLETATO (PUNTO 2+3) + fix lint + riallineamento.** Lavoro costruito da sessioni web (Sonnet 4.6) e consolidato/verificato in questa sessione CORE da PC casa. (1) **PUNTO 2 — Conferma appuntamento** (`0d3eabb`, `e58fe1d`): nuova fase follow-up `confirm` per i servizi (registrata in `PHASES`). Alla creazione dell'appuntamento Sliss prepara il messaggio di conferma WhatsApp; l'hero Home diventa *"DA FARE ADESSO: manda la conferma a [Nome]"* con tasto "Invia su WhatsApp" + "Segna come inviata". Template "Conferma appuntamento" aggiunto a tutti e 7 i cluster servizi. Ordine fasi servizi ora: **conferma → ringraziamento → controllo → recensione → riattivazione**. (2) **PUNTO 3 — Ringraziamento a ora-appuntamento +3h** (`e58fe1d`): il ringraziamento non parte più a ora-0 ma 3h dopo l'orario dell'appuntamento, via nuovo helper `isFuReady()` (controlla `scheduledTime` oltre a `scheduledDate`; gestisce lo sforamento a mezzanotte). È il "ringraziamento post-seduta" disegnato il 25/06. (3) **4 fix UX** (`24f887d`,`dc1836e`,`3ea9be6`,`5e8ded3`): hero separato da "Oggi in agenda" (azione vs info), label "I tuoi moduli" riposizionata, `isFuReady()` usato anche in Clients.jsx, hint "premi ✕ per tornare" su Richieste. (4) **Prassi d'avvio CORE:** main era indietro di 7 commit → riallineato (ff); branch laterale `claude/continue-discussion-1bjio3` verificato vuoto e cancellato → repo di nuovo solo `main`. (5) **Fix lint** (questa sessione): le sessioni remote avevano pushato con **lint rosso** (3 variabili `td`/`td2` morte, residui del refactor `isFuReady` in App.jsx/Home.jsx/Clients.jsx) — build e 45 test passavano ma il lint falliva. Pulite. **Verifica:** lint 0 + build verde + 45 test + deploy `e58fe1d` READY confermato da Erik.
 
 **Sessione 25/06/2026 (sera) (DEV/CORE) — M3 servizi: auto-aggiornamento Richieste validato dal vivo + orario appuntamento + 3 fix + disegno flusso conferma.** Cinque pezzi, tutti live e provati da Erik in prima persona (PC incognito = "finto Moira" ↔ cellulare = cliente, owner finto). (1) **Auto-aggiornamento lista Richieste** (`4b17002`): la cassetta server viene controllata all'avvio + ogni 60s + al rientro (visibilitychange), non più solo al mount; prima le prenotazioni nuove non comparivano senza riaprire l'app. **Validato dal vivo.** (2) **Bottone "Aggiungi a Google Calendar"** (`0e682cb`) nella conferma del modal prenotazione→appuntamento (solo servizi), riusa `gcalLink`. (3) **Fix hero Home servizi** (`6a91727`): le prenotazioni in attesa hanno priorità sul blocco "Inizia da qui/nessun cliente" — bug **pre-esistente** (l'hero "Prenotazione in attesa" era nascosto se l'attività non aveva ancora clienti: esattamente il caso reale di Moira); emerso dal test end-to-end. (4) **Orario sull'appuntamento** (`5c27b7e`): campo Ora opzionale (HH:MM) in creazione (modal Richieste + form Agenda) e visualizzazione (hero "ore 15 · Copertura", lista Agenda, dettaglio calendario, ordinati per ora); retrocompatibile. È la **fondazione** per il ringraziamento "post-seduta". (5) **Fix "richieste eliminate tornano"** (`09e7e69`): registro locale `sliss-richieste-seen-<owner>` → una richiesta eliminata resta eliminata, non più ripescata dalla cassetta ad ogni poll. **Disegno col CORE del flusso prenotazione→appuntamento** (vedi `RIPRENDI.md`): la trattativa data/ora resta **umana su WhatsApp** (Sliss non la automatizza); prossimi passi concordati = (2) **messaggio di conferma** alla creazione appuntamento, che diventa la vera azione dell'hero ("manda la conferma"); (3) **ringraziamento a ora-appuntamento +3h**; parcheggiato "segna completato" per sedute multiple.
 
@@ -50,10 +52,10 @@ Sistema operativo in piedi, app deployata (v7.5), tester attivi. M1 Follow-Up va
 
 ## Il prodotto oggi
 
-**App v7.5** (deploy Vercel READY). Tema chiaro/scuro opt-in (default chiaro), nav flottante mobile (barra logo in alto + isola 4 voci + FAB "+"), velature verdi.
+**App v7.6** (deploy Vercel READY). Tema chiaro/scuro opt-in (default chiaro), nav flottante mobile (barra logo in alto + isola 4 voci + FAB "+"), velature verdi.
 
 - **Moduli:** **M1 Follow-Up** = attivo e validato (gate Luca GO 23/06). **M3 Richieste** = sbloccato, **in validazione su entrambi i flussi**: prodotti (Luca, pagina Richieste) e servizi (Moira, pagina Prenota) costruiti e live; prenotazione/richiesta → appuntamento/ordine + follow-up. Bloccati fino ad avanzamento: M2, M5, M6, M9.
-- **Flussi:** Servizi (Appuntamenti + 4 follow-up, Moira) · Prodotti (Ordini + 5 follow-up, Luca).
+- **Flussi:** Servizi (Appuntamenti + 5 follow-up: conferma → ringraziamento +3h → controllo → recensione → riattivazione, Moira) · Prodotti (Ordini + 5 follow-up, Luca).
 - **Home a moduli** (Slice 1, prodotti): hero dinamico per priorità (richiesta→ordine→follow-up), righe modulo compatte, colore = stato. `HomeServizi` invariata.
 - **Scheda cliente** (parte di M1): visite/ordini totali, ultima visita/ordine, stato ciclo follow-up.
 - **Backup:** cloud su Upstash, additivo, ~8s dopo ogni modifica; ripristino manuale da Impostazioni. localStorage resta primario. Guard anti-sovrascrittura attiva.
@@ -85,10 +87,10 @@ Sistema operativo in piedi, app deployata (v7.5), tester attivi. M1 Follow-Up va
 **Quando riprendi (da `docs/RIPRENDI.md`):**
 1. **Attendere/raccogliere il feedback di Luca** sulla pagina aggiornamento — le 3 risposte servono a rifinire M3 beta.
 2. **Go-live M3 coi clienti veri di Luca:** imposta il messaggio di benvenuto WhatsApp Business col link (testo pronto in `aggiornamento-luca.html`; numero Kayek3D `393458983135`).
-3. **Auto-aggiornamento** della lista Richieste (no refresh manuale — poll o refresh al rientro).
-4. **Link eBay reali:** export CSV dal Seller Hub di Luca → riempire i campi `ebay` in `richieste.html`.
-5. **Validare il banco FAQ servizi con Moira** al momento naturale, non sollecitare.
-6. *(Slice 2+ Home a moduli: completare HomeServizi — dopo feedback Luca/Moira.)*
+3. **Link eBay reali:** export CSV dal Seller Hub di Luca → riempire i campi `ebay` in `richieste.html`.
+4. **Provare dal vivo il flusso conferma + ringraziamento +3h con Moira** (PUNTO 2+3 ora live): creare un appuntamento con orario → verificare hero "manda la conferma" e che il ringraziamento scatti a +3h. Validare il banco FAQ servizi al momento naturale, non sollecitare.
+5. *(Slice 2+ Home a moduli: completare HomeServizi — dopo feedback Luca/Moira.)*
+6. *(Parcheggiato dal flusso servizi: "segna completato" per sedute multiple.)*
 
 **Pulizia del temporaneo (residuo di fase test, da fare quando si chiude la finestra gate):**
 - Togliere il `report` dal cron serale (`vercel.json`) + `sendGateReport` in `notify.js`.

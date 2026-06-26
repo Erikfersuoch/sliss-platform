@@ -146,7 +146,6 @@ export default function SlissPlatform() {
   },[]);
   const ctx=useMemo(()=>({data,update,addRecord,deleteRecord,updateSettings,resetData,importData}),[data,update,addRecord,deleteRecord,updateSettings,resetData,importData]);
 
-  const td=today();
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&isFuReady(f)&&!isPhaseOff(data?.templates,f.phase)).length;
   const richNew=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova").length;
   const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,richieste:<Richieste/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go} bizType={data?.settings?.bizType||""}/>};
