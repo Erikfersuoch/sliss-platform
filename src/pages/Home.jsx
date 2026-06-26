@@ -36,6 +36,18 @@ const HomeProdotti = ({setView,data,update,pending,toShip}) => {
     hero={type:"followup",item:fu,label:`Follow-up: ${ph.label}`,name:cl?.name||"—",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
   }
 
+  // Hero secondario "POI": la seconda priorità, sotto l'hero principale (solo info+tap, mai un'azione doppia)
+  let secondo=null;
+  if(hero){
+    if(hero.type==="richiesta"&&toShip.length>0){
+      const o=toShip[0];const cl=(data?.clients||[]).find(c=>c.id===o.clientId);
+      secondo={label:"Ordine da spedire",name:cl?.name||"—",desc:o.product||"Ordine",onAction:()=>setView("orders"),icon:"package",color:T.amber};
+    } else if((hero.type==="richiesta"||hero.type==="ordine")&&pending.length>0){
+      const fu=pending[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
+      secondo={label:`Follow-up: ${ph.label}`,name:cl?.name||"—",desc:fu.message?.slice(0,60)||"",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
+    }
+  }
+
   // Conteggi moduli
   const richCount=richNuove.length;
   const shipCount=toShip.length;
@@ -77,6 +89,19 @@ const HomeProdotti = ({setView,data,update,pending,toShip}) => {
           <p style={{fontSize:"12.5px",color:T.textD,marginTop:"5px",lineHeight:1.5}}>Nessuna richiesta in attesa, nessun ordine da spedire.<br/>I follow-up partono quando serve.</p>
           <div style={{marginTop:"15px",fontSize:"12px",fontWeight:700,color:T.green,background:T.greenS,borderRadius:"12px",padding:"10px 13px",display:"inline-block"}}>💡 Aggiorna gli stati spedizione quando spedisci</div>
         </div>
+      )}
+
+      {/* HERO SECONDARIO "POI" — seconda priorità, sottomesso all'hero */}
+      {secondo&&(
+        <button onClick={secondo.onAction} style={{display:"flex",alignItems:"center",gap:"11px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"14px",padding:"11px 13px",marginTop:"-4px",marginBottom:"16px",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
+          <span style={{fontSize:"9.5px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,background:T.bg3,padding:"3px 7px",borderRadius:"7px",flexShrink:0}}>Poi</span>
+          <div style={{width:"30px",height:"30px",borderRadius:"9px",background:`color-mix(in srgb, ${secondo.color} 12%, transparent)`,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}><Icon name={secondo.icon} size={16} color={secondo.color} /></div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontWeight:700,fontSize:"13px"}}>{secondo.name}</div>
+            <div style={{fontSize:"11.5px",color:T.textM,marginTop:"1px",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{secondo.label}{secondo.desc?`: ${secondo.desc}`:""}</div>
+          </div>
+          <span style={{color:T.textMu,fontSize:"15px",fontWeight:700}}>{"›"}</span>
+        </button>
       )}
 
       {/* SEZIONE MODULI */}

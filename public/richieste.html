@@ -69,7 +69,7 @@
   // ---- SCRIPT (cucito su Luca, per ora) — domani configurabile dal pro -------
   // `sel`  = cosa cerca il cliente (entra nel messaggio WhatsApp)
   // `perso`= cover personalizzabile → al passo "compra" compare "Personalizzala"
-  // `ebay` = link DIRETTO alla scheda eBay (da riempire coi link reali di Luca)
+  // Il bottone eBay punta al catalogo generale (SHOP); link per-prodotto non gestiti.
   const FLOW = {
     start: 'root',
     nodes: {
@@ -89,11 +89,11 @@
         type: 'question',
         text: 'Quale cronometro hai?',
         options: [
-          { label: 'Aim Solo 2',         next: 'buy', sel: 'Cover Aim Solo 2',         perso: true, ebay: '' },
-          { label: 'Aim Mychron 6',      next: 'buy', sel: 'Cover Aim Mychron 6',      perso: true, ebay: '' },
-          { label: 'Starlane Stealth 5', next: 'buy', sel: 'Cover Starlane Stealth 5', perso: true, ebay: '' },
-          { label: 'PzRacing ST500',     next: 'buy', sel: 'Cover PzRacing ST500',     perso: true, ebay: '' },
-          { label: 'Alfano 7',           next: 'buy', sel: 'Cover Alfano 7',           perso: true, ebay: '' },
+          { label: 'Aim Solo 2',         next: 'buy', sel: 'Cover Aim Solo 2',         perso: true },
+          { label: 'Aim Mychron 6',      next: 'buy', sel: 'Cover Aim Mychron 6',      perso: true },
+          { label: 'Starlane Stealth 5', next: 'buy', sel: 'Cover Starlane Stealth 5', perso: true },
+          { label: 'PzRacing ST500',     next: 'buy', sel: 'Cover PzRacing ST500',     perso: true },
+          { label: 'Alfano 7',           next: 'buy', sel: 'Cover Alfano 7',           perso: true },
         ]
       },
       buy:     { type: 'buy' },
@@ -102,7 +102,7 @@
   };
 
   // ---- Stato + contesto ------------------------------------------------------
-  const ctx = { sel: null, perso: false, ebay: '', nome: '', cognome: '' };
+  const ctx = { sel: null, perso: false, nome: '', cognome: '' };
   const chat = document.getElementById('chat');
   const scrollDown = () => requestAnimationFrame(() => chat.scrollTop = chat.scrollHeight);
 
@@ -135,7 +135,6 @@
         el.classList.add('sel');
         if (opt.sel !== undefined)   ctx.sel = opt.sel;
         if (opt.perso !== undefined) ctx.perso = !!opt.perso;
-        if (opt.ebay !== undefined)  ctx.ebay = opt.ebay || '';
         goTo(opt.next);
       };
       wrap.appendChild(el);
@@ -156,7 +155,7 @@
       <input id="b-nome" type="text" placeholder="Marco" autocomplete="given-name" />
       <label>Cognome</label>
       <input id="b-cognome" type="text" placeholder="Rossi" autocomplete="family-name" />
-      <a class="cta" id="b-ebay" style="margin-top:14px">🛒 Compra subito su eBay<small>${ctx.ebay ? 'scheda prodotto · protezione acquisti' : 'sul nostro shop · protezione acquisti'}</small></a>
+      <a class="cta" id="b-ebay" style="margin-top:14px">🛒 Compra subito su eBay<small>sul nostro shop · protezione acquisti</small></a>
       <div class="oppure">oppure</div>
       <a class="cta perso" id="b-direct">💬 Scrivi a ${BIZ}<small>parli direttamente con noi</small></a>
       ${ctx.perso ? `<a class="cta perso" id="b-perso" style="margin-top:6px">✏️ Personalizzala<small>colore, logo, scritta…</small></a>` : ''}
@@ -174,7 +173,7 @@
     document.getElementById('b-ebay').onclick = () => {
       if (!grab()) return;
       logRequest({ nome: ctx.nome, cognome: ctx.cognome, product: ctx.sel || '', kind: 'ebay' });
-      window.open(ctx.ebay || SHOP, '_blank', 'noopener');
+      window.open(SHOP, '_blank', 'noopener');
     };
     document.getElementById('b-direct').onclick = () => {
       if (!grab()) return;
