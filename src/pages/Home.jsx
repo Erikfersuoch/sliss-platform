@@ -207,9 +207,6 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
         </div>
       )}
 
-      {/* SEZIONE MODULI */}
-      <div style={{fontSize:"11px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,margin:"18px 2px 9px"}}>I tuoi moduli</div>
-
       {/* OGGI IN AGENDA — informativo, non azione */}
       {apptToday.length>0&&(
         <button onClick={()=>setView("appointments")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"10px",cursor:"pointer",fontFamily:"inherit",textAlign:"left"}}>
@@ -221,6 +218,9 @@ const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setS
           <span style={{color:T.textMu,fontSize:"17px",fontWeight:700}}>{"\u{203A}"}</span>
         </button>
       )}
+
+      {/* SEZIONE MODULI */}
+      <div style={{fontSize:"11px",fontWeight:800,letterSpacing:".06em",textTransform:"uppercase",color:T.textMu,margin:"18px 2px 9px"}}>I tuoi moduli</div>
 
       {/* Richieste */}
       <button onClick={()=>setView("richieste")} style={{display:"flex",alignItems:"center",gap:"12px",width:"100%",background:T.bg2,border:`1px solid ${T.border}`,borderRadius:"15px",padding:"12px 13px",marginBottom:"5px",cursor:"pointer",fontFamily:"inherit",textAlign:"left",boxShadow:`0 4px 14px color-mix(in srgb, ${T.green} 5%, transparent)`}}>
