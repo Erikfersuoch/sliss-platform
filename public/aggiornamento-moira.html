@@ -81,6 +81,13 @@
   .note-title{font-size:11px;font-weight:800;color:var(--blue);margin-bottom:4px}
   .note p{font-size:12.5px;color:var(--textM);line-height:1.55}
 
+  /* Link box (prenotazioni) */
+  .link-box{background:var(--bg);border:1.5px dashed var(--green);border-radius:14px;padding:16px;margin-top:14px;text-align:center}
+  .link-box .url{display:block;font-size:14px;font-weight:800;color:var(--green);word-break:break-all;margin:8px 0}
+  .link-box .copy-btn{display:inline-block;background:var(--green);color:#fff;font-size:13px;font-weight:800;padding:10px 22px;border-radius:12px;border:none;cursor:pointer;box-shadow:0 6px 16px var(--glow);margin-top:4px}
+  .link-box .hint{font-size:11px;color:var(--textD);margin-top:10px;line-height:1.5}
+  .wa-tpl{background:#F0FFF4;border:1px solid #BBF7D0;border-radius:12px;padding:14px;margin-top:14px;font-size:13px;color:var(--textM);line-height:1.6;white-space:pre-wrap}
+
   .footer{text-align:center;margin-top:28px;font-size:11px;color:var(--textMu)}
   .footer span{color:var(--green);font-weight:700}
 </style>
@@ -91,8 +98,32 @@
   <div class="hdr">
     <div class="logo">S</div>
     <h1>Aggiornamento <span>Sliss</span></h1>
-    <div class="date">24 giugno 2026</div>
-    <div class="sub">Ciao Moira! Abbiamo aggiornato la Home in base al tuo feedback.<br/>Ecco cosa cambia e come funziona.</div>
+    <div class="date">26 giugno 2026</div>
+    <div class="sub">Ciao Moira! Due novita: il tuo <strong>link prenotazioni</strong> da attivare,<br/>e la <strong>Home</strong> aggiornata in base al tuo feedback.</div>
+  </div>
+
+  <!-- NOVITA: LINK PRENOTAZIONI (M3) -->
+  <div class="card accent">
+    <span class="tag amber">Da attivare</span>
+    <h2>Il tuo link prenotazioni</h2>
+    <p>Adesso i tuoi clienti possono <strong>prenotare e chiederti info</strong> da un link guidato. Quello che arriva lo trovi nella nuova sezione <strong>Richieste</strong> dell'app — cosi non si perde piu nessuna prenotazione.</p>
+    <div class="link-box">
+      <span style="font-size:12px;color:var(--textD)">Il tuo link personale:</span>
+      <span class="url" id="theLink">https://sliss.it/prenota?o=moira</span>
+      <button class="copy-btn" onclick="navigator.clipboard.writeText(document.getElementById('theLink').textContent).then(()=>{this.textContent='Copiato! ✓';setTimeout(()=>{this.textContent='Copia link'},1500)})">Copia link</button>
+      <div class="hint">Funziona su qualsiasi telefono. Il cliente non deve installare nulla.</div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="font-size:12px;font-weight:800;color:var(--textD);margin-bottom:8px">TESTO PRONTO PER IL MESSAGGIO DI BENVENUTO:</div>
+      <div class="wa-tpl">Ciao! Benvenuta/o da Momo Ink 🖤
+
+Per prenotare, chiedere info sul tatuaggio o sapere come prepararti, usa questo link — ti guido in un minuto:
+👇
+https://sliss.it/prenota?o=moira
+
+Altrimenti scrivimi pure qui!</div>
+      <div style="font-size:11px;color:var(--textD);margin-top:8px;line-height:1.5">Vai su <b>WhatsApp Business → Strumenti attivita → Messaggio di benvenuto</b>, incolla il testo, e attivalo. Da quel momento ogni nuovo contatto lo riceve in automatico.</div>
+    </div>
   </div>
 
   <!-- NOVITA 1: NUOVA HOME -->
