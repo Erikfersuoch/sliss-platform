@@ -1,0 +1,5 @@
+# Cancello pre-push di Sliss.
+# Non lascia partire un push se il lint o i test sono rossi.
+# Se ti blocca: leggi l'errore qui sopra, correggi, poi ripusha.
+echo "🚦 Controllo prima del push: lint + test..."
+npm run lint && npm test
