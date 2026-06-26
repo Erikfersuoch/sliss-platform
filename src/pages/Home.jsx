@@ -129,7 +129,7 @@ const HomeProdotti = ({setView,data,update,pending,toShip}) => {
 // ═══════════════════════════════════════════════════════════════
 //  HOME SERVIZI — hero dinamico + moduli compatti (v2)
 // ═══════════════════════════════════════════════════════════════
-const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuickAdd,setShowInvite}) => {
+const HomeServizi = ({setView,data,update,pending,activeC,toReact,noClients,setShowQuickAdd,setShowInvite}) => {
   const td=today();
   const biz=data.settings?.businessName||"la tua attività";
   const appts=(data?.appointments||[]);
@@ -140,8 +140,16 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
   const richNuove=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova");
   const richCount=richNuove.length;
 
+  const confirmPending=(data?.followUps||[]).filter(f=>f.phase==="confirm"&&f.status==="pending"&&f.scheduledDate<=td);
+  const confirmCount=confirmPending.length;
+  const pendingNonConfirm=pending.filter(f=>f.phase!=="confirm");
+  const fuCountNoConfirm=pendingNonConfirm.length;
+
   let hero=null;
-  if(richCount>0){
+  if(confirmCount>0){
+    const fu=confirmPending[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);
+    hero={type:"confirm",item:fu,label:"Manda la conferma",name:cl?.name||"\u{2014}",desc:fu.message?.slice(0,80)||"",age:null,action:"Invia su WhatsApp",onAction:()=>openSend(sendHref(fu.message,cl?.phone,cl?.email,cl?.channel)),icon:"check",color:T.green,fu,cl};
+  } else if(richCount>0){
     const oldest=richNuove[richNuove.length-1];
     const d=oldest.date||oldest.created;
     const age=d?Math.round((new Date(td)-new Date(d))/864e5):0;
@@ -150,8 +158,8 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
     if(apptToday.length>0){
       const a=apptToday[0];const cl=(data?.clients||[]).find(c=>c.id===a.clientId);
       hero={type:"appuntamento",label:"Appuntamento oggi",name:cl?.name||"\u{2014}",desc:(a.time?`ore ${a.time} \u{00B7} `:"")+(a.serviceType||"Appuntamento"),age:null,action:"Apri Agenda",onAction:()=>setView("appointments"),icon:"calendar",color:T.blue};
-    } else if(fuCount>0){
-      const fu=pending[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
+    } else if(fuCountNoConfirm>0){
+      const fu=pendingNonConfirm[0];const cl=(data?.clients||[]).find(c=>c.id===fu.clientId);const ph=PHASES[fu.phase]||{icon:"file",label:fu.phase,color:T.textD};
       hero={type:"followup",label:`Follow-up: ${ph.label}`,name:cl?.name||"\u{2014}",desc:fu.message?.slice(0,80)||"",age:fu.scheduledDate<td?"scaduto":"oggi",action:"Apri Follow-Up",onAction:()=>setView("followup"),icon:ph.icon,color:ph.color};
     }
   }
@@ -190,7 +198,9 @@ const HomeServizi = ({setView,data,pending,activeC,toReact,noClients,setShowQuic
             </div>
           </div>
           <button onClick={hero.onAction} style={{display:"block",width:"100%",textAlign:"center",background:hero.color,color:"#fff",fontSize:"14px",fontWeight:800,padding:"13px 0",borderRadius:"13px",border:"none",cursor:"pointer",fontFamily:"inherit",boxShadow:`0 8px 18px color-mix(in srgb, ${hero.color} 18%, transparent)`}}>{hero.action}</button>
-          {hero.type==="followup"&&fuCount>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti i follow-up ({fuCount})</button>}
+          {hero.type==="confirm"&&<button onClick={()=>{update("followUps",hero.fu.id,{status:"sent",sentDate:today()});}} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Segna come inviata</button>}
+          {hero.type==="confirm"&&confirmCount>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"5px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Altre conferme da inviare ({confirmCount})</button>}
+          {hero.type==="followup"&&fuCountNoConfirm>1&&<button onClick={()=>setView("followup")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti i follow-up ({fuCountNoConfirm})</button>}
           {hero.type==="appuntamento"&&apptToday.length>1&&<button onClick={()=>setView("appointments")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutti gli appuntamenti di oggi ({apptToday.length})</button>}
           {hero.type==="richiesta"&&richCount>1&&<button onClick={()=>setView("richieste")} style={{display:"block",width:"100%",textAlign:"center",fontSize:"11.5px",color:T.textD,fontWeight:700,marginTop:"9px",background:"none",border:"none",cursor:"pointer",fontFamily:"inherit"}}>Vedi tutte le prenotazioni ({richCount})</button>}
         </div>
@@ -293,7 +303,7 @@ const Home = ({setView}) => {
     const qName=qForm.firstName.trim()+(qForm.lastName.trim()?' '+qForm.lastName.trim():'');
     let clientId=(data?.clients||[]).find(c=>(qForm.phone.trim()&&c.phone===qForm.phone.trim())||(qForm.email.trim()&&c.email===qForm.email.trim()))?.id;
     if(!clientId){clientId=uid();addRecord("clients",{id:clientId,firstName:qForm.firstName.trim(),lastName:qForm.lastName.trim(),name:qName,phone:qForm.phone.trim(),email:qForm.email.trim(),channel:qForm.channel||"WhatsApp",status:"active",tags:[],notes:"",firstVisit:qForm.date,lastVisit:qForm.date,consent:true,created:today()});}
-    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.firstName.trim(),qForm.date,qForm.serviceType,timings,data?.templates).forEach(fu=>addRecord("followUps",fu));}
+    if(bizType==="servizi"){const apptId=uid();const timings=data?.settings?.followUpTimings||{thankyou:0,check:7,review:21,reactivation:60};addRecord("appointments",{id:apptId,clientId,date:qForm.date,serviceType:qForm.serviceType,notes:""});buildFollowUps(apptId,clientId,qForm.firstName.trim(),qForm.date,qForm.serviceType,timings,data?.templates,"").forEach(fu=>addRecord("followUps",fu));}
     else{const orderId=uid();addRecord("orders",{id:orderId,clientId,product:qForm.product||"Ordine",orderDate:qForm.date,status:"pending",notes:""});buildProductFollowUps(orderId,clientId,qForm.firstName.trim(),qForm.date,null,data?.templates).forEach(fu=>addRecord("followUps",fu));}
     setQDone(true);setTimeout(()=>{setQDone(false);setShowQuickAdd(false);setQForm({firstName:"",lastName:"",phone:"",email:"",date:today(),serviceType:clusterSvcTypes[0],product:"",channel:"WhatsApp"});},1500);
   };
@@ -302,7 +312,7 @@ const Home = ({setView}) => {
     <div style={{animation:"fadeIn .35s ease"}}>
       {bizType==="prodotti"
         ? <HomeProdotti setView={setView} data={data} update={update} pending={pending} toShip={toShip} />
-        : <HomeServizi setView={setView} data={data} pending={pending} activeC={activeC} toReact={toReact} noClients={noClients} setShowQuickAdd={setShowQuickAdd} setShowInvite={setShowInvite} />
+        : <HomeServizi setView={setView} data={data} update={update} pending={pending} activeC={activeC} toReact={toReact} noClients={noClients} setShowQuickAdd={setShowQuickAdd} setShowInvite={setShowInvite} />
       }
       {showInvite&&<InviteClient onClose={()=>setShowInvite(false)} />}
       <Modal open={showQuickAdd} onClose={()=>{setShowQuickAdd(false);setQDone(false);}} title="Nuovo cliente">

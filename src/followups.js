@@ -1,10 +1,12 @@
 import { fmtDate, addDays, uid } from "./helpers.js";
 
-const tplMessage = (templates, phase, clientName, fallback, date) => {
+const tplMessage = (templates, phase, clientName, fallback, date, extras) => {
   const t = (templates||[]).find(t => t.phase===phase && t.active!==false);
   let txt = t ? t.text : fallback;
   txt = (txt||"").replace(/\[Nome\]/g, clientName||"");
   if (date) txt = txt.replace(/\[Data\]/g, fmtDate(date));
+  if (extras?.service) txt = txt.replace(/\[Servizio\]/g, extras.service);
+  if (extras?.time) txt = txt.replace(/\[Ora\]/g, extras.time);
   return txt;
 };
 
@@ -19,10 +21,16 @@ const buildProductFollowUps = (orderId, clientId, clientName, orderDate, estimat
   ].map(fu => ({...fu, message: tplMessage(templates, fu.phase, clientName, fu.message, deliveryDate)})).filter(fu=>{const t=(templates||[]).find(t=>t.phase===fu.phase);return !t||t.active!==false;});
 };
 
-const buildFollowUps=(apptId,clientId,clientName,apptDate,serviceType,timings,templates)=>{
+const buildFollowUps=(apptId,clientId,clientName,apptDate,serviceType,timings,templates,apptTime)=>{
   const tm={thankyou:timings.thankyou||0,check:timings.check||7,review:timings.review||21,reactivation:timings.reactivation||60};
+  const timeStr=apptTime?` alle ${apptTime}`:"";
+  const confirmMsg=`Ciao ${clientName}! Confermato \u{1F5A4} Ti aspetto il ${fmtDate(apptDate)}${timeStr} per ${serviceType||"l'appuntamento"}. Per qualsiasi cosa scrivimi!`;
   const msgs={thankyou:serviceType==="Ritocco"?`Ciao ${clientName}! Grazie per il ritocco di oggi \u{1F64F} Scrivimi per qualsiasi cosa.`:`Ciao ${clientName}! Grazie per oggi \u{1F5A4} Ricordati pellicola e sapone neutro. Scrivimi se hai dubbi.`,check:`Ciao ${clientName}! Come sta andando? \u{C8} normale che desquami un po'. Se hai dubbi mandami una foto \u{1F64F}`,review:`Ciao ${clientName}! Sono passate un po' di settimane \u{2728} Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo.`,reactivation:`Ciao ${clientName}! Pensavo a te \u{2014} come stai? Se hai in mente qualcosa di nuovo, sono qui \u{1F5A4}`};
-  return ["thankyou","check","review","reactivation"].filter(phase=>{const t=(templates||[]).find(t=>t.phase===phase);return !t||t.active!==false;}).map(phase=>({id:uid(),appointmentId:apptId,clientId,phase,status:"pending",scheduledDate:addDays(apptDate,tm[phase]),sentDate:null,satisfaction:null,message:tplMessage(templates,phase,clientName,msgs[phase])}));
+  const extras={service:serviceType||"",time:apptTime||""};
+  const confirmFu={id:uid(),appointmentId:apptId,clientId,phase:"confirm",status:"pending",scheduledDate:apptDate,sentDate:null,satisfaction:null,message:tplMessage(templates,"confirm",clientName,confirmMsg,apptDate,extras)};
+  const rest=["thankyou","check","review","reactivation"].filter(phase=>{const t=(templates||[]).find(t=>t.phase===phase);return !t||t.active!==false;}).map(phase=>({id:uid(),appointmentId:apptId,clientId,phase,status:"pending",scheduledDate:addDays(apptDate,tm[phase]),sentDate:null,satisfaction:null,message:tplMessage(templates,phase,clientName,msgs[phase])}));
+  const confirmActive=(()=>{const t=(templates||[]).find(t=>t.phase==="confirm");return !t||t.active!==false;})();
+  return confirmActive?[confirmFu,...rest]:rest;
 };
 
 export { tplMessage, buildFollowUps, buildProductFollowUps };

@@ -5,6 +5,7 @@ import T from "./theme.js";
 export const FOUNDER_WA = "393316351951";
 
 export const PHASES = {
+  confirm:       { label: "Conferma",       color: T.green,  icon: "check",     bg: T.greenS },
   thankyou:      { label: "Ringraziamento", color: T.blue,   icon: "heart",     bg: T.blueS },
   check:         { label: "Controllo",      color: T.amberD, icon: "check",     bg: T.amberS },
   review:        { label: "Recensione",     color: T.purple, icon: "star",      bg: T.purpleS },
@@ -58,36 +59,42 @@ export const CLUSTERS = {...CLUSTERS_SERVIZI, ...CLUSTERS_PRODOTTI};
 
 export const CLUSTER_TEMPLATES = {
   tattoo: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento sessione", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per la sessione di oggi \u{1F5A4} Ricordati pellicola e sapone neutro per i primi giorni. Scrivimi per qualsiasi cosa.", active:true },
     { id:"t2", name:"Controllo cicatrizzazione", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Come sta andando la cicatrizzazione? \u{C8} normale che desquami un po' \u{2014} se hai dubbi mandami una foto \u{1F64F}", active:true },
     { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero stia guarendo bene \u{2728} Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! Pensavo a te \u{2014} hai in mente qualcosa di nuovo? Sono qui \u{1F5A4} Buona giornata!", active:true },
   ],
   barber: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento taglio", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie del passaggio oggi \u{1F488} Spero ti piaccia il risultato. Quando vuoi tornare, sai dove trovarmi!", active:true },
     { id:"t2", name:"Controllo soddisfazione", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Tutto ok con il taglio? Se vuoi una sistemata o vuoi prenotare il prossimo, sono qui \u{1F488}", active:true },
     { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero ti stia piacendo il risultato \u{1F64F} Se hai un minuto, una recensione su Google mi aiuterebbe tanto. Grazie!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! \u{C8} un po' che non ti vedo \u{1F488} Tutto bene? Quando vuoi passare, sono qui!", active:true },
   ],
   beauty: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento trattamento", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per essere passata oggi \u{2728} Spero ti sia piaciuto il trattamento. Per consigli scrivimi. A presto!", active:true },
     { id:"t2", name:"Controllo risultato", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Come ti stai trovando dopo il trattamento? Tutto ok? Sono qui per qualsiasi domanda \u{1F64F}", active:true },
     { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero stia ancora piacendoti il risultato \u{2728} Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! Pensavo a te \u{2014} \u{e8} un po' che non ci sentiamo \u{2728} Se hai voglia di un nuovo trattamento, sono qui!", active:true },
   ],
   artigiani: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento lavoro", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per avermi scelto per questo lavoro \u{1F64F} Spero che il risultato ti soddisfi. Per qualsiasi cosa scrivimi.", active:true },
     { id:"t2", name:"Controllo soddisfazione", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Volevo assicurarmi che tutto sia a posto dopo i lavori. C'\u{e8} qualcosa che vorresti sistemare?", active:true },
     { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero che il lavoro stia reggendo bene \u{1F64F} Se sei soddisfatto, una recensione su Google mi aiuterebbe a trovare nuovi clienti. Grazie!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! Sono passati un po' di mesi \u{2014} se hai altri lavori in programma, fammi sapere. Sono a disposizione!", active:true },
   ],
   officine: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento servizio", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per essere passato oggi \u{1F527} Speriamo che tutto proceda alla grande. Per qualsiasi problema siamo qui.", active:true },
     { id:"t2", name:"Controllo post-servizio", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Com'\u{e8} andata dopo il servizio? Tutto ok con il veicolo? Scrivici per qualsiasi dubbio \u{1F64F}", active:true },
     { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Speriamo che tutto stia andando bene \u{1F527} Se sei soddisfatto, una recensione su Google ci aiuterebbe molto. Grazie!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! \u{C8} un po' che non ci sentiamo \u{2014} se hai bisogno di manutenzione o controllo, siamo qui \u{1F527}", active:true },
   ],
   altro: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento base", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per oggi! \u{C8} stato un piacere. Se hai dubbi scrivimi. A presto!", active:true },
     { id:"t2", name:"Controllo soddisfazione", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Volevo solo sapere come stai andando. Tutto ok? Se qualcosa non ti convince al 100%, dimmelo.", active:true },
     { id:"t3", name:"Richiesta recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero di averti soddisfatto. Se hai un minuto, una recensione su Google mi aiuterebbe tantissimo. Grazie!", active:true },
@@ -108,6 +115,7 @@ export const CLUSTER_TEMPLATES = {
     { id:"t5", name:"Riordino", code:"PO5", phase:"reorder", channel:"WhatsApp", text:"Ciao [Nome]! \u{C8} passato un po' \u{2014} se hai bisogno di riordinare o vuoi scoprire le novit\u{e0}, sono qui!", active:true },
   ],
   altro_s: [
+    { id:"t0", name:"Conferma appuntamento", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato 🖤 Ti aspetto [Data] per [Servizio]. Per qualsiasi cosa scrivimi!", active:true },
     { id:"t1", name:"Ringraziamento", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Grazie per oggi! \u{C8} stato un piacere lavorare con te. Per qualsiasi cosa scrivimi.", active:true },
     { id:"t2", name:"Controllo", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Come stai andando? Tutto ok? Scrivimi se hai bisogno.", active:true },
     { id:"t3", name:"Recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Se sei soddisfatto, una recensione su Google mi aiuterebbe molto. Grazie!", active:true },

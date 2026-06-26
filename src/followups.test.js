@@ -19,9 +19,10 @@ describe("buildFollowUps — follow-up dei servizi (Moira)", () => {
   const DATE = "2026-06-16";
   const TIMINGS = {}; // tutti default: 0 / 7 / 21 / 60
 
-  it("a) genera 4 follow-up nelle fasi giuste, alle date giuste", () => {
+  it("a) genera 5 follow-up nelle fasi giuste, alle date giuste (conferma + 4 post)", () => {
     const fus = buildFollowUps(APPT, CLIENT, NAME, DATE, "Tatuaggio", TIMINGS, []);
-    expect(fus.map(f => f.phase)).toEqual(["thankyou", "check", "review", "reactivation"]);
+    expect(fus.map(f => f.phase)).toEqual(["confirm", "thankyou", "check", "review", "reactivation"]);
+    expect(byPhase(fus, "confirm").scheduledDate).toBe(DATE);
     expect(byPhase(fus, "thankyou").scheduledDate).toBe(addDays(DATE, 0));
     expect(byPhase(fus, "check").scheduledDate).toBe(addDays(DATE, 7));
     expect(byPhase(fus, "review").scheduledDate).toBe(addDays(DATE, 21));
@@ -37,10 +38,10 @@ describe("buildFollowUps — follow-up dei servizi (Moira)", () => {
     expect(byPhase(fus, "reactivation").scheduledDate).toBe(addDays(DATE, 90));
   });
 
-  it("c) una fase disattivata non viene creata (restano 3)", () => {
+  it("c) una fase disattivata non viene creata (restano 4)", () => {
     const templates = [{ phase: "review", text: "x", active: false }];
     const fus = buildFollowUps(APPT, CLIENT, NAME, DATE, "Tatuaggio", TIMINGS, templates);
-    expect(fus.map(f => f.phase)).toEqual(["thankyou", "check", "reactivation"]);
+    expect(fus.map(f => f.phase)).toEqual(["confirm", "thankyou", "check", "reactivation"]);
     expect(byPhase(fus, "review")).toBeUndefined();
   });
 

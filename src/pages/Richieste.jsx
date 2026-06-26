@@ -69,7 +69,7 @@ const Richieste = () => {
         id: apptId, clientId, date: pf.date, time: pf.time, serviceType: pf.service.trim(), notes: promo.desc || "",
       });
       const timings = data?.settings?.followUpTimings || { thankyou: 0, check: 7, review: 21, reactivation: 60 };
-      buildFollowUps(apptId, clientId, promo.nome || "", pf.date, pf.service.trim(), timings, data?.templates)
+      buildFollowUps(apptId, clientId, promo.nome || "", pf.date, pf.service.trim(), timings, data?.templates, pf.time)
         .forEach(fu => addRecord("followUps", fu));
       update("richieste", promo.id, { status: "chiusa", appointmentId: apptId });
     } else {
@@ -168,7 +168,7 @@ const Richieste = () => {
             <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "6px" }}>{isServizi ? "Appuntamento creato!" : "Ordine creato!"}</div>
             <div style={{ fontSize: "13px", color: T.textD, lineHeight: 1.6, marginBottom: "16px" }}>
               {isServizi
-                ? <>Ci pensa Sliss: i follow-up post-appuntamento partono da soli<br />(ringraziamento {"\u{2192}"} check {"\u{2192}"} recensione {"\u{2192}"} riattivazione).</>
+                ? <>Ci pensa Sliss: i follow-up partono da soli<br />(conferma {"\u{2192}"} ringraziamento {"\u{2192}"} check {"\u{2192}"} recensione {"\u{2192}"} riattivazione).</>
                 : <>Ci pensa Sliss: i follow-up post-vendita partono da soli<br />(conferma {"\u{2192}"} spedizione {"\u{2192}"} consegna {"\u{2192}"} recensione).</>
               }
             </div>
