@@ -173,9 +173,12 @@ const Richieste = () => {
               }
             </div>
             {isServizi && (
-              <Btn v="secondary" onClick={() => window.open(gcalLink(pf.date, pf.service, promo?.desc || ""), "_blank")} style={{ width: "100%", justifyContent: "center", marginBottom: "8px" }}>
-                <Icon name="calendar" size={15} />Aggiungi a Google Calendar
-              </Btn>
+              <>
+                <Btn v="secondary" onClick={() => window.open(gcalLink(pf.date, pf.service, promo?.desc || ""), "_blank")} style={{ width: "100%", justifyContent: "center", marginBottom: "4px" }}>
+                  <Icon name="calendar" size={15} />Aggiungi a Google Calendar
+                </Btn>
+                <div style={{ fontSize: "11px", color: T.textMu, textAlign: "center", marginBottom: "8px" }}>Si apre Google Calendar — premi {"✕"} per tornare qui</div>
+              </>
             )}
             <Btn onClick={() => setPromo(null)} style={{ width: "100%", justifyContent: "center" }}>Fatto</Btn>
           </div>
