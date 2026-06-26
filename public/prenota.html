@@ -97,6 +97,19 @@
 
   var SERVICES = ["Sessione tatuaggio", "Ritocco", "Flash tattoo", "Consulenza / bozzetto", "Copertura", "PMU / trucco semipermanente"];
 
+  // FAQ personalizzate dal professionista (sezione "Le tue FAQ" nell'app).
+  // Se ne ha salvate, sostituiscono i default qui sopra; tiene solo quelle visibili.
+  // Rete di sicurezza: se il magazzino è vuoto o non risponde, restano i default.
+  fetch("/api/faq?owner=" + encodeURIComponent(OWNER))
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d && Array.isArray(d.faq) && d.faq.length) {
+        var custom = d.faq.filter(function(f) { return f && f.q && f.on !== false; });
+        if (custom.length) FAQ = custom;
+      }
+    })
+    .catch(function() {});
+
   var ctx = { sel: null, nome: "", cognome: "", tel: "" };
   var chat = document.getElementById("chat");
   var scrollDown = function() { requestAnimationFrame(function() { chat.scrollTop = chat.scrollHeight; }); };
