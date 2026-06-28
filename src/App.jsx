@@ -23,6 +23,7 @@ import Feedback from "./pages/Feedback.jsx";
 import ModulesMap from "./pages/ModulesMap.jsx";
 import Settings from "./pages/Settings.jsx";
 import Richieste from "./pages/Richieste.jsx";
+import HelpSliss from "./pages/HelpSliss.jsx";
 
 // Migrazione una-tantum (v6.9): nei follow-up in attesa sostituisce il nome completo col solo nome.
 // Gira UNA volta in fase di init dello stato (non dentro un effect → niente setState a cascata).
@@ -148,7 +149,7 @@ export default function SlissPlatform() {
 
   const pendingCount=(data?.followUps||[]).filter(f=>f.status==="pending"&&isFuReady(f)&&!isPhaseOff(data?.templates,f.phase)).length;
   const richNew=(data?.richieste||[]).filter(r=>(r.status||"nuova")==="nuova").length;
-  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,richieste:<Richieste/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,more:<MoreMenu setView={go} bizType={data?.settings?.bizType||""}/>};
+  const viewMap={home:<Home setView={go}/>,appointments:<Appointments setView={go} openAdd={addOn==='appointments'}/>,orders:<Orders setView={go} openAdd={addOn==='orders'}/>,followup:<FollowUp setView={go} initialFilter={fuFilter} initialFuId={selFuId}/>,clients:<Clients initialClientId={selClientId} openAdd={addOn==='clients'}/>,richieste:<Richieste/>,templates:<Templates/>,feedback:<Feedback setView={go}/>,modules:<ModulesMap/>,settings:<Settings/>,help:<HelpSliss/>,more:<MoreMenu setView={go} bizType={data?.settings?.bizType||""}/>};
   const CurrentView=viewMap[view]||viewMap.home;
 
   if(showOnboarding) return <ErrorBoundary><Ctx.Provider value={ctx}><GlobalCSS /><Onboarding onComplete={()=>setShowOnboarding(false)} /></Ctx.Provider></ErrorBoundary>;
