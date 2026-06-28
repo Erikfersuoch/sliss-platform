@@ -7,7 +7,10 @@ import { FAQ_DEFAULTS } from "../faqDefaults.js";
 // "Le tue FAQ" (M3 v2): il professionista modifica le risposte automatiche che
 // il cliente vede nella pagina pubblica. Carica le sue FAQ salvate (api/faq);
 // se non ne ha ancora, parte dai default del suo settore così può modificarle.
-const FaqEditor = ({ owner, bizType = "servizi" }) => {
+// Riusabile (slice "FAQ su Sliss", admin): con seedDefaults={false} parte da
+// vuoto invece che dai default-cliente; title/intro/savedSuffix personalizzabili.
+const DEFAULT_INTRO = "Le risposte automatiche che il cliente vede nel tuo link. Modifica i testi (es. i tuoi prezzi), spegni le domande che non ti servono, aggiungine di tue.";
+const FaqEditor = ({ owner, bizType = "servizi", seedDefaults = true, title = "Le tue FAQ", intro = DEFAULT_INTRO, savedSuffix = "I tuoi clienti le vedono subito." }) => {
   const [items, setItems] = useState([]);
   const [status, setStatus] = useState("loading"); // loading | ready
   const [saving, setSaving] = useState(false);
@@ -16,7 +19,9 @@ const FaqEditor = ({ owner, bizType = "servizi" }) => {
   useEffect(() => {
     if (!owner) return;
     let alive = true;
-    const fallback = () => (FAQ_DEFAULTS[bizType] || FAQ_DEFAULTS.servizi).map(x => ({ ...x }));
+    const fallback = () => seedDefaults
+      ? (FAQ_DEFAULTS[bizType] || FAQ_DEFAULTS.servizi).map(x => ({ ...x }))
+      : [{ q: "", a: "", on: true }];
     fetch(`/api/faq?owner=${encodeURIComponent(owner)}`)
       .then(r => r.json())
       .then(d => {
@@ -27,7 +32,7 @@ const FaqEditor = ({ owner, bizType = "servizi" }) => {
       })
       .catch(() => { if (!alive) return; setItems(fallback()); setStatus("ready"); });
     return () => { alive = false; };
-  }, [owner, bizType]);
+  }, [owner, bizType, seedDefaults]);
 
   const setField = (i, key, val) => setItems(p => p.map((it, idx) => idx === i ? { ...it, [key]: val } : it));
   const toggle = (i) => setField(i, "on", !items[i].on);
@@ -44,7 +49,7 @@ const FaqEditor = ({ owner, bizType = "servizi" }) => {
         body: JSON.stringify({ owner, faq: clean }),
       });
       const d = await r.json();
-      setMsg(d.ok ? `✓ Salvate ${d.count} FAQ. I tuoi clienti le vedono subito.` : "Qualcosa è andato storto, riprova.");
+      setMsg(d.ok ? `✓ Salvate ${d.count} FAQ. ${savedSuffix}` : "Qualcosa è andato storto, riprova.");
     } catch {
       setMsg("Niente rete: riprova quando sei online.");
     }
@@ -53,9 +58,9 @@ const FaqEditor = ({ owner, bizType = "servizi" }) => {
 
   return (
     <Card style={{ marginBottom: "14px" }}>
-      <h3 style={{ fontSize: "15px", fontWeight: 700, marginBottom: "4px" }}>Le tue FAQ</h3>
+      <h3 style={{ fontSize: "15px", fontWeight: 700, marginBottom: "4px" }}>{title}</h3>
       <p style={{ fontSize: "12px", color: T.textD, marginBottom: "14px", lineHeight: 1.6 }}>
-        Le risposte automatiche che il cliente vede nel tuo link. Modifica i testi (es. i tuoi prezzi), spegni le domande che non ti servono, aggiungine di tue.
+        {intro}
       </p>
 
       {!owner && (

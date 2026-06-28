@@ -71,6 +71,13 @@ const Settings = () => {
         {notifStatus==='unsupported' && <p style={{fontSize:"13px",color:T.textD}}>{"Le notifiche non sono supportate su questo browser. Usa Safari su iPhone."}</p>}
       </Card>
       <FaqEditor owner={testerCode} bizType={currentBizType} />
+      {testerCode==='ceoerik' && <FaqEditor
+        owner="sliss-help"
+        seedDefaults={false}
+        title="FAQ su Sliss (admin)"
+        intro="Le risposte su come funziona Sliss. I tester le leggeranno da soli nella sezione Aiuto, così ti scrivono meno. Visibile solo a te (codice ceoerik)."
+        savedSuffix="I tester le vedranno in «Aiuto · Come funziona Sliss»."
+      />}
       <Card style={{marginBottom:"20px"}}>
         <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"10px"}}>Dati e backup</h3>
         <p style={{fontSize:"13px",color:T.textD,lineHeight:1.7,marginBottom:"12px"}}>I dati vivono su questo telefono. Se hai impostato il <b>codice tester</b>, una copia di sicurezza viene salvata automaticamente nel cloud: se cambi telefono o reinstalli l'app, puoi ripristinarla da qui.</p>

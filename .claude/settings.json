@@ -1,5 +1,11 @@
 {
   "permissions": {
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push *--force*)",
+      "Bash(git push *--delete*)"
+    ],
     "allow": [
       "mcp__claude_ai_Vercel__list_deployments",
       "mcp__claude_ai_Vercel__get_deployment",
@@ -7,11 +13,26 @@
       "mcp__claude_ai_Vercel__list_projects",
       "mcp__claude_ai_Vercel__get_runtime_logs",
       "Bash(git fetch *)",
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git diff*)",
+      "Bash(git show*)",
+      "Bash(git rev-parse*)",
+      "Bash(git branch*)",
+      "Bash(git stash*)",
+      "Bash(git merge --ff-only *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
       "Bash(npm run lint)",
       "Bash(npm run build)",
       "Bash(npm test)",
       "Bash(npm test *)",
-      "Bash(bash docs/check-sync.sh)"
+      "Bash(npm run *)",
+      "PowerShell(npm run *)",
+      "Bash(bash docs/check-sync.sh)",
+      "Bash(bash docs/check-sync.sh --fix)",
+      "Bash(bash docs/check-contesto.sh)"
     ]
   },
   "hooks": {
