@@ -1,6 +1,7 @@
 import { useState } from "react";
 import T from "../theme.js";
-import { CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI } from "../config.js";
+import { CLUSTERS_SERVIZI, CLUSTERS_PRODOTTI, CLUSTERS_RESERVED, CLUSTER_TEMPLATES } from "../config.js";
+import { uid } from "../helpers.js";
 import { useSliss } from "../context.js";
 import { Btn, Card, FormField, PageHeader } from "../components/ui.jsx";
 import Icon from "../components/Icon.jsx";
@@ -29,6 +30,17 @@ const Settings = () => {
     importData(b.data);
     setRestoreMsg("\u{2713} Dati ripristinati dal backup del "+when+".");
   };
+  // Founder (solo codice ceoerik): passa il profilo all'attività "Sliss" — tipo servizi,
+  // settore sliss e SOSTITUISCE i messaggi con quelli a tema Sliss. Preserva clienti/appuntamenti.
+  const [slissMsg,setSlissMsg]=useState("");
+  const activateSliss=()=>{
+    if(!window.confirm("Attivare l'attivit\u{e0} \u{ab}Sliss\u{bb}?\nImposta tipo = servizi, settore = Sliss e SOSTITUISCE i messaggi attuali con quelli a tema Sliss. Clienti e appuntamenti restano.")) return;
+    const tpls=(CLUSTER_TEMPLATES.sliss||[]).map(t=>({...t,id:uid()}));
+    const newName=bName.trim()||"Sliss";
+    importData({...data,settings:{...(data.settings||{}),businessName:newName,bizType:"servizi",cluster:"sliss"},templates:tpls});
+    setBName(newName);setCurrentBizType("servizi");setCurrentCluster("sliss");
+    setSlissMsg("\u{2713} Attivit\u{e0} Sliss attiva: tipo servizi, settore Sliss, messaggi a tema caricati.");
+  };
   return (
     <div style={{animation:"fadeIn .35s ease"}}>
       <PageHeader title="Impostazioni" />
@@ -41,7 +53,13 @@ const Settings = () => {
           ))}
         </div>
       </Card>
-      <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"16px"}}>{"Attivit\u{e0}"}</h3><FormField label={"Nome attivit\u{e0}"} hint="Appare nel saluto della Home"><input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" /></FormField><FormField label="Tipo attività" hint="Cambia il flusso: appuntamenti o ordini"><select value={currentBizType} onChange={e=>{const t=e.target.value;setCurrentBizType(t);setCurrentCluster(t==="prodotti"?Object.keys(CLUSTERS_PRODOTTI)[0]:Object.keys(CLUSTERS_SERVIZI)[0]);}}><option value="servizi">Servizi — appuntamenti</option><option value="prodotti">Prodotti — ordini</option></select></FormField><FormField label="Settore" hint="Usato per adattare i template"><select value={currentCluster} onChange={e=>setCurrentCluster(e.target.value)}>{Object.entries(currentBizType==="prodotti"?CLUSTERS_PRODOTTI:CLUSTERS_SERVIZI).map(([key,cl])=>(<option key={key} value={key}>{cl.icon} {cl.label}</option>))}</select></FormField><FormField label="Link Google Reviews" hint="Aggiunto ai messaggi di recensione"><input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." /></FormField></Card>
+      <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"16px"}}>{"Attivit\u{e0}"}</h3><FormField label={"Nome attivit\u{e0}"} hint="Appare nel saluto della Home"><input value={bName} onChange={e=>setBName(e.target.value)} placeholder="Es. Momo Ink" /></FormField><FormField label="Tipo attività" hint="Cambia il flusso: appuntamenti o ordini"><select value={currentBizType} onChange={e=>{const t=e.target.value;setCurrentBizType(t);setCurrentCluster(t==="prodotti"?Object.keys(CLUSTERS_PRODOTTI)[0]:Object.keys(CLUSTERS_SERVIZI)[0]);}}><option value="servizi">Servizi — appuntamenti</option><option value="prodotti">Prodotti — ordini</option></select></FormField><FormField label="Settore" hint="Usato per adattare i template"><select value={currentCluster} onChange={e=>setCurrentCluster(e.target.value)}>{Object.entries(currentBizType==="prodotti"?CLUSTERS_PRODOTTI:(testerCode==="ceoerik"?{...CLUSTERS_SERVIZI,...CLUSTERS_RESERVED}:CLUSTERS_SERVIZI)).map(([key,cl])=>(<option key={key} value={key}>{cl.icon} {cl.label}</option>))}</select></FormField><FormField label="Link Google Reviews" hint="Aggiunto ai messaggi di recensione"><input value={reviewLink} onChange={e=>setReviewLink(e.target.value)} placeholder="https://g.page/r/..." /></FormField></Card>
+      {testerCode==="ceoerik" && <Card style={{marginBottom:"14px",border:`1.5px solid ${T.green}`}}>
+        <h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>{"Founder \u{b7} Attivit\u{e0} Sliss"}</h3>
+        <p style={{fontSize:"12px",color:T.textD,marginBottom:"14px",lineHeight:1.6}}>Visibile solo a te (codice ceoerik). Mette il profilo in modalità «Sliss»: tipo servizi, settore Sliss e messaggi di follow-up a tema. Clienti e appuntamenti restano.</p>
+        <Btn onClick={activateSliss} style={{width:"100%",justifyContent:"center"}}>{"Attiva attivit\u{e0} \u{ab}Sliss\u{bb}"}</Btn>
+        {slissMsg && <p style={{fontSize:"12.5px",color:T.green,marginTop:"10px",lineHeight:1.5}}>{slissMsg}</p>}
+      </Card>}
       <Card style={{marginBottom:"14px"}}><h3 style={{fontSize:"15px",fontWeight:700,marginBottom:"4px"}}>Timing follow-up</h3><p style={{fontSize:"12px",color:T.textD,marginBottom:"16px"}}>Quando inviare ogni fase dopo l'appuntamento.</p>
         {[
           {key:"thankyouHours",label:"Ringraziamento",unit:"ore",step:1,min:0,max:48,def:2},

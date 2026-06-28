@@ -55,7 +55,16 @@ export const CLUSTERS_PRODOTTI = {
   altro_p:   { label: "Altro",                 icon: "\u{26A1}", color: T.textM, custom: true },
 };
 
-export const CLUSTERS = {...CLUSTERS_SERVIZI, ...CLUSTERS_PRODOTTI};
+// Cluster RISERVATI: non compaiono nelle liste settore dei tester veri (CLUSTERS_SERVIZI/
+// _PRODOTTI restano intatti). Si attivano solo per Erik (codice erik/ceoerik) via onboarding/
+// impostazioni. 'sliss' = l'attività del founder: i "clienti" sono i micro-business portati su Sliss.
+export const CLUSTERS_RESERVED = {
+  sliss: { label: "Sliss (founder)", icon: "\u{1F7E2}", color: T.green, reserved: true, serviceTypes: ["Onboarding","Demo","Setup","Formazione","Check-in"] },
+};
+
+// Merge globale per risolvere etichetta/icona di QUALSIASI cluster (inclusi i riservati),
+// senza che i riservati finiscano nelle liste di scelta dei tester.
+export const CLUSTERS = {...CLUSTERS_SERVIZI, ...CLUSTERS_PRODOTTI, ...CLUSTERS_RESERVED};
 
 export const CLUSTER_TEMPLATES = {
   tattoo: [
@@ -120,6 +129,13 @@ export const CLUSTER_TEMPLATES = {
     { id:"t2", name:"Controllo", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Come stai andando? Tutto ok? Scrivimi se hai bisogno.", active:true },
     { id:"t3", name:"Recensione", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Se sei soddisfatto, una recensione su Google mi aiuterebbe molto. Grazie!", active:true },
     { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! Pensavo a te \u{2014} se hai bisogno di qualcosa, sono qui. Buona giornata!", active:true },
+  ],
+  sliss: [
+    { id:"t0", name:"Conferma setup", code:"CF1", phase:"confirm", channel:"WhatsApp", text:"Ciao [Nome]! Confermato \u{2705} Ci sentiamo [Data] per il setup di Sliss sulla tua attivit\u{e0}. Se intanto hai domande, scrivimi!", active:true },
+    { id:"t1", name:"Benvenuto in Sliss", code:"R1", phase:"thankyou", channel:"WhatsApp", text:"Ciao [Nome]! Benvenuto in Sliss \u{1F7E2} Da ora i follow-up ai tuoi clienti li tiene Sliss, tu li invii con un tap. Per ogni dubbio sono qui.", active:true },
+    { id:"t2", name:"Controllo primi giorni", code:"C1", phase:"check", channel:"WhatsApp", text:"Ciao [Nome]! Come ti trovi con Sliss in questi primi giorni? Tutto chiaro? Se c'\u{e8} da sistemare qualcosa, lo guardiamo insieme \u{1F64F}", active:true },
+    { id:"t3", name:"Richiesta feedback", code:"RC1", phase:"review", channel:"WhatsApp", text:"Ciao [Nome]! Spero Sliss ti stia facendo risparmiare tempo \u{2728} Due righe di feedback mi aiutano tantissimo a migliorarlo. Grazie!", active:true },
+    { id:"t4", name:"Riattivazione", code:"RI1", phase:"reactivation", channel:"WhatsApp", text:"Ciao [Nome]! \u{C8} un po' che non ci sentiamo \u{2014} come va con i tuoi clienti? Se vuoi riprendere o provare le novit\u{e0} di Sliss, sono qui \u{1F7E2}", active:true },
   ],
   altro_p: [
     { id:"t1", name:"Conferma ordine", code:"PO1", phase:"order_confirm", channel:"WhatsApp", text:"Ciao [Nome]! Ho ricevuto il tuo ordine, grazie! Lo sto preparando. Ti aggiorno a breve.", active:true },
