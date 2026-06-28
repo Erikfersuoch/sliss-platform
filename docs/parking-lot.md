@@ -42,6 +42,8 @@
   **4. L'human-in-the-loop protegge:** finché **Erik/utente approva e invia** ogni messaggio (no invio automatico cieco), si resta nella fascia a rischio minimo. Quando si introdurranno gli invii automatici → rivedere questo punto.
   **AZIONE (Fase 3):** prima GDPR (privacy policy + consensi), poi 1 riga di trasparenza se nel frattempo c'è IA generativa; per qualcosa di vincolante, 1 ora con legale/DPO. Collegato: voce "recesso 19/06/2026" qui sopra, e [[project-beta-bar-e-budget]].
 
+- [28/06/2026] **📋 Report compliance go-to-market completo → `docs/compliance-go-to-market.md`.** Ricerca (28/06) sui 5 fronti per vendere in sicurezza: GDPR (ruoli Titolare/Responsabile + DPA art. 28), marketing/WhatsApp (servizio vs promozionale, opt-in, wa.me manuale vs BSP/API), AI Act, recesso/consumatori, adempimenti minimi al lancio. **Le 7 cose prima del primo incasso** + fonti ufficiali. **Punto tecnico che ci riguarda già:** il backup legato al "codice tester" va sostituito con auth vera prima di vendere (combacia con la nota "multi-dispositivo" del 20/06: da requisito di comodità diventa requisito privacy).
+
 ## Idee prodotto
 
 - [24/06/2026] **Gestione catalogo/prodotti da parte del professionista.** Il professionista deve poter aggiornare i prodotti mostrati nella selezione multipla della chat Richieste (`richieste.html`) senza toccare il codice. Oggi le categorie sono hardcoded. Upgrade: pannello in-app (o sezione in Impostazioni) dove il professionista aggiunge/modifica/rimuove i prodotti → si riflette nella chat pubblica. **Da fare dopo il feedback di Luca su M3 beta** — non toccare la chat prima di avere i suoi input (etichette WA, messaggi reali, volume). Collegato a: "importa inventario" da CSV eBay (punto 4 prossimi passi).
