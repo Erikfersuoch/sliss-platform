@@ -1,4 +1,19 @@
 {
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_Vercel__list_deployments",
+      "mcp__claude_ai_Vercel__get_deployment",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__get_runtime_logs",
+      "Bash(git fetch *)",
+      "Bash(npm run lint)",
+      "Bash(npm run build)",
+      "Bash(npm test)",
+      "Bash(npm test *)",
+      "Bash(bash docs/check-sync.sh)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
